@@ -92,6 +92,6 @@
       "eslint --cache --fix",
       "prettier --write"
     ],
-    "*.{js,ts,tsx,css,md}": "prettier --write"
+    "*.{js,ts,tsx,css,less,md,json}": "prettier --write"
   }
 }

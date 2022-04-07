@@ -4,9 +4,9 @@
 
 1. Start development server using `yarn start`
 
-1. Open http://localhost:1234/ in your favorite browser
+1. Open http://localhost:1234/ in your favourite browser
 
-1. Write a some great thing! You can generate component draft using `yarn generate NewGreatThing`
+1. Write a some great thing! You can generate components using `yarn generate NewGreatThing`
 
 1. Make a commit. Code linter and prettier will be runs automatically
 
@@ -14,23 +14,23 @@
 
 #### `yarn build`
 
-Builds production bundle into `dist` folder
+Builds production bundle into the `dist` folder
 
 #### `yarn start`
 
-Runs development Web Server
+Runs application with development environment
 
 #### `yarn lint`
 
-Runs code linter. To apply possible use the `yarn lint:fix` command
+Runs code linter. To fix issues that could be fixed automatically, use the `yarn lint:fix` command
 
 #### `yarn prettier`
 
-Check code style. Use the `yarn prettier:fix` command to apply code style automatically
+Check the code style. Use the `yarn prettier:fix` command to fix code style automatically
 
 #### `yarn generate <ComponentName>`
 
-Generates component draft, for example `yarn generate Sample`
+Generate a component draft, for example `yarn generate SampleThing`
 
 ## Tech stack
 
