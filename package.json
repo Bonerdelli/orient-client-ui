@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "ORIENT: React-based Web Application for Creditors",
   "author": "Andrei Nekrasov",
-  "license": "private",
+  "license": "UNLICENSED",
   "dependencies": {
     "dayjs": "^1.11.0",
     "easy-peasy": "^5.0.4",

@@ -2,17 +2,12 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
 
 # bundler
 .parcel-cache
 
 # production
-# /dist
+/dist
 
 # misc
 .eslintcache
