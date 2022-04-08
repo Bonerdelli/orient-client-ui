@@ -1,0 +1,17 @@
+keycloak:
+  realm: demo-realm
+  ssl-required: external
+  public-client: true
+  confidential-port: 0
+
+token:
+  lifespan: 300
+
+l10n:
+  defaultLocale: 'ru'
+
+roles:
+  pages:
+    home:
+      - admin
+      - operator

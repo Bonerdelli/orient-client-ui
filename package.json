@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "source": "src/index.html",
   "scripts": {
-    "start": "parcel serve --log-level verbose",
+    "start": "parcel serve --log-level warn",
     "clean": "rimraf ./dist/* ./.parcel-cache",
     "build": "run-s clean tsc parcel:build",
     "lint": "eslint ./src -f table --ext .js,.jsx,.ts,.tsx",
@@ -61,6 +61,7 @@
     "@parcel/config-default": "2.4.1",
     "@parcel/core": "2.4.1",
     "@parcel/packager-css": "2.4.1",
+    "@parcel/transformer-less": "2.4.1",
     "@parcel/transformer-svg-react": "2.4.1",
     "@parcel/transformer-typescript-tsc": "2.4.1",
     "@parcel/transformer-yaml": "2.4.1",
@@ -88,6 +89,7 @@
     "postcss": "8.4.12",
     "postcss-modules": "4.3.1",
     "prettier": "2.6.2",
+    "process": "^0.11.10",
     "rimraf": "3.0.2",
     "typescript": "4.6.3"
   },
