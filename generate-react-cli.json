@@ -15,6 +15,19 @@
       "withTest": false,
       "withStory": false,
       "withLazy": false
+    },
+    "page": {
+      "customTemplates": {
+        "index": "templates/default/index.ts",
+        "component": "templates/default/TemplateName.tsx",
+        "style": "templates/default/TemplateName.style.less"
+      },
+      "path": "src/pages",
+      "withStyle": true,
+      "withIndex": true,
+      "withTest": false,
+      "withStory": false,
+      "withLazy": false
     }
   },
   "cssPreprocessor": "less"
