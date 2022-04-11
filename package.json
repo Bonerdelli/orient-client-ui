@@ -1,7 +1,7 @@
 {
-  "name": "orient-creditor-ui",
+  "name": "orient-client-ui",
   "version": "0.0.1",
-  "description": "ORIENT: React-based Web Application for Creditors",
+  "description": "ORIENT: React-based Web Application for Clients",
   "author": "Andrew Nekrasov <bonerdelli@gmail.com>",
   "license": "UNLICENSED",
   "source": "src/index.html",

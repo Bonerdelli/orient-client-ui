@@ -4,7 +4,7 @@ import storage from 'redux-persist/lib/storage'
 
 import { UserStoreModel, userStoreModel } from './user'
 
-export const STORAGE_KEY_PREFIX = 'orient-creditor-0.0.1'
+export const STORAGE_KEY_PREFIX = 'orient-client-0.0.1'
 
 export interface AppStoreModel {
   user: UserStoreModel
