@@ -9,8 +9,6 @@ import request, { Response } from 'superagent'
 
 import { useKeycloak } from '@react-keycloak/web'
 
-// TODO: add displaying of error messages
-
 export const API_URL = process.env.API_URL || 'http://localhost:3001'
 export const REQUEST_TIMEOUT = 5000 // in milliseconds
 export const REQUEST_MAX_TIME = 20000 // in milliseconds

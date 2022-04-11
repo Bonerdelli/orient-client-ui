@@ -48,7 +48,7 @@ export const PublicRoutes = () => (
   </Switch>
 )
 
-// TODO: make lazy loading works
+// TODO: make lazy loading works?
 export const ProtectedRoutes = () => (
   <Switch>
     <PrivateRoute
