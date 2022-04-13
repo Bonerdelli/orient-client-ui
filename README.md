@@ -2,6 +2,8 @@
 
 ## Development
 
+1. Connect UI library using `yarn link orient-ui-library`
+
 1. Install dependencies using `yarn install`
 
 1. Start development server using `yarn start`
