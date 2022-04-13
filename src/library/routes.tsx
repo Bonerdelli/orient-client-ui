@@ -1,14 +1,12 @@
 import { FC } from 'react'
 import { Switch, Route, Redirect, RouteProps } from 'react-router-dom'
-import { useKeycloak } from '@react-keycloak/web'
 import portalConfig from 'config/portal.yaml'
+
+import { Roles } from 'library/models'
+import { hasAccess } from './helpers/roles'
 
 import HomePage from 'pages/HomePage'
 import Login from 'pages/Login'
-
-import { hasAccess } from './helpers/roles'
-
-import { Roles } from 'library/models'
 
 interface PrivateRouteOptions extends RouteProps {
   component: FC<RouteProps>
@@ -20,9 +18,7 @@ const PrivateRoute: FC<PrivateRouteOptions> = ({
   roles: accessRoles,
   ...rest
 }) => {
-  const { keycloak } = useKeycloak()
-  const roles: Roles = keycloak.tokenParsed?.realm_access?.roles
-
+  const roles: any = [] // TODO: use user.roles from API
   return (
     <Route
       {...rest}
@@ -55,7 +51,7 @@ export const ProtectedRoutes = () => (
       exact
       path="/"
       component={HomePage}
-      roles={portalConfig.roles.pages.operationalManage}
+      roles={portalConfig.roles.pages.home}
     />
     <Route exact path="/login">
       <Redirect to={{ pathname: '/' }} />

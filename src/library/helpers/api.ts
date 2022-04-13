@@ -7,8 +7,6 @@
 
 import request, { Response } from 'superagent'
 
-import { useKeycloak } from '@react-keycloak/web'
-
 export const API_URL = process.env.API_URL || 'http://localhost:3001'
 export const REQUEST_TIMEOUT = 5000 // in milliseconds
 export const REQUEST_MAX_TIME = 20000 // in milliseconds
@@ -68,7 +66,7 @@ export async function get<T>(
 ): Promise<T | ApiErrorResponse> {
   let serverError: ApiErrorResponse | null = null
   const url = getEndpointUrl(path)
-  const { keycloak } = useKeycloak()
+  const jwtToken = '' // TODO: read from store?
   const response = await request
     .get(url)
     .timeout({
@@ -77,7 +75,7 @@ export async function get<T>(
     })
     .type('json')
     .accept('json')
-    .set('Authorization', `Bearer ${keycloak?.idToken}`)
+    .set('Authorization', `Bearer ${jwtToken}`)
     .catch((err) => {
       serverError = handleApiError(err, onError)
     })
@@ -102,7 +100,7 @@ export async function post<T = void>(
 ): Promise<ApiCrudResponse<T>> {
   let serverError: ApiErrorResponse | null = null
   const url = getEndpointUrl(path)
-  const { keycloak } = useKeycloak()
+  const jwtToken = '' // TODO: read from store?
   const response = await request
     .post(url)
     .timeout({
@@ -111,7 +109,7 @@ export async function post<T = void>(
     })
     .type('json')
     .accept('json')
-    .set('Authorization', `Bearer ${keycloak?.idToken}`)
+    .set('Authorization', `Bearer ${jwtToken}`)
     .send(payload)
     .catch((err) => {
       serverError = handleApiError(err, onError)
@@ -136,7 +134,7 @@ export async function put<T = void>(
 ): Promise<ApiCrudResponse<T>> {
   let serverError: ApiErrorResponse | null = null
   const url = getEndpointUrl(path)
-  const { keycloak } = useKeycloak()
+  const jwtToken = '' // TODO: read from store?
   const response = await request
     .put(url)
     .timeout({
@@ -145,7 +143,7 @@ export async function put<T = void>(
     })
     .type('json')
     .accept('json')
-    .set('Authorization', `Bearer ${keycloak?.idToken}`)
+    .set('Authorization', `Bearer ${jwtToken}`)
     .send(payload)
     .catch((err) => {
       serverError = handleApiError(err, onError)
@@ -169,7 +167,7 @@ export async function del<T = void>(
 ): Promise<ApiCrudResponse<T>> {
   let serverError: ApiErrorResponse | null = null
   const url = getEndpointUrl(path)
-  const { keycloak } = useKeycloak()
+  const jwtToken = '' // TODO: read from store?
   const response = await request
     .delete(url)
     .timeout({
@@ -178,7 +176,7 @@ export async function del<T = void>(
     })
     .type('json')
     .accept('json')
-    .set('Authorization', `Bearer ${keycloak?.idToken}`)
+    .set('Authorization', `Bearer ${jwtToken}`)
     .catch((err) => {
       serverError = handleApiError(err, onError)
     })

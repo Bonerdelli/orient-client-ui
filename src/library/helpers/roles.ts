@@ -1,10 +1,12 @@
 import { Roles } from 'library/models'
 
+/**
+ * Check is user has access for a given resource
+ */
 export const hasAccess = (
-  accountRoles: Roles = [],
+  userRoles: Roles = [],
   accessRoles: Roles = undefined,
 ) => {
   if (!accessRoles || !accessRoles.length) return true
-
-  return accountRoles.some((role) => accessRoles.includes(role))
+  return userRoles.some((role) => accessRoles.includes(role))
 }
