@@ -1,5 +1,5 @@
 import { ApiErrorResponse /* , get */ } from 'orient-ui-library/helpers/api'
-import { User } from 'library/models'
+import { User } from 'orient-ui-library/models'
 
 import mockData from 'library/mock/user'
 

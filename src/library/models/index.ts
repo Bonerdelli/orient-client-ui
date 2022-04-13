@@ -1,1 +1,5 @@
-export * from './user'
+/**
+ * Describe project-specific models here
+ */
+
+export {}

@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { Switch, Route, Redirect, RouteProps } from 'react-router-dom'
 import portalConfig from 'config/portal.yaml'
 
-import { Roles } from 'library/models'
+import { Roles } from 'orient-ui-library/models'
 import { hasAccess } from './helpers/roles'
 
 import HomePage from 'pages/HomePage'

@@ -1,6 +1,6 @@
 import { Action, action } from 'easy-peasy'
 
-import { User } from 'library/models'
+import { User } from 'orient-ui-library/models'
 
 /**
  * User application state (example)
