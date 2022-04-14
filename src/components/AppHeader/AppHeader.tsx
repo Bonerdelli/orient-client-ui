@@ -1,16 +1,16 @@
 import { useTranslation } from 'react-i18next'
-import { Typography } from 'antd'
+import { Layout } from 'antd'
 
 import './AppHeader.style.less'
 
-const { Paragraph } = Typography
+const { Header } = Layout
 
 const AppHeader = () => {
   const { t } = useTranslation()
   return (
-    <div className="AppHeader" data-testid="AppHeader">
-      <Paragraph>{t('AppHeader.component')}</Paragraph>
-    </div>
+    <Header className="AppHeader">
+      <div className="logo" />
+    </Header>
   )
 }
 
