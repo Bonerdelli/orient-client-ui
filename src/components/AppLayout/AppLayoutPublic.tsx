@@ -1,13 +1,15 @@
+import { Layout } from 'antd'
+
 import { PublicRoutes } from 'library/routes'
 
-import './AppLayout.style.less'
+const { Content } = Layout
 
 const AppLayoutPublic = () => (
-  <div className="AppLayout__public">
-    <div className="AppLayout__public__content">
+  <Layout className="AppLayout AppLayout--public">
+    <Content>
       <PublicRoutes />
-    </div>
-  </div>
+    </Content>
+  </Layout>
 )
 
 export default AppLayoutPublic
