@@ -4,6 +4,13 @@ token:
 l10n:
   defaultLocale: 'ru'
 
+sections:
+  - сompany
+  - heads
+  - bankDetails
+  - documents
+  - requests
+
 roles:
   pages:
     home:

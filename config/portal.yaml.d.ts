@@ -18,6 +18,7 @@ declare const portalConfig: {
   token: PortalTokenConfig
   l10n: PortalLocaleConfig
   roles: PortalRolesConfig
+  sections: string[]
 }
 
 export type PortalConfig = typeof portalConfig

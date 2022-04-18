@@ -1,2 +1,14 @@
 portalTitle: Планета ORIENT
 shortTitle: ORIENT
+
+sections:
+  сompany:
+    title: Моя компания
+  heads:
+    title: Руководители и учредители
+  bankDetails:
+    title: Банковские реквизиты
+  documents:
+    title: Документы
+  requests:
+    title: Заявки

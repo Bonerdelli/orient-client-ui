@@ -11,7 +11,7 @@ const AppLayoutProtected = () => (
   <Layout className="AppLayout AppLayout--protected">
     <AppHeader />
     <Layout>
-      <Sider>
+      <Sider theme="light" className="AppLayout__leftMenu">
         <SideMenu />
       </Sider>
       <Content>

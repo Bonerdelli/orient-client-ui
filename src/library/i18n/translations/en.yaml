@@ -1,2 +1,14 @@
 portalTitle: Planet ORIENT
 shortTitle: ORIENT
+
+sections:
+  сompany:
+    title: My Company
+  heads:
+    title: Heads and Founders
+  bankDetails:
+    title: Bank Details
+  documents:
+    title: Documents
+  requests:
+    title: Requests
