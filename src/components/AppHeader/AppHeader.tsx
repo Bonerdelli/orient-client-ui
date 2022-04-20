@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Layout } from 'antd'
+import { Layout, Row, Col, Button, Tooltip } from 'antd'
+import { LogoutOutlined } from '@ant-design/icons'
 
 import './AppHeader.style.less'
 import Logo from 'orient-ui-library/assets/orient-logo.svg'
@@ -13,9 +14,17 @@ const AppHeader = () => {
   console.log('Init sections', sections, t('shortTitle'))
   return (
     <Header className="AppHeader">
-      <div className="AppHeader__logo">
-        <Logo width={100} height={100} />
-      </div>
+      <Row className="AppHeader__content" align="middle">
+        <Col>
+          <Logo className="AppHeader__logo" />
+        </Col>
+        <Col className="AppHeader__user"></Col>
+        <Col className="AppHeader__actions">
+          <Tooltip placement="bottomRight" mouseEnterDelay={1} title={t('common.user.actions.logout.title')}>
+            <Button className="AppHeader__actions__button" type="link" icon={<LogoutOutlined />} />
+          </Tooltip>
+        </Col>
+      </Row>
     </Header>
   )
 }

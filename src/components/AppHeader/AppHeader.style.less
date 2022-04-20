@@ -1,7 +1,28 @@
 @import 'orient-ui-library/styles/vars.less';
 
 .AppHeader {
+  padding-left: @padding-md;
+  padding-right: @padding-md * .5;
+  &__content {
+    height: 100%;
+  }
+  &__user {
+    flex-grow: 1;
+  }
   &__logo {
-    max-height: @layout-header-height;
+    display: block;
+    height: @layout-header-height - @padding-md * 2;
+    position: relative;
+  }
+  &__actions {
+    &__button {
+      opacity: .75;
+      &, &:hover, &:focus {
+        color: @white;
+      }
+      &:hover, &:focus {
+        opacity: 1;
+      }
+    }
   }
 }
