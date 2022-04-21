@@ -15,8 +15,10 @@ const AppLayoutProtected = () => (
     <Layout>
       <Sider
         theme="light"
+        collapsible={true}
         className="AppLayout__leftMenu"
         width={themeConfig['side-navigation-width']}
+        collapsedWidth={themeConfig['side-navigation-collapsed-width']}
       >
         <SideMenu />
       </Sider>
