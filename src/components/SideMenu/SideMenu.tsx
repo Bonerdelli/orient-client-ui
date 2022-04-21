@@ -2,14 +2,18 @@ import { useTranslation } from 'react-i18next'
 import { Menu } from 'antd'
 
 import './SideMenu.style.less'
+import config from 'config/portal.yaml'
 
 const { Item: MenuItem } = Menu
 
 const SideMenu = () => {
+  const { sections } = config
   const { t } = useTranslation()
   return (
     <Menu>
-      <MenuItem key="opt1">{t('opt1')}</MenuItem>
+      {sections.map(section => (
+        <MenuItem key={section}>{t(`sections.${section}.title`)}</MenuItem>
+      ))}
     </Menu>
   )
 }

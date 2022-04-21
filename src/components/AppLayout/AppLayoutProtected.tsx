@@ -1,5 +1,7 @@
 import { Layout } from 'antd'
 
+import themeConfig from 'orient-ui-library/config/theme.yaml'
+
 import AppHeader from 'components/AppHeader'
 import SideMenu from 'components/SideMenu'
 
@@ -11,7 +13,11 @@ const AppLayoutProtected = () => (
   <Layout className="AppLayout AppLayout--protected">
     <AppHeader />
     <Layout>
-      <Sider theme="light" className="AppLayout__leftMenu">
+      <Sider
+        theme="light"
+        className="AppLayout__leftMenu"
+        width={themeConfig['side-navigation-width']}
+      >
         <SideMenu />
       </Sider>
       <Content>

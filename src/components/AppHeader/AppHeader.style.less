@@ -3,11 +3,35 @@
 .AppHeader {
   padding-left: @padding-md;
   padding-right: @padding-md * .5;
+  color: @white;
   &__content {
     height: 100%;
   }
-  &__user {
+  &__spacer {
     flex-grow: 1;
+  }
+  &__user {
+    text-align: right;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    max-width: 40%;
+    &__avatar {
+      min-width: @avatar-size-base;
+    }
+    &__name {
+      display: inline-block;
+      overflow: hidden;
+      padding-left: @padding-xs;
+      font-size: 1.15em;
+      line-height: 1.15em;
+      text-overflow: ellipsis;
+      color: inherit;
+      @media @mobile {
+        font-size: .95em;
+        line-height: .95em;
+      }
+    }
   }
   &__logo {
     display: block;
@@ -18,10 +42,15 @@
     &__button {
       opacity: .75;
       &, &:hover, &:focus {
-        color: @white;
+        color: inherit;
       }
       &:hover, &:focus {
         opacity: 1;
+      }
+      &__title {
+        @media @mobile {
+          display: none !important; // Sorry
+        }
       }
     }
   }

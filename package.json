@@ -6,7 +6,8 @@
   "license": "UNLICENSED",
   "source": "src/index.html",
   "scripts": {
-    "start": "run-s clean serve",
+    "start": "npm run serve",
+    "start:nocache": "run-s clean serve",
     "clean": "rimraf ./dist/* ./.parcel-cache",
     "build": "run-s clean tsc parcel:build",
     "lint": "eslint ./src -f table --ext .js,.jsx,.ts,.tsx",
