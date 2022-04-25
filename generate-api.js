@@ -14,11 +14,15 @@ generateApi({
       version: "1.0.0",
       title: "Swagger Petstore",
     },
+    singleHttpClient: false,
+    generateRouteTypes: false,
+    generateResponses: true,
   },
 })
   .then(({ files, configuration }) => {
     files.forEach(({ content, name }) => {
-      fs.writeFile(path, content);
-    });
+      const fileName = path.resolve(process.cwd(), `./src/api/${name}`)
+      fs.writeFileSync(fileName, content)
+    })
   })
   .catch(e => console.error(e))
