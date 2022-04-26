@@ -16,7 +16,7 @@
     "serve": "parcel serve",
     "generate": "generate-react component --",
     "generate:page": "generate-react component --type=page --",
-    "generate:api": "node ./generate-api.js",
+    "generate:api:models": "npx openapi-typescript ./src/library/api/swagger.json -o ./src/library/api/schema.ts -c ./.prettierrc.js",
     "parcel:build": "parcel build --no-cache --no-source-maps --log-level error",
     "pre-commit": "npm run lint:fix && npm run prettier:fix",
     "prepare": "husky install",
