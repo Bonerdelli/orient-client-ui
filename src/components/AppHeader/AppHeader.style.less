@@ -3,12 +3,22 @@
 .AppHeader {
   padding-left: @padding-md;
   padding-right: @padding-md * .5;
-  color: @white;
   &__content {
     height: 100%;
   }
   &__spacer {
     flex-grow: 1;
+  }
+  &__separator {
+    height: 100%;
+    height: calc(100% - @padding-xs * 2);
+    // max-width: 1px;
+    // margin-top: @padding-xs;
+    // margin-bottom: @padding-xs;
+    border-right: 1px;
+    border-right-style: solid;
+    border-right-color: @layout-header-color;
+    opacity: .45;
   }
   &__user {
     text-align: right;
@@ -35,7 +45,7 @@
   }
   &__logo {
     display: block;
-    height: @layout-header-height - @padding-md * 2;
+    height: @layout-header-height - @padding-xs * 2;
     position: relative;
   }
   &__actions {
