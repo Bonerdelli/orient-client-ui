@@ -22,7 +22,7 @@ const PrivateRoute: FC<PrivateRouteOptions> = ({
   return (
     <Route
       {...rest}
-      render={(props) =>
+      render={props =>
         hasAccess(roles, accessRoles) ? (
           <Component {...props} />
         ) : (

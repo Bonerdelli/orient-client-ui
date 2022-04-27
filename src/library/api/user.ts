@@ -4,7 +4,7 @@ import { User } from 'orient-ui-library/models'
 import mockData from 'library/mock/user'
 
 export async function getCurrentUser(/* id: string */): Promise<
-  User | ApiErrorResponse
+User | ApiErrorResponse
 > {
   // const result = await get<User | ApiErrorResponse>('user/current') // NOTE: sample API call
   return mockData

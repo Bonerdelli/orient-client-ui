@@ -24,7 +24,7 @@ const AppHeader = () => {
           <Avatar className="AppHeader__user__avatar" icon={<UserOutlined />} />
           <Text className="AppHeader__user__name">{user?.fullName}</Text>
         </Col>
-        <Col className="AppHeader__separator"></Col>
+        <Col className="AppHeader__separator" />
         <Col className="AppHeader__actions">
           <Button size="small" className="AppHeader__actions__button" type="link" icon={<LogoutOutlined />}>
             <span className="AppHeader__actions__button__title">{t('common.user.actions.logout.title')}</span>
