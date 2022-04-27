@@ -47,6 +47,21 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'react/prop-types': 'off',
 
+    'react/jsx-wrap-multilines': ['warn', {
+      'declaration': 'parens-new-line',
+      'assignment': 'parens-new-line',
+      'return': 'parens-new-line',
+      'arrow': 'parens-new-line',
+      'condition': 'ignore',
+      'logical': 'ignore',
+      'prop': 'ignore',
+    }],
+
+    'react/function-component-definition': ['warn', {
+      'namedComponents': 'arrow-function',
+      'unnamedComponents': 'function-expression',
+    }],
+
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'arrow-parens': ['warn', 'as-needed'],
     'object-curly-newline': 'off',
