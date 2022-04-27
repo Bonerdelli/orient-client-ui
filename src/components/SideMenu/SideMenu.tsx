@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Menu } from 'antd'
+import { NavLink, useLocation } from 'react-router-dom'
 
 import {
   HomeOutlined,
@@ -25,13 +26,16 @@ const MENU_ICONS: Record<string, JSX.Element> = {
 const SideMenu = () => {
   const { sections } = config
   const { t } = useTranslation()
+  const location = useLocation()
   // TODO: save collapsed flag to state?
   // TODO: auto-collapse on mobiles
   return (
-    <Menu>
-      {sections.map(section => (
-        <MenuItem key={section} icon={MENU_ICONS[section]}>
-          {t(`sections.${section}.title`)}
+    <Menu selectedKeys={[location.pathname]}>
+      {Object.entries(sections).map(([section, link]) => (
+        <MenuItem key={link} icon={MENU_ICONS[section]}>
+          <NavLink to={link}>
+            <>{t(`sections.${section}.title`)}</>
+          </NavLink>
         </MenuItem>
       ))}
     </Menu>

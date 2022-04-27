@@ -8,7 +8,7 @@ type PageNotFoundProps = {
   navigateBack?: () => void
 }
 
-export const PageNotFound: React.FC<PageNotFoundProps> = ({
+const PageNotFound: React.FC<PageNotFoundProps> = ({
   title = '404',
   message = 'Запрашиваемая страница не найдена',
   navigateBackLabel = 'На главную',
@@ -25,3 +25,5 @@ export const PageNotFound: React.FC<PageNotFoundProps> = ({
     ]}
   />
 )
+
+export default PageNotFound

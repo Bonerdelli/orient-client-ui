@@ -5,14 +5,14 @@ l10n:
   defaultLocale: 'ru'
 
 sections:
-  - сompany
-  - heads
-  - bankDetails
-  - documents
-  - requests
+  сompany: /my-сompany
+  heads: /сompany-heads
+  bankDetails: /bank-details
+  documents: /documents
+  requests: /requests
 
 roles:
   pages:
-    home:
+    all:
       - admin
       - operator

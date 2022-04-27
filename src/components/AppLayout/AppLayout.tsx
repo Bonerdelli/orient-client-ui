@@ -14,6 +14,7 @@ import './AppLayout.style.less'
 const AppLayout = () => {
   const user = useStoreState(state => state.user.currentUser)
   const { setCurrentUser } = useStoreActions(actions => actions.user)
+  // TODO: loading state for user
 
   const loadUser = async () => {
     const user = await getCurrentUser()
