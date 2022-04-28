@@ -28,3 +28,10 @@ sections:
     title: Documents
   requests:
     title: Requests
+
+сompanyPage:
+  formSections:
+    main: General information
+    contacts: Contacts
+    regAuthority: Registration authority
+    founder: Founder information

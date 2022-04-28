@@ -28,3 +28,10 @@ sections:
     title: Документы
   requests:
     title: Заявки
+
+сompanyPage:
+  formSections:
+    main: Общая информация
+    contacts: Контактная информация
+    regAuthority: Информация о регистрирующем органе
+    founder: Информация о руководителе
