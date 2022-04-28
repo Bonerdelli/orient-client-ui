@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
-import { User, ApiErrorResponse /* , get */ } from 'orient-ui-library'
+import { User, ApiErrorResponse /* , get */, getCurrentUser } from 'orient-ui-library'
 
 import { useStoreActions, useStoreState } from 'library/store'
-import { getCurrentUser } from 'library/api'
 
 import AppLayoutPublic from './AppLayoutPublic'
 import AppLayoutProtected from './AppLayoutProtected'
