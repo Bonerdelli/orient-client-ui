@@ -1,9 +1,7 @@
-import { FC } from 'react'
 import { Switch, Route, Redirect, RouteProps } from 'react-router-dom'
 import portalConfig from 'config/portal.yaml'
 
-import { Roles } from 'orient-ui-library/models'
-import { hasAccess } from 'orient-ui-library/helpers/roles'
+import { Roles, hasAccess } from 'orient-ui-library'
 
 import Login from 'pages/Login'
 import PageNotFound from 'pages/PageNotFound'
@@ -14,11 +12,11 @@ import DocumentsPage from 'pages/DocumentsPage'
 import RequestsPage from 'pages/RequestsPage'
 
 interface PrivateRouteOptions extends RouteProps {
-  component: FC<RouteProps>
+  component: React.FC<RouteProps>
   roles: Roles
 }
 
-const PrivateRoute: FC<PrivateRouteOptions> = ({
+const PrivateRoute: React.FC<PrivateRouteOptions> = ({
   component: Component,
   roles: accessRoles,
   ...rest
