@@ -31,7 +31,11 @@ sections:
 
 сompanyPage:
   formSections:
-    main: General information
-    contacts: Contacts
-    regAuthority: Registration authority
-    founder: Founder information
+    main:
+      title: General information
+    contacts:
+      title: Contacts
+    regAuthority:
+      title: Registration authority
+    founder:
+      title: Founder information
