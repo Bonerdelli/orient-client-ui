@@ -30,12 +30,21 @@ sections:
     title: Requests
 
 сompanyPage:
+  tabs:
+    mainInfo:
+      title: General Information
+    contacts:
+      title: Contacts
+      description: You can provide contact details in addition to General Information
   formSections:
     main:
-      title: General information
+      title: General Information
     contacts:
       title: Contacts
     regAuthority:
-      title: Registration authority
+      title: Registration Authority
     founder:
-      title: Founder information
+      title: Founder Information
+    additionalContacts:
+      title: Additional Contacts
+      description: You can provide contact details in addition to General Information
