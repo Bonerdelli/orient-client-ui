@@ -30,6 +30,11 @@ sections:
     title: Заявки
 
 сompanyPage:
+  tabs:
+    mainInfo:
+      title: Общие сведения
+    contacts:
+      title: Контактные данные
   formSections:
     main:
       title: Общая информация
