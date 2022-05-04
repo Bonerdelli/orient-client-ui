@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Tabs } from 'antd'
+import { Layout, Tabs } from 'antd'
 
 import CompanyForm from 'components/CompanyForm'
 import CompanyContactsForm from 'components/CompanyContactsForm'
@@ -11,7 +11,7 @@ const { TabPane } = Tabs
 const MyСompanyPage = () => {
   const { t } = useTranslation()
   return (
-    <div className="MyСompanyPage" data-testid="MyСompanyPage">
+    <Layout className="MyСompanyPage" data-testid="MyСompanyPage">
       <Tabs className="MyСompanyPage__tabNavigation">
         <TabPane tab={t('сompanyPage.tabs.mainInfo.title')} key="main-info">
           <CompanyForm />
@@ -20,7 +20,7 @@ const MyСompanyPage = () => {
           <CompanyContactsForm />
         </TabPane>
       </Tabs>
-    </div>
+    </Layout>
   )
 }
 
