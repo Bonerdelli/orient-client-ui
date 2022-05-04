@@ -5,7 +5,11 @@ import './TemplateName.style.less'
 
 const { Paragraph } = Typography
 
-const TemplateName = () => {
+export interface TemplateNameProps {
+
+}
+
+const TemplateName: React.FC<TemplateNameProps> = ({}) => {
   const { t } = useTranslation()
   return (
     <div className="TemplateName" data-testid="TemplateName">
