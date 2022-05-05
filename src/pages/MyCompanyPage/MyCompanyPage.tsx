@@ -4,15 +4,15 @@ import { Layout, Tabs } from 'antd'
 import CompanyForm from 'components/CompanyForm'
 import CompanyContactsForm from 'components/CompanyContactsForm'
 
-import './MyСompanyPage.style.less'
+import './MyCompanyPage.style.less'
 
 const { TabPane } = Tabs
 
-const MyСompanyPage = () => {
+const MyCompanyPage = () => {
   const { t } = useTranslation()
   return (
-    <Layout className="MyСompanyPage" data-testid="MyСompanyPage">
-      <Tabs className="MyСompanyPage__tabNavigation">
+    <Layout className="MyCompanyPage" data-testid="MyCompanyPage">
+      <Tabs className="MyCompanyPage__tabNavigation">
         <TabPane tab={t('сompanyPage.tabs.mainInfo.title')} key="main-info">
           <CompanyForm />
         </TabPane>
@@ -24,4 +24,4 @@ const MyСompanyPage = () => {
   )
 }
 
-export default MyСompanyPage
+export default MyCompanyPage
