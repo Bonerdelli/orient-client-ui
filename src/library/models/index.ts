@@ -2,4 +2,4 @@
  * Describe project-specific models here
  */
 
-export {}
+export * from './companyHead'

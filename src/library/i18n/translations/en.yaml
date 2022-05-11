@@ -44,3 +44,10 @@ sections:
       title: Registration authority
     founder:
       title: Founder information
+
+headsPage:
+  tableColumns:
+    fullName: Full Name
+    isExecutive: Executive agency
+    isAttorney: Attorney-in-fact
+    ownership: Share in perc.

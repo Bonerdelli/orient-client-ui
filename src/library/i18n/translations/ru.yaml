@@ -44,3 +44,10 @@ sections:
       title: Информация о регистрирующем органе
     founder:
       title: Информация о руководителе
+
+headsPage:
+  tableColumns:
+    fullName: ФИО
+    isExecutive: Исполнительный орган
+    isAttorney: Представитель по доверенности
+    ownership: Доля, %
