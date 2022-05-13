@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Table, Button, Space } from 'antd'
@@ -16,8 +16,10 @@ export interface CompanyHeadsListProps { }
 const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
   const { t } = useTranslation()
   const [ data, setData ] = useState<CompanyHead[]>()
-  const [ hoveredRowNum, setHoveredRowNum ] = useState<number | undefined>()
 
+  useEffect(() => {
+    setData(mockData)
+  }, [ mockData ])
 
   const handleEdit = (item: CompanyHead) => {
     console.log('handleEdit', item)
@@ -27,8 +29,8 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
     console.log('handleDelete', item)
   }
 
-  const renderActions = ( _value: unknown, item: CompanyHead, index: number) => (
-    <Space style={{ visibility: index === hoveredRowNum ? 'visible' : 'hidden' }}>
+  const renderActions = (_val: unknown, item: CompanyHead) => (
+    <Space className="DataTable__actions">
       <Button
         key="edit"
         type="primary"
@@ -87,11 +89,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
     <div className="CompanyHeadsList" data-testid="CompanyHeadsList">
       <Table
         columns={columns}
-        dataSource={mockData}
-        onRow={(_record, rowIndex) => ({
-          onMouseEnter: () => setHoveredRowNum(rowIndex),
-          onMouseLeave: () => setHoveredRowNum(undefined),
-        })}
+        dataSource={data}
       />
     </div>
   )
