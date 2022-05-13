@@ -12,7 +12,7 @@ const CompanyHeadsPage = () => {
     <Layout className="CompanyHeadsPage" data-testid="CompanyHeadsPage">
       <Space direction="vertical" size="middle">
         <CompanyHeadsList />
-        <Button icon={<PlusOutlined />} size="large">{t('common.actions.add.title')}</Button>
+        <Button icon={<PlusOutlined />} type="default" size="large">{t('common.actions.add.title')}</Button>
       </Space>
     </Layout>
   )

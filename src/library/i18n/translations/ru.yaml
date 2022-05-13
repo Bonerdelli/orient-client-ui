@@ -51,3 +51,9 @@ headsPage:
     isExecutive: Исполнительный орган
     isAttorney: Представитель по доверенности
     ownership: Доля, %
+
+bankRequisitesPage:
+  tableColumns:
+    bankName: Название банка
+    mfoNum: МФО
+    account: Расчётный счет

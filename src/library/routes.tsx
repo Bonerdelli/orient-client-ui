@@ -7,7 +7,7 @@ import Login from 'pages/Login'
 import PageNotFound from 'pages/PageNotFound'
 import MyCompanyPage from 'pages/MyCompanyPage'
 import CompanyHeadsPage from 'pages/CompanyHeadsPage'
-import BankDetailsPage from 'pages/BankDetailsPage'
+import BankRequisitesPage from 'pages/BankRequisitesPage'
 import DocumentsPage from 'pages/DocumentsPage'
 import RequestsPage from 'pages/RequestsPage'
 
@@ -65,7 +65,7 @@ export const ProtectedRoutes = () => (
     <PrivateRoute
       exact
       path={portalConfig.sections.bankDetails}
-      component={BankDetailsPage}
+      component={BankRequisitesPage}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute

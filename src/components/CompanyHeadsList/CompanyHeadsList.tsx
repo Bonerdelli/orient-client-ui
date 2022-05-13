@@ -90,6 +90,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
       <Table
         columns={columns}
         dataSource={data}
+        pagination={false}
       />
     </div>
   )
