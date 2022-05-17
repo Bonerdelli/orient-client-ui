@@ -1,5 +1,67 @@
-@import 'antd/lib/style/themes/default.less';
+@import 'orient-ui-library/src/styles/vars.less';
 
 .AppHeader {
-  padding: @padding-xs;
+  padding-left: @padding-md;
+  padding-right: @padding-md * .5;
+  &__content {
+    height: 100%;
+  }
+  &__spacer {
+    flex-grow: 1;
+  }
+  &__separator {
+    height: 100%;
+    height: calc(100% - @padding-xs * 2);
+    // max-width: 1px;
+    // margin-top: @padding-xs;
+    // margin-bottom: @padding-xs;
+    border-right: 1px;
+    border-right-style: solid;
+    border-right-color: @layout-header-color;
+    opacity: .45;
+  }
+  &__user {
+    text-align: right;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    max-width: 40%;
+    &__avatar {
+      min-width: @avatar-size-base;
+    }
+    &__name {
+      display: inline-block;
+      overflow: hidden;
+      padding-left: @padding-xs;
+      font-size: 1.15em;
+      line-height: 1.15em;
+      text-overflow: ellipsis;
+      color: inherit;
+      @media @mobile {
+        font-size: .95em;
+        line-height: .95em;
+      }
+    }
+  }
+  &__logo {
+    display: block;
+    height: @layout-header-height - @padding-xs * 2;
+    position: relative;
+  }
+  &__actions {
+    &__button {
+      opacity: .75;
+      &, &:hover, &:focus {
+        color: inherit;
+      }
+      &:hover, &:focus {
+        opacity: 1;
+      }
+      &__title {
+        @media @mobile {
+          display: none !important; // Sorry
+        }
+      }
+    }
+  }
 }

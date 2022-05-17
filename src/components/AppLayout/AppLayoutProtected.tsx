@@ -1,16 +1,32 @@
-import { ProtectedRoutes } from 'library/routes'
+import { Layout } from 'antd'
+
+import themeConfig from 'orient-ui-library/config/theme.yaml'
 
 import AppHeader from 'components/AppHeader'
+import SideMenu from 'components/SideMenu'
 
-import './AppLayout.style.less'
+import { ProtectedRoutes } from 'library/routes'
+
+const { Sider, Content } = Layout
 
 const AppLayoutProtected = () => (
-  <div className="AppLayout__protected">
+  <Layout className="AppLayout AppLayout--protected">
     <AppHeader />
-    <div className="AppLayout__protected__content">
-      <ProtectedRoutes />
-    </div>
-  </div>
+    <Layout>
+      <Sider
+        theme="light"
+        collapsible
+        className="AppLayout__leftMenu"
+        width={themeConfig['side-navigation-width']}
+        collapsedWidth={themeConfig['side-navigation-collapsed-width']}
+      >
+        <SideMenu />
+      </Sider>
+      <Content>
+        <ProtectedRoutes />
+      </Content>
+    </Layout>
+  </Layout>
 )
 
 export default AppLayoutProtected

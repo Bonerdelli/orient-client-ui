@@ -1,13 +1,36 @@
+import { useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+
+import { User, ApiErrorResponse /* , get */, getCurrentUser } from 'orient-ui-library'
+
+import { useStoreActions, useStoreState } from 'library/store'
 
 import AppLayoutPublic from './AppLayoutPublic'
 import AppLayoutProtected from './AppLayoutProtected'
 
+import './AppLayout.style.less'
+
 const AppLayout = () => {
-  const authenticated = true // TODO: use store state
+  const user = useStoreState(state => state.user.currentUser)
+  const { setCurrentUser } = useStoreActions(actions => actions.user)
+  // TODO: loading state for user
+
+  const loadUser = async () => {
+    const user = await getCurrentUser()
+    if ((user as ApiErrorResponse).error) {
+      // TODO: handle errors
+    } else {
+      setCurrentUser(user as User)
+    }
+  }
+
+  useEffect(() => {
+    loadUser()
+  }, [])
+
   return (
     <BrowserRouter>
-      {authenticated ? <AppLayoutProtected /> : <AppLayoutPublic />}
+      {user ? <AppLayoutProtected /> : <AppLayoutPublic />}
     </BrowserRouter>
   )
 }
