@@ -12,11 +12,11 @@ export const resources = {
   en: { translation: {
     models: modelsEN,
     ...portalEN,
-  }},
+  } },
   ru: { translation: {
     models: modelsRU,
     ...portalRU,
-  }},
+  } },
 } as const
 
 i18next.use(initReactI18next).init({
