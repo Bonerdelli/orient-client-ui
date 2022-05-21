@@ -25,6 +25,7 @@
     "assets": "./assets",
     "config": "./config",
     "components": "./src/components",
+    "ui-library/components": "orient-ui-library/src/components",
     "library": "./src/library",
     "pages": "./src/pages"
   },
