@@ -1,10 +1,10 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import commonEN from 'orient-ui-library/src/i18n/common/en.yaml'
-import commonRU from 'orient-ui-library/src/i18n/common/ru.yaml'
-import modelsEN from 'orient-ui-library/src/i18n/models/en.yaml'
-import modelsRU from 'orient-ui-library/src/i18n/models/ru.yaml'
+import commonEN from 'orient-ui-library/i18n/common/en.yaml'
+import commonRU from 'orient-ui-library/i18n/common/ru.yaml'
+import modelsEN from 'orient-ui-library/i18n/models/en.yaml'
+import modelsRU from 'orient-ui-library/i18n/models/ru.yaml'
 
 import portalConfig from 'config/portal.yaml'
 

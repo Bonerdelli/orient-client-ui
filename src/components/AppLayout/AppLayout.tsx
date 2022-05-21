@@ -7,9 +7,9 @@ import {
   ApiErrorResponse,
   getCurrentUser,
   healthCheck,
-} from 'orient-ui-library/src/library'
+} from 'orient-ui-library/library'
 
-import { ErrorResultView } from 'orient-ui-library/src/components'
+import { ErrorResultView } from 'orient-ui-library/components'
 
 import { useStoreActions, useStoreState } from 'library/store'
 
