@@ -2,7 +2,7 @@ import { StoreProvider } from 'easy-peasy'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Spin } from 'antd'
 
-import 'orient-ui-library/src/styles/main.less'
+import 'orient-ui-library/styles/main.less'
 
 import 'library/i18n'
 import { store, persistor } from 'library/store'
