@@ -1,35 +1,38 @@
 import FormTextItem from 'components/FormTextItem'
-import FormTextItemEditable from 'components/FormTextItemEditable'
 
-export type FormInputConfig = [
-  string,   // Model
-  string,   // Name
-  boolean,  // Is Required
-  boolean?, // Is Editable
-  boolean?, // Editable inline
+export enum FormInputType {
+  'Text',
+  'TextArea',
+  'Select',
+  'CheckBox',
+  'Radio',
+  'Switcher',
+}
+
+export type FormInputShortConfig<T = unknown> = [
+  string,        // Model
+  keyof T,       // Name
+  FormInputType?,
+  boolean?,      // Is Required
+  boolean?,      // Disabled
 ]
 
-export const renderTextInput = (
-  model: string,
-  field: string,
-  isRequired: boolean,
-  isEditable = false,
-  isEditableInline = false,
-) => (
-  isEditableInline ?
-    <FormTextItemEditable
-      model={model}
-      field={field}
-      isRequired={isRequired}
-      isEditable={isEditable}
-    /> : <FormTextItem
-      model={model}
-      field={field}
-      isRequired={isRequired}
-      isEditable={isEditable}
-    />
-)
-
-export const renderTextInputs = (
-  inputConfig: FormInputConfig[]
-) => inputConfig.map(item => renderTextInput(...item))
+export const renderFormInputs = (
+  inputConfig: FormInputShortConfig[]
+) => inputConfig.map(inputConfig => {
+  const [ model, name, type, isRequired, disabled ] = inputConfig
+  switch (type) {
+    case undefined:
+    case FormInputType.Text:
+      return (
+        <FormTextItem
+          model={model}
+          field={name as string}
+          isRequired={isRequired ?? false}
+          isEditable={!disabled ?? true}
+        />
+      )
+    default:
+      throw new Error('Unknown form item type')
+  }
+})

@@ -3,6 +3,7 @@ import { Card, Form, Row, Col } from 'antd'
 
 import { FormInputConfig, renderTextInputs } from 'library/helpers/form'
 
+<<<<<<< Updated upstream
 import './CompanyForm.style.less'
 
 const companyFormFields: Record<string, FormInputConfig[]> = {
@@ -35,6 +36,18 @@ const companyFormFields: Record<string, FormInputConfig[]> = {
     [ 'companyFounder', 'inn', false ],
   ],
 }
+=======
+import { Company } from 'library/models/proxy' // TODO: to ui-lib
+import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { getCompanyById } from 'library/api' // TODO: to ui-lib
+
+import companyFormFields, { renderTextInputs } from './CompanyForm.form'
+import './CompanyForm.style.less'
+
+const { useFormInstance } = Form
+
+import { FAKE_COMPANY_ID } from 'library/mock/company' // TODO: replace after be updates
+>>>>>>> Stashed changes
 
 const CompanyForm = () => {
   const { t } = useTranslation()
