@@ -1,6 +1,9 @@
 import { createStore, createTypedHooks } from 'easy-peasy'
+import { Reducer, compose, applyMiddleware } from 'redux'
 import { PersistConfig, persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+
+import { axiosMiddleware } from 'orient-ui-library/library/helpers/api'
 
 import { UserStoreModel, userStoreModel } from './user'
 
@@ -27,14 +30,20 @@ const appStoreModel = {
   user: userStoreModel,
 }
 
+const reducerEnhancer = compose(
+  (reducer: Reducer) => persistReducer(persistRootConfig, reducer),
+  applyMiddleware(axiosMiddleware),
+);
+
 export const store = createStore<AppStoreModel>(appStoreModel, {
-  reducerEnhancer: reducer => persistReducer(persistRootConfig, reducer),
+  reducerEnhancer,
+  middleware: [ axiosMiddleware ]
 })
 
 const typedHooks = createTypedHooks<AppStoreModel>()
 export const { useStoreActions } = typedHooks
-export const { useStoreDispatch } = typedHooks
 export const { useStoreState } = typedHooks
+// export const { useStoreDispatch } = typedHooks
 
 export const persistor = persistStore(store)
 export default store
