@@ -16,12 +16,12 @@ export const resources = {
     common: commonEN,
     models: modelsEN,
     ...portalEN,
-  }},
+  } },
   ru: { translation: {
     common: commonRU,
     models: modelsRU,
     ...portalRU,
-  }},
+  } },
 } as const
 
 i18next.use(initReactI18next).init({
