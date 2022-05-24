@@ -1,22 +1,6 @@
 portalTitle: Планета ORIENT
 shortTitle: ORIENT
 
-common:
-  user:
-    title: Пользователь
-    actions:
-      login:
-        title: Вход
-      logout:
-        title: Выйти
-  actions:
-    add:
-      title: Добавить
-    edit:
-      title: Редактировать
-    delete:
-      title: Удалить
-
 sections:
   сompany:
     title: Моя компания
@@ -30,6 +14,11 @@ sections:
     title: Заявки
 
 сompanyPage:
+  tabs:
+    mainInfo:
+      title: Общие сведения
+    contacts:
+      title: Контактные данные
   formSections:
     main:
       title: Общая информация

@@ -5,7 +5,7 @@ import { Roles, hasAccess } from 'orient-ui-library'
 
 import Login from 'pages/Login'
 import PageNotFound from 'pages/PageNotFound'
-import MyСompanyPage from 'pages/MyСompanyPage'
+import MyCompanyPage from 'pages/MyCompanyPage'
 import CompanyHeadsPage from 'pages/CompanyHeadsPage'
 import BankDetailsPage from 'pages/BankDetailsPage'
 import DocumentsPage from 'pages/DocumentsPage'
@@ -53,7 +53,7 @@ export const ProtectedRoutes = () => (
     <PrivateRoute
       exact
       path={portalConfig.sections.сompany}
-      component={MyСompanyPage}
+      component={MyCompanyPage}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
