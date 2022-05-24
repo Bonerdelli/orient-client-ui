@@ -1,2 +1,46 @@
 portalTitle: Планета ORIENT
 shortTitle: ORIENT
+
+common:
+  user:
+    title: Пользователь
+    actions:
+      login:
+        title: Вход
+      logout:
+        title: Выйти
+  actions:
+    add:
+      title: Добавить
+    edit:
+      title: Редактировать
+    delete:
+      title: Удалить
+
+sections:
+  сompany:
+    title: Моя компания
+  heads:
+    title: Руководители и учредители
+  bankDetails:
+    title: Банковские реквизиты
+  documents:
+    title: Документы
+  requests:
+    title: Заявки
+
+сompanyPage:
+  tabs:
+    mainInfo:
+      title: Общие сведения
+    contacts:
+      title: Контактные данные
+  formSections:
+    main:
+      title: Общая информация
+    contacts:
+      title: Контактная информация
+    regAuthority:
+      title: Информация о регистрирующем органе
+    founder:
+      title: Информация о руководителе

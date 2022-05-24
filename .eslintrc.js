@@ -23,7 +23,7 @@ module.exports = {
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-unused-vars': 'error'',
+    '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/member-delimiter-style': ['warn', {
       multiline: {
         delimiter: 'none',
@@ -33,6 +33,7 @@ module.exports = {
         delimiter: 'semi',
         requireLast: false,
       },
+    }],
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/indent': ['warn', 2],
 
@@ -46,8 +47,23 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'react/prop-types': 'off',
 
+    'react/jsx-wrap-multilines': ['warn', {
+      'declaration': 'parens-new-line',
+      'assignment': 'parens-new-line',
+      'return': 'parens-new-line',
+      'arrow': 'parens-new-line',
+      'condition': 'ignore',
+      'logical': 'ignore',
+      'prop': 'ignore',
+    }],
+
+    'react/function-component-definition': ['warn', {
+      'namedComponents': 'arrow-function',
+      'unnamedComponents': 'function-expression',
+    }],
+
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'arrow-parens': ['warn', 's-needed'],
+    'arrow-parens': ['warn', 'as-needed'],
     'object-curly-newline': 'off',
     'implicit-arrow-linebreak': 'off',
     'function-paren-newline': 'off',

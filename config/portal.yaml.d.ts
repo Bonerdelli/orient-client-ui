@@ -7,7 +7,7 @@ declare const portalLocaleConfig: {
 }
 
 declare const portalRolesPagesConfig: {
-  home: string[]
+  all: string[]
 }
 
 declare const portalRolesConfig: {
@@ -18,6 +18,7 @@ declare const portalConfig: {
   token: PortalTokenConfig
   l10n: PortalLocaleConfig
   roles: PortalRolesConfig
+  sections: Record<string, string>
 }
 
 export type PortalConfig = typeof portalConfig

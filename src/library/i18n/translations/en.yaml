@@ -1,2 +1,46 @@
 portalTitle: Planet ORIENT
 shortTitle: ORIENT
+
+common:
+  user:
+    title: User
+    actions:
+      login:
+        title: Login
+      logout:
+        title: Logout
+  actions:
+    add:
+      title: Add
+    edit:
+      title: Edit
+    delete:
+      title: Delete
+
+sections:
+  сompany:
+    title: My Company
+  heads:
+    title: Heads and Founders
+  bankDetails:
+    title: Bank Details
+  documents:
+    title: Documents
+  requests:
+    title: Requests
+
+сompanyPage:
+  tabs:
+    mainInfo:
+      title: General information
+    contacts:
+      title: Contacts
+  formSections:
+    main:
+      title: General information
+    contacts:
+      title: Contacts
+    regAuthority:
+      title: Registration authority
+    founder:
+      title: Founder information
