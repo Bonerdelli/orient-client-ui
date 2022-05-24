@@ -1,10 +1,7 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import commonEN from 'orient-ui-library/i18n/common/en.yaml'
-import commonRU from 'orient-ui-library/i18n/common/ru.yaml'
-import modelsEN from 'orient-ui-library/i18n/models/en.yaml'
-import modelsRU from 'orient-ui-library/i18n/models/ru.yaml'
+import { i18nCommon } from 'orient-ui-library/library/i18n'
 
 import portalConfig from 'config/portal.yaml'
 
@@ -13,13 +10,11 @@ import portalRU from './translations/ru.yaml'
 
 export const resources = {
   en: { translation: {
-    common: commonEN,
-    models: modelsEN,
+    ...i18nCommon.en,
     ...portalEN,
   } },
   ru: { translation: {
-    common: commonRU,
-    models: modelsRU,
+    ...i18nCommon.ru,
     ...portalRU,
   } },
 } as const

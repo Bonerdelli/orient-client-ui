@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next'
-import { Layout, Typography } from 'antd'
+import { Layout } from 'antd'
+
+import { LoginForm } from 'orient-ui-library/components/LoginForm'
 
 import './Login.style.less'
 
-const { Paragraph } = Typography
-
-const Login = () => {
+const Login = (): React.FC => {
   const { t } = useTranslation()
   return (
     <Layout className="Login" data-testid="Login">
-      <Paragraph>{t('Login.component')}</Paragraph>
+      <LoginForm />
     </Layout>
   )
 }

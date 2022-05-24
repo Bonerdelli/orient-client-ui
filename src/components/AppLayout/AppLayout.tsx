@@ -2,14 +2,9 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Spin } from 'antd'
 
-import {
-  User,
-  ApiErrorResponse,
-  getCurrentUser,
-  healthCheck,
-} from 'orient-ui-library/library'
-
-import { Div, ErrorResultView } from 'orient-ui-library/components'
+import { healthCheck } from 'orient-ui-library/library'
+// import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { Div } from 'orient-ui-library/components/Div'
 
 import { useStoreActions, useStoreState } from 'library/store'
 
@@ -19,22 +14,13 @@ import AppLayoutProtected from './AppLayoutProtected'
 import './AppLayout.style.less'
 
 const AppLayout = () => {
-//
-  const user = useStoreState(state => state.user.currentUser)
-  const { setCurrentUser } = useStoreActions(actions => actions.user)
-  // TODO: loading state for user
+
+  const user = useStoreState(state => state.user.current)
+  const auth = useStoreState(state => state.user.currentAuth)
+  const { setUser } = useStoreActions(actions => actions.user)
 
   const [loading, setLoading] = useState<boolean>(true)
   const [apiError, setApiError] = useState<string | null>(null)
-
-  const loadUser = async () => {
-    const user = await getCurrentUser()
-    if ((user as ApiErrorResponse).error) {
-      // TODO: handle errors
-    } else {
-      setCurrentUser(user as User)
-    }
-  }
 
   const loadHealthStatus = async () => {
     const healthStatus = await healthCheck()
@@ -45,9 +31,7 @@ const AppLayout = () => {
   }
 
   const initialize = async () => {
-    if (await loadHealthStatus()) {
-      await loadUser()
-    }
+    await loadHealthStatus()
     setLoading(false)
   }
 
@@ -77,7 +61,7 @@ const AppLayout = () => {
 
   return (
     <BrowserRouter>
-      {user ? <AppLayoutProtected /> : <AppLayoutPublic />}
+      {auth && user ? <AppLayoutProtected /> : <AppLayoutPublic />}
     </BrowserRouter>
   )
 }
