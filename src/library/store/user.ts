@@ -1,5 +1,4 @@
 import { Action, action } from 'easy-peasy'
-
 import { User, JwtToken } from 'orient-ui-library'
 
 /**

@@ -4,7 +4,7 @@ import { Spin } from 'antd'
 
 import { healthCheck } from 'orient-ui-library/library'
 // import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { Div } from 'orient-ui-library/components/Div'
+import Div from 'orient-ui-library/components/Div'
 
 import { useStoreActions, useStoreState } from 'library/store'
 
