@@ -3,8 +3,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { Spin } from 'antd'
 
 import { healthCheck } from 'orient-ui-library/library'
-// import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import Div from 'orient-ui-library/components/Div'
+import ErrorResultView from 'ui-components/ErrorResultView'
+import Div from 'ui-components/Div'
 
 import { useStoreActions, useStoreState } from 'library/store'
 
@@ -39,17 +39,17 @@ const AppLayout = () => {
     initialize()
   }, [])
 
-  // if (apiError) {
-  //   return (
-  //     <Div className="AppLayout__globalError">
-  //       <ErrorResultView
-  //         title="common.errors.apiUnavailable.title"
-  //         message={`${apiError}.desc`}
-  //         status="error"
-  //       />
-  //     </Div>
-  //   )
-  // }
+  if (apiError) {
+    return (
+      <Div className="AppLayout__globalError">
+        <ErrorResultView
+          title="common.errors.apiUnavailable.title"
+          message={`${apiError}.desc`}
+          status="error"
+        />
+      </Div>
+    )
+  }
 
   if (loading) {
     return (
