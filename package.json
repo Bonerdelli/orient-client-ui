@@ -25,7 +25,6 @@
     "assets": "./assets",
     "config": "./config",
     "components": "./src/components",
-    "ui-components": "./node_modules/orient-ui-library/components",
     "library": "./src/library",
     "pages": "./src/pages"
   },
@@ -52,6 +51,7 @@
     "easy-peasy": "5.0.4",
     "i18next": "21.6.14",
     "lodash": "4.17.21",
+    "orient-ui-library": "file:./../orient-ui-library",
     "react": "16.14.0",
     "react-dom": "16.11.0",
     "react-i18next": "11.16.2",
