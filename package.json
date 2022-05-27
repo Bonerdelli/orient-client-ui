@@ -4,7 +4,7 @@
   "description": "ORIENT: React-based Web Application for Clients",
   "author": "Andrew Nekrasov <bonerdelli@gmail.com>",
   "license": "UNLICENSED",
-  "source": "src/index.html",
+  "index": "src/index.html",
   "scripts": {
     "start": "run-s clean serve",
     "clean": "rimraf ./dist/* ./.parcel-cache",
