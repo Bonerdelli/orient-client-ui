@@ -1,7 +1,7 @@
 import { Layout } from 'antd'
 // import { useTranslation } from 'react-i18next'
 
-import LoginForm from 'orient-ui-library/components/LoginForm'
+import LoginForm from 'ui-components/LoginForm'
 
 import './LoginPage.style.less'
 

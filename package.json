@@ -4,7 +4,7 @@
   "description": "ORIENT: React-based Web Application for Clients",
   "author": "Andrew Nekrasov <bonerdelli@gmail.com>",
   "license": "UNLICENSED",
-  "index": "src/index.html",
+  "source": "src/index.html",
   "scripts": {
     "start": "run-s clean serve",
     "clean": "rimraf ./dist/* ./.parcel-cache",
@@ -25,6 +25,7 @@
     "assets": "./assets",
     "config": "./config",
     "components": "./src/components",
+    "ui-components": "./src/components",
     "library": "./src/library",
     "pages": "./src/pages"
   },
@@ -46,7 +47,7 @@
     }
   },
   "dependencies": {
-    "antd": "4.19.5",
+    "antd": "^4.20.6",
     "dayjs": "1.11.0",
     "easy-peasy": "5.0.4",
     "i18next": "21.6.14",

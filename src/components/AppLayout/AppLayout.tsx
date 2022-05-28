@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Spin } from 'antd'
 
-import { healthCheck } from 'orient-ui-library/library'
-import { ErrorResultView } from 'orient-ui-library'
-import Div from 'orient-ui-library/components/Div'
+import { healthCheck } from 'orient-ui-library'
+import ErrorResultView from 'ui-components/ErrorResultView'
+import Div from 'ui-components/Div'
 
 import { useStoreActions, useStoreState } from 'library/store'
 
