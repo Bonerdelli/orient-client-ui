@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Result, Button } from 'antd'
 
 import { composeClasses } from 'orient-ui-library'
-// import { composeClasses } from 'library/helpers'
+// import { composeClasses } from 'library/helpers' // TODO: migrate to ui-library
 import Div from 'components/Div'
 
 import './ErrorResultView.style.less'

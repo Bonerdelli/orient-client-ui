@@ -6,7 +6,7 @@ import { healthCheck } from 'orient-ui-library'
 import ErrorResultView from 'ui-components/ErrorResultView'
 import Div from 'ui-components/Div'
 
-import { useStoreActions, useStoreState } from 'library/store'
+import { useStoreState } from 'library/store'
 
 import AppLayoutPublic from './AppLayoutPublic'
 import AppLayoutProtected from './AppLayoutProtected'
@@ -18,7 +18,6 @@ const AppLayout = () => {
 
   const user = useStoreState(state => state.user.current)
   const auth = useStoreState(state => state.user.currentAuth)
-  const { setUser } = useStoreActions(actions => actions.user)
 
   const [loading, setLoading] = useState<boolean>(true)
   const [apiError, setApiError] = useState<string | null>(null)
