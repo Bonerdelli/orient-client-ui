@@ -10,6 +10,7 @@ export interface UserStoreModel {
   currentAuth?: JwtToken | undefined
   setUser: Action<UserStoreModel, User>
   setAuth: Action<UserStoreModel, JwtToken>
+  setLogout: Action<UserStoreModel>
 }
 
 export const userStoreModel: UserStoreModel = {
@@ -19,5 +20,9 @@ export const userStoreModel: UserStoreModel = {
   }),
   setAuth: action((state, payload) => {
     state.currentAuth = payload
+  }),
+  setLogout: action((state) => {
+    delete state.current
+    delete state.currentAuth
   }),
 }

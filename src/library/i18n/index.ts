@@ -19,8 +19,6 @@ export const resources = {
   } },
 } as const
 
-console.log('resources', resources)
-
 i18next.use(initReactI18next).init({
   resources,
   lng: portalConfig.l10n.defaultLocale,

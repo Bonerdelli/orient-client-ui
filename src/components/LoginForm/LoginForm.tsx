@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Form, Input, Button, Space, Alert } from 'antd'
+import { Form, Input, Button, Space, Typography } from 'antd'
 
 import { AuthResult, auth } from 'orient-ui-library' // TODO: migrate to ui-lib, make local import
 // import { User } from 'orient-ui-library' // TODO: migrate to ui-lib, make local import
@@ -8,6 +8,8 @@ import { AuthResult, auth } from 'orient-ui-library' // TODO: migrate to ui-lib,
 import './LoginForm.style.less'
 
 const { Item: FormItem } = Form
+const { Password } = Input
+const { Text } = Typography
 
 export interface LoginFormProps {
   // onLogin: (user: User) => void // TODO: retrieve current user from JWT
@@ -44,28 +46,31 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
     setCompleted(true)
   }
 
-  const renderAuthError = () => (
-    <Alert
-      message={t('common.errors.authError.title')}
-      description={t('common.errors.authError.desc')}
-      type="error"
-    />
-  )
+  // TODO: use or remove
+  // const renderAuthError = () => (
+  //   <Alert
+  //     message={t('common.errors.authError.title')}
+  //     description={t('common.errors.authError.desc')}
+  //     type="error"
+  //   />
+  // )
 
   return (
     <Form
-      name="login"
+      name="authForm"
+      className="LoginForm"
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       initialValues={{ remember: true }}
       requiredMark={false}
       colon={false}
+      size="large"
       onFinish={handleSubmit}
       autoComplete="off"
     >
       <FormItem
         label={t('common.forms.authenticate.login.label')}
-        name="username"
+        name="login"
         rules={[{
           required: true,
           message: t('common.forms.authenticate.login.validation.required'),
@@ -82,15 +87,24 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
           message: t('common.forms.authenticate.password.validation.required'),
         }]}
       >
-        <Input.Password disabled={completed} />
+        <Password disabled={completed} />
       </FormItem>
 
       <FormItem wrapperCol={{ offset: 8, span: 16 }}>
-        <Space direction="horizontal" size="large">
-          <Button type="primary" size="large" htmlType="submit" disabled={submitting || completed}>
+        <Space direction="horizontal">
+          <Button
+            htmlType="submit"
+            type="primary"
+            className="LoginForm__button"
+            disabled={submitting || completed}
+            danger={authError}
+            block
+          >
             {t('common.user.actions.login.title')}
           </Button>
-          {authError && renderAuthError()}
+          {authError && (
+            <Text type="danger">{t('common.errors.authError.title')}</Text>
+          )}
         </Space>
       </FormItem>
     </Form>
