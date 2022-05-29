@@ -13,6 +13,7 @@ type ErrorResultViewProps = {
   status?: 'error' | 'warning' | 403 | 404 | 500,
   reloadCallback?: () => void,
   centered?: boolean
+  fullHeight?: boolean
 }
 
 const ErrorResultView: React.FC<ErrorResultViewProps> = ({
@@ -20,6 +21,7 @@ const ErrorResultView: React.FC<ErrorResultViewProps> = ({
   message = 'common.errors.dataLoadingError.desc',
   status = 'error',
   centered = false,
+  fullHeight = false,
   reloadCallback,
 }) => {
   const { t } = useTranslation()
@@ -27,6 +29,7 @@ const ErrorResultView: React.FC<ErrorResultViewProps> = ({
     <Div className={composeClasses({
       ErrorResultView: true,
       'ErrorResultView--centered': centered,
+      'ErrorResultView--fullHeight': fullHeight,
     })}>
       <Result
         status={status}

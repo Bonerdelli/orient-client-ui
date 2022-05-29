@@ -46,6 +46,7 @@ const AppLayout = () => {
           title="common.errors.apiUnavailable.title"
           message={`${apiError}.desc`}
           centered={true}
+          fullHeight={true}
           status="error"
         />
       </Div>
