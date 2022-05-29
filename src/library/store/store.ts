@@ -33,7 +33,7 @@ export const store = createStore<AppStoreModel>(appStoreModel, {
 
 const typedHooks = createTypedHooks<AppStoreModel>()
 export const { useStoreActions } = typedHooks
-export const { useStoreDispatch } = typedHooks
+// export const { useStoreDispatch } = typedHooks
 export const { useStoreState } = typedHooks
 
 export const persistor = persistStore(store)
