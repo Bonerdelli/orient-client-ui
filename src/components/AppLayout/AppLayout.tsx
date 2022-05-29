@@ -2,39 +2,25 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { Spin } from 'antd'
 
-import {
-  User,
-  ApiErrorResponse,
-  getCurrentUser,
-  healthCheck,
-} from 'orient-ui-library/library'
+import { healthCheck } from 'orient-ui-library'
+import ErrorResultView from 'ui-components/ErrorResultView'
+import Div from 'ui-components/Div'
 
-import { Div, ErrorResultView } from 'orient-ui-library/components'
-
-import { useStoreActions, useStoreState } from 'library/store'
+import { useStoreState } from 'library/store'
 
 import AppLayoutPublic from './AppLayoutPublic'
 import AppLayoutProtected from './AppLayoutProtected'
 
 import './AppLayout.style.less'
 
+
 const AppLayout = () => {
-//
-  const user = useStoreState(state => state.user.currentUser)
-  const { setCurrentUser } = useStoreActions(actions => actions.user)
-  // TODO: loading state for user
+
+  const user = useStoreState(state => state.user.current)
+  const auth = useStoreState(state => state.user.currentAuth)
 
   const [loading, setLoading] = useState<boolean>(true)
   const [apiError, setApiError] = useState<string | null>(null)
-
-  const loadUser = async () => {
-    const user = await getCurrentUser()
-    if ((user as ApiErrorResponse).error) {
-      // TODO: handle errors
-    } else {
-      setCurrentUser(user as User)
-    }
-  }
 
   const loadHealthStatus = async () => {
     const healthStatus = await healthCheck()
@@ -45,9 +31,7 @@ const AppLayout = () => {
   }
 
   const initialize = async () => {
-    if (await loadHealthStatus()) {
-      await loadUser()
-    }
+    await loadHealthStatus()
     setLoading(false)
   }
 
@@ -55,17 +39,19 @@ const AppLayout = () => {
     initialize()
   }, [])
 
-  // if (apiError) {
-  //   return (
-  //     <Div className="AppLayout__globalError">
-  //       <ErrorResultView
-  //         title="common.errors.apiUnavailable.title"
-  //         message={`${apiError}.desc`}
-  //         status="error"
-  //       />
-  //     </Div>
-  //   )
-  // }
+  if (apiError) {
+    return (
+      <Div className="AppLayout__globalError">
+        <ErrorResultView
+          title="common.errors.apiUnavailable.title"
+          message={`${apiError}.desc`}
+          centered={true}
+          fullHeight={true}
+          status="error"
+        />
+      </Div>
+    )
+  }
 
   if (loading) {
     return (
@@ -77,7 +63,7 @@ const AppLayout = () => {
 
   return (
     <BrowserRouter>
-      {user ? <AppLayoutProtected /> : <AppLayoutPublic />}
+      {auth && user ? <AppLayoutProtected /> : <AppLayoutPublic />}
     </BrowserRouter>
   )
 }
