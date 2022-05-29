@@ -17,7 +17,8 @@
     "generate": "generate-react component --",
     "generate:page": "generate-react component --type=page --",
     "parcel:build": "parcel build --no-cache --no-source-maps --log-level error",
-    "pre-commit": "npm run lint:fix && npm run prettier:fix",
+    "precommit": "npm run lint:fix && npm run prettier:fix",
+    "postinstall": "npm link orient-ui-library",
     "prepare": "husky install",
     "tsc": "tsc"
   },
