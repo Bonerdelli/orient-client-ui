@@ -1,43 +1,19 @@
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Row, Col } from 'antd'
+import { Card, Form, Row, Col, Spin } from 'antd'
 
-import { FormInputConfig, renderTextInputs } from 'library/helpers/form'
+import ErrorResultView from 'ui-components/ErrorResultView'
 
+import { renderTextInputs } from 'library/helpers/form'
+import { Company } from 'library/models/proxy' // TODO: to ui-lib
+import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { getCompany } from 'library/api' // TODO: to ui-lib
+
+import companyFormFields from './CompanyForm.form'
 import './CompanyForm.style.less'
-
-const companyFormFields: Record<string, FormInputConfig[]> = {
-  main: [
-    [ 'company', 'fullName', true ],
-    [ 'company', 'shortName', false, true ],
-    [ 'company', 'inn', true ],
-    [ 'company', 'opf', true ],
-    // TODO: make a two-cols layout
-    [ 'company', 'isMsp', true ],
-    [ 'company', 'capital', true ],
-    [ 'company', 'currency', true ],
-    [ 'company', 'oked', true ],
-    [ 'company', 'soogu', true ],
-    [ 'company', 'state', true ],
-  ],
-  contacts: [
-    [ 'companyContact', 'primaryEmail',    false ],
-    [ 'companyContact', 'additionalEmail', false ],
-    [ 'companyContact', 'primaryPhone',    true ],
-    [ 'companyContact', 'additionalPhone', true ],
-  ],
-  regAuthority: [
-    [ 'company', 'regAuthority', true ],
-    [ 'company', 'regDate', true ],
-    [ 'company', 'regNumber', true ],
-  ],
-  founder: [
-    [ 'companyFounder', 'lastName', true ], // TODO: ask for compound field
-    [ 'companyFounder', 'inn', false ],
-  ],
-}
 
 const CompanyForm = () => {
   const { t } = useTranslation()
+  const [ company, companyLoaded ] = useApi<Company>(getCompany)
 
   const renderMainSection = () => (
     <Card title={t('сompanyPage.formSections.main.title')}>
@@ -60,7 +36,13 @@ const CompanyForm = () => {
     </Card>
   )
 
-  return (
+  if (companyLoaded === false) {
+    return (
+      <ErrorResultView centered={true} status="error" />
+    )
+  }
+
+  const renderContent = () => (
     <Form
       className="CompanyForm"
       data-testid="CompanyForm"
@@ -85,6 +67,13 @@ const CompanyForm = () => {
       </Row>
     </Form>
   )
+
+  return (
+    <Spin spinning={companyLoaded === null}>
+      {renderContent()}
+    </Spin>
+  )
+
 }
 
 export default CompanyForm
