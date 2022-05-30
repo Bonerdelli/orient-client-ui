@@ -6,7 +6,7 @@ module.exports = (app) => app.use(
     target: API_URL,
     changeOrigin: true,
     secure: false,
-    logLevel: 'debug',
+    // logLevel: 'debug',
     pathRewrite: {
       [`^${API_PROXIED_PATH}`]: '',
     },

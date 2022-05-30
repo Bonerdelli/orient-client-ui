@@ -6,14 +6,21 @@ import ErrorResultView from 'ui-components/ErrorResultView'
 import { renderTextInputs } from 'library/helpers/form'
 import { Company } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-import { getCompany } from 'library/api' // TODO: to ui-lib
+import { getCompanyById } from 'library/api' // TODO: to ui-lib
 
 import companyFormFields from './CompanyForm.form'
 import './CompanyForm.style.less'
 
+// TODO: replace this when solve issue with "Bad company id provided"
+// for /client/company endpoint
+const FAKE_COMPANY_ID = 9
+
 const CompanyForm = () => {
   const { t } = useTranslation()
-  const [ company, companyLoaded ] = useApi<Company>(getCompany)
+  const [ company, companyLoaded ] = useApi<Company>(
+    getCompanyById,
+    { id: FAKE_COMPANY_ID }
+  )
 
   const renderMainSection = () => (
     <Card title={t('сompanyPage.formSections.main.title')}>

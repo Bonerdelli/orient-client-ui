@@ -8,3 +8,11 @@ export type CompanyResult = schema.components['schemas']['ServerResponseJCompany
 export async function getCompany(): Promise<CompanyResult> {
   return await get<CompanyResult>('/client/company') as CompanyResult // TODO: remove ErrorResult support!
 }
+
+export interface GetCompanyByIdParams {
+  id: number | bigint
+}
+
+export async function getCompanyById(params: GetCompanyByIdParams): Promise<CompanyResult> {
+  return await get<CompanyResult>(`/client/company/${params.id}`) as CompanyResult
+}
