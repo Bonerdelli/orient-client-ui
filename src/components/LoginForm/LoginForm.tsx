@@ -11,6 +11,10 @@ const { Item: FormItem } = Form
 const { Password } = Input
 const { Text } = Typography
 
+// TODO: remove for production / stage
+const DEFAULT_USERNAME = 'admin'
+const DEFAULT_PASSWORD = 'admin'
+
 export interface LoginFormProps {
   // onLogin: (user: User) => void // TODO: retrieve current user from JWT
   onLogin: (user: AuthResult) => void
@@ -61,8 +65,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       className="LoginForm"
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
-      initialValues={{ remember: true }}
       requiredMark={false}
+      initialValues={{
+        login: DEFAULT_USERNAME,
+        password: DEFAULT_PASSWORD,
+      }}
       colon={false}
       size="large"
       onFinish={handleSubmit}
