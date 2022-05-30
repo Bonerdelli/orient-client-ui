@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Form, Row, Col, Spin } from 'antd'
-import { mapKeys } from 'lodash'
 
+import Div from 'ui-components/Div'
 import ErrorResultView from 'ui-components/ErrorResultView'
 
 import { renderTextInputs } from 'library/helpers/form'
@@ -27,20 +26,6 @@ const CompanyForm = () => {
     getCompanyById, { id: FAKE_COMPANY_ID }
   )
 
-  const [ formValue, setFormValue ] = useState<Record<string, string>>()
-
-  useEffect(() => {
-    let updatedValue = {}
-    if (company) {
-      updatedValue = {
-        ...updatedValue,
-        ...mapKeys(company, (_, key) => `company.${key}`)
-      }
-    }
-    form?.setFieldsValue({ ...updatedValue })
-    setFormValue(updatedValue)
-  }, [company])
-
   const renderMainSection = () => (
     <Card title={t('сompanyPage.formSections.main.title')}>
       {renderTextInputs(companyFormFields.main)}
@@ -62,7 +47,7 @@ const CompanyForm = () => {
     </Card>
   )
 
-  const handleFormChange = (changedValues) => {
+  const handleFormChange = (changedValues: Record<string, string>) => {
     console.log('values', changedValues)
   }
 
@@ -72,8 +57,12 @@ const CompanyForm = () => {
     )
   }
 
-  if (!company || !formValue) {
-    return <></>
+  if (!company) {
+    return (
+      <Div className="AppLayout__loaderWrap">
+        <Spin size="large" />
+      </Div>
+    )
   }
 
   const renderContent = () => (
