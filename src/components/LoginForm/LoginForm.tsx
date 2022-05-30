@@ -7,7 +7,7 @@ import { AuthResult, auth } from 'orient-ui-library' // TODO: migrate to ui-lib,
 
 import './LoginForm.style.less'
 
-const { Item: FormItem } = Form
+const { useFormInstance, Item: FormItem } = Form
 const { Password } = Input
 const { Text } = Typography
 
@@ -28,6 +28,8 @@ interface FormValue {
 const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
 
   const { t } = useTranslation()
+  const form = useFormInstance()
+
   const [ submitting, setSubmitting ] = useState<boolean>(false)
   const [ authError, setAuthError ] = useState<boolean>(false)
   const [ completed, setCompleted ] = useState<boolean>(false)
@@ -61,6 +63,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
 
   return (
     <Form
+      form={form}
       name="authForm"
       className="LoginForm"
       labelCol={{ span: 8 }}
