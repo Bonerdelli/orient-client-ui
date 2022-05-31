@@ -3,7 +3,7 @@ import { FormInputConfig } from 'library/helpers/form'
 const formFields: Record<string, FormInputConfig[]> = {
   main: [
     [ 'company', 'fullName', true ],
-    [ 'company', 'shortName', false, true ],
+    [ 'company', 'shortName', false, true, true ],
     [ 'company', 'inn', true ],
     [ 'company', 'opf', true ],
     // TODO: make a two-cols layout
