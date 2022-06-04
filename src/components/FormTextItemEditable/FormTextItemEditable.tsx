@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Input, Tooltip, Button } from 'antd'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 
 import './FormTextItemEditable.style.less'
 
@@ -19,19 +19,32 @@ export interface FormTextItemEditableProps {
 const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({ model, field, isRequired, isEditable = false, groupFields = false }) => {
   const { t } = useTranslation()
   const [ editing, setEditing ] = useState<boolean>()
+  const [ prevValue, setPrevValue ] = useState<string>()
+  const [ value, setValue ] = useState<string>()
+
   const name = groupFields ? `${model}.${field}` : field
+
   const requiredRule = {
     required: true,
+  }
+
+  const handleEdit = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!editing) {
+      setEditing(true)
+      setPrevValue(e.target?.value)
+    }
   }
   const handleSave = () => {
     setEditing(false)
   }
   const handleCancel = () => {
+    setValue(prevValue)
     setEditing(false)
   }
+
   const renderActions = () => (
     <>
-      <Tooltip key="save" title={t('common.actions.save')}>
+      <Tooltip key="save" title={t('common.actions.save.title')}>
         <Button
           type="link"
           size="small"
@@ -39,7 +52,7 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({ model, fiel
           icon={<CheckOutlined />}
         />
       </Tooltip>
-      <Tooltip key="cancel" title={t('common.actions.cancel')}>
+      <Tooltip key="cancel" title={t('common.actions.cancel.title')}>
         <Button danger
           type="link"
           size="small"
@@ -49,6 +62,20 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({ model, fiel
       </Tooltip>
     </>
   )
+
+  const renderEditIcon = () => (
+    <>
+      <Tooltip title={t('common.actions.edit.title')}>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => setEditing(true)}
+          icon={<EditOutlined />}
+        />
+      </Tooltip>
+    </>
+  )
+
   return (
     <FormItem
       key={name}
@@ -57,9 +84,10 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({ model, fiel
       rules={isRequired ? [requiredRule] : []}
     >
       <Input
+        value={value}
         disabled={!isEditable}
-        onChange={() => setEditing(true)}
-        suffix={editing && renderActions()}
+        onChange={handleEdit}
+        suffix={editing ? renderActions() : renderEditIcon()}
       />
     </FormItem>
   )
