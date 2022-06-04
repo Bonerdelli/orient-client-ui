@@ -1,3 +1,5 @@
+import { FormInstance } from 'antd'
+
 import FormTextItem from 'components/FormTextItem'
 import FormTextItemEditable from 'components/FormTextItemEditable'
 
@@ -10,6 +12,7 @@ export type FormInputConfig = [
 ]
 
 export const renderTextInput = (
+  form: FormInstance,
   model: string,
   field: string,
   isRequired: boolean,
@@ -18,6 +21,7 @@ export const renderTextInput = (
 ) => (
   isEditableInline ?
     <FormTextItemEditable
+      form={form}
       model={model}
       field={field}
       isRequired={isRequired}
@@ -31,5 +35,6 @@ export const renderTextInput = (
 )
 
 export const renderTextInputs = (
-  inputConfig: FormInputConfig[]
-) => inputConfig.map(item => renderTextInput(...item))
+  form: FormInstance,
+  inputConfig: FormInputConfig[],
+) => inputConfig.map(item => renderTextInput(form, ...item))

@@ -1,14 +1,14 @@
 import { ChangeEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Form, Input, Tooltip, Button } from 'antd'
+import { Form, FormInstance, Input, Tooltip, Button } from 'antd'
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 
 import './FormTextItemEditable.style.less'
 
 const { Item: FormItem } = Form
-const { Group: InputGroup } = Input
 
 export interface FormTextItemEditableProps {
+  form: FormInstance
   model: string
   field: string
   isRequired: boolean
@@ -16,29 +16,32 @@ export interface FormTextItemEditableProps {
   groupFields?: boolean
 }
 
-const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({ model, field, isRequired, isEditable = false, groupFields = false }) => {
+const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
+  form,
+  model,
+  field,
+  isRequired,
+  isEditable = false,
+  groupFields = false,
+}) => {
   const { t } = useTranslation()
   const [ editing, setEditing ] = useState<boolean>()
-  const [ prevValue, setPrevValue ] = useState<string>()
-  const [ value, setValue ] = useState<string>()
-
   const name = groupFields ? `${model}.${field}` : field
 
   const requiredRule = {
     required: true,
   }
 
-  const handleEdit = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleEdit = () => {
     if (!editing) {
       setEditing(true)
-      setPrevValue(e.target?.value)
     }
   }
   const handleSave = () => {
     setEditing(false)
   }
   const handleCancel = () => {
-    setValue(prevValue)
+    form?.resetFields([ name ])
     setEditing(false)
   }
 
@@ -84,7 +87,6 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({ model, fiel
       rules={isRequired ? [requiredRule] : []}
     >
       <Input
-        value={value}
         disabled={!isEditable}
         onChange={handleEdit}
         suffix={editing ? renderActions() : renderEditIcon()}

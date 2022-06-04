@@ -30,24 +30,26 @@ const CompanyForm = () => {
     }
   }, [companies])
 
+  console.log('useForm', form)
+
   const renderMainSection = () => (
     <Card title={t('сompanyPage.formSections.main.title')}>
-      {renderTextInputs(companyFormFields.main)}
+      {renderTextInputs(form, companyFormFields.main)}
     </Card>
   )
   const renderContacts = () => (
     <Card title={t('сompanyPage.formSections.contacts.title')}>
-      {renderTextInputs(companyFormFields.contacts)}
+      {renderTextInputs(form, companyFormFields.contacts)}
     </Card>
   )
   const renderRegAuthority = () => (
     <Card title={t('сompanyPage.formSections.regAuthority.title')}>
-      {renderTextInputs(companyFormFields.regAuthority)}
+      {renderTextInputs(form, companyFormFields.regAuthority)}
     </Card>
   )
   const renderFounder = () => (
     <Card title={t('сompanyPage.formSections.founder.title')}>
-      {renderTextInputs(companyFormFields.founder)}
+      {renderTextInputs(form, companyFormFields.founder)}
     </Card>
   )
 
