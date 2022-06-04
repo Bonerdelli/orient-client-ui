@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Form, Row, Col, Spin } from 'antd'
 
@@ -7,24 +8,27 @@ import ErrorResultView from 'ui-components/ErrorResultView'
 import { renderTextInputs } from 'library/helpers/form'
 import { Company } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-import { getCompanyById } from 'library/api' // TODO: to ui-lib
+import { getCompany } from 'library/api' // TODO: to ui-lib
 
 import companyFormFields from './CompanyForm.form'
 import './CompanyForm.style.less'
 
 const { useFormInstance } = Form
 
-// TODO: replace this when solve issue with "Bad company id provided"
-// for /client/company endpoint
-const FAKE_COMPANY_ID = 9
-
 const CompanyForm = () => {
   const { t } = useTranslation()
   const form = useFormInstance()
 
-  const [ company, companyLoaded ] = useApi<Company>(
-    getCompanyById, { id: FAKE_COMPANY_ID }
-  )
+  const [ company, setCompany ] = useState<Company>()
+  const [ companies, companyLoaded ] = useApi<Company[]>(getCompany)
+
+  useEffect(() => {
+    if (companies?.length) {
+      // NOTE: take first company because multiple companies not supported
+      // TODO: ask be to make endpoint with default company
+      setCompany(companies[0])
+    }
+  }, [companies])
 
   const renderMainSection = () => (
     <Card title={t('сompanyPage.formSections.main.title')}>

@@ -34,7 +34,7 @@ const defaultOptions: UseApiOptions = {
  * @package orient-ui
  */
 export function useApi<T = any, P = any>(
-  apiCallback: (requestData?: P) => Promise<ApiResponse<T> | ApiErrorResult<T, P>>,
+  apiCallback: (requestData?: P) => Promise<ApiResponse<T> | null>,
   requestData?: P,
   opts: UseApiOptions = defaultOptions,
 ): UseApiHookValue<T> {
