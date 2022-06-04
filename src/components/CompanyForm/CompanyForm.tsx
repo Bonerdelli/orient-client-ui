@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Row, Col, Spin } from 'antd'
+import { Card, Form, Row, Col, Spin, message } from 'antd'
 
 import Div from 'ui-components/Div'
 import ErrorResultView from 'ui-components/ErrorResultView'
@@ -8,19 +8,17 @@ import ErrorResultView from 'ui-components/ErrorResultView'
 import { renderTextInputs } from 'library/helpers/form'
 import { Company } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-import { getCompany } from 'library/api' // TODO: to ui-lib
+import { getCompany, setCompanyShortName } from 'library/api' // TODO: to ui-lib
 
 import companyFormFields from './CompanyForm.form'
 import './CompanyForm.style.less'
 
-const { useFormInstance } = Form
-
 const CompanyForm = () => {
   const { t } = useTranslation()
-  const form = useFormInstance()
 
   const [ company, setCompany ] = useState<Company>()
   const [ companies, companyLoaded ] = useApi<Company[]>(getCompany)
+  const [ submitting, setSubmitting ] = useState<boolean>(false)
 
   useEffect(() => {
     if (companies?.length) {
@@ -30,31 +28,42 @@ const CompanyForm = () => {
     }
   }, [companies])
 
-  console.log('useForm', form)
+  const updateCompanyName = async (value: string) => {
+    if (company) {
+      const result = await setCompanyShortName({ id: company.id as number, value })
+      if (!result) {
+        message.error(t('common.errors.requestError.title'))
+      }
+    }
+    setSubmitting(false)
+  }
 
   const renderMainSection = () => (
     <Card title={t('сompanyPage.formSections.main.title')}>
-      {renderTextInputs(form, companyFormFields.main)}
+      <Spin spinning={submitting}>
+        {renderTextInputs(companyFormFields.main)}
+      </Spin>
     </Card>
   )
   const renderContacts = () => (
     <Card title={t('сompanyPage.formSections.contacts.title')}>
-      {renderTextInputs(form, companyFormFields.contacts)}
+      {renderTextInputs(companyFormFields.contacts)}
     </Card>
   )
   const renderRegAuthority = () => (
     <Card title={t('сompanyPage.formSections.regAuthority.title')}>
-      {renderTextInputs(form, companyFormFields.regAuthority)}
+      {renderTextInputs(companyFormFields.regAuthority)}
     </Card>
   )
   const renderFounder = () => (
     <Card title={t('сompanyPage.formSections.founder.title')}>
-      {renderTextInputs(form, companyFormFields.founder)}
+      {renderTextInputs(companyFormFields.founder)}
     </Card>
   )
 
-  const handleFormChange = (changedValues: Record<string, string>) => {
-    console.log('values', changedValues)
+  const handleFormSubmit = (values: Record<string, string>) => {
+    updateCompanyName(values.shortName)
+    setSubmitting(true)
   }
 
   if (companyLoaded === false) {
@@ -73,9 +82,8 @@ const CompanyForm = () => {
 
   const renderContent = () => (
     <Form
-      form={form}
       initialValues={company}
-      onValuesChange={handleFormChange}
+      onFinish={handleFormSubmit}
       className="CompanyForm"
       data-testid="CompanyForm"
       labelCol={{ span: 10 }}
@@ -92,9 +100,7 @@ const CompanyForm = () => {
         <Col span={12} key="second">
           <Row gutter={[0, 12]}>
             <Col span={24}>
-              <fieldset name="company">
-                {renderContacts()}
-              </fieldset>
+              {renderContacts()}
             </Col>
             <Col span={24}>{renderRegAuthority()}</Col>
             <Col span={24}>{renderFounder()}</Col>

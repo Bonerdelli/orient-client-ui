@@ -2,6 +2,8 @@
 
 import { AxiosError } from 'axios'
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { message } from 'antd';
 
 import { useStoreActions } from 'library/store'
 
@@ -38,7 +40,7 @@ export function useApi<T = any, P = any>(
   requestData?: P,
   opts: UseApiOptions = defaultOptions,
 ): UseApiHookValue<T> {
-
+  const { t } = useTranslation()
   const { setLogout } = useStoreActions(actions => actions.user)
 
   const [ data, setData ] = useState<T | null>(null)
@@ -52,6 +54,9 @@ export function useApi<T = any, P = any>(
     ) {
       setLogout()
       return null
+    }
+    if ((result as ApiErrorResult<T, P>)?.error) {
+      message.error(t('common.errors.dataLoadingError.title'))
     }
     if (!result || !(result as ApiResponse<T>).success) {
       setResult(false)

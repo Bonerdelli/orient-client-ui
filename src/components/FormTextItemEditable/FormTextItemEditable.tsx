@@ -1,14 +1,13 @@
-import { ChangeEvent, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Form, FormInstance, Input, Tooltip, Button } from 'antd'
+import { Form, Input, Tooltip, Button } from 'antd'
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 
 import './FormTextItemEditable.style.less'
 
-const { Item: FormItem } = Form
+const { Item: FormItem, useFormInstance } = Form
 
 export interface FormTextItemEditableProps {
-  form: FormInstance
   model: string
   field: string
   isRequired: boolean
@@ -17,7 +16,6 @@ export interface FormTextItemEditableProps {
 }
 
 const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
-  form,
   model,
   field,
   isRequired,
@@ -25,6 +23,8 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
   groupFields = false,
 }) => {
   const { t } = useTranslation()
+  const form = useFormInstance()
+
   const [ editing, setEditing ] = useState<boolean>()
   const name = groupFields ? `${model}.${field}` : field
 
@@ -38,6 +38,7 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
     }
   }
   const handleSave = () => {
+    form?.submit() // TODO: separate form submitting
     setEditing(false)
   }
   const handleCancel = () => {
