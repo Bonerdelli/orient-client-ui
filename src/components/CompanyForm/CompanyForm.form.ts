@@ -2,31 +2,31 @@ import { FormInputConfig } from 'library/helpers/form'
 
 const formFields: Record<string, FormInputConfig[]> = {
   main: [
-    [ 'company', 'fullName', true ],
+    [ 'company', 'fullName', false ],
     [ 'company', 'shortName', false, true, true ],
-    [ 'company', 'inn', true ],
-    [ 'company', 'opf', true ],
+    [ 'company', 'inn', false ],
+    [ 'company', 'opf', false ],
     // TODO: make a two-cols layout
-    [ 'company', 'isMsp', true ],
-    [ 'company', 'capital', true ],
-    [ 'company', 'currency', true ],
-    [ 'company', 'oked', true ],
-    [ 'company', 'soogu', true ],
-    [ 'company', 'state', true ],
+    [ 'company', 'isMsp', false ],
+    [ 'company', 'capital', false ],
+    [ 'company', 'currency', false ],
+    [ 'company', 'oked', false ],
+    [ 'company', 'soogu', false ],
+    [ 'company', 'state', false ],
   ],
   contacts: [
     [ 'companyContact', 'primaryEmail',    false ],
     [ 'companyContact', 'additionalEmail', false ],
-    [ 'companyContact', 'primaryPhone',    true ],
-    [ 'companyContact', 'additionalPhone', true ],
+    [ 'companyContact', 'primaryPhone',    false ],
+    [ 'companyContact', 'additionalPhone', false ],
   ],
   regAuthority: [
-    [ 'company', 'regAuthority', true ],
-    [ 'company', 'regDate', true ],
-    [ 'company', 'regNumber', true ],
+    [ 'company', 'regAuthority', false ],
+    [ 'company', 'regDate', false ],
+    [ 'company', 'regNumber', false ],
   ],
   founder: [
-    [ 'companyFounder', 'lastName', true ], // TODO: ask for compound field
+    [ 'companyFounder', 'lastName', false ], // TODO: ask for compound field
     [ 'companyFounder', 'inn', false ],
   ],
 }
