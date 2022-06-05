@@ -1,15 +1,19 @@
 import { useTranslation } from 'react-i18next'
-import { Layout, Typography } from 'antd'
+import { Space, Layout, Button } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+
+import CompanyHeadsList from 'components/CompanyHeadsList'
 
 import './CompanyHeadsPage.style.less'
-
-const { Paragraph } = Typography
 
 const CompanyHeadsPage = () => {
   const { t } = useTranslation()
   return (
     <Layout className="CompanyHeadsPage" data-testid="CompanyHeadsPage">
-      <Paragraph>{t('CompanyHeadsPage.component')}</Paragraph>
+      <Space direction="vertical" size="middle">
+        <CompanyHeadsList />
+        <Button icon={<PlusOutlined />} type="default" size="large">{t('common.actions.add.title')}</Button>
+      </Space>
     </Layout>
   )
 }

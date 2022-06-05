@@ -32,3 +32,16 @@ sections:
     additionalContacts:
       title: Additional Contacts
       description: You can provide contact details in addition to General Information
+
+headsPage:
+  tableColumns:
+    fullName: Full Name
+    isExecutive: Executive agency
+    isAttorney: Attorney-in-fact
+    ownership: Share in perc.
+
+bankRequisitesPage:
+  tableColumns:
+    bankName: Bank name
+    mfoNum: MFO # TODO: check en l10n
+    account: Account number

@@ -31,3 +31,16 @@ sections:
     additionalContacts:
       title: Дополнительные контакты
       description: Вы можете указать контактные данные в дополнение к тем, что указаны на владке «Общие сведения»
+
+headsPage:
+  tableColumns:
+    fullName: ФИО
+    isExecutive: Исполнительный орган
+    isAttorney: Представитель по доверенности
+    ownership: Доля, %
+
+bankRequisitesPage:
+  tableColumns:
+    bankName: Название банка
+    mfoNum: МФО
+    account: Расчётный счет

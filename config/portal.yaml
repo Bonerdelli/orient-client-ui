@@ -4,6 +4,9 @@ token:
 l10n:
   defaultLocale: 'ru'
 
+dataDisplay:
+  numberFractionalLength: 2
+
 sections:
   сompany: /my-сompany
   heads: /сompany-heads

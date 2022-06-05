@@ -2,4 +2,5 @@
  * Describe project-specific models here
  */
 
-export {}
+export * from './bankRequisites'
+export * from './companyHead'
