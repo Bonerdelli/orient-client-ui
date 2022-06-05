@@ -2190,7 +2190,7 @@ eslint-config-prettier@8.5.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.5.0.tgz#5a81680ec934beca02c7b1a61cf8ca34b66feab1"
   integrity sha512-obmWKLUNCnhtQRKc+tmnYuQl0pFU1ibYJQ5BGhTVB08bHe9wC8qUeG7c08dj9XX+AuPj1YSGSQIHl1pnDHZR0Q==
 
-eslint-formatter-table@^7.32.1:
+eslint-formatter-table@7.32.1:
   version "7.32.1"
   resolved "https://registry.yarnpkg.com/eslint-formatter-table/-/eslint-formatter-table-7.32.1.tgz#b7b0471c1f05e5aee2821e98c4a2b26bab281346"
   integrity sha512-JYC49hAJMNjLfbgXVeQHU6ngP0M8ThgXCHLGrncYB+R/RHEhRPnLxHjolTJdb7RdQ8zcCt2F7Mrt6Ou3PwMOHw==
@@ -2797,7 +2797,7 @@ htmlparser2@^7.1.1:
     domutils "^2.8.0"
     entities "^3.0.1"
 
-http-proxy-middleware@^2.0.6:
+http-proxy-middleware@2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/http-proxy-middleware/-/http-proxy-middleware-2.0.6.tgz#e1a4dd6979572c7ab5a4e4b55095d1f32a74963f"
   integrity sha512-ya/UeJ6HVBYxrgYotAZo1KvPWlgB48kUJLDePFeneHsVujFaW5WNj2NgWCAE//B1Dl02BIfYlpNgBy8Kf8Rjmw==
@@ -3766,7 +3766,7 @@ ordered-binary@^1.2.4:
   integrity sha512-djRmZoEpOGvIRW7ufsCDHtvcUa18UC9TxnPbHhSVFZHsoyg0dtut1bWtBZ/fmxdPN62oWXrV6adM7NoWU+CneA==
 
 "orient-ui-library@file:../orient-ui-library":
-  version "0.0.1"
+  version "0.2.0"
   dependencies:
     antd "4.20.6"
     axios "0.27.2"
