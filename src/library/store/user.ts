@@ -21,7 +21,7 @@ export const userStoreModel: UserStoreModel = {
   setAuth: action((state, payload) => {
     state.currentAuth = payload
   }),
-  setLogout: action((state) => {
+  setLogout: action(state => {
     delete state.current
     delete state.currentAuth
   }),

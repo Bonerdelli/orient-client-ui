@@ -18,7 +18,7 @@ export type FormInputShortConfig<T = unknown> = [
 ]
 
 export const renderFormInputs = (
-  inputConfig: FormInputShortConfig[]
+  inputConfig: FormInputShortConfig[],
 ) => inputConfig.map(inputConfig => {
   const [ model, name, type, isRequired, disabled ] = inputConfig
   switch (type) {

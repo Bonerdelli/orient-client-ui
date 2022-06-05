@@ -68,16 +68,14 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
   )
 
   const renderEditIcon = () => (
-    <>
-      <Tooltip title={t('common.actions.edit.title')}>
-        <Button
-          type="link"
-          size="small"
-          onClick={() => setEditing(true)}
-          icon={<EditOutlined />}
-        />
-      </Tooltip>
-    </>
+    <Tooltip title={t('common.actions.edit.title')}>
+      <Button
+        type="link"
+        size="small"
+        onClick={() => setEditing(true)}
+        icon={<EditOutlined />}
+      />
+    </Tooltip>
   )
 
   return (

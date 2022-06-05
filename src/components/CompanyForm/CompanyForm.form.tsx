@@ -62,7 +62,7 @@ export const renderTextInput = (
 )
 
 export const renderTextInputs = (
-  inputConfig: CompanyFormInputConfig[]
+  inputConfig: CompanyFormInputConfig[],
 ) => inputConfig.map(item => renderTextInput(...item))
 
 export default formFields

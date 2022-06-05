@@ -9,20 +9,20 @@ import { Company } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompanyById } from 'library/api' // TODO: to ui-lib
 
+import { FAKE_COMPANY_ID } from 'library/mock/company'
 import formFields from './CompanyContactsForm.form'
 
+
+
 const { useFormInstance } = Form
-const { Meta } = Card
-
-
-import { FAKE_COMPANY_ID } from 'library/mock/company' // TODO: replace after be updates
+const { Meta } = Card // TODO: replace after be updates
 
 const CompanyContactsForm = () => {
   const { t } = useTranslation()
   const form = useFormInstance()
 
   const [ formData, formDataLoaded ] = useApi<Company>(
-    getCompanyById, { id: FAKE_COMPANY_ID }
+    getCompanyById, { id: FAKE_COMPANY_ID },
   )
 
   const handleFormChange = (changedValues: Record<string, string>) => {
@@ -31,7 +31,7 @@ const CompanyContactsForm = () => {
 
   if (formDataLoaded === false) {
     return (
-      <ErrorResultView centered={true} status="error" />
+      <ErrorResultView centered status="error" />
     )
   }
 

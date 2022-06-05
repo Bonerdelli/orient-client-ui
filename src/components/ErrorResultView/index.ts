@@ -1,1 +1,1 @@
-export { default } from "./ErrorResultView"
+export { default } from './ErrorResultView'

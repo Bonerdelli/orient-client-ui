@@ -26,7 +26,7 @@ export type UseApiHookValue<T> = [
 ]
 
 const defaultOptions: UseApiOptions = {
-  catchUnauthorized: true
+  catchUnauthorized: true,
 }
 
 /**

@@ -10,12 +10,10 @@ import AppLayout from 'components/AppLayout'
 import './App.style.less'
 
 
-const App = () => {
-  return (
-    <StoreProvider store={store}>
-      <AppLayout />
-    </StoreProvider>
-  )
-}
+const App = () => (
+  <StoreProvider store={store}>
+    <AppLayout />
+  </StoreProvider>
+)
 
 export default App

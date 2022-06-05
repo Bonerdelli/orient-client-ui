@@ -8,10 +8,10 @@ import Div from 'components/Div'
 import './ErrorResultView.style.less'
 
 type ErrorResultViewProps = {
-  title?: string,
-  message?: string,
-  status?: 'error' | 'warning' | 403 | 404 | 500,
-  reloadCallback?: () => void,
+  title?: string
+  message?: string
+  status?: 'error' | 'warning' | 403 | 404 | 500
+  reloadCallback?: () => void
   centered?: boolean
   fullHeight?: boolean
 }

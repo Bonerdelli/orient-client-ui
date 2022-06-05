@@ -67,7 +67,7 @@ const CompanyForm = () => {
 
   if (companyLoaded === false) {
     return (
-      <ErrorResultView centered={true} status="error" />
+      <ErrorResultView centered status="error" />
     )
   }
 
