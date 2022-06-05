@@ -19,6 +19,7 @@ module.exports = {
   rules: {
     'import/extensions': 'off',
     'import/prefer-default-export': 'off',
+    'no-restricted-exports': 'off',
 
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',

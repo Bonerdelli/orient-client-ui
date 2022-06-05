@@ -48,7 +48,9 @@
     }
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "antd": "4.20.6",
+    "axios": "^0.27.2",
     "dayjs": "1.11.0",
     "easy-peasy": "5.0.4",
     "i18next": "21.6.14",

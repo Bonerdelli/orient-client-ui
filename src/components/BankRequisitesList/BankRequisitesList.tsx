@@ -10,9 +10,7 @@ import { BankRequisites } from 'library/models'
 import './BankRequisitesList.style.less'
 import mockData from 'library/mock/bankRequisites' // TODO: integrate with API when ready
 
-export interface BankRequisitesListProps { }
-
-const BankRequisitesList: React.FC<BankRequisitesListProps> = ({}) => {
+const BankRequisitesList: React.FC = () => {
   const { t } = useTranslation()
   const [ data, setData ] = useState<BankRequisites[]>()
 

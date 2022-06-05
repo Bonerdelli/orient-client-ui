@@ -2,9 +2,9 @@ import React from 'react'
 import { Result, Button } from 'antd'
 
 type PageNotFoundProps = {
-  title?: string
-  message?: string
-  navigateBackLabel?: string
+  title: string
+  message: string
+  navigateBackLabel: string
   navigateBack?: () => void
 }
 
