@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import { useStoreRehydrated } from 'easy-peasy'
 import { Spin } from 'antd'
 
 import { healthCheck } from 'orient-ui-library'
@@ -16,6 +17,7 @@ import './AppLayout.style.less'
 
 const AppLayout = () => {
 
+  const rehydrated = useStoreRehydrated()
   const user = useStoreState(state => state.user.current)
   const auth = useStoreState(state => state.user.currentAuth)
 
@@ -53,7 +55,7 @@ const AppLayout = () => {
     )
   }
 
-  if (loading) {
+  if (loading || !rehydrated) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large" />

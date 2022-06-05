@@ -7,9 +7,13 @@ import { AuthResult, auth } from 'orient-ui-library' // TODO: migrate to ui-lib,
 
 import './LoginForm.style.less'
 
-const { Item: FormItem } = Form
+const { useFormInstance, Item: FormItem } = Form
 const { Password } = Input
 const { Text } = Typography
+
+// TODO: remove for production / stage
+const DEFAULT_USERNAME = 'admin'
+const DEFAULT_PASSWORD = 'admin'
 
 export interface LoginFormProps {
   // onLogin: (user: User) => void // TODO: retrieve current user from JWT
@@ -24,6 +28,8 @@ interface FormValue {
 const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
 
   const { t } = useTranslation()
+  const form = useFormInstance()
+
   const [ submitting, setSubmitting ] = useState<boolean>(false)
   const [ authError, setAuthError ] = useState<boolean>(false)
   const [ completed, setCompleted ] = useState<boolean>(false)
@@ -57,12 +63,16 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
 
   return (
     <Form
+      form={form}
       name="authForm"
       className="LoginForm"
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
-      initialValues={{ remember: true }}
       requiredMark={false}
+      initialValues={{
+        login: DEFAULT_USERNAME,
+        password: DEFAULT_PASSWORD,
+      }}
       colon={false}
       size="large"
       onFinish={handleSubmit}

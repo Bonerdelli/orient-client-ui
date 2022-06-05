@@ -11,7 +11,7 @@ export interface AppStoreModel {
 }
 
 const appStoreModel = {
-  user: userStoreModel,
+  user: persist(userStoreModel),
 }
 
 export const store = createStore<AppStoreModel>(
