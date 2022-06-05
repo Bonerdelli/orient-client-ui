@@ -17,7 +17,7 @@ import './AppLayout.style.less'
 
 const AppLayout = () => {
 
-  const isRehydrated = useStoreRehydrated()
+  const rehydrated = useStoreRehydrated()
   const user = useStoreState(state => state.user.current)
   const auth = useStoreState(state => state.user.currentAuth)
 
@@ -55,7 +55,7 @@ const AppLayout = () => {
     )
   }
 
-  if (loading || !isRehydrated) {
+  if (loading || !rehydrated) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large" />
