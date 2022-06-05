@@ -1,5 +1,4 @@
-import { StoreProvider, useStoreRehydrated } from 'easy-peasy'
-import { Spin } from 'antd'
+import { StoreProvider } from 'easy-peasy'
 
 import 'orient-ui-library/styles/main.less'
 import 'library/i18n'
@@ -12,15 +11,9 @@ import './App.style.less'
 
 
 const App = () => {
-  const isRehydrated = useStoreRehydrated()
-  const renderLoading = () => (
-    <div className="App__loader">
-      <Spin size="large" />
-    </div>
-  )
   return (
     <StoreProvider store={store}>
-      {isRehydrated ? <AppLayout /> : renderLoading() }
+      <AppLayout />
     </StoreProvider>
   )
 }

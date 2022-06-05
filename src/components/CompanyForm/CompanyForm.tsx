@@ -5,12 +5,11 @@ import { Card, Form, Row, Col, Spin, message } from 'antd'
 import Div from 'ui-components/Div'
 import ErrorResultView from 'ui-components/ErrorResultView'
 
-import { renderTextInputs } from 'library/helpers/form'
 import { Company } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompany, setCompanyShortName } from 'library/api' // TODO: to ui-lib
 
-import companyFormFields from './CompanyForm.form'
+import companyFormFields, { renderTextInputs } from './CompanyForm.form'
 import './CompanyForm.style.less'
 
 const CompanyForm = () => {
