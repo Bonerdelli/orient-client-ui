@@ -6,7 +6,7 @@ const { Content } = Layout
 
 const AppLayoutPublic = () => (
   <Layout className="AppLayout AppLayout--public">
-    <Content>
+    <Content className="AppLayout__content">
       <PublicRoutes />
     </Content>
   </Layout>

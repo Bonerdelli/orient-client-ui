@@ -22,7 +22,7 @@ const AppLayoutProtected = () => (
       >
         <SideMenu />
       </Sider>
-      <Content>
+      <Content className="AppLayout__content">
         <ProtectedRoutes />
       </Content>
     </Layout>

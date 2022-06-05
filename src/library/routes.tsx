@@ -3,7 +3,7 @@ import portalConfig from 'config/portal.yaml'
 
 import { Roles, hasAccess } from 'orient-ui-library'
 
-import Login from 'pages/Login'
+import LoginPage from 'pages/LoginPage'
 import PageNotFound from 'pages/PageNotFound'
 import MyCompanyPage from 'pages/MyCompanyPage'
 import CompanyHeadsPage from 'pages/CompanyHeadsPage'
@@ -39,7 +39,7 @@ const PrivateRoute: React.FC<PrivateRouteOptions> = ({
 export const PublicRoutes = () => (
   <Switch>
     <Route exact path="/login">
-      <Login />
+      <LoginPage />
     </Route>
     <Route path="*">
       <Redirect to={{ pathname: '/login' }} />
