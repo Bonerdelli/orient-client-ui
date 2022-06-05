@@ -1,19 +1,28 @@
 import { Action, action } from 'easy-peasy'
-
-import { User } from 'orient-ui-library'
+import { User, JwtToken } from 'orient-ui-library'
 
 /**
  * User application state (example)
  */
 
 export interface UserStoreModel {
-  currentUser?: User | undefined
-  setCurrentUser: Action<UserStoreModel, User>
+  current?: User | undefined
+  currentAuth?: JwtToken | undefined
+  setUser: Action<UserStoreModel, User>
+  setAuth: Action<UserStoreModel, JwtToken>
+  setLogout: Action<UserStoreModel>
 }
 
 export const userStoreModel: UserStoreModel = {
-  currentUser: undefined,
-  setCurrentUser: action((state, payload) => {
-    state.currentUser = payload
+  current: undefined,
+  setUser: action((state, payload) => {
+    state.current = payload
+  }),
+  setAuth: action((state, payload) => {
+    state.currentAuth = payload
+  }),
+  setLogout: action((state) => {
+    delete state.current
+    delete state.currentAuth
   }),
 }

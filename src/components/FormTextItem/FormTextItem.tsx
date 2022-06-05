@@ -10,17 +10,19 @@ export interface FormTextItemProps {
   field: string
   isRequired: boolean
   isEditable?: boolean
+  groupFields?: boolean
 }
 
-const FormTextItem: React.FC<FormTextItemProps> = ({ model, field, isRequired, isEditable = false }) => {
+const FormTextItem: React.FC<FormTextItemProps> = ({ model, field, isRequired, isEditable = false, groupFields = false }) => {
   const { t } = useTranslation()
+  const name = groupFields ? `${model}.${field}` : field
   const requiredRule = {
     required: true,
   }
   return (
     <FormItem
-      key={`${model}.${field}`}
-      name={`${model}.${field}`}
+      key={name}
+      name={name}
       label={t(`models.${model}.fields.${field}.title`)}
       rules={isRequired ? [requiredRule] : []}
     >

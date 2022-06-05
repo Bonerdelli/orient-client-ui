@@ -1,10 +1,12 @@
 import FormTextItem from 'components/FormTextItem'
+import FormTextItemEditable from 'components/FormTextItemEditable'
 
 export type FormInputConfig = [
-  string,  // Model
-  string,  // Name
-  boolean, // Is Required
-  boolean? // Is Editable
+  string,   // Model
+  string,   // Name
+  boolean,  // Is Required
+  boolean?, // Is Editable
+  boolean?, // Editable inline
 ]
 
 export const renderTextInput = (
@@ -12,15 +14,24 @@ export const renderTextInput = (
   field: string,
   isRequired: boolean,
   isEditable = false,
+  isEditableInline = false,
 ) => (
-  <FormTextItem
-    model={model}
-    field={field}
-    isRequired={isRequired}
-    isEditable={isEditable}
-  />
+  isEditableInline ?
+    <FormTextItemEditable
+      model={model}
+      field={field}
+      isRequired={isRequired}
+      isEditable={isEditable}
+      key={`${model}.${field}`}
+    /> : <FormTextItem
+      model={model}
+      field={field}
+      isRequired={isRequired}
+      isEditable={isEditable}
+      key={`${model}.${field}`}
+    />
 )
 
 export const renderTextInputs = (
-  inputConfig: FormInputConfig[]
+  inputConfig: FormInputConfig[],
 ) => inputConfig.map(item => renderTextInput(...item))

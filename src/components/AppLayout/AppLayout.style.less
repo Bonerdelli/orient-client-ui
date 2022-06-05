@@ -1,6 +1,24 @@
+@import 'orient-ui-library/styles/vars.less';
+
 .AppLayout {
   height: 100%;
-  &__leftMenu {
+  &__loaderWrap {
+    position: absolute;
+    margin-left: -(@spin-dot-size-lg / 2);
+    margin-top: -(@spin-dot-size-lg / 2);
+    top: 50%;
+    left: 50%;
+  }
+  &__leftMenu,
+  &__globalError {
+    position: relative;
     height: 100%;
   }
+  &__content {
+    position: relative;
+  }
+}
+
+.AppLayout--public {
+
 }

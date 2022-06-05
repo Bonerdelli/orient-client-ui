@@ -1,22 +1,22 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import modelsEN from 'orient-ui-library/src/i18n/models/en.yaml'
-import modelsRU from 'orient-ui-library/src/i18n/models/ru.yaml'
+import { i18nCommon } from 'orient-ui-library/library/i18n'
 
 import portalConfig from 'config/portal.yaml'
+
 import portalEN from './translations/en.yaml'
 import portalRU from './translations/ru.yaml'
 
 export const resources = {
   en: { translation: {
-    models: modelsEN,
+    ...i18nCommon.en,
     ...portalEN,
-  }},
+  } },
   ru: { translation: {
-    models: modelsRU,
+    ...i18nCommon.ru,
     ...portalRU,
-  }},
+  } },
 } as const
 
 i18next.use(initReactI18next).init({

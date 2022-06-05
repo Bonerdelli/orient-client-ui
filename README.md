@@ -43,4 +43,4 @@ Generate a component draft, for example `yarn generate SampleThing`
 - State management: Redux with [easy-peasy](https://github.com/ctrlplusb/easy-peasy) on top
 - Router: [react-router](https://github.com/remix-run/react-router)
 - Code purity: [ESLint](https://eslint.org/) and [prettier](https://prettier.io/)
-- Helper libs: [dayjs](https://day.js.org/), [superagent](https://github.com/visionmedia/superagent)
+- Helper libs: [dayjs](https://day.js.org/), [axios](https://github.com/axios/axios)

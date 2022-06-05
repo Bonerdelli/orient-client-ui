@@ -1,22 +1,6 @@
 portalTitle: Planet ORIENT
 shortTitle: ORIENT
 
-common:
-  user:
-    title: User
-    actions:
-      login:
-        title: Login
-      logout:
-        title: Logout
-  actions:
-    add:
-      title: Add
-    edit:
-      title: Edit
-    delete:
-      title: Delete
-
 sections:
   сompany:
     title: My Company
@@ -32,18 +16,22 @@ sections:
 сompanyPage:
   tabs:
     mainInfo:
-      title: General information
+      title: General Information
     contacts:
       title: Contacts
+      description: You can provide contact details in addition to General Information
   formSections:
     main:
-      title: General information
+      title: General Information
     contacts:
       title: Contacts
     regAuthority:
-      title: Registration authority
+      title: Registration Authority
     founder:
-      title: Founder information
+      title: Founder Information
+    additionalContacts:
+      title: Additional Contacts
+      description: You can provide contact details in addition to General Information
 
 headsPage:
   tableColumns:
