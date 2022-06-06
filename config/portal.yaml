@@ -5,6 +5,7 @@ l10n:
   defaultLocale: 'ru'
 
 dataDisplay:
+  quickSearchMaxItems: 15
   numberFractionalLength: 2
 
 sections:
