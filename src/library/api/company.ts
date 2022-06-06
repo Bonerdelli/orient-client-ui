@@ -18,7 +18,7 @@ export interface GetCompanyByIdParams {
 }
 
 export async function getCompanyById(params: GetCompanyByIdParams): Promise<CompanyResponse> {
-  return await get<CompanyResponse>(`/client/company/${params.id}`) as CompanyResponse // TODO: API error generiv type
+  return await get<CompanyResponse>(`/client/company/${params.id}`) as CompanyResponse // TODO: API error generic type
 }
 
 export interface SetCompanyShortNameParams {
