@@ -11,28 +11,23 @@ import { CompanyContacts } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompanyContacts, updateCompanyContacts } from 'library/api' // TODO: to ui-lib
 
-import { FAKE_COMPANY_ID } from 'library/mock/company'
 import formFields from './CompanyContactsForm.form'
 
 const { Item: FormItem } = Form
-const { Meta } = Card // TODO: replace after be updates
+const { Meta } = Card
 
 export interface CompanyContactsFormProps {
   companyId: number,
-  id: number,
 }
 
-const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ id = FAKE_COMPANY_ID }) => {
+const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) => {
   const { t } = useTranslation()
 
-
+  let [ submitResult ] = useState<boolean | null>(false)
   const [ formData, setFormData ] = useState<Partial<CompanyContacts>>()
-  const [ submitting, setSubmitting ] = useState<boolean>()
-  const [ _, setSubmitSuccess ] = useState<boolean>()
 
   const [ companyHeadData, dataLoaded ] = useApi<CompanyContacts | null>(
-    // TODO: update generic with no API Success wrapper
-    getCompanyContacts, { companyId: id },
+    getCompanyContacts, { companyId },
   )
 
   useEffect(() => {
@@ -40,15 +35,14 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ id = FAKE_COM
   }, [ companyHeadData ])
 
   const handleFormSubmit = async (data: CompanyContacts) => {
-    setSubmitting(true)
-    const result = await updateCompanyContacts(data, { companyId, id })
-    if (result) {
-      setFormData(result)
-      setSubmitSuccess(true)
+    const { companyId } = data as CompanyContacts
+    if (!companyId) {
+      return
     }
-    setSubmitting(false)
+    [ , submitResult ] = useApi(
+      updateCompanyContacts, { companyId }, data,
+    )
   }
-
 
   if (dataLoaded === false) {
     return (
@@ -69,8 +63,9 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ id = FAKE_COM
       <Button
         type="primary"
         size="large"
+        htmlType="submit"
         icon={<SaveOutlined />}
-        disabled={submitting}
+        disabled={submitResult === null}
       >
         {t('common.actions.save.title')}
       </Button>

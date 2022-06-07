@@ -29,7 +29,10 @@ const CompanyForm = () => {
 
   const updateCompanyName = async (value: string) => {
     if (company) {
-      const result = await setCompanyShortName({ id: company.id as number, value })
+      const result = await setCompanyShortName(
+        { companyId: company.id as number },
+        { shortName: value },
+      )
       if (!result) {
         message.error(t('common.errors.requestError.title'))
       }
