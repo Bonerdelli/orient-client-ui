@@ -1,8 +1,8 @@
 import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
 
-export type CompanyHeadResponse = schema.components['schemas']['ServerResponseJCompanyFounder']
-export type CompanyHeadListResponse = schema.components['schemas']['ServerResponseListJCompanyFounder']
+import { CompanyHead } from 'library/models/proxy' // TODO: move to ui-lib after debugging
+
 export type CompanyHeadSaveRequest = schema.components['schemas']['CompanyFounderSaveRequest']
 
 export interface GetCompanyHeadsParams {
@@ -10,7 +10,7 @@ export interface GetCompanyHeadsParams {
 }
 
 export async function getCompanyHeads(params: GetCompanyHeadsParams) {
-  return await get<CompanyHeadListResponse>(`/client/company/${params.companyId}`)
+  return await get<CompanyHead[]>(`/client/company/${params.companyId}`)
 }
 
 export interface CompanyHeadSaveParams {
@@ -19,12 +19,12 @@ export interface CompanyHeadSaveParams {
 }
 
 export async function getCompanyHead(params: CompanyHeadSaveParams) {
-  return await get<CompanyHeadResponse>(`/client/company/${params.companyId}/founder/${params.id}`)
+  return await get<CompanyHead>(`/client/company/${params.companyId}/founder/${params.id}`)
 }
 
 export async function updateCompanyHead(
   params: CompanyHeadSaveParams,
   request: CompanyHeadSaveRequest,
 ) {
-  return await post<CompanyHeadResponse>(`/client/company/${params.companyId}/founder/${params.id}`, request)
+  return await post<CompanyHead>(`/client/company/${params.companyId}/founder/${params.id}`, request)
 }

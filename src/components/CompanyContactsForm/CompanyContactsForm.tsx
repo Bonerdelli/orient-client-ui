@@ -43,10 +43,6 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
   }, [ updatedData ])
 
   const handleFormSubmit = async (data: CompanyContacts) => {
-    const { companyId } = data as CompanyContacts
-    if (!companyId) {
-      return
-    }
     [ updatedData, submitResult ] = useApi<CompanyContacts | null>(
       updateCompanyContacts,
       { companyId },

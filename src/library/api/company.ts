@@ -1,14 +1,12 @@
 import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
 
-// import { Company } from 'library/models/proxy' // TODO: move to ui-lib after debugging
+import { Company } from 'library/models/proxy' // TODO: move to ui-lib after debugging
 
-export type CompanyResponse = schema.components['schemas']['ServerResponseJCompany']
-export type CompanyListResponse = schema.components['schemas']['ServerResponseListJCompany']
 export type CompanyPatchShortNameRequest = schema.components['schemas']['PatchShortNameDto']
 
 export async function getCompany() {
-  return await get<CompanyListResponse>('/client/company')
+  return await get<Company[]>('/client/company')
 }
 
 export interface GetCompanyByIdParams {
@@ -16,7 +14,7 @@ export interface GetCompanyByIdParams {
 }
 
 export async function getCompanyById(params: GetCompanyByIdParams) {
-  return await get<CompanyResponse>(`/client/company/${params.id}`)
+  return await get<Company>(`/client/company/${params.id}`)
 }
 
 export interface SetCompanyShortNameParams {
@@ -27,5 +25,5 @@ export async function setCompanyShortName(
   params: SetCompanyShortNameParams,
   request: CompanyPatchShortNameRequest,
 ) {
-  return await post<CompanyResponse>(`/client/company/${params.companyId}/shortName`, request)
+  return await post<Company>(`/client/company/${params.companyId}/shortName`, request)
 }

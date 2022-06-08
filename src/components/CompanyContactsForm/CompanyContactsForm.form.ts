@@ -1,8 +1,8 @@
 import { FormInputShortConfig, FormInputType } from 'library/helpers/form'
 
-import { CompanyContact } from 'library/models/proxy' // TODO: to ui-lib
+import { CompanyContacts } from 'library/models/proxy' // TODO: to ui-lib
 
-const formFields: FormInputShortConfig<CompanyContact>[] = [
+const formFields: FormInputShortConfig<CompanyContacts>[] = [
   [ 'companyContact', 'primaryEmail', FormInputType.Text, true ],
   [ 'companyContact', 'additionalEmail'    ],
   [ 'companyContact', 'primaryPhone'       ],

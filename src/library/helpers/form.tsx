@@ -17,9 +17,10 @@ export type FormInputShortConfig<T = unknown> = [
   boolean?,      // Disabled
 ]
 
-export const renderFormInputs = (
-  inputConfig: FormInputShortConfig[],
-) => inputConfig.map(inputConfig => {
+export function renderFormInputs<T = unknown> (
+  inputConfig: FormInputShortConfig<T>[],
+) {
+  return inputConfig.map(inputConfig => {
   const [ model, name, type, isRequired, disabled ] = inputConfig
   switch (type) {
     case undefined:
@@ -35,4 +36,4 @@ export const renderFormInputs = (
     default:
       throw new Error('Unknown form item type')
   }
-})
+}
