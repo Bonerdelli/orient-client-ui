@@ -27,7 +27,41 @@ const defaultOptions: UseApiHookOptions = {
 }
 
 /**
- * Hook for call CRUD endpoint and retrieve data from API
+ * Helper function for call API endpoint and retrieve data
+ *
+ * @author Nekrasov Andrew <bonerdelli@gmail.com>
+ * @package orient-ui
+ */
+
+export async function callApi<T = unknown, P = unknown, R = unknown>(
+  apiCallback: (requestParameters?: P, requestData?: R) => Promise<ApiResponse<T>>,
+  requestParameters?: P,
+  requestData?: R,
+  onResult?: (result: boolean) => void,
+  onError?: (error: string) => void,
+  onUnauthorized?: () => void,
+): Promise<T | null> {
+  const result = await apiCallback(requestParameters, requestData)
+  if (
+    onUnauthorized &&
+    (result as ApiErrorResponse)?.status === 403
+  ) {
+    onUnauthorized && onUnauthorized()
+    return null
+  }
+  if ((result as ApiErrorResponse)?.error) {
+    onError && onError((result as ApiErrorResponse)?.error)
+  }
+  if (!(result as ApiResponse<T>)?.success) {
+    onResult && onResult(false)
+    return null
+  }
+  onResult && onResult(true)
+  return (result as ApiSuccessResponse<T>).data as T
+}
+
+/**
+ * Hook for call API endpoint and retrieve data
  *
  * @author Nekrasov Andrew <bonerdelli@gmail.com>
  * @package orient-ui
@@ -44,33 +78,19 @@ export function useApi<T = unknown, P = unknown, R = unknown>(
   const [ data, setData ] = useState<T | null>(null)
   const [ result, setResult ] = useState<boolean | null>(null)
 
-  const loadData: () => Promise<T | null> = async () => {
-    const result = await apiCallback(requestParameters, requestData)
-    if (
-      opts.catchUnauthorized &&
-      (result as ApiErrorResponse)?.status === 403
-    ) {
-      setLogout()
-      return null
-    }
-    if ((result as ApiErrorResponse)?.error) {
-      message.error(t('common.errors.dataLoadingError.title'))
-    }
-    if (!(result as ApiResponse<T>)?.success) {
-      setResult(false)
-      return null
-    }
-    setResult(true)
-    return (result as ApiSuccessResponse<T>).data as T
+  const getData = async () => {
+    const loadedData = await callApi(
+      apiCallback,
+      requestParameters,
+      requestData,
+      (result) => setResult(result),
+      () => message.error(t('common.errors.dataLoadingError.title')),
+      () => opts.catchUnauthorized && setLogout(),
+    )
+    setData(loadedData)
   }
 
-  useEffect(() => {
-    const getData = async () => {
-      const loadedData = await loadData()
-      setData(loadedData)
-    }
-    getData()
-  }, [])
+  useEffect(() => { getData() }, [])
 
   return [ data, result ]
 }

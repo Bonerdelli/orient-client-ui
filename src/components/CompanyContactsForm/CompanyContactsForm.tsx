@@ -8,7 +8,7 @@ import ErrorResultView from 'ui-components/ErrorResultView'
 
 import { renderFormInputs } from 'library/helpers/form'
 import { CompanyContacts } from 'library/models/proxy' // TODO: to ui-lib
-import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompanyContacts, updateCompanyContacts } from 'library/api' // TODO: to ui-lib
 
 import formFields from './CompanyContactsForm.form'
@@ -23,10 +23,8 @@ export interface CompanyContactsFormProps {
 const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) => {
   const { t } = useTranslation()
 
-  let [ updatedData ] = useState<CompanyContacts | null>()
-  let [ submitResult ] = useState<boolean | null>(false)
-
   const [ formData, setFormData ] = useState<Partial<CompanyContacts>>()
+  const [ submitting, setSubmitting ] = useState<boolean>(false)
   const [ initialData, dataLoaded ] = useApi<CompanyContacts | null>(
     getCompanyContacts,
     { companyId },
@@ -36,18 +34,17 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
     setFormData(initialData ?? {})
   }, [ initialData ])
 
-  useEffect(() => {
-    if (updatedData) {
-      setFormData(updatedData)
-    }
-  }, [ updatedData ])
-
   const handleFormSubmit = async (data: CompanyContacts) => {
-    [ updatedData, submitResult ] = useApi<CompanyContacts | null>(
+    setSubmitting(true)
+    const updatedData = await callApi<CompanyContacts | null>(
       updateCompanyContacts,
       { companyId },
       data,
     )
+    if (updatedData) {
+      setFormData(updatedData)
+    }
+    setSubmitting(false)
   }
 
   if (dataLoaded === false) {
@@ -71,14 +68,26 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
         size="large"
         htmlType="submit"
         icon={<SaveOutlined />}
-        disabled={submitResult === null}
+        disabled={submitting}
       >
         {t('common.actions.save.title')}
       </Button>
     </FormItem>
   )
 
-  const renderContent = () => (
+  const renderFormContent = () => (
+    <Card>
+      <Meta
+        title={t('сompanyPage.formSections.additionalContacts.title')}
+        description={t('сompanyPage.formSections.additionalContacts.description')}
+      />
+      <Divider />
+      {renderFormInputs(formFields)}
+      {renderFormActions()}
+    </Card>
+  )
+
+  return (
     <Form
       initialValues={formData || {}}
       onFinish={(data: CompanyContacts) => handleFormSubmit(data)}
@@ -93,24 +102,12 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
     >
       <Row gutter={12}>
         <Col span={16}>
-          <Card>
-            <Meta
-              title={t('сompanyPage.formSections.additionalContacts.title')}
-              description={t('сompanyPage.formSections.additionalContacts.description')}
-            />
-            <Divider />
-            {renderFormInputs(formFields)}
-            {renderFormActions()}
-          </Card>
+          <Spin spinning={submitting}>
+            {renderFormContent()}
+          </Spin>
         </Col>
       </Row>
     </Form>
-  )
-
-  return (
-    <Spin spinning={dataLoaded === null}>
-      {renderContent()}
-    </Spin>
   )
 
 }
