@@ -1,31 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Form, Row, Col, Spin, message } from 'antd'
 
-import Div from 'ui-components/Div'
-import ErrorResultView from 'ui-components/ErrorResultView'
-
 import { Company } from 'library/models/proxy' // TODO: to ui-lib
-import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-import { getCompany, setCompanyShortName } from 'library/api' // TODO: to ui-lib
+import { setCompanyShortName } from 'library/api'
 
 import companyFormFields, { renderTextInputs } from './CompanyForm.form'
 import './CompanyForm.style.less'
 
-const CompanyForm = () => {
+export interface CompanyFormProps {
+  company: Company,
+}
+
+const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const { t } = useTranslation()
 
-  const [ company, setCompany ] = useState<Company>()
-  const [ companies, companyLoaded ] = useApi<Company[]>(getCompany)
   const [ submitting, setSubmitting ] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (companies?.length) {
-      // NOTE: take first company because multiple companies not supported
-      // TODO: ask be to make endpoint with default company
-      setCompany(companies[0])
-    }
-  }, [companies])
 
   const updateCompanyName = async (value: string) => {
     if (company) {
@@ -68,20 +58,6 @@ const CompanyForm = () => {
     setSubmitting(true)
   }
 
-  if (companyLoaded === false) {
-    return (
-      <ErrorResultView centered status="error" />
-    )
-  }
-
-  if (!company) {
-    return (
-      <Div className="AppLayout__loaderWrap">
-        <Spin size="large" />
-      </Div>
-    )
-  }
-
   const renderContent = () => (
     <Form
       initialValues={company}
@@ -113,7 +89,7 @@ const CompanyForm = () => {
   )
 
   return (
-    <Spin spinning={companyLoaded === null}>
+    <Spin spinning={false}>
       {renderContent()}
     </Spin>
   )

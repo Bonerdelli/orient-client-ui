@@ -33,7 +33,7 @@ const defaultOptions: UseApiHookOptions = {
  * @package orient-ui
  */
 export function useApi<T = unknown, P = unknown, R = unknown>(
-  apiCallback: (requestParameters?: P, requestData?: R) => Promise<ApiResponse<T> | null>,
+  apiCallback: (requestParameters?: P, requestData?: R) => Promise<ApiResponse<T>>,
   requestParameters?: P,
   requestData?: R,
   opts: UseApiHookOptions = defaultOptions,
@@ -44,7 +44,7 @@ export function useApi<T = unknown, P = unknown, R = unknown>(
   const [ data, setData ] = useState<T | null>(null)
   const [ result, setResult ] = useState<boolean | null>(null)
 
-  const loadData = async () => {
+  const loadData: () => Promise<T | null> = async () => {
     const result = await apiCallback(requestParameters, requestData)
     if (
       opts.catchUnauthorized &&

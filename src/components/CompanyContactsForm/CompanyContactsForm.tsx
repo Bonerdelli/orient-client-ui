@@ -23,24 +23,34 @@ export interface CompanyContactsFormProps {
 const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) => {
   const { t } = useTranslation()
 
+  let [ updatedData ] = useState<CompanyContacts | null>()
   let [ submitResult ] = useState<boolean | null>(false)
-  const [ formData, setFormData ] = useState<Partial<CompanyContacts>>()
 
-  const [ companyHeadData, dataLoaded ] = useApi<CompanyContacts | null>(
-    getCompanyContacts, { companyId },
+  const [ formData, setFormData ] = useState<Partial<CompanyContacts>>()
+  const [ initialData, dataLoaded ] = useApi<CompanyContacts | null>(
+    getCompanyContacts,
+    { companyId },
   )
 
   useEffect(() => {
-    setFormData(companyHeadData ?? {})
-  }, [ companyHeadData ])
+    setFormData(initialData ?? {})
+  }, [ initialData ])
+
+  useEffect(() => {
+    if (updatedData) {
+      setFormData(updatedData)
+    }
+  }, [ updatedData ])
 
   const handleFormSubmit = async (data: CompanyContacts) => {
     const { companyId } = data as CompanyContacts
     if (!companyId) {
       return
     }
-    [ , submitResult ] = useApi(
-      updateCompanyContacts, { companyId }, data,
+    [ updatedData, submitResult ] = useApi<CompanyContacts | null>(
+      updateCompanyContacts,
+      { companyId },
+      data,
     )
   }
 
