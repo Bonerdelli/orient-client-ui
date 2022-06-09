@@ -38,6 +38,9 @@ headsPage:
     isExecutive: Исполнительный орган
     isAttorney: Представитель по доверенности
     ownership: Доля, %
+  formSections:
+    main:
+      title: Карточка руководителя/учредителя
 
 bankRequisitesPage:
   tableColumns:

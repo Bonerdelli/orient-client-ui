@@ -39,6 +39,9 @@ headsPage:
     isExecutive: Executive agency
     isAttorney: Attorney-in-fact
     ownership: Share in perc.
+  formSections:
+    main:
+      title: Company Head Information
 
 bankRequisitesPage:
   tableColumns:

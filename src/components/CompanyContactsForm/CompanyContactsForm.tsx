@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Grid, Row, Col, Spin, Divider, Button } from 'antd'
+import { Card, Form, Grid, Row, Col, Spin, Skeleton, Divider, Button } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
 import { isUndefined } from 'lodash'
 
-import Div from 'ui-components/Div'
 import ErrorResultView from 'ui-components/ErrorResultView'
 
 import { CompanyContacts } from 'library/models/proxy' // TODO: to ui-lib
@@ -52,20 +51,6 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
     setSubmitting(false)
   }
 
-  if (dataLoaded === false) {
-    return (
-      <ErrorResultView centered status="error" />
-    )
-  }
-
-  if (!formData) {
-    return (
-      <Div className="AppLayout__loaderWrap">
-        <Spin size="large" />
-      </Div>
-    )
-  }
-
   const renderFormActions = () => (
     <FormItem>
       <Button
@@ -80,19 +65,30 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
     </FormItem>
   )
 
-  const renderFormContent = () => (
+  const renderCardContent = () => (
     <Card>
       <Meta
         title={t('companyPage.formSections.additionalContacts.title')}
         description={t('companyPage.formSections.additionalContacts.description')}
       />
       <Divider />
-      {renderFormInputs(formFields)}
-      {renderFormActions()}
+      {renderForm()}
     </Card>
   )
 
-  const renderForm = () => (
+  const renderForm = () => {
+    if (isUndefined(formData)) {
+      return <Skeleton active={dataLoaded === null} />
+    }
+    if (dataLoaded === false) {
+      return (
+        <ErrorResultView centered status="error" />
+      )
+    }
+    return renderFormContent()
+  }
+
+  const renderFormContent = () => (
     <Form
       initialValues={formData}
       onFinish={(data: CompanyContacts) => handleFormSubmit(data)}
@@ -101,7 +97,8 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
       {...baseFormConfig(breakPoint)}
     >
       <Spin spinning={submitting}>
-        {renderFormContent()}
+        {renderFormInputs(formFields)}
+        {renderFormActions()}
       </Spin>
     </Form>
   )
@@ -109,9 +106,7 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
   return (
     <Row gutter={12}>
       <Col xs={24} xl={18} xxl={14} className="relative">
-        <Spin spinning={dataLoaded === null}>
-          {!isUndefined(formData) && renderForm()}
-        </Spin>
+        {renderCardContent()}
       </Col>
     </Row>
   )

@@ -109,6 +109,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
             htmlType="submit"
             type="primary"
             className="LoginForm__button"
+            loading={submitting}
             disabled={submitting || completed}
             danger={authError}
             block
