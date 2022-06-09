@@ -52,7 +52,7 @@ export const ProtectedRoutes = () => (
   <Switch>
     <PrivateRoute
       exact
-      path={portalConfig.sections.сompany}
+      path={portalConfig.sections.company}
       component={MyCompanyPage}
       roles={portalConfig.roles.pages.all}
     />
@@ -81,10 +81,10 @@ export const ProtectedRoutes = () => (
       roles={portalConfig.roles.pages.all}
     />
     <Route exact path="/">
-      <Redirect to={{ pathname: '/my-сompany' }} />
+      <Redirect to={{ pathname: '/my-company' }} />
     </Route>
     <Route exact path="/login">
-      <Redirect to={{ pathname: '/my-сompany' }} />
+      <Redirect to={{ pathname: '/my-company' }} />
     </Route>
     <Route path="*">
       <PageNotFound />

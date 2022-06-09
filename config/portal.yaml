@@ -8,8 +8,8 @@ dataDisplay:
   numberFractionalLength: 2
 
 sections:
-  сompany: /my-сompany
-  heads: /сompany-heads
+  company: /my-company
+  heads: /company-heads
   bankDetails: /bank-details
   documents: /documents
   requests: /requests

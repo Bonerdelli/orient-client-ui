@@ -37,7 +37,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const renderMainSection = () => (
     <Card
       className="CompanyForm__mainInfo"
-      title={t('сompanyPage.formSections.main.title')}
+      title={t('companyPage.formSections.main.title')}
     >
       <Spin spinning={submitting}>
         {renderTextInputs(companyFormFields.main)}
@@ -45,17 +45,17 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
     </Card>
   )
   const renderContacts = () => (
-    <Card title={t('сompanyPage.formSections.contacts.title')}>
+    <Card title={t('companyPage.formSections.contacts.title')}>
       {renderTextInputs(companyFormFields.contacts)}
     </Card>
   )
   const renderRegAuthority = () => (
-    <Card title={t('сompanyPage.formSections.regAuthority.title')}>
+    <Card title={t('companyPage.formSections.regAuthority.title')}>
       {renderTextInputs(companyFormFields.regAuthority)}
     </Card>
   )
   const renderFounder = () => (
-    <Card title={t('сompanyPage.formSections.founder.title')}>
+    <Card title={t('companyPage.formSections.founder.title')}>
       {renderTextInputs(companyFormFields.founder)}
     </Card>
   )

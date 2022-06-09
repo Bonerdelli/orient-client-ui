@@ -2,7 +2,7 @@ portalTitle: Planet ORIENT
 shortTitle: ORIENT
 
 sections:
-  сompany:
+  company:
     title: My Company
   heads:
     title: Heads and Founders
@@ -13,7 +13,7 @@ sections:
   requests:
     title: Requests
 
-сompanyPage:
+companyPage:
   tabs:
     mainInfo:
       title: General Information

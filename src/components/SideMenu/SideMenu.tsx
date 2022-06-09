@@ -16,7 +16,7 @@ import config from 'config/portal.yaml'
 const { Item: MenuItem } = Menu
 
 const MENU_ICONS: Record<string, JSX.Element> = {
-  сompany: <HomeOutlined />,
+  company: <HomeOutlined />,
   heads: <UserOutlined />,
   bankDetails: <BankOutlined />,
   documents: <FileProtectOutlined />,

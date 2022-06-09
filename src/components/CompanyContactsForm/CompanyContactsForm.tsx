@@ -83,8 +83,8 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
   const renderFormContent = () => (
     <Card>
       <Meta
-        title={t('сompanyPage.formSections.additionalContacts.title')}
-        description={t('сompanyPage.formSections.additionalContacts.description')}
+        title={t('companyPage.formSections.additionalContacts.title')}
+        description={t('companyPage.formSections.additionalContacts.description')}
       />
       <Divider />
       {renderFormInputs(formFields)}

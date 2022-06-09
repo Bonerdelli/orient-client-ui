@@ -49,10 +49,10 @@ const MyCompanyPage = () => {
   return (
     <Layout className="MyCompanyPage" data-testid="MyCompanyPage">
       <Tabs className="MyCompanyPage__tabNavigation">
-        <TabPane tab={t('сompanyPage.tabs.mainInfo.title')} key="main-info">
+        <TabPane tab={t('companyPage.tabs.mainInfo.title')} key="main-info">
           <CompanyForm company={company} />
         </TabPane>
-        <TabPane tab={t('сompanyPage.tabs.contacts.title')} key="contacts">
+        <TabPane tab={t('companyPage.tabs.contacts.title')} key="contacts">
           <CompanyContactsForm companyId={company.id as number} />
         </TabPane>
       </Tabs>

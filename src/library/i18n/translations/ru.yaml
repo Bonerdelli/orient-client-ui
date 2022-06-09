@@ -2,7 +2,7 @@ portalTitle: Планета ORIENT
 shortTitle: ORIENT
 
 sections:
-  сompany:
+  company:
     title: Моя компания
   heads:
     title: Руководители и учредители
@@ -13,7 +13,7 @@ sections:
   requests:
     title: Заявки
 
-сompanyPage:
+companyPage:
   tabs:
     mainInfo:
       title: Общие сведения
