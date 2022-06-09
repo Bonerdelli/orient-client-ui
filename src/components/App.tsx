@@ -9,7 +9,6 @@ import AppLayout from 'components/AppLayout'
 
 import './App.style.less'
 
-
 const App = () => (
   <StoreProvider store={store}>
     <AppLayout />

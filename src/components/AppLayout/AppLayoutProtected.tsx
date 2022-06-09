@@ -2,6 +2,7 @@ import { Layout } from 'antd'
 
 import themeConfig from 'orient-ui-library/config/theme.yaml'
 
+import CompanyWrapper from 'components/CompanyWrapper'
 import AppHeader from 'components/AppHeader'
 import SideMenu from 'components/SideMenu'
 
@@ -24,7 +25,9 @@ const AppLayoutProtected = () => (
         <SideMenu />
       </Sider>
       <Content className="AppLayout__content">
-        <ProtectedRoutes />
+        <CompanyWrapper>
+          <ProtectedRoutes />
+        </CompanyWrapper>
       </Content>
     </Layout>
   </Layout>

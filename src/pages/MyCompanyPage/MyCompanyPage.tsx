@@ -1,13 +1,9 @@
-import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Layout, Tabs, Spin } from 'antd'
 
-import { Company } from 'library/models/proxy' // TODO: to ui-lib
-import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-import { getCompany } from 'library/api' // TODO: to ui-lib
+import { useStoreState } from 'library/store'
 
 import Div from 'ui-components/Div'
-import ErrorResultView from 'ui-components/ErrorResultView'
 
 import CompanyForm from 'components/CompanyForm'
 import CompanyContactsForm from 'components/CompanyContactsForm'
@@ -18,25 +14,7 @@ const { TabPane } = Tabs
 
 const MyCompanyPage = () => {
   const { t } = useTranslation()
-
-  const [ company, setCompany ] = useState<Company>()
-  const [ companies, companyLoaded ] = useApi<Company[]>(getCompany)
-
-
-  useEffect(() => {
-    if (companies?.length) {
-      // NOTE: take first company because multiple companies not supported
-      // TODO: ask be to make endpoint with default company
-      setCompany(companies[0])
-    }
-  }, [companies])
-
-
-  if (companyLoaded === false) {
-    return (
-      <ErrorResultView centered status="error" />
-    )
-  }
+  const company = useStoreState(state => state.company.current)
 
   if (!company) {
     return (
