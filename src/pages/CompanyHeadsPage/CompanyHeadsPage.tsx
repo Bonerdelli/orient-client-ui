@@ -3,6 +3,7 @@ import { Space, Layout, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
 import CompanyHeadsList from 'components/CompanyHeadsList'
+import CompanyHeadForm from 'components/CompanyHeadForm'
 
 import './CompanyHeadsPage.style.less'
 
@@ -13,6 +14,7 @@ const CompanyHeadsPage = () => {
       <Space direction="vertical" size="middle">
         <CompanyHeadsList />
         <Button icon={<PlusOutlined />} type="default" size="large">{t('common.actions.add.title')}</Button>
+        <CompanyHeadForm />
       </Space>
     </Layout>
   )

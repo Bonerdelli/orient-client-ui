@@ -1,51 +1,53 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Row, Col, Spin, Divider, Button } from 'antd'
+import { Card, Form, Grid, Row, Col, Spin, Divider, Button } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
+import { isUndefined } from 'lodash'
 
 import Div from 'ui-components/Div'
 import ErrorResultView from 'ui-components/ErrorResultView'
 
-import { renderFormInputs } from 'library/helpers/form'
 import { CompanyHead } from 'library/models/proxy' // TODO: to ui-lib
-import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
+import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
 import { getCompanyHead, updateCompanyHead } from 'library/api' // TODO: to ui-lib
 
 import formFields from './CompanyHeadForm.form'
 
-const { Meta } = Card
+const { useBreakpoint } = Grid
 const { Item: FormItem } = Form
+const { Meta } = Card
 
 export interface CompanyHeadFormProps {
   companyId: number,
-  id: number,
 }
 
-const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({
-  companyId,
-  id,
-}) => {
+const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ companyId }) => {
   const { t } = useTranslation()
+  const breakPoint = useBreakpoint()
 
   const [ formData, setFormData ] = useState<Partial<CompanyHead>>()
-  const [ submitting, setSubmitting ] = useState<boolean>()
-  const [ _, setSubmitSuccess ] = useState<boolean>()
-
-  const [ companyHeadData, dataLoaded ] = useApi<CompanyHead | null>(
-    // TODO: update generic with no API Success wrapper
-    getCompanyHead, { companyId, id },
+  const [ submitting, setSubmitting ] = useState<boolean>(false)
+  const [ initialData, dataLoaded ] = useApi<CompanyHead | null>(
+    getCompanyHead,
+    { companyId },
   )
 
   useEffect(() => {
-    setFormData(companyHeadData ?? {})
-  }, [ companyHeadData ])
+    if (initialData) {
+      setFormData(initialData ?? {})
+    }
+  }, [ initialData ])
 
   const handleFormSubmit = async (data: CompanyHead) => {
     setSubmitting(true)
-    const result = await updateCompanyHead(data, { companyId, id })
-    if (result) {
-      setFormData(result)
-      setSubmitSuccess(true)
+    const updatedData = await callApi<CompanyHead | null>(
+      updateCompanyHead,
+      { companyId },
+      data,
+    )
+    if (updatedData) {
+      setFormData(updatedData)
     }
     setSubmitting(false)
   }
@@ -69,6 +71,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({
       <Button
         type="primary"
         size="large"
+        htmlType="submit"
         icon={<SaveOutlined />}
         disabled={submitting}
       >
@@ -77,39 +80,40 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({
     </FormItem>
   )
 
-  const renderContent = () => (
+  const renderFormContent = () => (
+    <Card>
+      <Meta
+        title={t('companyPage.formSections.additionalContacts.title')}
+        description={t('companyPage.formSections.additionalContacts.description')}
+      />
+      <Divider />
+      {renderFormInputs(formFields)}
+      {renderFormActions()}
+    </Card>
+  )
+
+  const renderForm = () => (
     <Form
       initialValues={formData}
       onFinish={(data: CompanyHead) => handleFormSubmit(data)}
       className="CompanyHeadForm"
       data-testid="CompanyHeadForm"
-      labelCol={{ span: 10 }}
-      wrapperCol={{ flex: 1 }}
-      labelAlign="left"
-      requiredMark={false}
-      colon={false}
-      labelWrap
+      {...baseFormConfig(breakPoint)}
     >
-      <Row gutter={12}>
-        <Col span={16}>
-          <Card>
-            <Meta
-              title={t('сompanyPage.formSections.additionalContacts.title')}
-              description={t('сompanyPage.formSections.additionalContacts.description')}
-            />
-            <Divider />
-            {renderFormInputs(formFields)}
-            {renderFormActions()}
-          </Card>
-        </Col>
-      </Row>
+      <Spin spinning={submitting}>
+        {renderFormContent()}
+      </Spin>
     </Form>
   )
 
   return (
-    <Spin spinning={dataLoaded === null}>
-      {renderContent()}
-    </Spin>
+    <Row gutter={12}>
+      <Col xs={24} xl={18} xxl={14} className="relative">
+        <Spin spinning={dataLoaded === null}>
+          {!isUndefined(formData) && renderForm()}
+        </Spin>
+      </Col>
+    </Row>
   )
 
 }
