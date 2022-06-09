@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Row, Col, Spin, Divider, Button } from 'antd'
+import { Card, Form, Grid, Row, Col, Spin, Divider, Button } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
+import { isUndefined } from 'lodash'
 
 import Div from 'ui-components/Div'
 import ErrorResultView from 'ui-components/ErrorResultView'
 
-import { renderFormInputs } from 'library/helpers/form'
 import { CompanyContacts } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
+import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
 import { getCompanyContacts, updateCompanyContacts } from 'library/api' // TODO: to ui-lib
 
 import formFields from './CompanyContactsForm.form'
 
+const { useBreakpoint } = Grid
 const { Item: FormItem } = Form
 const { Meta } = Card
 
@@ -22,6 +24,7 @@ export interface CompanyContactsFormProps {
 
 const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) => {
   const { t } = useTranslation()
+  const breakPoint = useBreakpoint()
 
   const [ formData, setFormData ] = useState<Partial<CompanyContacts>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
@@ -31,7 +34,9 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
   )
 
   useEffect(() => {
-    setFormData(initialData ?? {})
+    if (initialData) {
+      setFormData(initialData ?? {})
+    }
   }, [ initialData ])
 
   const handleFormSubmit = async (data: CompanyContacts) => {
@@ -87,27 +92,28 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
     </Card>
   )
 
-  return (
+  const renderForm = () => (
     <Form
-      initialValues={formData || {}}
+      initialValues={formData}
       onFinish={(data: CompanyContacts) => handleFormSubmit(data)}
       className="CompanyContactsForm"
       data-testid="CompanyContactsForm"
-      labelCol={{ span: 10 }}
-      wrapperCol={{ flex: 1 }}
-      labelAlign="left"
-      requiredMark={false}
-      colon={false}
-      labelWrap
+      {...baseFormConfig(breakPoint)}
     >
-      <Row gutter={12}>
-        <Col span={16}>
-          <Spin spinning={submitting}>
-            {renderFormContent()}
-          </Spin>
-        </Col>
-      </Row>
+      <Spin spinning={submitting}>
+        {renderFormContent()}
+      </Spin>
     </Form>
+  )
+
+  return (
+    <Row gutter={12}>
+      <Col xs={24} xl={18} xxl={14} className="relative">
+        <Spin spinning={dataLoaded === null}>
+          {!isUndefined(formData) && renderForm()}
+        </Spin>
+      </Col>
+    </Row>
   )
 
 }

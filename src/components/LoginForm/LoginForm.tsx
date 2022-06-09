@@ -100,7 +100,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
         <Password disabled={completed} />
       </FormItem>
 
-      <FormItem wrapperCol={{ offset: 8, span: 16 }}>
+      <FormItem wrapperCol={{
+        xs: { flex: 1, span: 24 },
+        sm: { offset: 8, span: 16 },
+      }}>
         <Space direction="horizontal">
           <Button
             htmlType="submit"

@@ -23,7 +23,7 @@ const LoginPage = () => {
 
   return (
     <Row justify="center" className="Login">
-      <Col span={8}>
+      <Col xs={20} sm={18} md={14} lg={10} xl={8}>
         <LoginForm onLogin={handleLogin} />
       </Col>
     </Row>

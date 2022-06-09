@@ -16,6 +16,7 @@ const AppLayoutProtected = () => (
       <Sider
         theme="light"
         collapsible
+        breakpoint="lg"
         className="AppLayout__leftMenu"
         width={themeConfig['side-navigation-width']}
         collapsedWidth={themeConfig['side-navigation-collapsed-width']}

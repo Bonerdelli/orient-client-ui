@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Row, Col, Spin, message } from 'antd'
+import { Card, Form, Grid, Row, Col, Spin, message } from 'antd'
 
 import { Company } from 'library/models/proxy' // TODO: to ui-lib
 import { setCompanyShortName } from 'library/api'
+import { twoColumnFormConfig } from 'library/helpers/form'
 
 import companyFormFields, { renderTextInputs } from './CompanyForm.form'
 import './CompanyForm.style.less'
+
+const { useBreakpoint } = Grid
 
 export interface CompanyFormProps {
   company: Company,
@@ -14,6 +17,7 @@ export interface CompanyFormProps {
 
 const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const { t } = useTranslation()
+  const breakPoint = useBreakpoint()
 
   const [ submitting, setSubmitting ] = useState<boolean>(false)
 
@@ -31,7 +35,10 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   }
 
   const renderMainSection = () => (
-    <Card title={t('сompanyPage.formSections.main.title')}>
+    <Card
+      className="CompanyForm__mainInfo"
+      title={t('сompanyPage.formSections.main.title')}
+    >
       <Spin spinning={submitting}>
         {renderTextInputs(companyFormFields.main)}
       </Spin>
@@ -64,19 +71,14 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
       onFinish={handleFormSubmit}
       className="CompanyForm"
       data-testid="CompanyForm"
-      labelCol={{ span: 10 }}
-      wrapperCol={{ flex: 1 }}
-      labelAlign="left"
-      requiredMark={false}
-      colon={false}
-      labelWrap
+      {...twoColumnFormConfig(breakPoint)}
     >
       <Row gutter={12}>
-        <Col span={12} key="first">
+        <Col xs={24} xl={12} xxl={10} key="first">
           {renderMainSection()}
         </Col>
-        <Col span={12} key="second">
-          <Row gutter={[0, 12]}>
+        <Col xs={24} xl={12} xxl={10} key="second">
+          <Row gutter={[12, 12]}>
             <Col span={24}>
               {renderContacts()}
             </Col>
