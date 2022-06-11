@@ -4,9 +4,12 @@
 
 html,
 body,
-#root,
-#root > .ant-alert-error {
+#root {
   height: 100%;
+}
+
+#root > .ant-alert-error {
+  min-height: 100%;
 }
 
 body {
@@ -23,10 +26,6 @@ a {
   margin-left: -16px;
   top: 45%;
   left: 50%;
-}
-
-.App__exception {
-  margin: @padding-md;
 }
 
 // TODO: move to component

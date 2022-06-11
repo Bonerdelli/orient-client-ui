@@ -57,7 +57,6 @@ export const ProtectedRoutes = () => (
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
-      exact
       path={portalConfig.sections.heads}
       component={CompanyHeadsPage}
       roles={portalConfig.roles.pages.all}

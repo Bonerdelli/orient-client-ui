@@ -7,11 +7,14 @@ import { ScreenMap } from 'antd/es/_util/responsiveObserve'
 
 import FormTextItem from 'components/FormTextItem'
 import FormItemWrapper from 'components/FormItemWrapper'
-
+import NumericInput from 'components/NumericInput'
 
 export enum FormInputType {
   'Text',
   'TextArea',
+  'Numeric',
+  'Percent',
+  'Integer',
   'Select',
   'CheckBox',
   'Radio',
@@ -34,42 +37,38 @@ export type FormInputShortConfig<T = unknown> = [
 const renderCustomInput = (type: FormInputType, isEditable: boolean) => {
   switch (type) {
     case FormInputType.TextArea: {
-      return (
-        <Input disabled={!isEditable} />
-      )
+      return <Input disabled={!isEditable} />
     }
     case FormInputType.Select: {
-      return (
-        <Select disabled={!isEditable} />
-      )
+      return <Select disabled={!isEditable} />
     }
     case FormInputType.CheckBox: {
-      return (
-        <Checkbox disabled={!isEditable} />
-      )
+      return <Checkbox disabled={!isEditable} />
     }
     case FormInputType.Radio: {
-      return (
-        <Radio disabled={!isEditable} />
-      )
+      return <Radio disabled={!isEditable} />
     }
     case FormInputType.Switcher: {
-      return (
-        <Switch disabled={!isEditable} />
-      )
+      return <Switch disabled={!isEditable} />
     }
     case FormInputType.Date: {
-      return (
-        <DatePicker disabled={!isEditable} />
-      )
+      return <></> // <DatePicker disabled={!isEditable} />
     }
     case FormInputType.DatePeriod: {
-      return (
-        <DatePicker disabled={!isEditable} />
-      )
+      return <></> // <DatePicker disabled={!isEditable} />
     }
-    default:
+    case FormInputType.Numeric: {
+      return <NumericInput disabled={!isEditable} />
+    }
+    case FormInputType.Integer: {
+      return <NumericInput disabled={!isEditable} type="number" />
+    }
+    case FormInputType.Percent: {
+      return <NumericInput disabled={!isEditable} suffix='%' />
+    }
+    default: {
       throw new Error('Unknown form item type')
+    }
   }
 }
 
@@ -116,6 +115,9 @@ export function renderFormInput<T = unknown> (
   )
 }
 
+/**
+ * Base antd form layout configuration
+ */
 export const baseFormConfig = (bp: ScreenMap): FormProps => ({
   labelCol: {
     xs: { span: 24 },
@@ -132,6 +134,9 @@ export const baseFormConfig = (bp: ScreenMap): FormProps => ({
   labelWrap: true,
 })
 
+/**
+ * Two-columns antd form layout configuration
+ */
 export const twoColumnFormConfig = (bp: ScreenMap): FormProps => ({
   ...baseFormConfig(bp),
   labelCol: {

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link, useRouteMatch } from 'react-router-dom'
+import { remove } from 'lodash'
 
-import { Table, Button, Space } from 'antd'
+import { Table, Button, Space, Popconfirm } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
@@ -12,17 +14,24 @@ import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderBinaryCell, renderNumericCell } from 'library/helpers/table' // TODO: to ui-lib
 
 import { useStoreState } from 'library/store'
-import { getCompanyHeads } from 'library/api'
+import { getCompanyHeads, deleteCompanyHead } from 'library/api'
 
 import './CompanyHeadsList.style.less'
 
 export interface CompanyHeadsListProps {
   companyId: number
+}
 
+export enum PassportType {
+  Ru = 'RU',
+  Uz = 'UZ',
+  Uz_Id = 'UZ_ID',
 }
 
 const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   const { t } = useTranslation()
+  const { url } = useRouteMatch()
+
   const company = useStoreState(state => state.company.current)
   const [ data, dataLoaded ] = useApi<CompanyHead[]>(getCompanyHeads, { companyId })
 
@@ -30,28 +39,37 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
     console.log('handleEdit', item)
   }
 
-  const handleDelete = (item: CompanyHead) => {
-    console.log('handleDelete', item)
+  const handleDelete = async (item: CompanyHead) => {
+    if (data) {
+      await deleteCompanyHead({ companyId, id: item.id as number })
+      remove(data, (datum) => datum === item)
+    }
   }
 
   const renderActions = (_val: unknown, item: CompanyHead) => (
     <Space className="DataTable__actions">
-      <Button
-        key="edit"
-        type="primary"
-        shape="circle"
-        title={t('common.actions.edit.title')}
-        onClick={() => handleEdit(item)}
-        icon={<EditOutlined />}
-      />
-      <Button
-        key="delete"
-        type="primary" danger
-        shape="circle"
-        title={t('common.actions.delete.title')}
-        onClick={() => handleDelete(item)}
-        icon={<DeleteOutlined />}
-      />
+      <Link to={`${url}/${item.id}`}>
+        <Button
+          key="edit"
+          type="primary"
+          shape="circle"
+          title={t('common.actions.edit.title')}
+          onClick={() => handleEdit(item)}
+          icon={<EditOutlined />}
+        />
+      </Link>
+      <Popconfirm
+        onConfirm={() => handleDelete(item)}
+        title={t('common.actions.delete.confirmOne')}
+      >
+        <Button
+          key="delete"
+          type="primary" danger
+          shape="circle"
+          title={t('common.actions.delete.title')}
+          icon={<DeleteOutlined />}
+        />
+      </Popconfirm>
     </Space>
   )
 
@@ -61,6 +79,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
       key: 'fullName',
       dataIndex: 'fullName',
       title: t('headsPage.tableColumns.fullName'),
+      render: (_, item: CompanyHead) => ([item.lastName, item.firstName, item.secondName].filter(Boolean).join(' ')),
     },
     {
       key: 'isExecutive',
@@ -96,11 +115,10 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
     )
   }
 
-  console.log('data', data)
-
   return (
     <div className="CompanyHeadsList" data-testid="CompanyHeadsList">
       <Table
+        bordered
         columns={columns}
         loading={dataLoaded === null}
         dataSource={data || []}

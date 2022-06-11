@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import SlideRoutes from 'react-slide-routes'
-import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
+// import SlideRoutes from 'react-slide-routes' // TODO: make slide animation works
+import { Router, Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 import { Space, Layout, Spin, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
@@ -39,14 +39,14 @@ const CompanyHeadsPage = () => {
 
   return (
     <Layout className="CompanyHeadsPage" data-testid="CompanyHeadsPage">
-      <SlideRoutes>
-        <Route path="/">
+      <Switch>
+        <Route exact path={path}>
           {renderList()}
         </Route>
-        <Route path="/add">
-          <CompanyHeadForm companyId={company.id as number} />
+        <Route path={`${path}/:itemId`}>
+          <CompanyHeadForm backUrl={url} companyId={company.id as number} />
         </Route>
-      </SlideRoutes>
+      </Switch>
     </Layout>
   )
 }
