@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 
 import { Company } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-import { getCompany } from 'library/api' // TODO: to ui-lib
+import { getCompany } from 'library/api'
 
 import { useStoreActions } from 'library/store'
 
-import ErrorResultView from 'ui-components/ErrorResultView'
+import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
 
 export interface CompanyWrapperProps {
   children: JSX.Element

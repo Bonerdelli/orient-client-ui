@@ -1,12 +1,11 @@
 // TODO: remove after debugging and libs separation
 // @import 'antd/dist/antd.less'; // DEBUG: uncomment for debug with lib sources
+@import 'orient-ui-library/styles/vars.less';
 
 html,
-body {
-  height: 100%;
-}
-
-#root {
+body,
+#root,
+#root > .ant-alert-error {
   height: 100%;
 }
 
@@ -24,6 +23,10 @@ a {
   margin-left: -16px;
   top: 45%;
   left: 50%;
+}
+
+.App__exception {
+  margin: @padding-md;
 }
 
 // TODO: move to component

@@ -5,21 +5,26 @@ import { Table, Button, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
+import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
+
 import { CompanyHead } from 'library/models'
-import { renderBinaryCell, renderNumericCell } from 'library/helpers/table'
+import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { renderBinaryCell, renderNumericCell } from 'library/helpers/table' // TODO: to ui-lib
+
+import { useStoreState } from 'library/store'
+import { getCompanyHeads } from 'library/api'
 
 import './CompanyHeadsList.style.less'
-import mockData from 'library/mock/heads' // TODO: integrate with API when ready
 
-export interface CompanyHeadsListProps { }
+export interface CompanyHeadsListProps {
+  companyId: number
 
-const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
+}
+
+const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   const { t } = useTranslation()
-  const [ data, setData ] = useState<CompanyHead[]>()
-
-  useEffect(() => {
-    setData(mockData)
-  }, [ mockData ])
+  const company = useStoreState(state => state.company.current)
+  const [ data, dataLoaded ] = useApi<CompanyHead[]>(getCompanyHeads, { companyId })
 
   const handleEdit = (item: CompanyHead) => {
     console.log('handleEdit', item)
@@ -85,11 +90,20 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
     },
   ]
 
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="error" />
+    )
+  }
+
+  console.log('data', data)
+
   return (
     <div className="CompanyHeadsList" data-testid="CompanyHeadsList">
       <Table
         columns={columns}
-        dataSource={data}
+        loading={dataLoaded === null}
+        dataSource={data || []}
         pagination={false}
       />
     </div>
