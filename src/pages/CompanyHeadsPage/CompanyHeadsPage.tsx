@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import SlideRoutes from 'react-slide-routes'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 import { Space, Layout, Spin, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
@@ -11,10 +13,13 @@ import Div from 'components/Div' // TODO: from ui-lib
 
 import './CompanyHeadsPage.style.less'
 
+
 const CompanyHeadsPage = () => {
   const { t } = useTranslation()
-  const [ companyAddShow, _setCompanyAddShow ] = useState<boolean>(false)
+  const { path, url } = useRouteMatch()
+
   const company = useStoreState(state => state.company.current)
+
   if (!company) {
     return (
       <Div className="AppLayout__loaderWrap">
@@ -22,13 +27,26 @@ const CompanyHeadsPage = () => {
       </Div>
     )
   }
+
+  const renderList = (): JSX.Element => (
+    <Space direction="vertical" size="middle">
+      <CompanyHeadsList companyId={company.id as number} />
+      <Link to={`${url}/add`}>
+        <Button icon={<PlusOutlined />} type="link" size="large">{t('common.actions.add.title')}</Button>
+      </Link>
+    </Space>
+  )
+
   return (
     <Layout className="CompanyHeadsPage" data-testid="CompanyHeadsPage">
-      <Space direction="vertical" size="middle">
-        <CompanyHeadsList companyId={company.id as number} />
-        <Button icon={<PlusOutlined />} type="link" size="large">{t('common.actions.add.title')}</Button>
-        {company && companyAddShow && <CompanyHeadForm companyId={company.id as number} />}
-      </Space>
+      <SlideRoutes>
+        <Route path="/">
+          {renderList()}
+        </Route>
+        <Route path="/add">
+          <CompanyHeadForm companyId={company.id as number} />
+        </Route>
+      </SlideRoutes>
     </Layout>
   )
 }
