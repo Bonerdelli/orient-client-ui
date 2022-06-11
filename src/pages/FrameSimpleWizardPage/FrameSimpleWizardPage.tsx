@@ -1,6 +1,6 @@
 import FrameSimpleWizard from 'components/FrameSimpleWizard'
 
-import './FrameWizardPage.style.less'
+import './FrameSimpleWizardPage.style.less'
 
 const FrameWizardPage = () => (
   <div className="FrameWizardPage" data-testid="FrameWizardPage">

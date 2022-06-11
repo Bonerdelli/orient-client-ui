@@ -1,7 +1,7 @@
 import { Switch, Route, Redirect, RouteProps } from 'react-router-dom'
 import portalConfig from 'config/portal.yaml'
 
-import { Roles, hasAccess } from 'orient-ui-library'
+import { UserRoles, hasAccess } from 'orient-ui-library'
 
 import LoginPage from 'pages/LoginPage'
 import PageNotFound from 'pages/PageNotFound'
@@ -9,11 +9,14 @@ import MyCompanyPage from 'pages/MyCompanyPage'
 import CompanyHeadsPage from 'pages/CompanyHeadsPage'
 import BankRequisitesPage from 'pages/BankRequisitesPage'
 import DocumentsPage from 'pages/DocumentsPage'
-import RequestsPage from 'pages/RequestsPage'
+import OrdersPage from 'pages/OrdersPage'
+
+import FrameWizardPage from 'pages/FrameWizardPage'
+import FrameSimpleWizardPage from 'pages/FrameSimpleWizardPage'
 
 interface PrivateRouteOptions extends RouteProps {
   component: React.FC<RouteProps>
-  roles: Roles
+  roles: UserRoles
 }
 
 const PrivateRoute: React.FC<PrivateRouteOptions> = ({
@@ -77,9 +80,22 @@ export const ProtectedRoutes = () => (
     <PrivateRoute
       exact
       path={portalConfig.sections.requests}
-      component={RequestsPage}
+      component={OrdersPage}
       roles={portalConfig.roles.pages.all}
     />
+
+    <PrivateRoute
+      path={portalConfig.sections.requests}
+      component={FrameWizardPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path={portalConfig.sections.requests}
+      component={FrameSimpleWizardPage}
+      roles={portalConfig.roles.pages.all}
+    />
+
+
     <Route exact path="/">
       <Redirect to={{ pathname: '/my-company' }} />
     </Route>
