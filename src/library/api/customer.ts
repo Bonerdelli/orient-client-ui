@@ -9,7 +9,7 @@ const QUICK_SEARCH_MAX_ITEMS = portalConfig.dataDisplay.quickSearchMaxItems
 export type CustomerGridRequest = schema.components['schemas']['CustomerGridRequest']
 export type CustomerGridResponse = ApiResponse<GridResponse<Customer>>
 
-export async function getCustomers(_, request: CustomerGridRequest) {
+export async function getCustomers(_: never, request: CustomerGridRequest) {
   return await post<GridResponse>('/client/customer/list', request)
 }
 
