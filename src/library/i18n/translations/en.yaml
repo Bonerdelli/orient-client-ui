@@ -13,6 +13,12 @@ sections:
   requests:
     title: Requests
 
+orders:
+  actionButton:
+    title: Get the product
+  frame:
+  simpleFrame:
+
 companyPage:
   tabs:
     mainInfo:

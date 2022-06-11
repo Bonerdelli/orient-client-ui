@@ -13,6 +13,12 @@ sections:
   requests:
     title: Заявки
 
+orders:
+  actionButton:
+    title: Получить продукт
+  frame:
+  simpleFrame:
+
 companyPage:
   tabs:
     mainInfo:
