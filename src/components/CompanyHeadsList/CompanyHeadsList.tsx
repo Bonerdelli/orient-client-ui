@@ -47,7 +47,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   }
 
   const renderActions = (_val: unknown, item: CompanyHead) => (
-    <Space className="DataTable__actions">
+    <Space className="DataTable__ghostActions">
       <Link to={`${url}/${item.id}`}>
         <Button
           key="edit"

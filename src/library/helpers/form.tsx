@@ -1,26 +1,31 @@
 import { isUndefined } from 'lodash'
 
 import { Input, Select, DatePicker, Switch, Checkbox, Radio } from 'antd'
+import { Rule as ValidationRule } from 'antd/es/form'
 
 import { FormProps } from 'antd/es/form/'
 import { ScreenMap } from 'antd/es/_util/responsiveObserve'
 
 import FormTextItem from 'components/FormTextItem'
 import FormItemWrapper from 'components/FormItemWrapper'
-import NumericInput from 'components/NumericInput'
+
+import portalConfig from 'config/portal.yaml'
+
+const ACCOUNT_NUMBER_LENGTH = portalConfig.dataEntry.accountNumberLength
 
 export enum FormInputType {
   'Text',
   'TextArea',
-  'Numeric',
-  'Percent',
-  'Integer',
   'Select',
   'CheckBox',
   'Radio',
   'Switcher',
   'Date',
   'DatePeriod',
+  'Numeric',
+  'Percent',
+  'Integer',
+  'AccountNumber',
 }
 
 export type FormInputShortConfig<T = unknown> = [
@@ -34,7 +39,7 @@ export type FormInputShortConfig<T = unknown> = [
 /**
  * Render Custom Input
  */
-const renderCustomInput = (type: FormInputType, isEditable: boolean) => {
+const renderFormInputField = (type: FormInputType, isEditable: boolean) => {
   switch (type) {
     case FormInputType.TextArea: {
       return <Input disabled={!isEditable} />
@@ -58,13 +63,16 @@ const renderCustomInput = (type: FormInputType, isEditable: boolean) => {
       return <></> // <DatePicker disabled={!isEditable} />
     }
     case FormInputType.Numeric: {
-      return <NumericInput disabled={!isEditable} />
+      return <Input disabled={!isEditable} />
     }
     case FormInputType.Integer: {
-      return <NumericInput disabled={!isEditable} type="number" />
+      return <Input disabled={!isEditable} type="number" />
     }
     case FormInputType.Percent: {
-      return <NumericInput disabled={!isEditable} suffix='%' />
+      return <Input disabled={!isEditable} suffix='%' />
+    }
+    case FormInputType.AccountNumber: {
+      return <Input disabled={!isEditable} maxLength={ACCOUNT_NUMBER_LENGTH} />
     }
     default: {
       throw new Error('Unknown form item type')
@@ -89,6 +97,7 @@ export function renderFormInput<T = unknown> (
 ) {
   const [ model, name, type, isRequired, disabled ] = inputConfig
   const isEditable = !disabled ?? true
+  const rules: ValidationRule[] = []
 
   if (
     isUndefined(type) || // Text input by defalut
@@ -104,13 +113,43 @@ export function renderFormInput<T = unknown> (
     )
   }
 
+  if (type === FormInputType.Percent ||
+      type === FormInputType.Numeric) {
+    // NOTE: doesn't work because of
+    //   https://stackoverflow.com/questions/65292936/why-number-validate-rule-doesnt-work-in-antd
+    // TODO: fixme or use NumericInput
+    // rules.push({
+    //   type: 'number'
+    // })
+  }
+
+  if (type === FormInputType.AccountNumber ||
+      type === FormInputType.Integer) {
+    // NOTE: doesn't work because of
+    //   https://stackoverflow.com/questions/65292936/why-number-validate-rule-doesnt-work-in-antd
+    // TODO: fixme or use NumericInput
+    // rules.push({
+    //   type: 'integer'
+    // })
+    rules.push({
+      pattern: /^\d*$/
+    })
+  }
+
+  if (type === FormInputType.AccountNumber) {
+    rules.push({
+      len: ACCOUNT_NUMBER_LENGTH
+    })
+  }
+
   return (
     <FormItemWrapper
       model={model}
       field={name as string}
       isRequired={isRequired ?? false}
+      validationRules={rules}
     >
-      {renderCustomInput(type, isEditable)}
+      {renderFormInputField(type, isEditable)}
     </FormItemWrapper>
   )
 }

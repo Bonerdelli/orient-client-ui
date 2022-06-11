@@ -28,12 +28,7 @@ a {
   left: 50%;
 }
 
-// TODO: move to component
-.DataTable__actions {
-  visibility: hidden;
-}
-
-.ant-table-row:hover .DataTable__actions {
+.ant-table-row:hover .DataTable__ghostActions {
   visibility: visible;
 }
 
@@ -41,4 +36,18 @@ a {
 // TODO: move to ui-lib
 .relative {
   position: relative;
+}
+
+/**
+ * Cross-component classes
+ * TODO: move it somewhere
+ */
+
+.DataTable__ghostActions {
+  visibility: hidden;
+}
+
+.Form__actions {
+  padding-top: @padding-sm;
+  text-align: right;
 }

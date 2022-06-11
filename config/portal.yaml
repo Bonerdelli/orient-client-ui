@@ -8,6 +8,9 @@ dataDisplay:
   quickSearchMaxItems: 15
   numberFractionalLength: 2
 
+dataEntry:
+  accountNumberLength: 20
+
 sections:
   company: /my-company
   heads: /company-heads

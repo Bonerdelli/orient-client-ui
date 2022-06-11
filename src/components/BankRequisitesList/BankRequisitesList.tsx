@@ -1,54 +1,68 @@
-import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link, useRouteMatch } from 'react-router-dom'
+import { remove } from 'lodash'
 
-import { Table, Button, Space } from 'antd'
+import { Table, Button, Space, Popconfirm } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
-import { BankRequisites } from 'library/models'
+import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
+
+import { CompanyRequisites } from 'library/models/proxy'
+import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+
+import { getCompanyRequisitesList, getCompanyRequisites } from 'library/api'
 
 import './BankRequisitesList.style.less'
-import mockData from 'library/mock/bankRequisites' // TODO: integrate with API when ready
 
-const BankRequisitesList: React.FC = () => {
+export interface BankRequisitesListProps {
+  companyId: number
+}
+
+const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) => {
   const { t } = useTranslation()
-  const [ data, setData ] = useState<BankRequisites[]>()
+  const { url } = useRouteMatch()
 
-  useEffect(() => {
-    setData(mockData)
-  }, [ mockData ])
+  const [ data, dataLoaded ] = useApi<CompanyRequisites[]>(getCompanyRequisitesList, { companyId })
 
-  const handleEdit = (item: BankRequisites) => {
-    console.log('handleEdit', item)
+  const handleDelete = async (item: CompanyRequisites) => {
+    if (data) {
+      await getCompanyRequisites({ companyId, id: item.id as number })
+      remove(data, (datum) => datum === item)
+    }
   }
 
-  const handleDelete = (item: BankRequisites) => {
-    console.log('handleDelete', item)
-  }
-
-  const renderActions = (_val: unknown, item: BankRequisites) => (
-    <Space className="DataTable__actions">
-      <Button
-        key="edit"
-        type="primary"
-        shape="circle"
-        title={t('common.actions.edit.title')}
-        onClick={() => handleEdit(item)}
-        icon={<EditOutlined />}
-      />
-      <Button
-        key="delete"
-        type="primary" danger
-        shape="circle"
-        title={t('common.actions.delete.title')}
-        onClick={() => handleDelete(item)}
-        icon={<DeleteOutlined />}
-      />
+  const renderActions = (_val: unknown, item: CompanyRequisites) => (
+    <Space size="small">
+      <Link to={`${url}/${item.id}`}>
+        <Button
+          key="edit"
+          type="link"
+          shape="circle"
+          title={t('common.actions.edit.title')}
+          icon={<EditOutlined />}
+        />
+      </Link>
+      <Popconfirm
+        onConfirm={() => handleDelete(item)}
+        title={t('common.actions.delete.confirmOne')}
+        placement="bottomRight"
+        okButtonProps={{
+          danger: true,
+        }}
+      >
+        <Button
+          key="delete"
+          type="link" danger
+          shape="circle"
+          title={t('common.actions.delete.title')}
+          icon={<DeleteOutlined />}
+        />
+      </Popconfirm>
     </Space>
   )
 
-
-  const columns: ColumnsType<BankRequisites> = [
+  const columns: ColumnsType<CompanyRequisites> = [
     {
       key: 'bankName',
       dataIndex: 'bankName',
@@ -56,12 +70,12 @@ const BankRequisitesList: React.FC = () => {
     },
     {
       key: 'mfoNum',
-      dataIndex: 'mfoNum',
+      dataIndex: 'mfo',
       title: t('bankRequisitesPage.tableColumns.mfoNum'),
     },
     {
       key: 'account',
-      dataIndex: 'account',
+      dataIndex: 'accountNumber',
       title: t('bankRequisitesPage.tableColumns.account'),
     },
     {
@@ -71,11 +85,19 @@ const BankRequisitesList: React.FC = () => {
     },
   ]
 
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="error" />
+    )
+  }
+
   return (
     <div className="BankRequisitesList" data-testid="BankRequisitesList">
       <Table
+        bordered
         columns={columns}
-        dataSource={data}
+        loading={dataLoaded === null}
+        dataSource={data || []}
         pagination={false}
       />
     </div>
