@@ -18,13 +18,7 @@ const appStoreModel = {
 }
 
 export const store = createStore<AppStoreModel>(
-  persist(appStoreModel, {
-    allow: [
-      // Put store keys here to persist state in the local storage
-      'user',
-    ],
-  }),
-  {
+  appStoreModel, {
     version: STORAGE_KEY_VERSION,
     middleware: [
       axiosMiddleware,

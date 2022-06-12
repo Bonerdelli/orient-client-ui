@@ -19,6 +19,11 @@ interface PrivateRouteOptions extends RouteProps {
   roles: UserRoles
 }
 
+export const HOME_PATH = portalConfig.sections.company
+export const LOGIN_PATH = '/login'
+export const FRAME_ORDER_PATH = '/frame-order'
+export const SIMPLE_FRAME_ORDER_PATH = '/simple-frame-order'
+
 const PrivateRoute: React.FC<PrivateRouteOptions> = ({
   component: Component,
   roles: accessRoles,
@@ -45,7 +50,7 @@ export const PublicRoutes = () => (
       <LoginPage />
     </Route>
     <Route path="*">
-      <Redirect to={{ pathname: '/login' }} />
+      <Redirect to={{ pathname: LOGIN_PATH }} />
     </Route>
   </Switch>
 )
@@ -85,22 +90,22 @@ export const ProtectedRoutes = () => (
     />
 
     <PrivateRoute
-      path={portalConfig.sections.requests}
+      path={FRAME_ORDER_PATH}
       component={FrameWizardPage}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
-      path={portalConfig.sections.requests}
+      path={SIMPLE_FRAME_ORDER_PATH}
       component={FrameSimpleWizardPage}
       roles={portalConfig.roles.pages.all}
     />
 
 
     <Route exact path="/">
-      <Redirect to={{ pathname: '/my-company' }} />
+      <Redirect to={{ pathname: HOME_PATH }} />
     </Route>
     <Route exact path="/login">
-      <Redirect to={{ pathname: '/my-company' }} />
+      <Redirect to={{ pathname: HOME_PATH }} />
     </Route>
     <Route path="*">
       <PageNotFound />

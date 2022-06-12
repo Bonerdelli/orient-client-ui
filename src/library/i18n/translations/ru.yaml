@@ -50,7 +50,7 @@ bankRequisitesPage:
 
 orders:
   actionButton:
-    title: Get the product
+    title: Получить продукт
   actions:
     cancel:
       title: Отменить заявку
@@ -78,33 +78,30 @@ orders:
 
 
 frameOrder:
-  # TODO: translate me
   title: Заявка на заключение рамочного договора
   firstStep:
-    title: Шаг 1. Параметры заявки
+    title: Параметры заявки
   secondStep:
-    title: Шаг 2. Документы
+    title: Документы
   thirdStep:
-    title: Шаг 3. Подписание документов
+    title: Подписание документов
   fourthStep:
-    title: Шаг 4. Предложения Банков
+    title: Предложения Банков
 
 frameSimpleOrder:
-  # TODO: translate me
   title: Заявка на заключение рамочного договора
   firstStep:
-    title: Шаг 1. Параметры заявки
+    title: Параметры заявки
   secondStep:
-    title: Шаг 2. Документы
+    title: Документы
   thirdStep:
-    title: Шаг 3. Подписание документов
+    title: Подписание документов
   fourthStep:
-    title: Шаг 4. В Банке
+    title: В Банке
 
 frameSteps:
-  # TODO: translate me
+  desc: Выберите ИНН Заказчика
   selectInn:
-    title: Выберите ИНН Заказчика
     label: ИНН Заказчика
     placeholder: Начните вводить ИНН для поиска
     customerInfo:
