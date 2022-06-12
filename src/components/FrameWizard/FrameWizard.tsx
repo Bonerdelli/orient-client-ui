@@ -26,7 +26,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 0:
-        return <FrameSelectInn />
+        return <FrameSelectInn onNavigateNextAllow={handleFirstStepAllowNext} />
       case 1:
         return <FrameDocuments />
       case 2:
@@ -35,6 +35,11 @@ const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
         return <FrameBankOffers />
       default:
         return <></>
+    }
+  }
+  const handleFirstStepAllowNext = (allow: boolean) => {
+    if (allow) {
+      console.log('handleFirstStepAllowNext')
     }
   }
   const handleNextStep = () => {

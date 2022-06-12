@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Empty } from 'antd'
 
-import './EmptyResult.style.less'
-
 const EmptyResult: React.FC = () => {
   const { t } = useTranslation()
   return (
