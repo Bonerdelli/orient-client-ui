@@ -1,18 +1,18 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Typography, Select, Row, Col, Grid, Card, Steps, Form, Empty, Input } from 'antd'
+import { Button, Typography, Row, Col, Card, Steps } from 'antd'
 
 import Div from 'components/Div'
 
+import FrameSelectInn from 'components/FrameSelectInn'
+import FrameDocuments from 'components/FrameDocuments'
+import FrameSignDocuments from 'components/FrameSignDocuments'
+import FrameBankOffers from 'components/FrameBankOffers'
+
 import './FrameWizard.style.less'
 
-import { baseFormConfig } from 'library/helpers/form'
-
-
 const { Step } = Steps
-const { Title, Paragraph } = Typography
-const { Item: FormItem } = Form
-const { useBreakpoint } = Grid
+const { Title } = Typography
 
 export interface FrameWizardProps {
 
@@ -22,18 +22,17 @@ const LAST_STEP_INDEX = 3
 
 const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
   const { t } = useTranslation()
-  const breakPoint = useBreakpoint()
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 0:
-        return renderFirstStep()
+        return <FrameSelectInn />
       case 1:
-        return renderSecondStep()
+        return <FrameDocuments />
       case 2:
-        return renderThirdStep()
+        return <FrameSignDocuments />
       case 3:
-        return renderFourthStep()
+        return <FrameBankOffers />
       default:
         return <></>
     }
@@ -48,7 +47,13 @@ const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
   }
   const renderNextButton = () => {
     return (
-      <Button size="large" type="primary" onClick={handleNextStep}>{t('orders.actions.next.title')}</Button>
+      <Button
+        size="large"
+        type="primary"
+        onClick={handleNextStep}
+      >
+        {t('orders.actions.next.title')}
+      </Button>
     )
   }
   const renderActions = () => (
@@ -58,47 +63,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
       <Col>{renderNextButton()}</Col>
     </Row>
   )
-  // TODO: to ui-lib
-  const renderEmptyResult = () => (
-    <Empty
-      image={Empty.PRESENTED_IMAGE_SIMPLE}
-      description={t('common.forms.select.noData')}
-    />
-  )
-  const renderFirstStep = () => (
-    <Div className="FrameWizard__step__content">
-      <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
-      <Row>
-        <Col lg={12} xl={10}>
-          <Select
-            showSearch
-            notFoundContent={renderEmptyResult()}
-            placeholder={t('frameSteps.selectInn.placeholder')}
-          >
-          </Select>
-        </Col>
-      </Row>
-      {renderActions()}
-    </Div>
-  )
-  const renderSecondStep = () => (
-    <Div className="FrameWizard__step__content">
-      <Title level={5}>{t('frameSteps.documents.title')}</Title>
-      {renderActions()}
-    </Div>
-  )
-  const renderThirdStep = () => (
-    <Div className="FrameWizard__step__content">
-      <Title level={5}>{t('frameSteps.signDocuments.sectionTitles.signDocuments')}</Title>
-      {renderActions()}
-    </Div>
-  )
-  const renderFourthStep = () => (
-    <Div className="FrameWizard__step__content">
-      <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
-      {renderActions()}
-    </Div>
-  )
+
   return (
     <>
       <Card className="Wizard FrameWizard">
@@ -111,7 +76,10 @@ const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
         </Steps>
       </Card>
       <Card className="FrameWizard__step">
-        {renderCurrentStep()}
+        <Div className="FrameWizard__step__content">
+          {renderCurrentStep()}
+          {renderActions()}
+        </Div>
       </Card>
     </>
   )
