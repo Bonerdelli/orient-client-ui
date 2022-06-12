@@ -54,6 +54,8 @@ orders:
   actions:
     cancel:
       title: Отменить заявку
+    next:
+      title: Далее
     submitForReview:
       title: Отправить на проверку # Submit for review
     signAndSubmit:
@@ -100,15 +102,15 @@ frameSimpleOrder:
     title: В Банке
 
 frameSteps:
-  desc: Выберите ИНН Заказчика
   selectInn:
+    title: Выберите ИНН Заказчика
     label: ИНН Заказчика
     placeholder: Начните вводить ИНН для поиска
     customerInfo:
       title: Информация о выбранном Заказчике
 
   documents:
-    desc: Приложите пакет документов для оформления заявки
+    title: Приложите пакет документов для оформления заявки
     sectionTitles:
       mainDocs: Обязательные документы
       additionalDocs: Дополнительные документы

@@ -49,6 +49,9 @@ bankRequisitesPage:
     mfoNum: MFO # TODO: check en l10n
     account: Account number
 
+##
+# TODO: sync l10ns below
+##
 orders:
   actionButton:
     title: Get the product
