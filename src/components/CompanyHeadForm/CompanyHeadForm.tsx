@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Grid, Row, Col, Spin, Skeleton, Divider, Button } from 'antd'
-import { SaveOutlined } from '@ant-design/icons'
+import { Link, useParams } from 'react-router-dom'
+import { Card, Form, Grid, Row, Col, Spin, Skeleton, Button } from 'antd'
+import { SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { isUndefined } from 'lodash'
 
 import ErrorResultView from 'ui-components/ErrorResultView'
@@ -12,24 +13,33 @@ import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
 import { getCompanyHead, updateCompanyHead } from 'library/api' // TODO: to ui-lib
 
 import formFields from './CompanyHeadForm.form'
+import './CompanyHeadForm.style.less'
 
 const { useBreakpoint } = Grid
 const { Item: FormItem } = Form
-const { Meta } = Card
 
 export interface CompanyHeadFormProps {
   companyId: number,
+  backUrl?: string
+  id?: number,
 }
 
-const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ companyId }) => {
+export interface CompanyHeadPathParams {
+  itemId?: string,
+}
+
+const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, id }) => {
   const { t } = useTranslation()
   const breakPoint = useBreakpoint()
+  const { itemId } = useParams<CompanyHeadPathParams>()
 
   const [ formData, setFormData ] = useState<Partial<CompanyHead>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
   const [ initialData, dataLoaded ] = useApi<CompanyHead | null>(
-    getCompanyHead,
-    { companyId },
+    getCompanyHead, {
+      companyId,
+      id: id ?? itemId,
+    },
   )
 
   useEffect(() => {
@@ -41,8 +51,10 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ companyId }) => {
   const handleFormSubmit = async (data: CompanyHead) => {
     setSubmitting(true)
     const updatedData = await callApi<CompanyHead | null>(
-      updateCompanyHead,
-      { companyId },
+      updateCompanyHead, {
+        companyId,
+        id: id ?? itemId,
+      },
       data,
     )
     if (updatedData) {
@@ -65,10 +77,21 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ companyId }) => {
     </FormItem>
   )
 
+  const renderCardTitle = () => {
+    const title = t('headsPage.formSections.main.title')
+    if (!backUrl) return title
+    return (
+      <>
+        <Link className="CompanyHeadForm__navigateBack" to={backUrl}>
+          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
+        </Link>
+        {title}
+      </>
+    )
+  }
+
   const renderCardContent = () => (
-    <Card>
-      <Meta title={t('headsPage.formSections.main.title')} />
-      <Divider />
+    <Card title={renderCardTitle()}>
       {renderForm()}
     </Card>
   )

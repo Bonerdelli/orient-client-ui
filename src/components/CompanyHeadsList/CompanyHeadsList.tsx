@@ -1,52 +1,75 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link, useRouteMatch } from 'react-router-dom'
+import { remove } from 'lodash'
 
-import { Table, Button, Space } from 'antd'
+import { Table, Button, Space, Popconfirm } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
+import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
+
 import { CompanyHead } from 'library/models'
-import { renderBinaryCell, renderNumericCell } from 'library/helpers/table'
+import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { renderBinaryCell, renderNumericCell } from 'library/helpers/table' // TODO: to ui-lib
+
+import { useStoreState } from 'library/store'
+import { getCompanyHeads, deleteCompanyHead } from 'library/api'
 
 import './CompanyHeadsList.style.less'
-import mockData from 'library/mock/heads' // TODO: integrate with API when ready
 
-export interface CompanyHeadsListProps { }
+export interface CompanyHeadsListProps {
+  companyId: number
+}
 
-const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
+export enum PassportType {
+  Ru = 'RU',
+  Uz = 'UZ',
+  Uz_Id = 'UZ_ID',
+}
+
+const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   const { t } = useTranslation()
-  const [ data, setData ] = useState<CompanyHead[]>()
+  const { url } = useRouteMatch()
 
-  useEffect(() => {
-    setData(mockData)
-  }, [ mockData ])
+  const company = useStoreState(state => state.company.current)
+  const [ data, dataLoaded ] = useApi<CompanyHead[]>(getCompanyHeads, { companyId })
 
   const handleEdit = (item: CompanyHead) => {
     console.log('handleEdit', item)
   }
 
-  const handleDelete = (item: CompanyHead) => {
-    console.log('handleDelete', item)
+  const handleDelete = async (item: CompanyHead) => {
+    if (data) {
+      await deleteCompanyHead({ companyId, id: item.id as number })
+      remove(data, (datum) => datum === item)
+    }
   }
 
   const renderActions = (_val: unknown, item: CompanyHead) => (
-    <Space className="DataTable__actions">
-      <Button
-        key="edit"
-        type="primary"
-        shape="circle"
-        title={t('common.actions.edit.title')}
-        onClick={() => handleEdit(item)}
-        icon={<EditOutlined />}
-      />
-      <Button
-        key="delete"
-        type="primary" danger
-        shape="circle"
-        title={t('common.actions.delete.title')}
-        onClick={() => handleDelete(item)}
-        icon={<DeleteOutlined />}
-      />
+    <Space className="DataTable__ghostActions">
+      <Link to={`${url}/${item.id}`}>
+        <Button
+          key="edit"
+          type="primary"
+          shape="circle"
+          title={t('common.actions.edit.title')}
+          onClick={() => handleEdit(item)}
+          icon={<EditOutlined />}
+        />
+      </Link>
+      <Popconfirm
+        onConfirm={() => handleDelete(item)}
+        title={t('common.actions.delete.confirmOne')}
+      >
+        <Button
+          key="delete"
+          type="primary" danger
+          shape="circle"
+          title={t('common.actions.delete.title')}
+          icon={<DeleteOutlined />}
+        />
+      </Popconfirm>
     </Space>
   )
 
@@ -56,6 +79,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
       key: 'fullName',
       dataIndex: 'fullName',
       title: t('headsPage.tableColumns.fullName'),
+      render: (_, item: CompanyHead) => ([item.lastName, item.firstName, item.secondName].filter(Boolean).join(' ')),
     },
     {
       key: 'isExecutive',
@@ -85,11 +109,19 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({}) => {
     },
   ]
 
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="error" />
+    )
+  }
+
   return (
     <div className="CompanyHeadsList" data-testid="CompanyHeadsList">
       <Table
+        bordered
         columns={columns}
-        dataSource={data}
+        loading={dataLoaded === null}
+        dataSource={data || []}
         pagination={false}
       />
     </div>

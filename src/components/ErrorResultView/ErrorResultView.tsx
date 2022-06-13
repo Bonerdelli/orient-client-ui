@@ -13,6 +13,7 @@ type ErrorResultViewProps = {
   status?: 'error' | 'warning' | 403 | 404 | 500
   reloadCallback?: () => void
   centered?: boolean
+  compact?: boolean
   fullHeight?: boolean
 }
 
@@ -22,6 +23,7 @@ const ErrorResultView: React.FC<ErrorResultViewProps> = ({
   status = 'error',
   centered = false,
   fullHeight = false,
+  compact = false,
   reloadCallback,
 }) => {
   const { t } = useTranslation()
@@ -30,6 +32,7 @@ const ErrorResultView: React.FC<ErrorResultViewProps> = ({
       ErrorResultView: true,
       'ErrorResultView--centered': centered,
       'ErrorResultView--fullHeight': fullHeight,
+      'ErrorResultView--compact': compact,
     })}>
       <Result
         status={status}

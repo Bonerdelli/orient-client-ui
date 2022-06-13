@@ -1,13 +1,15 @@
 // TODO: remove after debugging and libs separation
 // @import 'antd/dist/antd.less'; // DEBUG: uncomment for debug with lib sources
+@import 'orient-ui-library/styles/vars.less';
 
 html,
-body {
+body,
+#root {
   height: 100%;
 }
 
-#root {
-  height: 100%;
+#root > .ant-alert-error {
+  min-height: 100%;
 }
 
 body {
@@ -31,12 +33,7 @@ h1, h2, h3, h4 {
   left: 50%;
 }
 
-// TODO: move to component
-.DataTable__actions {
-  visibility: hidden;
-}
-
-.ant-table-row:hover .DataTable__actions {
+.ant-table-row:hover .DataTable__ghostActions {
   visibility: visible;
 }
 
@@ -44,4 +41,18 @@ h1, h2, h3, h4 {
 // TODO: move to ui-lib
 .relative {
   position: relative;
+}
+
+/**
+ * Cross-component classes
+ * TODO: move it somewhere
+ */
+
+.DataTable__ghostActions {
+  visibility: hidden;
+}
+
+.Form__actions {
+  padding-top: @padding-sm;
+  text-align: right;
 }
