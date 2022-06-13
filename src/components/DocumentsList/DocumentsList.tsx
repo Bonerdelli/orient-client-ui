@@ -123,6 +123,7 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
     <Div className="DocumentsList" data-testid="DocumentsList">
       <Table
         size="middle"
+        className="DocumentsList__table"
         columns={columns}
         dataSource={data}
         pagination={false}

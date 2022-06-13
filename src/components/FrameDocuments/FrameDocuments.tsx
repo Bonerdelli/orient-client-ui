@@ -26,8 +26,8 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({ orderId, customerId }) 
     bankRequisites: true,
     questionnaire: false,
   }
-  const dotParams = async (ready: boolean) => ({
-    dot: ready ? <CheckCircleFilled /> : <ExclamationCircleOutlined />,
+  const dotParams = (ready: boolean) => ({
+    dot: ready ? <CheckCircleFilled size={16} /> : <ExclamationCircleOutlined />,
     color: ready ? 'green' : 'red',
   })
   return (
@@ -45,7 +45,7 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({ orderId, customerId }) 
       </Div>
       <Div className="FrameDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
-        <Timeline>
+        <Timeline className="FrameDocuments__companyDataStatus">
           <TimelineItem {...dotParams(сompanyDataReady.сompanyHead)}>
             {t('frameSteps.documents.сompanyData.сompanyHead')}
           </TimelineItem>
