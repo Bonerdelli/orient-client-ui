@@ -28,7 +28,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
       case 0:
         return <FrameSelectInn onNavigateNextAllow={handleFirstStepAllowNext} />
       case 1:
-        return <FrameDocuments />
+        return <FrameDocuments orderId={0} customerId={0} />
       case 2:
         return <FrameSignDocuments />
       case 3:
