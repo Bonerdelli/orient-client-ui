@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Typography } from 'antd'
+import { Typography, Space } from 'antd'
 
 import Div from 'components/Div'
 import DocumentsList from 'components/DocumentsList'
@@ -21,11 +21,17 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({ orderId, customerId }) 
   return (
     <Div className="FrameDocuments">
       <Paragraph>{t('frameSteps.documents.title')}</Paragraph>
-      <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
-      <DocumentsList customerId={customerId} orderId={orderId} types={PRIMARY_DOC_TYPES} />
-      <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
-      <DocumentsList customerId={customerId} orderId={orderId} types={SECONDARY_DOC_TYPES} />
-      <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
+      <Div className="FrameDocuments__section">
+        <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
+        <DocumentsList customerId={customerId} orderId={orderId} types={PRIMARY_DOC_TYPES} />
+      </Div>
+      <Div className="FrameDocuments__section">
+        <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
+        <DocumentsList customerId={customerId} orderId={orderId} types={SECONDARY_DOC_TYPES} />
+      </Div>
+      <Div className="FrameDocuments__section">
+        <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
+      </Div>
     </Div>
   )
 }

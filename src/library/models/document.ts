@@ -1,3 +1,11 @@
+export enum DocumentStatus {
+  Uploaded = 'uploaded',
+  NotUploaded = 'notUploaded',
+  UploadingError = 'uploadingError',
+  Signed = 'signed',
+  Unsigned = 'unsigned',
+}
+
 /**
  * NOTE: need EP to retrieve doc types
  * Doc type must not be in cyr name
@@ -15,6 +23,6 @@ export const DOCUMENT_TYPE = {
 
 export interface Document {
   id: number
-  type: keyof typeof DOCUMENT_TYPE
+  type: number // keyof typeof DOCUMENT_TYPE
   status: unknown
 }
