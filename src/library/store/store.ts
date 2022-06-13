@@ -13,12 +13,15 @@ export interface AppStoreModel {
 }
 
 const appStoreModel = {
-  user: persist(userStoreModel),
+  user: userStoreModel,
   company: companyStoreModel,
 }
 
 export const store = createStore<AppStoreModel>(
-  appStoreModel, {
+  persist(appStoreModel, {
+    storage: localStorage,
+    allow: ['user'],
+  }), {
     version: STORAGE_KEY_VERSION,
     middleware: [
       axiosMiddleware,

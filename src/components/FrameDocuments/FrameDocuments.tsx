@@ -27,7 +27,9 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({ orderId, customerId }) 
     questionnaire: false,
   }
   const dotParams = (ready: boolean) => ({
-    dot: ready ? <CheckCircleFilled size={16} /> : <ExclamationCircleOutlined />,
+    dot: ready
+      ? <CheckCircleFilled className="FrameDocuments__companyDataStatus__okIcon" />
+      : <ExclamationCircleOutlined />,
     color: ready ? 'green' : 'red',
   })
   return (
