@@ -48,3 +48,6 @@ bankRequisitesPage:
     bankName: Bank name
     mfoNum: MFO # TODO: check en l10n
     account: Account number
+  formSections:
+    main:
+      title: Bank details

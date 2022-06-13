@@ -51,31 +51,26 @@ export const PublicRoutes = () => (
 export const ProtectedRoutes = () => (
   <Switch>
     <PrivateRoute
-      exact
       path={portalConfig.sections.company}
       component={MyCompanyPage}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
-      exact
       path={portalConfig.sections.heads}
       component={CompanyHeadsPage}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
-      exact
       path={portalConfig.sections.bankDetails}
       component={BankRequisitesPage}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
-      exact
       path={portalConfig.sections.documents}
       component={DocumentsPage}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
-      exact
       path={portalConfig.sections.requests}
       component={RequestsPage}
       roles={portalConfig.roles.pages.all}

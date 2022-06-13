@@ -1,4 +1,8 @@
+import { ConfigProvider, Alert } from 'antd'
 import { StoreProvider } from 'easy-peasy'
+
+// import enUS from 'antd/lib/locale/en_US' // TODO: add locale switcher
+import ruRU from 'antd/lib/locale/ru_RU'
 
 import 'orient-ui-library/styles/main.less'
 import 'library/i18n'
@@ -9,10 +13,16 @@ import AppLayout from 'components/AppLayout'
 
 import './App.style.less'
 
+const { ErrorBoundary } = Alert
+
 const App = () => (
-  <StoreProvider store={store}>
-    <AppLayout />
-  </StoreProvider>
+  <ConfigProvider locale={ruRU}>
+    <StoreProvider store={store}>
+      <ErrorBoundary showIcon>
+        <AppLayout />
+      </ErrorBoundary>
+    </StoreProvider>
+  </ConfigProvider>
 )
 
 export default App

@@ -47,3 +47,6 @@ bankRequisitesPage:
     bankName: Название банка
     mfoNum: МФО
     account: Расчётный счет
+  formSections:
+    main:
+      title: Банковские реквизиты
