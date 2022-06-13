@@ -48,19 +48,18 @@
     height: @layout-header-height - @padding-xs * 2;
     position: relative;
   }
-  &__actions {
-    &__button {
+  &__actions &__actions__button,
+  &__mainAction .ant-btn-link {
       opacity: .75;
-      &, &:hover, &:focus {
-        color: inherit;
-      }
-      &:hover, &:focus {
-        opacity: 1;
-      }
-      &__title {
-        @media @mobile {
-          display: none !important; // Sorry
-        }
+    &, &:hover, &:focus {
+      color: inherit;
+    }
+    &:hover, &:focus {
+      opacity: 1;
+    }
+    &__title {
+      @media @mobile {
+        display: none !important; // Sorry
       }
     }
   }

@@ -21,6 +21,8 @@ const AppLayout = () => {
   const user = useStoreState(state => state.user.current)
   const auth = useStoreState(state => state.user.currentAuth)
 
+  console.log('store', user, auth)
+
   const [loading, setLoading] = useState<boolean>(true)
   const [apiError, setApiError] = useState<string | null>(null)
 

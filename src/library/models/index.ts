@@ -5,4 +5,5 @@
 export * from './bankRequisites'
 export * from './common'
 export * from './companyHead'
+export * from './document'
 export * from './customer'

@@ -5,12 +5,19 @@ import { LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import './AppHeader.style.less'
 import Logo from 'orient-ui-library/assets/orient-logo.svg'
 
+import Div from 'components/Div'
+
 import { useStoreActions, useStoreState } from 'library/store'
 
 const { Header } = Layout
 const { Text } = Typography
 
-const AppHeader = () => {
+export interface AppHeaderProps {
+  title?: string
+  mainAction?: JSX.Element
+}
+
+const AppHeader: React.FC<AppHeaderProps> = ({ title, mainAction }) => {
   const { setLogout } = useStoreActions(actions => actions.user)
   const user = useStoreState(state => state.user.current)
   const { t } = useTranslation()
@@ -20,7 +27,17 @@ const AppHeader = () => {
       <Row className="AppHeader__content" align="middle" gutter={12}>
         <Col>
           <Logo className="AppHeader__logo" />
+          {title && (
+            <Div className="AppHeader__title" >
+              {title}
+            </Div>
+          )}
         </Col>
+        {mainAction && (
+          <Col className="AppHeader__mainAction">
+            {mainAction}
+          </Col>
+        )}
         <Col className="AppHeader__spacer" />
         <Col className="AppHeader__user">
           <Avatar className="AppHeader__user__avatar" icon={<UserOutlined />} />
@@ -33,7 +50,7 @@ const AppHeader = () => {
             type="link"
             className="AppHeader__actions__button"
             icon={<LogoutOutlined />}
-            onClick={setLogout}
+            onClick={() => setLogout()}
           >
             <span className="AppHeader__actions__button__title">{t('common.user.actions.logout.title')}</span>
           </Button>
