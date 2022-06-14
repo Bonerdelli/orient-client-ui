@@ -5,11 +5,11 @@ import { CompanyHead } from 'library/models/proxy' // TODO: move to ui-lib after
 
 export type CompanyHeadSaveRequest = schema.components['schemas']['CompanyFounderSaveRequest']
 
-export interface GetCompanyHeadsParams {
+export interface CompanyHeadsParams {
   companyId: number | bigint
 }
 
-export async function getCompanyHeads(params: GetCompanyHeadsParams) {
+export async function getCompanyHeads(params: CompanyHeadsParams) {
   return await get<CompanyHead[]>(`/client/company/${params.companyId}/founder`)
 }
 
@@ -27,8 +27,8 @@ export async function deleteCompanyHead(params: CompanyHeadItemParams) {
 }
 
 export async function updateCompanyHead(
-  params: CompanyHeadItemParams,
+  params: CompanyHeadsParams,
   request: CompanyHeadSaveRequest,
 ) {
-  return await post<CompanyHead>(`/client/company/${params.companyId}/founder/${params.id}`, request)
+  return await post<CompanyHead>(`/client/company/${params.companyId}/founder`, request)
 }

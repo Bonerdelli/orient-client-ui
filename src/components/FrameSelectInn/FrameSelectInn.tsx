@@ -7,7 +7,7 @@ import Div from 'components/Div' // TODO: from ui-lib
 import EmptyResult from 'components/EmptyResult' // TODO: from ui-lib
 
 import { Customer } from 'library/models' // TODO: check API schema, why not from proxy?
-import { FrameWizardType, searchCustomers, startFrameWizard } from 'library/api'
+import { FrameWizardType, searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
 
 import './FrameSelectInn.style.less'
 
@@ -80,6 +80,20 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
       setSelectedId(selectedCustomer?.id)
     }
   }, [selectedCustomer])
+
+  useEffect(() => {
+    loadCurrentStep()
+  }, [orderId])
+
+  const loadCurrentStep = async () => {
+    const result = await getFrameWizardStep({
+      type: wizardType,
+      companyId,
+      orderId,
+      step: 1,
+    })
+    console.log('getFrameWizardStep', result)
+  }
 
   const sendNextStep = async () => {
     if (!selectedCustomer) {

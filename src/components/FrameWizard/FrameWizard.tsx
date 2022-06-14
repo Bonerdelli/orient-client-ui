@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Card, Steps, Skeleton } from 'antd'
+import { Link, useParams } from 'react-router-dom'
+import { Typography, Card, Steps, Skeleton, Button } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import FrameSelectInn from 'components/FrameSelectInn'
 import FrameDocuments from 'components/FrameDocuments'
@@ -17,13 +19,18 @@ const { Title } = Typography
 
 export interface FrameWizardProps {
   orderId?: number
+  backUrl?: string
+}
+
+export interface FrameWizardPathParams {
+  itemId?: string,
 }
 
 export const FRAME_WIZARD_LAST_STEP_INDEX = 3
 
-const FrameWizard: React.FC<FrameWizardProps> = ({ orderId }) => {
+const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
-
+  const { itemId } = useParams<FrameWizardPathParams>()
   const company = useStoreState(state => state.company.current)
 
   const [ currentStep, setCurrentStep ] = useState<number>(0)
@@ -38,7 +45,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId }) => {
       case 0:
         return <FrameSelectInn
           companyId={company?.id as number}
-          orderId={orderId}
+          orderId={Number(itemId) || orderId}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
           selectedCustomer={selectedCustomer}
@@ -49,7 +56,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId }) => {
           companyId={company?.id as number}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
-          orderId={orderId}
+          orderId={Number(itemId) || orderId}
           customerId={-1}
         />
       case 2:
@@ -57,7 +64,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId }) => {
           companyId={company?.id as number}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
-          orderId={orderId}
+          orderId={Number(itemId) || orderId}
           customerId={-1}
         />
       case 3:
@@ -65,7 +72,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId }) => {
           companyId={company?.id as number}
           currentStep={currentStep}
           setCurrentStep={setCurrentStep}
-          orderId={orderId}
+          orderId={Number(itemId) || orderId}
           customerId={-1}
         />
       default:
@@ -73,10 +80,23 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId }) => {
     }
   }
 
+  const renderTitle = () => {
+    const title = t('frameOrder.title')
+    if (!backUrl) return title
+    return (
+      <>
+        <Link className="FrameWizard__navigateBack" to={backUrl}>
+          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
+        </Link>
+        {title}
+      </>
+    )
+  }
+
   return (
     <>
       <Card className="Wizard FrameWizard">
-        <Title level={3}>{t('frameOrder.title')}</Title>
+        <Title level={3}>{renderTitle()}</Title>
         <Steps current={currentStep} onChange={setCurrentStep}>
           <Step title={t('frameOrder.firstStep.title')} />
           <Step disabled={!selectedCustomer} title={t('frameOrder.secondStep.title')} />

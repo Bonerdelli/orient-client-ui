@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Timeline, Row, Col, Button, message } from 'antd'
 
-
 import Div from 'components/Div'
 import DocumentsList from 'components/DocumentsList'
 
@@ -44,7 +43,7 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
   const сompanyDataReady = {
     сompanyHead: true,
     bankRequisites: true,
-    questionnaire: false,
+    questionnaire: true,
   }
 
   const sendNextStep = async () => {

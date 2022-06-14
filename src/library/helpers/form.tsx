@@ -12,6 +12,7 @@ import FormItemWrapper from 'components/FormItemWrapper'
 import portalConfig from 'config/portal.yaml'
 
 const ACCOUNT_NUMBER_LENGTH = portalConfig.dataEntry.accountNumberLength
+const INN_NUMBER_LENGTH = 9 // TODO: use config portalConfig.dataEntry.innNumberLength
 
 export enum FormInputType {
   'Text',
@@ -26,6 +27,7 @@ export enum FormInputType {
   'Percent',
   'Integer',
   'AccountNumber',
+  'INN',
 }
 
 export type FormInputShortConfig<T = unknown> = [
@@ -73,6 +75,9 @@ const renderFormInputField = (type: FormInputType, isEditable: boolean) => {
     }
     case FormInputType.AccountNumber: {
       return <Input disabled={!isEditable} maxLength={ACCOUNT_NUMBER_LENGTH} />
+    }
+    case FormInputType.INN: {
+      return <Input disabled={!isEditable} maxLength={INN_NUMBER_LENGTH} />
     }
     default: {
       throw new Error('Unknown form item type')

@@ -11,6 +11,8 @@ export enum FrameWizardType {
 interface FrameWizardCommonParameters {
   type: FrameWizardType
   companyId: number
+  orderId?: number
+  step?: number
 }
 
 export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
@@ -59,7 +61,8 @@ export async function sendFrameWizardStep3(
 }
 
 /**
- * Gwt current step
+ * Get current step
+ * TODO: check this
  */
 export async function getCurrentFrameWizardStep(
   params: FrameWizardCommonParameters,
@@ -67,4 +70,15 @@ export async function getCurrentFrameWizardStep(
   const { companyId, type } = params
   const basePath = getBasePath(companyId, type)
   return await get(basePath)
+}
+
+/**
+ * Get wizard step
+ */
+export async function getFrameWizardStep(
+  params: FrameWizardCommonParameters,
+) {
+  const { companyId, orderId, type, step } = params
+  const basePath = getBasePath(companyId, type)
+  return await get(`${basePath}/${orderId}/${step}`)
 }

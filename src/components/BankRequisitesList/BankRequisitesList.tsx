@@ -32,7 +32,7 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
   }
 
   const renderActions = (_val: unknown, item: CompanyRequisites) => (
-    <Space size="small">
+    <Space size="small" className="DataTable__ghostActions">
       <Link to={`${url}/${item.id}`}>
         <Button
           key="edit"

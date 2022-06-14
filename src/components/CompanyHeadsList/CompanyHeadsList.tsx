@@ -33,16 +33,17 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   const { url } = useRouteMatch()
 
   const company = useStoreState(state => state.company.current)
-  const [ data, dataLoaded ] = useApi<CompanyHead[]>(getCompanyHeads, { companyId })
+  const [ data, dataLoaded, reloadData ] = useApi<CompanyHead[]>(getCompanyHeads, { companyId })
 
   const handleEdit = (item: CompanyHead) => {
-    console.log('handleEdit', item)
+    // console.log('handleEdit', item)
   }
 
   const handleDelete = async (item: CompanyHead) => {
     if (data) {
       await deleteCompanyHead({ companyId, id: item.id as number })
       remove(data, (datum) => datum === item)
+      reloadData()
     }
   }
 
@@ -51,7 +52,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
       <Link to={`${url}/${item.id}`}>
         <Button
           key="edit"
-          type="primary"
+          type="link"
           shape="circle"
           title={t('common.actions.edit.title')}
           onClick={() => handleEdit(item)}
@@ -63,8 +64,9 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
         title={t('common.actions.delete.confirmOne')}
       >
         <Button
+          danger
           key="delete"
-          type="primary" danger
+          type="link"
           shape="circle"
           title={t('common.actions.delete.title')}
           icon={<DeleteOutlined />}
