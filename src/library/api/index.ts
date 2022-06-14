@@ -1,6 +1,7 @@
 export * from './company'
 export * from './companyContacts'
 export * from './companyHead'
+export * from './companyOrders'
 export * from './customer'
 export * from './companyRequisites'
 export * from './frameWizard'
