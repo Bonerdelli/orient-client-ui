@@ -3,59 +3,68 @@ import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to 
 
 export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
 
-const getBasePath = (companyId: number) => `/client/company/${companyId}/wizard/frame`
+export enum FrameWizardType {
+  Simple,
+  Full,
+}
 
-interface WizardCommonParameters {
+interface FrameWizardCommonParameters {
+  type: FrameWizardType
   companyId: number
 }
 
-interface WizardStepParameters extends WizardCommonParameters {
+export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
   orderId: number
+}
+
+const getBasePath = (companyId: number, type: FrameWizardType) => {
+  const typePath = type === FrameWizardType.Full ? 'frame' : 'frameSimple'
+  return `/client/company/${companyId}/wizard/${typePath}`
 }
 
 /**
  * Wizard start (step 1)
  */
-export async function startWizard(
-  params: WizardCommonParameters,
+export async function startFrameWizard(
+  params: FrameWizardCommonParameters,
   request: WizardStep1To2Request
 ) {
-  const { companyId } = params
-  const basePath = getBasePath(companyId)
+  const { companyId, type } = params
+  const basePath = getBasePath(companyId, type)
   return await post(basePath, request)
 }
 
 /**
  * Send wizard step 2
  */
-export async function sendStep2(
-  params: WizardStepParameters,
+export async function sendFrameWizardStep2(
+  params: FrameWizardStepParameters,
   request: unknown
 ) {
-  const { companyId, orderId } = params
-  const basePath = getBasePath(companyId)
+  const { companyId, orderId, type } = params
+  const basePath = getBasePath(companyId, type)
   return await post(`${basePath}/${orderId}/2`, request)
 }
 
 /**
  * Send wizard step 2
  */
-export async function sendStep3(
-  params: WizardStepParameters,
+export async function sendFrameWizardStep3(
+  params: FrameWizardStepParameters,
   request: unknown
 ) {
-  const { companyId, orderId } = params
-  const basePath = getBasePath(companyId)
+  const { companyId, orderId, type } = params
+  const basePath = getBasePath(companyId, type)
   return await post(`${basePath}/${orderId}/3`, request)
 }
 
 /**
  * Gwt current step
  */
-export async function getCurrentStep(
-  params: WizardCommonParameters,
+export async function getCurrentFrameWizardStep(
+  params: FrameWizardCommonParameters,
 ) {
-  const { companyId } = params
-  const basePath = getBasePath(companyId)
+  const { companyId, type } = params
+  const basePath = getBasePath(companyId, type)
   return await get(basePath)
 }

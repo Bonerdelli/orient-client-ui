@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Typography, Row, Col, Card, Steps } from 'antd'
-
-import Div from 'components/Div'
+import { Typography, Card, Steps, Skeleton } from 'antd'
 
 import FrameSelectInn from 'components/FrameSelectInn'
 import FrameDocuments from 'components/FrameDocuments'
 import FrameSignDocuments from 'components/FrameSignDocuments'
 import FrameBankOffers from 'components/FrameBankOffers'
+
+import { Customer } from 'library/models'
+import { useStoreState } from 'library/store'
 
 import './FrameWizard.style.less'
 
@@ -15,59 +16,62 @@ const { Step } = Steps
 const { Title } = Typography
 
 export interface FrameWizardProps {
-
+  orderId?: number
 }
 
-const LAST_STEP_INDEX = 3
+export const FRAME_WIZARD_LAST_STEP_INDEX = 3
 
-const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
+const FrameWizard: React.FC<FrameWizardProps> = ({ orderId }) => {
   const { t } = useTranslation()
+
+  const company = useStoreState(state => state.company.current)
+
   const [ currentStep, setCurrentStep ] = useState<number>(0)
+
+  const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
+
   const renderCurrentStep = () => {
+    if (!company) {
+      return <Skeleton active={true} />
+    }
     switch (currentStep) {
       case 0:
-        return <FrameSelectInn onNavigateNextAllow={handleFirstStepAllowNext} />
+        return <FrameSelectInn
+          companyId={company?.id as number}
+          orderId={orderId}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          selectedCustomer={selectedCustomer}
+          setSelectedCustomer={setSelectedCustomer}
+        />
       case 1:
-        return <FrameDocuments orderId={0} customerId={0} />
+        return <FrameDocuments
+          companyId={company?.id as number}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          orderId={orderId}
+          customerId={-1}
+        />
       case 2:
-        return <FrameSignDocuments />
+        return <FrameSignDocuments
+          companyId={company?.id as number}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          orderId={orderId}
+          customerId={-1}
+        />
       case 3:
-        return <FrameBankOffers />
+        return <FrameBankOffers
+          companyId={company?.id as number}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          orderId={orderId}
+          customerId={-1}
+        />
       default:
         return <></>
     }
   }
-  const handleFirstStepAllowNext = (allow: boolean) => {
-    if (allow) {
-      console.log('handleFirstStepAllowNext')
-    }
-  }
-  const handleNextStep = () => {
-    if (currentStep < LAST_STEP_INDEX) {
-      setCurrentStep(currentStep + 1)
-    }
-  }
-  const renderCancelButton = () => {
-    return (<></>)
-  }
-  const renderNextButton = () => {
-    return (
-      <Button
-        size="large"
-        type="primary"
-        onClick={handleNextStep}
-      >
-        {t('orders.actions.next.title')}
-      </Button>
-    )
-  }
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
-      <Col>{renderCancelButton()}</Col>
-      <Col flex={1}></Col>
-      <Col>{renderNextButton()}</Col>
-    </Row>
-  )
 
   return (
     <>
@@ -81,10 +85,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
         </Steps>
       </Card>
       <Card className="FrameWizard__step">
-        <Div className="FrameWizard__step__content">
-          {renderCurrentStep()}
-          {renderActions()}
-        </Div>
+        {renderCurrentStep()}
       </Card>
     </>
   )

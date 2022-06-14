@@ -3,19 +3,34 @@ import { Typography } from 'antd'
 
 import Div from 'components/Div'
 
+import { FrameWizardType } from 'library/api'
+
 import './FrameBankOffers.style.less'
 
 const { Title } = Typography
 
 export interface FrameBankOffersProps {
-
+  wizardType?: FrameWizardType
+  companyId?: number
 }
 
-const FrameBankOffers: React.FC<FrameBankOffersProps> = ({}) => {
+const FrameBankOffers: React.FC<FrameBankOffersProps> = ({
+  // wizardType = FrameWizardType.Full,
+  // companyId,
+}) => {
   const { t } = useTranslation()
-  return (
+  const renderActions = () => (
+    <></>
+  )
+  const renderStepContent = () => (
     <Div className="FrameBankOffers">
       <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
+    </Div>
+  )
+  return (
+    <Div className="FrameWizard__step__content">
+      {renderStepContent()}
+      {renderActions()}
     </Div>
   )
 }
