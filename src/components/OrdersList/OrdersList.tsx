@@ -1,16 +1,17 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Popconfirm } from 'antd'
+import { Table, Button, Space, Popconfirm, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
 
-import { Order } from 'library/models/order'
+import { Order, GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { formatDate } from 'library/helpers/date' // TODO: to ui-lib
 
-import { getCompanyOrdersList, deleteCompanyOrder } from 'library/api'
+import { getCompanyOrdersList } from 'library/api'
 
 import './OrdersList.style.less'
 
@@ -22,7 +23,14 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
-  const [ data, dataLoaded, dataReloadCallback ] = useApi<Order[]>(getCompanyOrdersList, { companyId })
+  const [
+    data,
+    dataLoaded,
+    dataReloadCallback,
+  ] = useApi<GridResponse<Order[]>>(
+    getCompanyOrdersList,  // TODO: fixme
+    { companyId },
+  )
 
   const handleDelete = async (item: Order) => {
     if (data) {
@@ -35,53 +43,64 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
     <Space size="small">
       <Link to={`${url}/${item.id}`}>
         <Button
-          key="edit"
+          key="view"
           type="link"
           shape="circle"
-          title={t('common.actions.edit.title')}
-          icon={<EditOutlined />}
+          title={t('common.actions.view.title')}
+          icon={<EyeOutlined />}
         />
       </Link>
-      <Popconfirm
-        onConfirm={() => handleDelete(item)}
-        title={t('common.actions.delete.confirmOne')}
-        placement="bottomRight"
-        okButtonProps={{
-          danger: true,
-        }}
-      >
-        <Button
-          key="delete"
-          type="link" danger
-          shape="circle"
-          title={t('common.actions.delete.title')}
-          icon={<DeleteOutlined />}
-        />
-      </Popconfirm>
     </Space>
   )
 
+  const renderOrderType = (code: string) => {
+    switch (code) {
+      // TODO: fill me with other params
+      case 'frame':
+        return 'На рамочный договор' // TODO: ask be for enum and add l10ns
+      default:
+        return <></>
+    }
+  }
+
   const columns: ColumnsType<Order> = [
     {
-      key: 'bankName',
-      dataIndex: 'bankName',
-      title: t('bankRequisitesPage.tableColumns.bankName'),
+      key: 'number',
+      dataIndex: 'id',
+      title: t('models.order.fields.id.title'), // TODO: choose where to store such l10ns
+      align: 'center',
     },
     {
-      key: 'mfoNum',
-      dataIndex: 'mfo',
-      title: t('bankRequisitesPage.tableColumns.mfoNum'),
+      key: 'typeCode',
+      dataIndex: 'typeCode',
+      title: t('models.order.fields.typeCode.title'),
+      render: renderOrderType,
+      align: 'center',
     },
     {
-      key: 'account',
-      dataIndex: 'accountNumber',
-      title: t('bankRequisitesPage.tableColumns.account'),
+      key: 'updatedAt',
+      dataIndex: 'updatedAt',
+      title: t('models.order.fields.createdAt.title'), // TODO: fixme
+      render: (val) => formatDate(val, { includeTime: true }),
     },
+    {
+      key: 'amount',
+      dataIndex: 'amount',
+      title: t('models.order.fields.amount.title'),
+    },
+    {
+      key: 'statusName',
+      dataIndex: 'statusName',
+      title: t('models.order.fields.statusName.title'),
+      render: (val) => <Tag>{val}</Tag>,
+      align: 'center',
+    },
+
     {
       key: 'actions',
       render: renderActions,
       align: 'right',
-      width: 100,
+      width: 50,
     },
   ]
 
@@ -97,7 +116,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
         bordered
         columns={columns}
         loading={dataLoaded === null}
-        dataSource={data || []}
+        dataSource={data?.data || []}
         pagination={false}
       />
     </div>

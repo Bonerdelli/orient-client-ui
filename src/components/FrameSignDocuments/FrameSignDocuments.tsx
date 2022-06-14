@@ -17,8 +17,9 @@ const { Title } = Typography
 
 export interface FrameSignDocumentsProps {
   wizardType?: FrameWizardType
-  companyId: number
-  orderId: number
+  orderId?: number
+  companyId?: number
+  customerId?: number
   currentStep: number
   setCurrentStep: (step: number) => void
 }
@@ -37,6 +38,7 @@ const FrameSignDocuments: React.FC<FrameSignDocumentsProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   const sendNextStep = async () => {
+    if (!orderId) return
     setSubmitting(true)
     const result = await sendFrameWizardStep3({
       type: wizardType,

@@ -13,8 +13,8 @@ import './DocumentsList.style.less'
 const { Text } = Typography
 
 export interface DocumentsListProps {
-  orderId: number
-  customerId: number
+  orderId?: number
+  customerId?: number
   types: number[]
 }
 
@@ -117,7 +117,6 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
       align: 'right',
     },
   ]
-
 
   return (
     <Div className="DocumentsList" data-testid="DocumentsList">

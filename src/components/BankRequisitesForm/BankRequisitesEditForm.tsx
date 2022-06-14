@@ -126,14 +126,12 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
 
   const renderForm = () => {
     if (dataLoaded === false) {
-      return (
-        <ErrorResultView centered compact status="error" />
-      )
+      return <ErrorResultView centered compact status="error" />
     }
-    if (isNull(formData)) {
+    if (dataLoaded && isNull(initialData)) {
       return <ErrorResultView centered compact status="warning" />
     }
-    if (isUndefined(formData)) {
+    if (isUndefined(formData) || isNull(formData)) {
       return <Skeleton active={dataLoaded === null} />
     }
     return renderFormContent()

@@ -70,6 +70,7 @@ orders:
       title: Подписать и отправить
     refuseOffer:
       title: Отказаться от предложения # Refuse the offer
+  # NOTE: status label is cabinet-specific
   statuses:
     draft:
       title: Черновик

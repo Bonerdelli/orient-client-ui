@@ -17,9 +17,9 @@ const { Item: TimelineItem } = Timeline
 
 export interface FrameDocumentsProps {
   wizardType?: FrameWizardType
-  companyId: number
-  orderId: number
-  customerId: number
+  companyId?: number
+  orderId?: number
+  customerId?: number
   currentStep: number
   setCurrentStep: (step: number) => void
 }
@@ -48,6 +48,7 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
   }
 
   const sendNextStep = async () => {
+    if (!orderId || !companyId) return
     setSubmitting(true)
     const result = await sendFrameWizardStep2({
       type: wizardType,

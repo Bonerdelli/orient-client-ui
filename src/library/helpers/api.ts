@@ -12,6 +12,11 @@ import {
 
 import { useStoreActions } from 'library/store'
 
+// TODO: to ui-lib
+export interface PaginatedRequest {
+  limit: number,
+  page: number,
+}
 
 export interface UseApiHookOptions {
   catchUnauthorized: boolean
@@ -25,6 +30,13 @@ export type UseApiHookValue<T> = [
 
 const defaultOptions: UseApiHookOptions = {
   catchUnauthorized: true,
+}
+
+export const DEFAULT_PAGINATION_LIMIT = 100
+
+export const defaultPaginatedRequest: PaginatedRequest = {
+  limit: DEFAULT_PAGINATION_LIMIT,
+  page: 1,
 }
 
 /**

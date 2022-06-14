@@ -12,6 +12,10 @@ const { Title } = Typography
 export interface FrameBankOffersProps {
   wizardType?: FrameWizardType
   companyId?: number
+  orderId?: number
+  customerId?: number
+  currentStep: number
+  setCurrentStep: (step: number) => void
 }
 
 const FrameBankOffers: React.FC<FrameBankOffersProps> = ({

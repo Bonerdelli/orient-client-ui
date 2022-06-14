@@ -79,9 +79,9 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId }) => {
         <Title level={3}>{t('frameOrder.title')}</Title>
         <Steps current={currentStep} onChange={setCurrentStep}>
           <Step title={t('frameOrder.firstStep.title')} />
-          <Step title={t('frameOrder.secondStep.title')} />
-          <Step title={t('frameOrder.thirdStep.title')} />
-          <Step title={t('frameOrder.fourthStep.title')} />
+          <Step disabled={!selectedCustomer} title={t('frameOrder.secondStep.title')} />
+          <Step disabled title={t('frameOrder.thirdStep.title')} />
+          <Step disabled title={t('frameOrder.fourthStep.title')} />
         </Steps>
       </Card>
       <Card className="FrameWizard__step">
