@@ -15,6 +15,7 @@ const { Text } = Typography
 export interface DocumentsListProps {
   orderId?: number
   customerId?: number
+  showHeader?: boolean
   types: number[]
 }
 
@@ -23,6 +24,7 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
   // orderId,
   // customerId,
   types,
+  showHeader,
 }) => {
   const { t } = useTranslation()
   const [ data, setData ] = useState<Document[]>()
@@ -102,13 +104,15 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
       key: 'type',
       dataIndex: 'type',
       width: 'auto',
+      title: t('common.documents.fields.type.title'),
       render: (value) => DOCUMENT_TYPE[value],
     },
     {
       key: 'status',
       dataIndex: 'status',
-      align: 'right',
+      title: t('common.documents.fields.status.title'),
       render: renderDocumentStatus,
+      align: 'center',
     },
     {
       key: 'actions',
@@ -126,7 +130,7 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
         columns={columns}
         dataSource={data}
         pagination={false}
-        showHeader={false}
+        showHeader={showHeader}
       />
     </Div>
   )
