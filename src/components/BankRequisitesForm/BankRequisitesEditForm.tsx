@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams, useHistory } from 'react-router-dom'
 import { Card, Form, Grid, Row, Col, Space, Spin, Skeleton, Button } from 'antd'
 import { SaveOutlined, ArrowLeftOutlined, StopOutlined } from '@ant-design/icons'
-import { isUndefined } from 'lodash'
+import { isUndefined, isNull } from 'lodash'
 
 import ErrorResultView from 'ui-components/ErrorResultView'
 import Div from 'components/Div' // TODO: from ui-lib
@@ -38,7 +38,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
   const breakPoint = useBreakpoint()
   const [ form ] = useForm()
 
-  const [ formData, setFormData ] = useState<Partial<CompanyRequisites>>()
+  const [ formData, setFormData ] = useState<Partial<CompanyRequisites> | null>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
   const [ initialData, dataLoaded ] = useApi<CompanyRequisites | null>(
     getCompanyRequisites, {
@@ -48,11 +48,8 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
   )
 
   useEffect(() => {
-    console.log('initialData', initialData)
-    if (initialData) {
-      setFormData(initialData ?? {})
-    }
-  }, [ initialData ])
+    setFormData(initialData)
+  }, [initialData])
 
   const handleItemUpdate = async (data: CompanyRequisites) => {
     const updatedData = await callApi<CompanyRequisites | null>(
@@ -94,7 +91,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
           icon={<SaveOutlined />}
           disabled={submitting}
         >
-          {t('common.actions.edit.title')}
+          {t('common.actions.save.title')}
         </Button>
         <Button
           type="default"
@@ -133,6 +130,9 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
         <ErrorResultView centered compact status="error" />
       )
     }
+    if (isNull(formData)) {
+      return <ErrorResultView centered compact status="warning" />
+    }
     if (isUndefined(formData)) {
       return <Skeleton active={dataLoaded === null} />
     }
@@ -142,7 +142,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
   const renderFormContent = () => (
     <Form
       form={form}
-      initialValues={formData}
+      initialValues={formData ?? {}}
       onFinish={(data: CompanyRequisites) => handleFormSubmit(data)}
       className="BankRequisitesForm"
       data-testid="BankRequisitesForm"

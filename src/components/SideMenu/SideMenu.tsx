@@ -8,6 +8,7 @@ import {
   BankOutlined,
   FileProtectOutlined,
   UnorderedListOutlined,
+  FormOutlined,
 } from '@ant-design/icons'
 
 import './SideMenu.style.less'
@@ -21,14 +22,13 @@ const MENU_ICONS: Record<string, JSX.Element> = {
   bankDetails: <BankOutlined />,
   documents: <FileProtectOutlined />,
   requests: <UnorderedListOutlined />,
+  toSign: <FormOutlined />,
 }
 
 const SideMenu = () => {
   const { sections } = config
   const { t } = useTranslation()
   const location = useLocation()
-  // TODO: save collapsed flag to state?
-  // TODO: auto-collapse on mobiles
   return (
     <Menu selectedKeys={[location.pathname]}>
       {Object.entries(sections).map(([section, link]) => (

@@ -13,7 +13,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({}) => {
   const { t } = useTranslation()
   return (
     <div className="OrdersPage" data-testid="OrdersPage">
-      <Paragraph>{t('OrdersPage.component')}</Paragraph>
+      <Paragraph>{t('')}</Paragraph>
     </div>
   )
 }

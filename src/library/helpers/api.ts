@@ -20,6 +20,7 @@ export interface UseApiHookOptions {
 export type UseApiHookValue<T> = [
   T | null, // Result data
   boolean | null, // Success or not or null when loading
+  () => Promise<void>, // Data reload callback
 ]
 
 const defaultOptions: UseApiHookOptions = {
@@ -92,5 +93,5 @@ export function useApi<T = unknown, P = unknown, R = unknown>(
 
   useEffect(() => { getData() }, [])
 
-  return [ data, result ]
+  return [ data, result, getData ]
 }

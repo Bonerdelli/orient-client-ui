@@ -9,7 +9,7 @@ const DocumentsPage = () => {
   const { t } = useTranslation()
   return (
     <Layout className="DocumentsPage" data-testid="DocumentsPage">
-      <Paragraph>{t('DocumentsPage.component')}</Paragraph>
+      <Paragraph>{t('')}</Paragraph>
     </Layout>
   )
 }

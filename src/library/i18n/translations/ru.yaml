@@ -11,7 +11,9 @@ sections:
   documents:
     title: Документы
   requests:
-    title: Заявки
+    title: Мои заявки
+  toSign:
+    title: Заявки на подпись
 
 companyPage:
   tabs:

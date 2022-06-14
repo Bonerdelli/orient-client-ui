@@ -16,7 +16,8 @@ sections:
   heads: /company-heads
   bankDetails: /bank-details
   documents: /documents
-  requests: /requests
+  requests: /my-requests
+  toSign: /to-sign
 
 roles:
   pages:

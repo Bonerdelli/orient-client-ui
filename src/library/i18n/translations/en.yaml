@@ -11,7 +11,9 @@ sections:
   documents:
     title: Documents
   requests:
-    title: Requests
+    title: My Requests
+  toSign:
+    title: Requests to Sign
 
 companyPage:
   tabs:
