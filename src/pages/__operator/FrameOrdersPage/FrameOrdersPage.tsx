@@ -1,20 +1,34 @@
-import { useTranslation } from 'react-i18next'
-import { Typography } from 'antd'
+// import SlideRoutes from 'react-slide-routes' // TODO: make slide animation works
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Space, Layout } from 'antd'
+
+import FrameOrdersList from 'components/__operator/FrameOrdersList'
+// import { OrderEditForm } from 'components/OrderForm'
+import FrameOperatorWizard from 'components/__operator/FrameOperatorWizard'
 
 import './FrameOrdersPage.style.less'
 
-const { Paragraph } = Typography
+const FrameOrdersPage = () => {
 
-export interface FrameOrdersPageProps {
+  const { path, url } = useRouteMatch()
 
-}
+  const renderList = (): JSX.Element => (
+    <Space direction="vertical" size="middle">
+      <FrameOrdersList />
+    </Space>
+  )
 
-const FrameOrdersPage: React.FC<FrameOrdersPageProps> = ({}) => {
-  const { t } = useTranslation()
   return (
-    <div className="FrameOrdersPage" data-testid="FrameOrdersPage">
-      <Paragraph>{t('FrameOrdersPage.component')}</Paragraph>
-    </div>
+    <Layout className="FrameOrdersPage" data-testid="FrameOrdersPage">
+      <Switch>
+        <Route exact path={path}>
+          {renderList()}
+        </Route>
+        <Route path={`${path}/:itemId`}>
+          <FrameOperatorWizard backUrl={url} />
+        </Route>
+      </Switch>
+    </Layout>
   )
 }
 

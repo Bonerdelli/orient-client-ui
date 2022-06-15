@@ -6,7 +6,7 @@ import './FrameOperatorWizard.style.less'
 const { Paragraph } = Typography
 
 export interface FrameOperatorWizardProps {
-
+  backUrl: string
 }
 
 const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({}) => {

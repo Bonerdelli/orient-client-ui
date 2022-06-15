@@ -8,15 +8,10 @@ import { useStoreState } from 'library/store'
 import Div from 'components/Div' // TODO: from ui-lib
 
 import OrdersList from 'components/OrdersList'
-// import { OrderEditForm } from 'components/OrderForm'
 import FrameWizard from 'components/FrameWizard'
 
 import './OrdersPage.style.less'
 
-/**
- * Looks similar with req list
- * TODO: make a common component maybe?
- */
 const OrdersPage = () => {
   const { t } = useTranslation()
   const { path, url } = useRouteMatch()
