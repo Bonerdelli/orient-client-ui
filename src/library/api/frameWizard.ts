@@ -67,9 +67,9 @@ export async function sendFrameWizardStep3(
 export async function getCurrentFrameWizardStep(
   params: FrameWizardCommonParameters,
 ) {
-  const { companyId, type } = params
+  const { companyId, orderId, type } = params
   const basePath = getBasePath(companyId, type)
-  return await get(basePath)
+  return await get(`${basePath}/${orderId}`)
 }
 
 /**

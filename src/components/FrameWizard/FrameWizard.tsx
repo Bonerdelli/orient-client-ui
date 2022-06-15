@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { Typography, Card, Steps, Skeleton, Button } from 'antd'
@@ -11,6 +11,8 @@ import FrameBankOffers from 'components/FrameBankOffers'
 
 import { Customer } from 'library/models'
 import { useStoreState } from 'library/store'
+
+import { FrameWizardType, getCurrentFrameWizardStep } from 'library/api'
 
 import './FrameWizard.style.less'
 
@@ -33,21 +35,54 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
   const { itemId } = useParams<FrameWizardPathParams>()
   const company = useStoreState(state => state.company.current)
 
+  const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
+  const [ currentStepData, setCurrentStepData ] = useState<unknown>()
+  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ companyId, setCompanyId ] = useState<number>()
 
   const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
 
+  useEffect(() => {
+    if (companyId) {
+      setStepDataLoading(true)
+      loadCurrentStepData()
+    }
+  }, [companyId])
+
+  useEffect(() => {
+    if (company) {
+      setCompanyId(company.id)
+    }
+  }, [company])
+
+  const loadCurrentStepData = async () => {
+    const result = await getCurrentFrameWizardStep({
+      type: FrameWizardType.Full,
+      companyId: companyId as number,
+      orderId: Number(itemId) || orderId,
+    })
+    if (result.success) {
+      setCurrentStepData((result.data as any).data)
+      const stepInd = (result.data as any).step - 1
+      setCurrentStep(stepInd)
+      setSelectedStep(stepInd)
+    }
+    setStepDataLoading(false)
+  }
+
   const renderCurrentStep = () => {
-    if (!company) {
+    if (!company || stepDataLoading) {
       return <Skeleton active={true} />
     }
-    switch (currentStep) {
+    switch (selectedStep) {
       case 0:
         return <FrameSelectInn
           companyId={company?.id as number}
           orderId={Number(itemId) || orderId}
           currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
+          currentStepData={currentStepData}
+          setCurrentStep={setSelectedStep}
           selectedCustomer={selectedCustomer}
           setSelectedCustomer={setSelectedCustomer}
         />
@@ -55,7 +90,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
         return <FrameDocuments
           companyId={company?.id as number}
           currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
+          setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={-1}
         />
@@ -63,7 +98,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
         return <FrameSignDocuments
           companyId={company?.id as number}
           currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
+          setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={-1}
         />
@@ -71,7 +106,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
         return <FrameBankOffers
           companyId={company?.id as number}
           currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
+          setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={-1}
         />
@@ -97,9 +132,9 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
     <>
       <Card className="Wizard FrameWizard">
         <Title level={3}>{renderTitle()}</Title>
-        <Steps current={currentStep} onChange={setCurrentStep}>
+        <Steps current={stepDataLoading ? undefined : selectedStep} onChange={setSelectedStep}>
           <Step title={t('frameOrder.firstStep.title')} />
-          <Step disabled={!selectedCustomer} title={t('frameOrder.secondStep.title')} />
+          <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
           <Step disabled title={t('frameOrder.thirdStep.title')} />
           <Step disabled title={t('frameOrder.fourthStep.title')} />
         </Steps>

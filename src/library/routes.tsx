@@ -100,12 +100,12 @@ export const ProtectedRoutes = () => (
 
     {/* NOTE: separate by repos */}
     <PrivateRoute
-      path={'frame-orders__bank'}
+      path={'/frame-orders__bank'}
       component={FrameOrdersPage__bank}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
-      path={'frame-orders__operator'}
+      path={'/frame-orders__operator'}
       component={FrameOrdersPage__operator}
       roles={portalConfig.roles.pages.all}
     />

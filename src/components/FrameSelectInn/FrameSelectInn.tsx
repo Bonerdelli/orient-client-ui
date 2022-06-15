@@ -7,7 +7,7 @@ import Div from 'components/Div' // TODO: from ui-lib
 import EmptyResult from 'components/EmptyResult' // TODO: from ui-lib
 
 import { Customer } from 'library/models' // TODO: check API schema, why not from proxy?
-import { FrameWizardType, searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
+import { FrameWizardType, searchCustomers, startFrameWizard } from 'library/api'
 
 import './FrameSelectInn.style.less'
 
@@ -18,8 +18,8 @@ export interface FrameSelectInnProps {
   wizardType?: FrameWizardType
   companyId: number
   orderId?: number
-  setOrderId?: (order: number) => void
   currentStep: number
+  currentStepData?: unknown
   setCurrentStep: (step: number) => void
   selectedCustomer: Customer | undefined
   setSelectedCustomer: (customer: Customer | undefined) => void
@@ -29,8 +29,8 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
-  setOrderId,
   currentStep,
+  currentStepData,
   setCurrentStep,
   selectedCustomer,
   setSelectedCustomer,
@@ -43,8 +43,14 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
   const [ options, setOptions ] = useState<BaseOptionType[]>()
 
   const [ selectedId, setSelectedId ] = useState<Customer['id']>()
-  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ submitting, setSubmitting ] = useState<boolean>()
+
+  useEffect(() => {
+    if (currentStep >= 1) {
+      setNextStepAllowed(true)
+    }
+  }, [currentStep])
 
   useEffect(() => {
     if (foundItems) {
@@ -55,6 +61,15 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
     }
     handleSearch()
   }, [search])
+
+  console.log('FrameSignDocuments', currentStep)
+
+  useEffect(() => {
+    if ((currentStepData as any)?.founder?.id) {
+      setSelectedId((currentStepData as any)?.founder?.id)
+      setSearch('') // TODO: switch to getting customer by ID after BE will ready
+    }
+  }, [currentStepData])
 
   useEffect(() => {
     const updatedResult = foundItems.map(datum => ({
@@ -74,26 +89,12 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
 
   useEffect(() => {
     if (selectedCustomer) {
-      setIsNextStepAllowed(true)
+      setNextStepAllowed(true)
     }
     if (!selectedId) {
       setSelectedId(selectedCustomer?.id)
     }
   }, [selectedCustomer])
-
-  useEffect(() => {
-    loadCurrentStep()
-  }, [orderId])
-
-  const loadCurrentStep = async () => {
-    const result = await getFrameWizardStep({
-      type: wizardType,
-      companyId,
-      orderId,
-      step: 1,
-    })
-    console.log('getFrameWizardStep', result)
-  }
 
   const sendNextStep = async () => {
     if (!selectedCustomer) {
@@ -108,7 +109,7 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
-      setIsNextStepAllowed(false)
+      setNextStepAllowed(false)
     } else {
       setCurrentStep(currentStep + 1)
     }
@@ -186,21 +187,25 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
     </Row>
   )
 
+  const renderInnSelector = () => (
+    <Col lg={12} xl={10}>
+      <Select
+        className="FrameSelectInn__select"
+        onSearch={setSearch}
+        loading={searching}
+        notFoundContent={search && <EmptyResult />}
+        onSelect={setSelectedId}
+        options={options}
+      >
+      </Select>
+    </Col>
+  )
+
   const renderStepContent = () => (
     <Div className="FrameSelectInn">
       <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Row>
-        <Col lg={12} xl={10}>
-          <Select
-            className="FrameSelectInn__select"
-            onSearch={setSearch}
-            loading={searching}
-            notFoundContent={search && <EmptyResult />}
-            onSelect={setSelectedId}
-            options={options}
-          >
-          </Select>
-        </Col>
+        {currentStep < 1 && renderInnSelector()}
         {renderCustomerInfo()}
       </Row>
     </Div>
