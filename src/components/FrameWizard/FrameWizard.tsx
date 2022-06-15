@@ -44,6 +44,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
 
+  // TODO: BE doesn't sent customer, fix after DE fixes
   const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
 
   useEffect(() => {
@@ -75,13 +76,13 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
   }
 
   const renderCurrentStep = () => {
-    if (!company || stepDataLoading) {
+    if (!companyId || stepDataLoading) {
       return <Skeleton active={true} />
     }
     switch (selectedStep) {
       case 0:
         return <FrameSelectInn
-          companyId={company?.id as number}
+          companyId={companyId}
           orderId={Number(itemId) || orderId}
           currentStep={currentStep}
           currentStepData={currentStepData}
@@ -91,19 +92,19 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
         />
       case 1:
         return <FrameDocuments
-          companyId={company?.id as number}
+          companyId={companyId}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
-          customerId={-1}
+          customerId={selectedCustomer?.id}
         />
       case 2:
         return <FrameSignDocuments
-          companyId={company?.id as number}
+          companyId={companyId}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
-          customerId={-1}
+          customerId={selectedCustomer?.id}
         />
       case 3:
         return <FrameBankOffers
@@ -111,7 +112,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
-          customerId={-1}
+          customerId={selectedCustomer?.id}
         />
       default:
         return <></>

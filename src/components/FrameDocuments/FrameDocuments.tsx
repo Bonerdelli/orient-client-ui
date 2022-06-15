@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Typography, Timeline, Row, Col, Button, message } from 'antd'
 
 import Div from 'components/Div'
-import DocumentsList from 'components/DocumentsList'
+import OrderDocumentsList from 'components/OrderDocumentsList'
 
 import { FrameWizardType, sendFrameWizardStep2 } from 'library/api'
 
@@ -119,6 +119,8 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
     color: ready ? 'green' : 'red',
   })
 
+  // TODO: check using companyId and customerId
+
   const renderStepContent = () => (
     <Div className="FrameDocuments">
       <Div className="FrameDocuments__title">
@@ -126,11 +128,19 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
       </Div>
       <Div className="FrameDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
-        <DocumentsList customerId={customerId} orderId={orderId} types={PRIMARY_DOC_TYPES} />
+        <OrderDocumentsList
+          companyId={companyId as number}
+          orderId={orderId as number}
+          types={PRIMARY_DOC_TYPES}
+        />
       </Div>
       <Div className="FrameDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
-        <DocumentsList customerId={customerId} orderId={orderId} types={SECONDARY_DOC_TYPES} />
+        <OrderDocumentsList
+          companyId={companyId as number}
+          orderId={orderId as number}
+          types={SECONDARY_DOC_TYPES}
+        />
       </Div>
       <Div className="FrameDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>

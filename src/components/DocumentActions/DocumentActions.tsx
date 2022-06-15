@@ -30,26 +30,26 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
 }) => {
   const { t } = useTranslation()
   const user = useStoreState(state => state.user)
-  const [ uploading, setUploading ] = useState<boolean>()
+  const [ operationInProccess, setOperationInProccess ] = useState<boolean>()
 
   const canUpload = () => document.status === DocumentStatus.NotUploaded
   const canDownload = () => document.status === DocumentStatus.Uploaded
   const canDelete = () => document.status === DocumentStatus.Uploaded
 
-  const getUploadProps = (typeId: number): UploadProps => ({
+  const getUploadProps = (_typeId: number): UploadProps => ({
     name: 'file',
     action: uploadUrl,
     headers: {
       Authorization: `Bearer ${user?.currentAuth?.accessToken}`,
     },
     onChange(info) {
+      if (!operationInProccess) {
+        setOperationInProccess(true)
+      }
       if (info.file.status === 'done') {
-        message.success(`${info.file.name} успешно загружен`)
-        onUploadSuccess && onUploadSuccess()
-        onChange && onChange()
+        handleUploadSuccess(info.file.name)
       } else if (info.file.status === 'error') {
-        message.error(`Ошибка загрузки файла ${info.file.name}`)
-        onUploadError && onUploadError()
+        handleUploadError(info.file.name)
       }
     },
     progress: {
@@ -61,13 +61,54 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
     iconRender: () => <></>,
   })
 
+  const handleUploadSuccess = (fileName: string) => {
+    message.success(t(
+      'common.documents.statusMessages.uploaded',
+      { name: fileName },
+    ))
+    setOperationInProccess(false)
+    onUploadSuccess && onUploadSuccess()
+    onChange && onChange()
+  }
+
+  const handleUploadError = (fileName: string) => {
+    message.error(t(
+      'common.documents.statusMessages.uploadingError',
+      { name: fileName },
+    ))
+    setOperationInProccess(false)
+    onUploadError && onUploadError()
+  }
+
+  const handleDownload = async () => {
+    const result = await downloadHandler(document)
+    if (!result) {
+      message.error(
+        t('common.documents.statusMessages.downloadingError')
+      )
+    }
+  }
+
+  const handleDelete = async () => {
+    setOperationInProccess(true)
+    const result = await deleteHandler(document)
+    if (!result) {
+      message.error(
+        t('common.documents.statusMessages.deletingError')
+      )
+    } else {
+      onChange && onChange()
+    }
+    setOperationInProccess(false)
+  }
+
   const renderAddButton = () => (
     <Upload {...getUploadProps(document.type)}>
       <Button
         key="upload"
         type="link"
         shape="circle"
-        style={{ display: uploading ? 'none' : 'block' }}
+        loading={operationInProccess}
         title={t('common.documents.actions.upload.title')}
         icon={<UploadOutlined />}
       />
@@ -80,7 +121,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       type="link"
       shape="circle"
       title={t('common.documents.actions.download.title')}
-      onClick={() => downloadHandler(document)}
+      onClick={handleDownload}
       icon={<DownloadOutlined />}
     />
   )
@@ -91,17 +132,18 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       key="delete"
       type="link"
       shape="circle"
+      loading={operationInProccess}
       title={t('common.actions.delete.title')}
-      onClick={() => deleteHandler(document)}
+      onClick={handleDelete}
       icon={<DeleteOutlined />}
     />
   )
 
   return (
     <>
-      {canUpload() && renderAddButton}
-      {!uploading && canDownload() && renderDownloadButton}
-      {!uploading && canDelete() && renderDeleteButton}
+      {canUpload() && renderAddButton()}
+      {canDownload() && renderDownloadButton()}
+      {canDelete() && renderDeleteButton()}
     </>
   )
 }

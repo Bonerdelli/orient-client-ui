@@ -43,12 +43,12 @@ const SideMenu = () => {
       {/* NOTE: separate by repos */}
       <MenuItem key="frame-orders__bank" icon={<EllipsisOutlined />}>
         <NavLink to="frame-orders__bank">
-          <i>Заявки на рамочный (Банк)</i>
+          <i>Заявки на РД (Банк)</i>
         </NavLink>
       </MenuItem>
       <MenuItem key="frame-orders__operator" icon={<EllipsisOutlined />}>
         <NavLink to="frame-orders__operator">
-          <i>Заявки на рамочный (Оператор)</i>
+          <i>Заявки на РД (Оператор)</i>
         </NavLink>
       </MenuItem>
     </Menu>

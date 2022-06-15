@@ -9,27 +9,28 @@ import Div from 'components/Div' // TODO: ui-lib
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { CompanyDocument } from 'library/models/proxy'
+import { OrderDocument } from 'library/models/proxy'
 import { useApi } from 'library/helpers/api'
 
 import {
-  getCompanyDocuments,
-  getCompanyDocumentUploadUrl,
-  deleteCompanyDocument,
-  downloadCompanyDocument,
+  getOrderDocuments,
+  getOrderDocumentUploadUrl,
+  deleteOrderDocument,
+  downloadOrderDocument,
 } from 'library/api'
 
-import './CompanyDocumentsList.style.less'
+import './OrderDocumentsList.style.less'
 
 const { Text } = Typography
 
-export interface CompanyDocumentsListProps {
+export interface OrderDocumentsListProps {
   companyId: number
+  orderId: number
   types: number[]
 }
 
-const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
-  const { companyId, types } = props
+const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
+  const { companyId, orderId, types } = props
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
@@ -38,7 +39,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     companyDocuments,
     documentsLoading,
     companyDocumentsReload,
-  ] = useApi<CompanyDocument[]>(getCompanyDocuments, { companyId })
+  ] = useApi<OrderDocument[]>(getOrderDocuments, { companyId, orderId })
 
   useEffect(() => {
     if (companyDocuments === null) {
@@ -51,7 +52,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     setItems(updatedItems)
   }, [types, documentsLoading, companyDocuments])
 
-  const composeDocument = (typeId: number, document?: CompanyDocument): Document => {
+  const composeDocument = (typeId: number, document?: OrderDocument): Document => {
     if (!document?.info) {
       return {
         type: typeId,
@@ -66,18 +67,28 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   }
 
   const getUploadUrl = useCallback((typeId: number) => {
-    const apiPath = getCompanyDocumentUploadUrl(companyId, typeId)
+    const apiPath = getOrderDocumentUploadUrl(companyId, orderId, typeId)
     return getEndpointUrl(apiPath)
-  }, [companyId])
+  }, [companyId, orderId])
 
   const handleItemDelete = async (item: Document) => {
-    const result = await deleteCompanyDocument({ companyId, documentId: item.id as number })
+    const documentId = item.id as number
+    const result = await deleteOrderDocument({
+      companyId,
+      orderId,
+      documentId,
+    })
     return result
   }
 
   const handleItemDownload = async (item: Document) => {
-    const result = await downloadCompanyDocument({ companyId, documentId: item.id as number })
-    return result.success
+    const documentId = item.id as number
+    const result = await downloadOrderDocument({
+      companyId,
+      orderId,
+      documentId,
+    })
+    return result as any // TODO: check this
   }
 
   const renderDocumentStatus = (status: DocumentStatus) => {
@@ -94,6 +105,8 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
         return <Text>{t('common.documents.statuses.unsigned')}</Text>
     }
   }
+
+
 
   const renderActions = (_val: unknown, item: Document) => (
     <Space className="DataTable__actions DataTable__ghostActions--">
@@ -131,17 +144,18 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   ]
 
   return (
-    <Div className="CompanyDocumentsList" data-testid="CompanyDocumentsList">
+    <Div className="OrderDocumentsList" data-testid="OrderDocumentsList">
       <Table
-        size={'large'}
+        size={'middle'}
         loading={documentsLoading === null}
-        className="CompanyDocumentsList__table"
+        className="OrderDocumentsList__table"
         columns={columns}
         dataSource={items}
         pagination={false}
+        showHeader={false}
       />
     </Div>
   )
 }
 
-export default CompanyDocumentsList
+export default OrderDocumentsList

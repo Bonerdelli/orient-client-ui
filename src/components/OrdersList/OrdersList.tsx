@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Popconfirm, Tag } from 'antd'
+import { Table, Button, Space, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
@@ -26,18 +26,10 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
   const [
     data,
     dataLoaded,
-    dataReloadCallback,
   ] = useApi<GridResponse<Order[]>>(
     getCompanyOrdersList,  // TODO: fixme
     { companyId },
   )
-
-  const handleDelete = async (item: Order) => {
-    if (data) {
-      await deleteCompanyOrder({ companyId, id: item.id as number })
-      dataReloadCallback()
-    }
-  }
 
   const renderActions = (_val: unknown, item: Order) => (
     <Space size="small">
@@ -75,13 +67,14 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
       dataIndex: 'typeCode',
       title: t('models.order.fields.typeCode.title'),
       render: renderOrderType,
-      align: 'center',
+      align: 'left',
     },
     {
       key: 'updatedAt',
       dataIndex: 'updatedAt',
       title: t('models.order.fields.createdAt.title'), // TODO: fixme
       render: (val) => formatDate(val, { includeTime: true }),
+      align: 'center',
     },
     {
       key: 'amount',
@@ -113,10 +106,10 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
   return (
     <div className="OrdersList" data-testid="OrdersList">
       <Table
-        bordered
+        size="middle"
         columns={columns}
         loading={dataLoaded === null}
-        dataSource={data?.data || []}
+        dataSource={data?.data as unknown as Order[] || []}
         pagination={false}
       />
     </div>
