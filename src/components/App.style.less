@@ -56,3 +56,20 @@ h1, h2, h3, h4 {
   padding-top: @padding-sm;
   text-align: right;
 }
+
+/**
+ * Ant overriding
+ * TODO: move to ui-lib
+ */
+
+.ant-steps-item-wait:not(.ant-steps-item-disabled) {
+  > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+    color: @text-color;
+  }
+  .ant-steps-item-icon {
+    border-color: @text-color;
+    > .ant-steps-icon {
+      color: @text-color;
+    }
+  }
+}

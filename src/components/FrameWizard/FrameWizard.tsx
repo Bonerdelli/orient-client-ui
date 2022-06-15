@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Skeleton, Button } from 'antd'
+import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import FrameSelectInn from 'components/FrameSelectInn'
@@ -18,6 +18,7 @@ import './FrameWizard.style.less'
 
 const { Step } = Steps
 const { Title } = Typography
+const { useBreakpoint } = Grid
 
 export interface FrameWizardProps {
   orderId?: number
@@ -32,6 +33,8 @@ export const FRAME_WIZARD_LAST_STEP_INDEX = 3
 
 const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
+  const breakpoint = useBreakpoint()
+
   const { itemId } = useParams<FrameWizardPathParams>()
   const company = useStoreState(state => state.company.current)
 
@@ -132,7 +135,11 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
     <>
       <Card className="Wizard FrameWizard">
         <Title level={3}>{renderTitle()}</Title>
-        <Steps current={stepDataLoading ? undefined : selectedStep} onChange={setSelectedStep}>
+        <Steps
+          current={stepDataLoading ? undefined : selectedStep}
+          direction={breakpoint.xl ? 'horizontal' : 'vertical'}
+          onChange={setSelectedStep}
+        >
           <Step title={t('frameOrder.firstStep.title')} />
           <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
           <Step disabled title={t('frameOrder.thirdStep.title')} />

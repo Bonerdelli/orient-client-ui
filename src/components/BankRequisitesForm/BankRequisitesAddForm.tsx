@@ -27,7 +27,7 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
 
   const { t } = useTranslation()
   const history = useHistory()
-  const breakPoint = useBreakpoint()
+  const breakpoint = useBreakpoint()
   const [ form ] = useForm()
 
   const [ formData, setFormData ] = useState<Partial<CompanyRequisites>>()
@@ -119,7 +119,7 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
       onFinish={(data: CompanyRequisites) => handleFormSubmit(data)}
       className="BankRequisitesForm"
       data-testid="BankRequisitesForm"
-      {...baseFormConfig(breakPoint)}
+      {...baseFormConfig(breakpoint)}
     >
       <Spin spinning={submitting}>
         {renderFormInputs(formFields)}
