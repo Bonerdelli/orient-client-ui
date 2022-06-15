@@ -22,7 +22,8 @@ export const DOCUMENT_TYPE = {
 }
 
 export interface Document {
-  id: number
+  id?: number // NOTE: no identifier for docs that haven't been uploaded
   type: number // keyof typeof DOCUMENT_TYPE
-  status: unknown
+  status: DocumentStatus
+  fileId?: number
 }
