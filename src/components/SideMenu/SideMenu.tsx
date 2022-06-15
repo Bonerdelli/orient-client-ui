@@ -38,6 +38,16 @@ const SideMenu = () => {
           </NavLink>
         </MenuItem>
       ))}
+      <MenuItem key="frame-orders__bank">
+        <NavLink to="frame-orders__bank">
+          <i>Заявки на рамочный (Банк)</i>
+        </NavLink>
+      </MenuItem>
+      <MenuItem key="frame-orders__operator">
+        <NavLink to="frame-orders__operator">
+          <i>Заявки на рамочный (Оператор)</i>
+        </NavLink>
+      </MenuItem>
     </Menu>
   )
 }

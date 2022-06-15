@@ -14,6 +14,9 @@ import OrdersPage from 'pages/OrdersPage'
 import FrameWizardPage from 'pages/FrameWizardPage'
 import FrameSimpleWizardPage from 'pages/FrameSimpleWizardPage'
 
+import FrameOrdersPage__bank from 'pages/__bank/FrameOrdersPage'
+import FrameOrdersPage__operator from 'pages/__operator/FrameOrdersPage'
+
 interface PrivateRouteOptions extends RouteProps {
   component: React.FC<RouteProps>
   roles: UserRoles
@@ -95,6 +98,17 @@ export const ProtectedRoutes = () => (
       roles={portalConfig.roles.pages.all}
     />
 
+    {/* NOTE: separate by repos */}
+    <PrivateRoute
+      path={'frame-orders__bank'}
+      component={FrameOrdersPage__bank}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path={'frame-orders__operator'}
+      component={FrameOrdersPage__operator}
+      roles={portalConfig.roles.pages.all}
+    />
 
     <Route exact path="/">
       <Redirect to={{ pathname: HOME_PATH }} />

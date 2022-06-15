@@ -23,4 +23,7 @@ roles:
   pages:
     all:
       - admin
+      - client
+      - customer
       - operator
+      - bank
