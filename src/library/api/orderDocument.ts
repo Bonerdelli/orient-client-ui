@@ -41,3 +41,13 @@ export const getCompanyDocumentUploadUrl = (
 ) => (
   `/client/company/${companyId}/document/${typeId}`
 )
+
+export async function getCompanyDocuments(params: OrderDocumentItemParams) {
+  const { companyId } = params
+  return await get<Document[]>(`/client/company/${companyId}/document`)
+}
+
+export async function deleteCompanyDocuments(params: any) {
+  const { companyId, docId } = params
+  return await del(`/client/company/${companyId}/document/${docId}`)
+}

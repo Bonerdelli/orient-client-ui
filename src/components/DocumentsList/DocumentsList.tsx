@@ -11,8 +11,9 @@ import { UploadOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/ic
 import Div from 'components/Div' // TODO: ui-lib
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { getOrderDocumentUploadUrl, getCompanyDocumentUploadUrl } from 'library/api'
+import { getCompanyDocuments, getOrderDocumentUploadUrl, getCompanyDocumentUploadUrl, deleteCompanyDocuments } from 'library/api'
 import { useStoreState } from 'library/store'
+import { useApi } from 'library/helpers/api'
 
 import './DocumentsList.style.less'
 
@@ -35,9 +36,13 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
   const company = useStoreState(state => state.company.current)
   const user = useStoreState(state => state.user)
 
+  const companyId = company?.id
+
   const [ data, setData ] = useState<Document[]>()
   const [ uploadUrl, setUploadUrl ] = useState<boolean>()
   const [ uploading, setUploading ] = useState<boolean>()
+
+  const [ companyDocuments, _, companyDocumentsReload ] = useApi<Document[]>(getCompanyDocuments, { companyId })
 
   useEffect(() => {
     const updatedData = types.map(typeId => ({
@@ -47,6 +52,10 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
     }))
     setData(updatedData)
   }, [types])
+
+  useEffect(() => {
+    // console.log('companyDocuments', companyDocuments)
+  }, [companyDocuments])
 
   const getUploadUrl = useCallback((typeId: number) => {
     if (!company) {
@@ -62,25 +71,40 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
     return getEndpointUrl(apiPath)
   }, [company, orderId])
 
-  const handleUpload = (item: Document, file?: File) => {
-    if (file) {
-      // console.log('handleUpload', item, file)
-    }
-  }
-
   const handleDownload = (item: Document) => {
     // console.log('handleDownload', item)
   }
 
-  const handleDelete = (item: Document) => {
-    // console.log('handleDelete', item)
+  const handleDelete = async (item: Document) => {
+    const existsDoc = companyDocuments?.find((datum: any) => datum.typeId === item.type)?.info
+    if (existsDoc) {
+      await deleteCompanyDocuments({ companyId, docId: existsDoc.documentId })
+      companyDocumentsReload()
+    }
   }
 
-  const canUpload = (doc: Document) => doc.status === DocumentStatus.NotUploaded
-  const canDownload = (doc: Document) => doc.status === DocumentStatus.Uploaded
-  const canDelete = (doc: Document) => doc.status === DocumentStatus.Uploaded
+  // const canUpload = (doc: Document) => doc.status === DocumentStatus.NotUploaded
+  // const canDownload = (doc: Document) => doc.status === DocumentStatus.Uploaded
+  // const canDelete = (doc: Document) => doc.status === DocumentStatus.Uploaded
 
-  const renderDocumentStatus = (status: DocumentStatus) => {
+  const canUpload = useCallback((doc: Document) => {
+    const existsDoc = companyDocuments?.find((datum: any) => datum.typeId === doc.type)?.info
+    return !!existsDoc
+  }, [companyDocuments])
+  const canDownload = useCallback((doc: Document) => {
+    const existsDoc = companyDocuments?.find((datum: any) => datum.typeId === doc.type)?.info
+    return !existsDoc
+  }, [companyDocuments])
+  const canDelete = useCallback((doc: Document) => {
+    const existsDoc = companyDocuments?.find((datum: any) => datum.typeId === doc.type)?.info
+    return !existsDoc
+  }, [companyDocuments])
+
+  const renderDocumentStatus = (status: DocumentStatus, doc) => {
+    const existsDoc = companyDocuments?.find((datum: any) => datum.typeId === doc.type)?.info
+    if (existsDoc) {
+      status = DocumentStatus.Uploaded
+    }
     switch (status) {
       case DocumentStatus.Uploaded:
         return <Text>{t('common.documents.statuses.uploaded')}</Text>
@@ -98,15 +122,15 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
   const getUploadProps = (typeId: number): UploadProps => ({
     name: 'file',
     action: getUploadUrl(typeId),
-    // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
     headers: {
       Authorization: `Bearer ${user?.currentAuth?.accessToken}`,
     },
     onChange(info) {
       if (info.file.status === 'done') {
-        message.success(`${info.file.name} успешно загружен`);
+        message.success(`${info.file.name} успешно загружен`)
+        companyDocumentsReload()
       } else if (info.file.status === 'error') {
-        message.error(`Ошибка загрузки файла ${info.file.name}`);
+        message.error(`Ошибка загрузки файла ${info.file.name}`)
       }
     },
     progress: {
@@ -128,7 +152,6 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
             shape="circle"
             style={{ display: uploading ? 'none' : 'block' }}
             title={t('common.documents.actions.upload.title')}
-            onClick={() => handleUpload(item)}
             icon={<UploadOutlined />}
           />
         </Upload>
@@ -169,7 +192,7 @@ const DocumentsList: React.FC<DocumentsListProps> = ({
       key: 'status',
       dataIndex: 'status',
       title: t('common.documents.fields.status.title'),
-      render: renderDocumentStatus,
+      render: (s, i) => renderDocumentStatus(s, i),
       align: 'center',
     },
     {
