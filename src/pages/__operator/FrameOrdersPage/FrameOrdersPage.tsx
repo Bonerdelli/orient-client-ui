@@ -3,7 +3,6 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
 import FrameOrdersList from 'components/__operator/FrameOrdersList'
-// import { OrderEditForm } from 'components/OrderForm'
 import FrameOperatorWizard from 'components/__operator/FrameOperatorWizard'
 
 import './FrameOrdersPage.style.less'

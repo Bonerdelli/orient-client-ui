@@ -11,7 +11,8 @@ import { Order, GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { formatDate } from 'library/helpers/date' // TODO: to ui-lib
 
-import { getFrameOrdersList } from 'library/api/__operator/frameOrder'
+import { getFrameOrdersList } from 'library/api/__bank/frameOrder'
+import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FrameOrdersList.style.less'
 
@@ -27,7 +28,9 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     data,
     dataLoaded,
   ] = useApi<GridResponse<Order[]>>(
-    getFrameOrdersList, {},
+    getFrameOrdersList, {
+      bankId: MOCK_BANK_ID,
+    },
   )
 
   const renderActions = (_val: unknown, item: Order) => (
@@ -48,32 +51,32 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     {
       key: 'number',
       dataIndex: 'id',
-      title: t('__operator.frameOrdersPage.tableColumnTitles.id'),
+      title: t('__bank.frameOrdersPage.tableColumnTitles.id'),
       align: 'center',
     },
     {
       key: 'clientInn',
       dataIndex: 'clientInn',
-      title: t('__operator.frameOrdersPage.tableColumnTitles.clientInn'),
+      title: t('__bank.frameOrdersPage.tableColumnTitles.clientInn'),
       align: 'left',
     },
     {
       key: 'clientName',
       dataIndex: 'clientName',
-      title: t('__operator.frameOrdersPage.tableColumnTitles.clientName'),
+      title: t('__bank.frameOrdersPage.tableColumnTitles.clientName'),
       align: 'left',
     },
     {
       key: 'updatedAt', // TODO: is it status updated time?
       dataIndex: 'updatedAt',
-      title: t('__operator.frameOrdersPage.tableColumnTitles.updatedAt'),
+      title: t('__bank.frameOrdersPage.tableColumnTitles.updatedAt'),
       render: (val) => formatDate(val, { includeTime: true }),
       align: 'center',
     },
     {
       key: 'statusName',
       dataIndex: 'statusName',
-      title: t('__operator.frameOrdersPage.tableColumnTitles.statusName'),
+      title: t('__bank.frameOrdersPage.tableColumnTitles.statusName'),
       render: (val) => <Tag>{val}</Tag>,
       align: 'center',
     },

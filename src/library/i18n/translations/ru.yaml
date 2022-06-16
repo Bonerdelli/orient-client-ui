@@ -189,10 +189,10 @@ __operator:
       title: Результаты скоринга
 
   orderStepParameters:
-    title: Дополнительные параметры
+    title: Параметры заявки и клиента
 
   orderStepDocuments:
-    title: Параметры заявки и клиента
+    title: Документы / БО
     sectionTitles:
       mainDocs: Обязательные документы
       additionalDocs: Дополнительные документы
@@ -248,7 +248,7 @@ __operator:
 
 __bank:
   frameOrdersPage:
-    tableColumns:
+    tableColumnTitles:
       id: Номер заявки
       clientInn: ИНН Поставщика
       clientName: Наименование Поставщика
@@ -272,7 +272,11 @@ __bank:
     sixthStep:
       title: Архив
 
+  orderStepParameters:
+    title: Параметры заявки и клиента
+
   orderStepDocuments:
+    title: Документы
     sectionTitles:
       mainDocs: Обязательные документы
       additionalDocs: Дополнительные документы
@@ -280,19 +284,18 @@ __bank:
       checkList: Чек-лист по заявке
 
   orderStepContractParams:
+    title: Параметры договора
     sectionTitles:
       documents: Документы по сделке
 
-  orderStepStopFactors:
-    sectionTitles:
-      stopFactors: Стоп-факторы
-      banksWhereTrigerred: Банки, в которых сработали стоп-факторы
+  orderStepContractDocuments:
+    title: Документы по сделке
 
-  orderStepScoringResult:
-    compliant:
-      title: Соответствует параметрам
-    nonCompliant:
-      title: Не соответствует параметрам
+  orderStepOfferAcceptance:
+    title: Принятие предложения
+
+  orderStepArchive:
+    title: Параметры заявки и клиента
 
   orderActions:
     cancel:

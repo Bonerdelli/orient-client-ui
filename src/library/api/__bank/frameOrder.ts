@@ -11,20 +11,20 @@ export async function getFrameOrdersList(
 }
 
 export interface FrameOrderItemParams {
+  bankId: number
   orderId: number | bigint
 }
 
 export async function getFrameOrderWizard(params: FrameOrderItemParams) {
-  const { orderId } = params
-  return await get<Order>(`/operator/wizard/frame/${orderId}`)
+  const { bankId, orderId } = params
+  return await get<Order>(`/bank/${bankId}/wizard/frame/${orderId}`)
 }
 
-export interface FrameOrderStepParams {
-  orderId: number | bigint
+export interface FrameOrderStepParams extends FrameOrderItemParams {
   step: number
 }
 
 export async function getFrameOrderWizardStep(params: FrameOrderStepParams) {
-  const { orderId, step } = params
-  return await get<Order>(`/operator/wizard/frame/${orderId}/${step}`)
+  const { bankId, orderId, step } = params
+  return await get<Order>(`/bank/${bankId}/wizard/frame/${orderId}/${step}`)
 }
