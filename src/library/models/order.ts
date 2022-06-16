@@ -1,6 +1,3 @@
-export type OrderStatusCode = 'frame_draft' // TODO: ask be
-export type OrderTypeCode = 'frame'
-
 export interface Order {
   id: number
   clientInn: string
@@ -11,5 +8,11 @@ export interface Order {
   amount: number | null
   currencyCode: string | null
   currencyName: string | null
-  typeCode: OrderTypeCode
+  typeCode: OrderWizardType
+}
+
+export enum OrderWizardType {
+  Frame = 'frame',
+  FrameSimple = 'frame_simple',
+  Factoring = 'factor',
 }

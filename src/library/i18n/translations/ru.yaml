@@ -188,7 +188,11 @@ __operator:
     fifthStep:
       title: Результаты скоринга
 
+  orderStepParameters:
+    title: Дополнительные параметры
+
   orderStepDocuments:
+    title: Параметры заявки и клиента
     sectionTitles:
       mainDocs: Обязательные документы
       additionalDocs: Дополнительные документы
@@ -196,15 +200,20 @@ __operator:
       finStatements: Бухгалтерская отчетность (Форма 1)
 
   orderStepStopFactors:
+    title: Проверка на стоп-факторы
     sectionTitles:
       stopFactors: Стоп-факторы
       banksWhereTrigerred: Банки, в которых сработали стоп-факторы
 
   orderStepScoringResult:
+    title: Результаты скоринга
     compliant:
       title: Соответствует параметрам
     nonCompliant:
       title: Не соответствует параметрам
+
+  orderStepOptionalParameters:
+    title: Дополнительные параметры
 
   orderActions:
     cancel:

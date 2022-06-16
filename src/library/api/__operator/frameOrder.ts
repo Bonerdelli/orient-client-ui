@@ -19,7 +19,7 @@ export interface FrameOrderItemParams {
   orderId: number | bigint
 }
 
-export async function getFrameOrder(params: FrameOrderItemParams) {
+export async function getFrameOrderWizard(params: FrameOrderItemParams) {
   const { orderId } = params
   return await get<Order>(`/operator/wizard/frame/${orderId}`)
 }
@@ -29,7 +29,7 @@ export interface FrameOrderStepParams {
   step: number
 }
 
-export async function getFrameOrderStep(params: FrameOrderStepParams) {
+export async function getFrameOrderWizardStep(params: FrameOrderStepParams) {
   const { orderId, step } = params
   return await get<Order>(`/operator/wizard/frame/${orderId}/${step}`)
 }
