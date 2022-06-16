@@ -5,9 +5,10 @@ import { BaseOptionType } from 'antd/es/select'
 
 import Div from 'components/Div' // TODO: from ui-lib
 import EmptyResult from 'components/EmptyResult' // TODO: from ui-lib
+import ErrorResultView from 'components/ErrorResultView'
 
 import { Customer } from 'library/models' // TODO: check API schema, why not from proxy?
-import { FrameWizardType, searchCustomers, startFrameWizard } from 'library/api'
+import { FrameWizardType, searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
 
 import './FrameSelectInn.style.less'
 
@@ -40,10 +41,13 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
   const [ search, setSearch ] = useState<string>()
   const [ searching, setSearching ] = useState<boolean>(false)
   const [ foundItems, setFoundItems ] = useState<Customer[]>([])
+  const [ selectedId, setSelectedId ] = useState<Customer['id']>()
   const [ options, setOptions ] = useState<BaseOptionType[]>()
 
-  const [ selectedId, setSelectedId ] = useState<Customer['id']>()
+  const [ stepData, setStepData ] = useState<unknown>()
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
+  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   useEffect(() => {
@@ -62,7 +66,35 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
     handleSearch()
   }, [search])
 
-  console.log('FrameSignDocuments', currentStep)
+  useEffect(() => {
+    if (orderId) {
+      setStepDataLoading(true)
+      loadCurrentStepData()
+    }
+  }, [])
+
+  useEffect(() => {
+    if ((stepData as any)?.requisites?.ownership) {
+      // TODO: ask BE why not customer: { id }
+      setSelectedId((stepData as any)?.requisites?.ownership)
+    }
+  }, [stepData])
+
+  const loadCurrentStepData = async () => {
+    const result = await getFrameWizardStep({
+      type: wizardType,
+      companyId: companyId as number,
+      step: currentStep,
+      orderId,
+    })
+    if (result.success) {
+      setStepData((result.data as any).data) // TODO: fix typings after BE updates swagger
+      setDataLoaded(true)
+    } else {
+      setDataLoaded(false)
+    }
+    setStepDataLoading(false)
+  }
 
   useEffect(() => {
     if ((currentStepData as any)?.founder?.id) {
@@ -129,7 +161,7 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
   }
 
   const renderCustomerInfo = () => {
-    if (selectedId && !selectedCustomer) {
+    if (selectedId && !selectedCustomer || stepDataLoading === true) {
       return (
         <Skeleton active={true} />
       )
@@ -210,6 +242,12 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
       </Row>
     </Div>
   )
+
+  if (orderId && dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="warning" />
+    )
+  }
 
   return (
     <Div className="FrameWizard__step__content">
