@@ -71,9 +71,9 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
-      const stepInd = (result.data as any).step - 1
-      setCurrentStep(stepInd)
-      setSelectedStep(stepInd)
+      const step = Number((result.data as any).step)
+      setCurrentStep(step)
+      setSelectedStep(step)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -86,7 +86,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
       return <Skeleton active={true} />
     }
     switch (selectedStep) {
-      case 0:
+      case 1:
         return <FrameSelectInn
           companyId={companyId}
           orderId={Number(itemId) || orderId}
@@ -96,7 +96,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
           selectedCustomer={selectedCustomer}
           setSelectedCustomer={setSelectedCustomer}
         />
-      case 1:
+      case 2:
         return <FrameDocuments
           companyId={companyId}
           currentStep={currentStep}
@@ -104,7 +104,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
         />
-      case 2:
+      case 3:
         return <FrameSignDocuments
           companyId={companyId}
           currentStep={currentStep}
@@ -112,7 +112,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
         />
-      case 3:
+      case 4:
         return <FrameBankOffers
           companyId={company?.id as number}
           currentStep={currentStep}
@@ -149,9 +149,9 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
       <Card className="Wizard FrameWizard">
         <Title level={3}>{renderTitle()}</Title>
         <Steps
-          current={stepDataLoading ? undefined : selectedStep}
+          current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
-          onChange={setSelectedStep}
+          onChange={(step) => setSelectedStep(step + 1)}
         >
           <Step title={t('frameOrder.firstStep.title')} />
           <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />

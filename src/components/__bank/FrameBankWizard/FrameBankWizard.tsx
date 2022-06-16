@@ -70,9 +70,9 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
-      const stepInd = (result.data as any).step - 1
-      setCurrentStep(stepInd)
-      setSelectedStep(stepInd)
+      const step = Number((result.data as any).step)
+      setCurrentStep(step)
+      setSelectedStep(step)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -99,17 +99,17 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       setCurrentStep: setSelectedStep,
     }
     switch (selectedStep) {
-      case 0:
-        return <OrderStepParameters {...stepBaseProps}/>
       case 1:
-        return <OrderStepDocuments {...stepBaseProps}/>
+        return <OrderStepParameters {...stepBaseProps}/>
       case 2:
-        return <OrderStepContractParams {...stepBaseProps}/>
+        return <OrderStepDocuments {...stepBaseProps}/>
       case 3:
-        return <OrderStepContractDocuments {...stepBaseProps}/>
+        return <OrderStepContractParams {...stepBaseProps}/>
       case 4:
-        return <OrderStepOfferAcceptance {...stepBaseProps}/>
+        return <OrderStepContractDocuments {...stepBaseProps}/>
       case 5:
+        return <OrderStepOfferAcceptance {...stepBaseProps}/>
+      case 6:
         return <OrderStepArchive {...stepBaseProps}/>
       default:
         return <></>
@@ -140,9 +140,9 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       <Card className="Wizard FrameWizard">
         <Title level={3}>{renderTitle()}</Title>
         <Steps
-          current={stepDataLoading ? undefined : selectedStep}
+          current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
-          onChange={setSelectedStep}
+          onChange={(step) => setSelectedStep(step + 1)}
         >
           <Step disabled={!isFirstStepActive()} title={t('__bank.frameWizard.firstStep.title')} />
           <Step disabled={!isSecondStepActive()} title={t('__bank.frameWizard.secondStep.title')} />

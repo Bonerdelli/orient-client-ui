@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Timeline, Row, Col, Button, message } from 'antd'
+import { Typography, Timeline, Skeleton, Row, Col, Button, message } from 'antd'
+import { CheckCircleFilled, ExclamationCircleOutlined } from '@ant-design/icons'
 
 import Div from 'components/Div'
 import OrderDocumentsList from 'components/OrderDocumentsList'
+import ErrorResultView from 'components/ErrorResultView'
 
-import { FrameWizardType, sendFrameWizardStep2 } from 'library/api'
+import { FrameWizardType, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api'
 
-import { CheckCircleFilled, ExclamationCircleOutlined } from '@ant-design/icons'
 
 import './FrameDocuments.style.less'
 
@@ -38,7 +39,31 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
 
   const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
+
+  const [ stepData, setStepData ] = useState<unknown>()
+  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
+
+  useEffect(() => {
+    loadCurrentStepData()
+  }, [])
+
+  const loadCurrentStepData = async () => {
+    const result = await getFrameWizardStep({
+      type: wizardType,
+      companyId: companyId as number,
+      step: currentStep,
+      orderId,
+    })
+    if (result.success) {
+      setStepData((result.data as any).data)
+      setDataLoaded(true)
+    } else {
+      setDataLoaded(false)
+    }
+    setStepDataLoading(false)
+  }
 
   const сompanyDataReady = {
     сompanyHead: true,
@@ -60,14 +85,14 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setIsNextStepAllowed(false)
     } else {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(currentStep)
     }
     setSubmitting(false)
   }
 
   const handlePrevStep = () => {
     if (isPrevStepAllowed) {
-      setCurrentStep(currentStep - 1)
+      setCurrentStep(currentStep)
     }
   }
 
@@ -158,6 +183,18 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
       </Div>
     </Div>
   )
+
+  if (!stepData && stepDataLoading) {
+    return (
+      <Skeleton active={true} />
+    )
+  }
+
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="warning" />
+    )
+  }
 
   return (
     <Div className="FrameWizard__step__content">

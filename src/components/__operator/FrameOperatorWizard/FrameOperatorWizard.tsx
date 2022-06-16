@@ -67,9 +67,9 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
-      const stepInd = (result.data as any).step - 1
-      setCurrentStep(stepInd)
-      setSelectedStep(stepInd)
+      const step = Number((result.data as any).step)
+      setCurrentStep(step)
+      setSelectedStep(step)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -94,15 +94,15 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
       setCurrentStep: setSelectedStep,
     }
     switch (selectedStep) {
-      case 0:
-        return <OrderStepParameters {...stepBaseProps}/>
       case 1:
-        return <OrderStepDocuments {...stepBaseProps}/>
+        return <OrderStepParameters {...stepBaseProps}/>
       case 2:
-        return <OrderStepStopFactors {...stepBaseProps}/>
+        return <OrderStepDocuments {...stepBaseProps}/>
       case 3:
-        return <OrderStepOptionalParameters {...stepBaseProps}/>
+        return <OrderStepStopFactors {...stepBaseProps}/>
       case 4:
+        return <OrderStepOptionalParameters {...stepBaseProps}/>
+      case 5:
         return <OrderStepScoringResults {...stepBaseProps}/>
       default:
         return <></>
@@ -133,9 +133,9 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
       <Card className="Wizard FrameWizard">
         <Title level={3}>{renderTitle()}</Title>
         <Steps
-          current={stepDataLoading ? undefined : selectedStep}
+          current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
-          onChange={setSelectedStep}
+          onChange={(step) => setSelectedStep(step + 1)}
         >
           <Step disabled={!isFirstStepActive()} title={t('__operator.frameWizard.firstStep.title')} />
           <Step disabled={!isSecondStepActive()} title={t('__operator.frameWizard.secondStep.title')} />
