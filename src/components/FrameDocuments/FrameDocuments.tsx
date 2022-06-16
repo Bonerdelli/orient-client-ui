@@ -8,7 +8,7 @@ import OrderDocumentsList from 'components/OrderDocumentsList'
 import ErrorResultView from 'components/ErrorResultView'
 
 import { FrameWizardType, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api'
-
+import { OrderDocument } from 'library/models/proxy'
 
 import './FrameDocuments.style.less'
 
@@ -45,9 +45,16 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
+  const [ documents, setDocuments ] = useState<OrderDocument[]>()
+
   useEffect(() => {
     loadCurrentStepData()
   }, [])
+
+  useEffect(() => {
+    // TODO: ask BE to fix model generation and fix typings
+    setDocuments((stepData as any)?.documents ?? [])
+  }, [stepData])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -157,6 +164,8 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
           companyId={companyId as number}
           orderId={orderId as number}
           types={PRIMARY_DOC_TYPES}
+          current={documents}
+          onChange={loadCurrentStepData}
         />
       </Div>
       <Div className="FrameDocuments__section">
@@ -165,6 +174,8 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
           companyId={companyId as number}
           orderId={orderId as number}
           types={SECONDARY_DOC_TYPES}
+          current={documents}
+          onChange={loadCurrentStepData}
         />
       </Div>
       <Div className="FrameDocuments__section">

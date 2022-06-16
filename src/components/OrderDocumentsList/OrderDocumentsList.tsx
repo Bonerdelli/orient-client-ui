@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Table, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
+import { isUndefined } from 'lodash'
 
 import { getEndpointUrl } from 'orient-ui-library/library'
 
@@ -10,10 +11,8 @@ import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
 import { OrderDocument } from 'library/models/proxy'
-import { useApi } from 'library/helpers/api'
 
 import {
-  getOrderDocuments,
   getOrderDocumentUploadUrl,
   deleteOrderDocument,
   downloadOrderDocument,
@@ -27,30 +26,26 @@ export interface OrderDocumentsListProps {
   companyId: number
   orderId: number
   types: number[]
+  current?: OrderDocument[]
+  onChange: () => {}
 }
 
 const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
-  const { companyId, orderId, types } = props
+  const { companyId, orderId, types, current, onChange } = props
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
 
-  const [
-    companyDocuments,
-    documentsLoading,
-    companyDocumentsReload,
-  ] = useApi<OrderDocument[]>(getOrderDocuments, { companyId, orderId })
-
   useEffect(() => {
-    if (companyDocuments === null) {
+    if (!current) {
       return
     }
     const updatedItems = types.map(typeId => {
-      const existsDoc = companyDocuments?.find((datum) => datum.typeId === typeId)
+      const existsDoc = current?.find((datum) => datum.typeId === typeId)
       return composeDocument(typeId, existsDoc)
     })
     setItems(updatedItems)
-  }, [types, documentsLoading, companyDocuments])
+  }, [types, current])
 
   const composeDocument = (typeId: number, document?: OrderDocument): Document => {
     if (!document?.info) {
@@ -115,7 +110,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
         uploadUrl={getUploadUrl(item.type)}
         deleteHandler={handleItemDelete}
         downloadHandler={handleItemDownload}
-        onChange={companyDocumentsReload}
+        onChange={onChange}
       />
     </Space>
   )
@@ -147,7 +142,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     <Div className="OrderDocumentsList" data-testid="OrderDocumentsList">
       <Table
         size={'middle'}
-        loading={documentsLoading === null}
+        loading={isUndefined(current)}
         className="OrderDocumentsList__table"
         columns={columns}
         dataSource={items}
