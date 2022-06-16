@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom'
 import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
+import ErrorResultView from 'components/ErrorResultView' // TODO: from ui-lib
+
 import OrderStepParameters from 'components/__operator/OrderStepParameters'
 import OrderStepDocuments from 'components/__operator/OrderStepDocuments'
 import OrderStepStopFactors from 'components/__operator/OrderStepStopFactors'
@@ -43,6 +45,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
 
   useEffect(() => {
@@ -67,6 +70,9 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
       const stepInd = (result.data as any).step - 1
       setCurrentStep(stepInd)
       setSelectedStep(stepInd)
+      setDataLoaded(true)
+    } else {
+      setDataLoaded(false)
     }
     setStepDataLoading(false)
   }
@@ -113,6 +119,12 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
         </Link>
         {title}
       </>
+    )
+  }
+
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="warning" />
     )
   }
 

@@ -135,7 +135,6 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     )
   }
 
-
   return (
     <>
       <Card className="Wizard FrameWizard">

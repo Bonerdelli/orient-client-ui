@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom'
 import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
+import ErrorResultView from 'components/ErrorResultView' // TODO: from ui-lib
+
 import FrameSelectInn from 'components/FrameSelectInn'
 import FrameDocuments from 'components/FrameDocuments'
 import FrameSignDocuments from 'components/FrameSignDocuments'
@@ -42,6 +44,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const [ currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
 
   // TODO: BE doesn't sent customer, fix after DE fixes
@@ -71,6 +74,9 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
       const stepInd = (result.data as any).step - 1
       setCurrentStep(stepInd)
       setSelectedStep(stepInd)
+      setDataLoaded(true)
+    } else {
+      setDataLoaded(false)
     }
     setStepDataLoading(false)
   }
@@ -129,6 +135,12 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
         </Link>
         {title}
       </>
+    )
+  }
+
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="warning" />
     )
   }
 
