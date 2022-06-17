@@ -13,7 +13,7 @@ interface PrivateRouteOptions extends RouteProps {
   roles: UserRoles
 }
 
-export const HOME_PATH = portalConfig.sections.company
+export const HOME_PATH = portalConfig.sections.frameOrders
 export const LOGIN_PATH = '/login'
 
 const PrivateRoute: React.FC<PrivateRouteOptions> = ({
@@ -52,7 +52,7 @@ export const ProtectedRoutes = () => (
   <Switch>
 
     <PrivateRoute
-      path={'/frame-orders'}
+      path="/frame-orders"
       component={FrameOrdersPage}
       roles={portalConfig.roles.pages.all}
     />
