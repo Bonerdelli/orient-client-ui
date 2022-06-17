@@ -30,7 +30,7 @@ const OrderStepOfferAcceptance: React.FC<OrderStepOfferAcceptanceProps> = ({
   )
   const renderStepContent = () => (
     <Div className="OrderStepOfferAcceptance">
-      <Title level={5}>{t('__bank.orderStepOfferAcceptance.title')}</Title>
+      <Title level={5}>{t('orderStepOfferAcceptance.title')}</Title>
     </Div>
   )
   return (

@@ -30,7 +30,7 @@ const OrderStepArchive: React.FC<OrderStepArchiveProps> = ({
   )
   const renderStepContent = () => (
     <Div className="OrderStepArchive">
-      <Title level={5}>{t('__bank.orderStepArchive.title')}</Title>
+      <Title level={5}>{t('orderStepArchive.title')}</Title>
     </Div>
   )
   return (

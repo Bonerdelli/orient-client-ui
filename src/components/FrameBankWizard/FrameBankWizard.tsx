@@ -6,17 +6,17 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'components/ErrorResultView' // TODO: from ui-lib
 
-import OrderStepParameters from 'components/__bank/OrderStepParameters'
-import OrderStepDocuments from 'components/__bank/OrderStepDocuments'
-import OrderStepContractParams from 'components/__bank/OrderStepContractParams'
-import OrderStepContractDocuments from 'components/__bank/OrderStepContractDocuments'
-import OrderStepOfferAcceptance from 'components/__bank/OrderStepOfferAcceptance'
-import OrderStepArchive from 'components/__bank/OrderStepArchive'
+import OrderStepParameters from 'components/OrderStepParameters'
+import OrderStepDocuments from 'components/OrderStepDocuments'
+import OrderStepContractParams from 'components/OrderStepContractParams'
+import OrderStepContractDocuments from 'components/OrderStepContractDocuments'
+import OrderStepOfferAcceptance from 'components/OrderStepOfferAcceptance'
+import OrderStepArchive from 'components/OrderStepArchive'
 
 import { OrderWizardType } from 'library/models'
 import { useStoreState } from 'library/store'
 
-import { getFrameOrderWizard } from 'library/api/__bank/frameOrder'
+import { getFrameOrderWizard } from 'library/api/frameOrder'
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FrameBankWizard.style.less'
@@ -117,7 +117,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   }
 
   const renderTitle = () => {
-    const title = t('__bank.frameWizard.title')
+    const title = t('frameWizard.title')
     if (!backUrl) return title
     return (
       <>
@@ -144,12 +144,12 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('__bank.frameWizard.firstStep.title')} />
-          <Step disabled={!isSecondStepActive()} title={t('__bank.frameWizard.secondStep.title')} />
-          <Step disabled={!isThirdStepActive()} title={t('__bank.frameWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('__bank.frameWizard.fourthStep.title')} />
-          <Step disabled={!isFifthStepActive()} title={t('__bank.frameWizard.fifthStep.title')} />
-          <Step disabled={!isSixthStepActive()} title={t('__bank.frameWizard.sixthStep.title')} />
+          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
+          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
+          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
+          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fourthStep.title')} />
+          <Step disabled={!isFifthStepActive()} title={t('frameWizard.fifthStep.title')} />
+          <Step disabled={!isSixthStepActive()} title={t('frameWizard.sixthStep.title')} />
         </Steps>
       </Card>
       <Card className="FrameWizard__step">

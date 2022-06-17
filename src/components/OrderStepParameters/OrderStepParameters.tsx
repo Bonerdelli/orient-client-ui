@@ -30,7 +30,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   )
   const renderStepContent = () => (
     <Div className="OrderStepParameters">
-      <Title level={5}>{t('__bank.orderStepParameters.title')}</Title>
+      <Title level={5}>{t('orderStepParameters.title')}</Title>
     </Div>
   )
   return (

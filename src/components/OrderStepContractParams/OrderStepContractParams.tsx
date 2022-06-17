@@ -30,7 +30,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   )
   const renderStepContent = () => (
     <Div className="OrderStepContractParams">
-      <Title level={5}>{t('__bank.orderStepContractParams.title')}</Title>
+      <Title level={5}>{t('orderStepContractParams.title')}</Title>
     </Div>
   )
   return (
