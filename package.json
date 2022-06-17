@@ -8,7 +8,7 @@
   "scripts": {
     "start": "run-s clean serve",
     "clean": "rimraf ./dist/* ./.parcel-cache",
-    "build": "run-s clean tsc parcel:build",
+    "build": "run-s clean parcel:build",
     "lint": "eslint ./src -f table --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint ./src -f table --fix --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --check ./src",
