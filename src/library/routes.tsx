@@ -98,18 +98,6 @@ export const ProtectedRoutes = () => (
       roles={portalConfig.roles.pages.all}
     />
 
-    {/* NOTE: separate by repos */}
-    <PrivateRoute
-      path={'/frame-orders__bank'}
-      component={FrameOrdersPage__bank}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={'/frame-orders__operator'}
-      component={FrameOrdersPage__operator}
-      roles={portalConfig.roles.pages.all}
-    />
-
     <Route exact path="/">
       <Redirect to={{ pathname: HOME_PATH }} />
     </Route>
