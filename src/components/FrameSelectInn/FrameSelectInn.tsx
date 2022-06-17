@@ -19,6 +19,7 @@ export interface FrameSelectInnProps {
   wizardType?: FrameWizardType
   companyId: number
   orderId?: number
+  setOrderId: (orderId: number) => void
   currentStep: number
   currentStepData?: unknown
   setCurrentStep: (step: number) => void
@@ -30,6 +31,7 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
+  setOrderId,
   currentStep,
   currentStepData,
   setCurrentStep,
@@ -67,11 +69,11 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
   }, [search])
 
   useEffect(() => {
-    if (orderId) {
+    if (companyId && orderId) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [])
+  }, [companyId, orderId])
 
   useEffect(() => {
     if ((stepData as any)?.requisites?.ownership) {
@@ -143,6 +145,7 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOrderId((result as any)?.data?.orderId as number)
       setCurrentStep(currentStep + 1)
     }
     setSubmitting(false)
@@ -237,7 +240,7 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
     <Div className="FrameSelectInn">
       <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Row>
-        {currentStep < 1 && renderInnSelector()}
+        {renderInnSelector()}
         {renderCustomerInfo()}
       </Row>
     </Div>

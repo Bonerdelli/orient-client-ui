@@ -23,7 +23,7 @@ const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FrameWizardProps {
-  orderId?: number
+  // orderId?: number
   backUrl?: string
 }
 
@@ -33,25 +33,26 @@ export interface FrameWizardPathParams {
 
 export const FRAME_WIZARD_LAST_STEP_INDEX = 3
 
-const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
+const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FrameWizardPathParams>()
   const company = useStoreState(state => state.company.current)
 
-  const [ selectedStep, setSelectedStep ] = useState<number>(0)
-  const [ currentStep, setCurrentStep ] = useState<number>(0)
+  const [ selectedStep, setSelectedStep ] = useState<number>(1)
+  const [ currentStep, setCurrentStep ] = useState<number>(1)
   const [ currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
+  const [ orderId, setOrderId ] = useState<>()
 
   // TODO: BE doesn't sent customer, fix after DE fixes
   const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
 
   useEffect(() => {
-    if (companyId) {
+    if (companyId && (Number(itemId) || orderId)) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
@@ -90,6 +91,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
         return <FrameSelectInn
           companyId={companyId}
           orderId={Number(itemId) || orderId}
+          setOrderId={setOrderId}
           currentStep={currentStep}
           currentStepData={currentStepData}
           setCurrentStep={setSelectedStep}
