@@ -5,9 +5,7 @@ import { UserRoles, hasAccess } from 'orient-ui-library'
 
 import LoginPage from 'pages/LoginPage'
 import PageNotFound from 'pages/PageNotFound'
-
-import FrameOrdersPage__bank from 'pages/__bank/FrameOrdersPage'
-import FrameOrdersPage__operator from 'pages/__operator/FrameOrdersPage'
+import FrameOrdersPage from 'pages/FrameOrdersPage'
 
 interface PrivateRouteOptions extends RouteProps {
   component: React.FC<RouteProps>
@@ -52,15 +50,9 @@ export const PublicRoutes = () => (
 export const ProtectedRoutes = () => (
   <Switch>
 
-    {/* NOTE: separate by repos */}
     <PrivateRoute
-      path={'/frame-orders__bank'}
-      component={FrameOrdersPage__bank}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={'/frame-orders__operator'}
-      component={FrameOrdersPage__operator}
+      path={'/frame-orders'}
+      component={FrameOrdersPage}
       roles={portalConfig.roles.pages.all}
     />
 

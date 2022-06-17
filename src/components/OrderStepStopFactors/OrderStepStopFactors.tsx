@@ -28,7 +28,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
   )
   const renderStepContent = () => (
     <Div className="OrderStepStopFactors">
-      <Title level={5}>{t('__operator.orderStepStopFactors.title')}</Title>
+      <Title level={5}>{t('orderStepStopFactors.title')}</Title>
     </Div>
   )
   return (

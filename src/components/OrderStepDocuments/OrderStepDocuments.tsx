@@ -28,7 +28,7 @@ const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
   )
   const renderStepContent = () => (
     <Div className="OrderStepDocuments">
-      <Title level={5}>{t('__operator.orderStepDocuments.title')}</Title>
+      <Title level={5}>{t('orderStepDocuments.title')}</Title>
     </Div>
   )
   return (

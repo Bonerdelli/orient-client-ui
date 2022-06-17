@@ -2,8 +2,8 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
-import FrameOrdersList from 'components/__operator/FrameOrdersList'
-import FrameOperatorWizard from 'components/__operator/FrameOperatorWizard'
+import FrameOrdersList from 'components/FrameOrdersList'
+import FrameOperatorWizard from 'components/FrameOperatorWizard'
 
 import './FrameOrdersPage.style.less'
 

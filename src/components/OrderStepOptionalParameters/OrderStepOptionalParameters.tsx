@@ -28,7 +28,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
   )
   const renderStepContent = () => (
     <Div className="OrderStepOptionalParameters">
-      <Title level={5}>{t('__operator.orderStepOptionalParameters.title')}</Title>
+      <Title level={5}>{t('orderStepOptionalParameters.title')}</Title>
     </Div>
   )
   return (

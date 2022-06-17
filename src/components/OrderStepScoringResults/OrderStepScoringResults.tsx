@@ -28,7 +28,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   )
   const renderStepContent = () => (
     <Div className="OrderStepScoringResults">
-      <Title level={5}>{t('__operator.orderStepScoringResult.title')}</Title>
+      <Title level={5}>{t('orderStepScoringResult.title')}</Title>
     </Div>
   )
   return (
