@@ -5,14 +5,6 @@ import { UserRoles, hasAccess } from 'orient-ui-library'
 
 import LoginPage from 'pages/LoginPage'
 import PageNotFound from 'pages/PageNotFound'
-import MyCompanyPage from 'pages/MyCompanyPage'
-import CompanyHeadsPage from 'pages/CompanyHeadsPage'
-import BankRequisitesPage from 'pages/BankRequisitesPage'
-import DocumentsPage from 'pages/DocumentsPage'
-import OrdersPage from 'pages/OrdersPage'
-
-import FrameWizardPage from 'pages/FrameWizardPage'
-import FrameSimpleWizardPage from 'pages/FrameSimpleWizardPage'
 
 import FrameOrdersPage__bank from 'pages/__bank/FrameOrdersPage'
 import FrameOrdersPage__operator from 'pages/__operator/FrameOrdersPage'
@@ -24,8 +16,6 @@ interface PrivateRouteOptions extends RouteProps {
 
 export const HOME_PATH = portalConfig.sections.company
 export const LOGIN_PATH = '/login'
-export const FRAME_ORDER_PATH = '/frame-order'
-export const SIMPLE_FRAME_ORDER_PATH = '/simple-frame-order'
 
 const PrivateRoute: React.FC<PrivateRouteOptions> = ({
   component: Component,
@@ -61,42 +51,6 @@ export const PublicRoutes = () => (
 // TODO: make lazy loading works?
 export const ProtectedRoutes = () => (
   <Switch>
-    <PrivateRoute
-      path={portalConfig.sections.company}
-      component={MyCompanyPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={portalConfig.sections.heads}
-      component={CompanyHeadsPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={portalConfig.sections.bankDetails}
-      component={BankRequisitesPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={portalConfig.sections.documents}
-      component={DocumentsPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={portalConfig.sections.requests}
-      component={OrdersPage}
-      roles={portalConfig.roles.pages.all}
-    />
-
-    <PrivateRoute
-      path={FRAME_ORDER_PATH}
-      component={FrameWizardPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={SIMPLE_FRAME_ORDER_PATH}
-      component={FrameSimpleWizardPage}
-      roles={portalConfig.roles.pages.all}
-    />
 
     {/* NOTE: separate by repos */}
     <PrivateRoute
