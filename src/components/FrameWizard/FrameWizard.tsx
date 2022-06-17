@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Typography, Row, Col, Card, Steps } from 'antd'
-
-import Div from 'components/Div'
+import { Link, useParams } from 'react-router-dom'
+import { Typography, Card, Steps, Skeleton, Button } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import FrameSelectInn from 'components/FrameSelectInn'
 import FrameDocuments from 'components/FrameDocuments'
 import FrameSignDocuments from 'components/FrameSignDocuments'
 import FrameBankOffers from 'components/FrameBankOffers'
+
+import { Customer } from 'library/models'
+import { useStoreState } from 'library/store'
 
 import './FrameWizard.style.less'
 
@@ -15,76 +18,94 @@ const { Step } = Steps
 const { Title } = Typography
 
 export interface FrameWizardProps {
-
+  orderId?: number
+  backUrl?: string
 }
 
-const LAST_STEP_INDEX = 3
+export interface FrameWizardPathParams {
+  itemId?: string,
+}
 
-const FrameWizard: React.FC<FrameWizardProps> = ({}) => {
+export const FRAME_WIZARD_LAST_STEP_INDEX = 3
+
+const FrameWizard: React.FC<FrameWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
+  const { itemId } = useParams<FrameWizardPathParams>()
+  const company = useStoreState(state => state.company.current)
+
   const [ currentStep, setCurrentStep ] = useState<number>(0)
+
+  const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
+
   const renderCurrentStep = () => {
+    if (!company) {
+      return <Skeleton active={true} />
+    }
     switch (currentStep) {
       case 0:
-        return <FrameSelectInn onNavigateNextAllow={handleFirstStepAllowNext} />
+        return <FrameSelectInn
+          companyId={company?.id as number}
+          orderId={Number(itemId) || orderId}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          selectedCustomer={selectedCustomer}
+          setSelectedCustomer={setSelectedCustomer}
+        />
       case 1:
-        return <FrameDocuments orderId={0} customerId={0} />
+        return <FrameDocuments
+          companyId={company?.id as number}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          orderId={Number(itemId) || orderId}
+          customerId={-1}
+        />
       case 2:
-        return <FrameSignDocuments />
+        return <FrameSignDocuments
+          companyId={company?.id as number}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          orderId={Number(itemId) || orderId}
+          customerId={-1}
+        />
       case 3:
-        return <FrameBankOffers />
+        return <FrameBankOffers
+          companyId={company?.id as number}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          orderId={Number(itemId) || orderId}
+          customerId={-1}
+        />
       default:
         return <></>
     }
   }
-  const handleFirstStepAllowNext = (allow: boolean) => {
-    if (allow) {
-      console.log('handleFirstStepAllowNext')
-    }
-  }
-  const handleNextStep = () => {
-    if (currentStep < LAST_STEP_INDEX) {
-      setCurrentStep(currentStep + 1)
-    }
-  }
-  const renderCancelButton = () => {
-    return (<></>)
-  }
-  const renderNextButton = () => {
+
+  const renderTitle = () => {
+    const title = t('frameOrder.title')
+    if (!backUrl) return title
     return (
-      <Button
-        size="large"
-        type="primary"
-        onClick={handleNextStep}
-      >
-        {t('orders.actions.next.title')}
-      </Button>
+      <>
+        <Link className="FrameWizard__navigateBack" to={backUrl}>
+          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
+        </Link>
+        {title}
+      </>
     )
   }
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
-      <Col>{renderCancelButton()}</Col>
-      <Col flex={1}></Col>
-      <Col>{renderNextButton()}</Col>
-    </Row>
-  )
 
   return (
     <>
       <Card className="Wizard FrameWizard">
-        <Title level={3}>{t('frameOrder.title')}</Title>
+        <Title level={3}>{renderTitle()}</Title>
         <Steps current={currentStep} onChange={setCurrentStep}>
           <Step title={t('frameOrder.firstStep.title')} />
-          <Step title={t('frameOrder.secondStep.title')} />
-          <Step title={t('frameOrder.thirdStep.title')} />
-          <Step title={t('frameOrder.fourthStep.title')} />
+          <Step disabled={!selectedCustomer} title={t('frameOrder.secondStep.title')} />
+          <Step disabled title={t('frameOrder.thirdStep.title')} />
+          <Step disabled title={t('frameOrder.fourthStep.title')} />
         </Steps>
       </Card>
       <Card className="FrameWizard__step">
-        <Div className="FrameWizard__step__content">
-          {renderCurrentStep()}
-          {renderActions()}
-        </Div>
+        {renderCurrentStep()}
       </Card>
     </>
   )

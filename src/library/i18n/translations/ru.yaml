@@ -11,7 +11,9 @@ sections:
   documents:
     title: Документы
   requests:
-    title: Заявки
+    title: Мои заявки
+  toSign:
+    title: Заявки на подпись
 
 companyPage:
   tabs:
@@ -65,6 +67,7 @@ orders:
       title: Подписать и отправить
     refuseOffer:
       title: Отказаться от предложения # Refuse the offer
+  # NOTE: status label is cabinet-specific
   statuses:
     draft:
       title: Черновик

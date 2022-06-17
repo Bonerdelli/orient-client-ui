@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Descriptions, Space, Row, Col, Card, Select, message } from 'antd'
+import { Typography, Descriptions, Space, Row, Col, Card, Skeleton, Select, Button, message } from 'antd'
 import { BaseOptionType } from 'antd/es/select'
 
 import Div from 'components/Div' // TODO: from ui-lib
 import EmptyResult from 'components/EmptyResult' // TODO: from ui-lib
 
 import { Customer } from 'library/models' // TODO: check API schema, why not from proxy?
-import { searchCustomers } from 'library/api'
+import { FrameWizardType, searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
 
 import './FrameSelectInn.style.less'
 
@@ -15,10 +15,26 @@ const { Title, Text } = Typography
 const { Item: DescItem } = Descriptions
 
 export interface FrameSelectInnProps {
-  onNavigateNextAllow: (allow: boolean) => void
+  wizardType?: FrameWizardType
+  companyId: number
+  orderId?: number
+  setOrderId?: (order: number) => void
+  currentStep: number
+  setCurrentStep: (step: number) => void
+  selectedCustomer: Customer | undefined
+  setSelectedCustomer: (customer: Customer | undefined) => void
 }
 
-const FrameSelectInn: React.FC<FrameSelectInnProps> = ({ onNavigateNextAllow }) => {
+const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
+  wizardType = FrameWizardType.Full,
+  companyId,
+  orderId,
+  setOrderId,
+  currentStep,
+  setCurrentStep,
+  selectedCustomer,
+  setSelectedCustomer,
+}) => {
   const { t } = useTranslation()
 
   const [ search, setSearch ] = useState<string>()
@@ -27,14 +43,15 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({ onNavigateNextAllow }) 
   const [ options, setOptions ] = useState<BaseOptionType[]>()
 
   const [ selectedId, setSelectedId ] = useState<Customer['id']>()
-  const [ selectedItem, setSelectedItem ] = useState<Customer>()
+  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
+  const [ submitting, setSubmitting ] = useState<boolean>()
 
   useEffect(() => {
     if (foundItems) {
       setFoundItems([])
     }
-    if (selectedItem) {
-      setSelectedItem(undefined)
+    if (selectedCustomer) {
+      setSelectedCustomer(undefined)
     }
     handleSearch()
   }, [search])
@@ -52,12 +69,51 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({ onNavigateNextAllow }) 
 
   useEffect(() => {
     const item = foundItems.find(datum => datum.id === selectedId)
-    setSelectedItem(item)
+    setSelectedCustomer(item)
   }, [foundItems, selectedId])
 
   useEffect(() => {
-    onNavigateNextAllow(true)
-  }, [selectedItem])
+    if (selectedCustomer) {
+      setIsNextStepAllowed(true)
+    }
+    if (!selectedId) {
+      setSelectedId(selectedCustomer?.id)
+    }
+  }, [selectedCustomer])
+
+  useEffect(() => {
+    loadCurrentStep()
+  }, [orderId])
+
+  const loadCurrentStep = async () => {
+    const result = await getFrameWizardStep({
+      type: wizardType,
+      companyId,
+      orderId,
+      step: 1,
+    })
+    console.log('getFrameWizardStep', result)
+  }
+
+  const sendNextStep = async () => {
+    if (!selectedCustomer) {
+      return
+    }
+    setSubmitting(true)
+    const result = await startFrameWizard({
+      type: wizardType,
+      companyId,
+    }, {
+      customerId: selectedCustomer?.id,
+    })
+    if (!result.success) {
+      message.error(t('common.errors.requestError.title'))
+      setIsNextStepAllowed(false)
+    } else {
+      setCurrentStep(currentStep + 1)
+    }
+    setSubmitting(false)
+  }
 
   const handleSearch = async () => {
     setSearching(true)
@@ -71,22 +127,66 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({ onNavigateNextAllow }) 
     setSearching(false)
   }
 
+  const renderCustomerInfo = () => {
+    if (selectedId && !selectedCustomer) {
+      return (
+        <Skeleton active={true} />
+      )
+    }
+    if (!selectedCustomer) {
+      return <></>
+    }
+    const customer = selectedCustomer
+    return (
+      <Div className="FrameSelectInn__customerInfo">
+        <Title level={5}>{t('frameSteps.selectInn.customerInfo.title')}</Title>
+        <Card>
+          <Descriptions title={customer.shortName}>
+            <DescItem label={t('models.customer.fields.shortName.title')}>{customer.shortName}</DescItem>
+            <DescItem label={t('models.customer.fields.chief.title')}>{customer.chief}</DescItem>
+            <DescItem label={t('models.customer.fields.soato.title')}>{customer.soato}</DescItem>
+            <DescItem label={t('models.customer.fields.address.title')}>{customer.address}</DescItem>
+          </Descriptions>
+        </Card>
+      </Div>
+    )
+  }
 
-  const renderCustomerInfo = (customer: Customer) => (
-    <Div className="FrameSelectInn__customerInfo">
-      <Title level={5}>{t('frameSteps.selectInn.customerInfo.title')}</Title>
-      <Card>
-        <Descriptions title={customer.shortName}>
-          <DescItem label={t('models.customer.fields.shortName.title')}>{customer.shortName}</DescItem>
-          <DescItem label={t('models.customer.fields.chief.title')}>{customer.chief}</DescItem>
-          <DescItem label={t('models.customer.fields.soato.title')}>{customer.soato}</DescItem>
-          <DescItem label={t('models.customer.fields.address.title')}>{customer.address}</DescItem>
-        </Descriptions>
-      </Card>
-    </Div>
+  const handleNextStep = () => {
+    if (orderId && isNextStepAllowed) {
+      setCurrentStep(currentStep + 1)
+    } else if (isNextStepAllowed) {
+      sendNextStep()
+    }
+  }
+
+  const renderCancelButton = () => {
+    return (<></>)
+  }
+
+  const renderNextButton = () => {
+    return (
+      <Button
+        size="large"
+        type="primary"
+        onClick={handleNextStep}
+        disabled={!isNextStepAllowed || submitting}
+        loading={submitting}
+      >
+        {t('orders.actions.next.title')}
+      </Button>
+    )
+  }
+
+  const renderActions = () => (
+    <Row className="FrameWizard__step__actions">
+      <Col>{renderCancelButton()}</Col>
+      <Col flex={1}></Col>
+      <Col>{renderNextButton()}</Col>
+    </Row>
   )
 
-  return (
+  const renderStepContent = () => (
     <Div className="FrameSelectInn">
       <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Row>
@@ -101,8 +201,15 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({ onNavigateNextAllow }) 
           >
           </Select>
         </Col>
-        {selectedItem && renderCustomerInfo(selectedItem)}
+        {renderCustomerInfo()}
       </Row>
+    </Div>
+  )
+
+  return (
+    <Div className="FrameWizard__step__content">
+      {renderStepContent()}
+      {renderActions()}
     </Div>
   )
 }

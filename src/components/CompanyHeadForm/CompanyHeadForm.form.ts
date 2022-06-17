@@ -6,7 +6,7 @@ const formFields: FormInputShortConfig<CompanyHead>[] = [
   ['lastName'           ],
   ['firstName'          ],
   ['secondName'         ],
-  ['inn'                ],
+  ['inn',               FormInputType.INN],
   ['ownership',         FormInputType.Percent],
   ['isIo',              FormInputType.Switcher],
   ['isAttorney',        FormInputType.Switcher],

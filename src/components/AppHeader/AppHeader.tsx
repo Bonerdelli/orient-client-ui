@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Layout, Row, Col, Typography, Avatar, Button } from 'antd'
+import { Layout, Row, Col, Typography, Avatar, Button, Select } from 'antd'
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons'
 
 import './AppHeader.style.less'
@@ -11,6 +11,7 @@ import { useStoreActions, useStoreState } from 'library/store'
 
 const { Header } = Layout
 const { Text } = Typography
+const { Option } = Select
 
 export interface AppHeaderProps {
   title?: string
@@ -20,7 +21,18 @@ export interface AppHeaderProps {
 const AppHeader: React.FC<AppHeaderProps> = ({ title, mainAction }) => {
   const { setLogout } = useStoreActions(actions => actions.user)
   const user = useStoreState(state => state.user.current)
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
+  const renderLangSwitcher = () => (
+    <Select
+      defaultValue={i18n.language}
+      onChange={(lng) => i18n.changeLanguage(lng)}
+      bordered={false}
+    >
+      <Option value='en'>Eng</Option>
+      <Option value='ru'>Rus</Option>
+    </Select>
+  )
 
   return (
     <Header className="AppHeader">
@@ -54,6 +66,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ title, mainAction }) => {
           >
             <span className="AppHeader__actions__button__title">{t('common.user.actions.logout.title')}</span>
           </Button>
+          {renderLangSwitcher()}
         </Col>
       </Row>
     </Header>

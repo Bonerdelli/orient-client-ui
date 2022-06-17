@@ -1,3 +1,7 @@
+/**
+ * TODO: remove this or use
+ */
+
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useHistory } from 'react-router-dom'
@@ -8,40 +12,40 @@ import { isUndefined, isNull } from 'lodash'
 import ErrorResultView from 'ui-components/ErrorResultView'
 import Div from 'components/Div' // TODO: from ui-lib
 
-import { CompanyRequisites } from 'library/models/proxy' // TODO: to ui-lib
+import { Order } from 'library/models/order'
 import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
-import { getCompanyRequisites, updateCompanyRequisites } from 'library/api'
+import { getCompanyOrder, updateCompanyOrder } from 'library/api'
 
-import formFields from './BankRequisitesForm.form'
-import './BankRequisitesForm.style.less'
+import formFields from './OrderForm.form'
+import './OrderForm.style.less'
 
 const { useBreakpoint } = Grid
 const { useForm } = Form
 
-export interface BankRequisitesEditFormProps {
+export interface OrderEditFormProps {
   companyId: number,
   backUrl?: string
   itemId?: number,
 }
 
-export interface CompanyRequisitesPathParams {
+export interface OrderPathParams {
   itemId?: string,
 }
 
-export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (props) => {
+export const OrderEditForm: React.FC<OrderEditFormProps> = (props) => {
   const { backUrl, companyId } = props
 
   const { t } = useTranslation()
   const history = useHistory()
-  const { itemId } = useParams<CompanyRequisitesPathParams>()
+  const { itemId } = useParams<OrderPathParams>()
   const breakPoint = useBreakpoint()
   const [ form ] = useForm()
 
-  const [ formData, setFormData ] = useState<Partial<CompanyRequisites> | null>()
+  const [ formData, setFormData ] = useState<Partial<Order> | null>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
-  const [ initialData, dataLoaded ] = useApi<CompanyRequisites | null>(
-    getCompanyRequisites, {
+  const [ initialData, dataLoaded ] = useApi<Order | null>(
+    getCompanyOrder, {
       id: itemId ?? props.itemId,
       companyId,
     },
@@ -51,9 +55,9 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
     setFormData(initialData)
   }, [initialData])
 
-  const handleItemUpdate = async (data: CompanyRequisites) => {
-    const updatedData = await callApi<CompanyRequisites | null>(
-      updateCompanyRequisites, {
+  const handleItemUpdate = async (data: Order) => {
+    const updatedData = await callApi<Order | null>(
+      updateCompanyOrder, {
         id: itemId ?? props.itemId,
         companyId,
       },
@@ -64,7 +68,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
     }
   }
 
-  const handleFormSubmit = async (data: CompanyRequisites) => {
+  const handleFormSubmit = async (data: Order) => {
     setSubmitting(true)
     await handleItemUpdate(data)
     setSubmitting(false)
@@ -110,7 +114,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
     if (!backUrl) return title
     return (
       <>
-        <Link className="BankRequisitesForm__navigateBack" to={backUrl}>
+        <Link className="OrderForm__navigateBack" to={backUrl}>
           <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
         </Link>
         {title}
@@ -141,9 +145,9 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
     <Form
       form={form}
       initialValues={formData ?? {}}
-      onFinish={(data: CompanyRequisites) => handleFormSubmit(data)}
-      className="BankRequisitesForm"
-      data-testid="BankRequisitesForm"
+      onFinish={(data: Order) => handleFormSubmit(data)}
+      className="OrderForm"
+      data-testid="OrderForm"
       {...baseFormConfig(breakPoint)}
     >
       <Spin spinning={submitting}>
@@ -163,4 +167,4 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
 
 }
 
-export default BankRequisitesEditForm // TODO: rename to BankRequisitesEditForm maybe?
+export default OrderEditForm // TODO: rename to OrderEditForm maybe?

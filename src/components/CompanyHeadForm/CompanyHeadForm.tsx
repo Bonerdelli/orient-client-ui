@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import { Card, Form, Grid, Row, Col, Spin, Skeleton, Button } from 'antd'
 import { SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import { isUndefined } from 'lodash'
@@ -30,8 +30,9 @@ export interface CompanyHeadPathParams {
 
 const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, id }) => {
   const { t } = useTranslation()
-  const breakPoint = useBreakpoint()
   const { itemId } = useParams<CompanyHeadPathParams>()
+  const breakPoint = useBreakpoint()
+  const history = useHistory()
 
   const [ formData, setFormData ] = useState<Partial<CompanyHead>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
@@ -59,6 +60,9 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
     )
     if (updatedData) {
       setFormData(updatedData)
+      if (backUrl) {
+        history.push(backUrl)
+      }
     }
     setSubmitting(false)
   }

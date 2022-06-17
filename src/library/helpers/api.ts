@@ -12,6 +12,11 @@ import {
 
 import { useStoreActions } from 'library/store'
 
+// TODO: to ui-lib
+export interface PaginatedRequest {
+  limit: number,
+  page: number,
+}
 
 export interface UseApiHookOptions {
   catchUnauthorized: boolean
@@ -20,10 +25,18 @@ export interface UseApiHookOptions {
 export type UseApiHookValue<T> = [
   T | null, // Result data
   boolean | null, // Success or not or null when loading
+  () => Promise<void>, // Data reload callback
 ]
 
 const defaultOptions: UseApiHookOptions = {
   catchUnauthorized: true,
+}
+
+export const DEFAULT_PAGINATION_LIMIT = 100
+
+export const defaultPaginatedRequest: PaginatedRequest = {
+  limit: DEFAULT_PAGINATION_LIMIT,
+  page: 1,
 }
 
 /**
@@ -92,5 +105,5 @@ export function useApi<T = unknown, P = unknown, R = unknown>(
 
   useEffect(() => { getData() }, [])
 
-  return [ data, result ]
+  return [ data, result, getData ]
 }

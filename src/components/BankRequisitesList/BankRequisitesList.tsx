@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
-import { remove } from 'lodash'
 
 import { Table, Button, Space, Popconfirm } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
@@ -11,7 +10,7 @@ import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
 import { CompanyRequisites } from 'library/models/proxy'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
-import { getCompanyRequisitesList, getCompanyRequisites } from 'library/api'
+import { getCompanyRequisitesList, deleteCompanyRequisites } from 'library/api'
 
 import './BankRequisitesList.style.less'
 
@@ -23,17 +22,17 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
-  const [ data, dataLoaded ] = useApi<CompanyRequisites[]>(getCompanyRequisitesList, { companyId })
+  const [ data, dataLoaded, dataReloadCallback ] = useApi<CompanyRequisites[]>(getCompanyRequisitesList, { companyId })
 
   const handleDelete = async (item: CompanyRequisites) => {
     if (data) {
-      await getCompanyRequisites({ companyId, id: item.id as number })
-      remove(data, (datum) => datum === item)
+      await deleteCompanyRequisites({ companyId, id: item.id as number })
+      dataReloadCallback()
     }
   }
 
   const renderActions = (_val: unknown, item: CompanyRequisites) => (
-    <Space size="small">
+    <Space size="small" className="DataTable__ghostActions">
       <Link to={`${url}/${item.id}`}>
         <Button
           key="edit"
@@ -82,6 +81,7 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
       key: 'actions',
       render: renderActions,
       align: 'right',
+      width: 100,
     },
   ]
 
