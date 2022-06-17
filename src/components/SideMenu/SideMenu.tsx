@@ -9,7 +9,6 @@ import {
   FileProtectOutlined,
   UnorderedListOutlined,
   FormOutlined,
-  EllipsisOutlined,
 } from '@ant-design/icons'
 
 import './SideMenu.style.less'
@@ -39,12 +38,6 @@ const SideMenu = () => {
           </NavLink>
         </MenuItem>
       ))}
-
-      <MenuItem key="frame-orders" icon={<EllipsisOutlined />}>
-        <NavLink to="/frame-orders">
-          <i>Заявки на рамочный договор</i>
-        </NavLink>
-      </MenuItem>
     </Menu>
   )
 }

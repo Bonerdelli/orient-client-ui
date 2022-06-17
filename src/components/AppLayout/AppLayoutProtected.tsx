@@ -1,6 +1,6 @@
 import { Layout } from 'antd'
 
-import themeConfig from 'orient-ui-library/config/theme-bank.yaml'
+import themeConfig from 'orient-ui-library/config/theme.yaml'
 
 import ClientAppHeader from 'components/ClientAppHeader'
 import SideMenu from 'components/SideMenu'

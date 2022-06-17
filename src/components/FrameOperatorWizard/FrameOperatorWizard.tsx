@@ -122,11 +122,11 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     )
   }
 
-  if (dataLoaded === false) {
+  // if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
     )
-  }
+  // }
 
   return (
     <>
