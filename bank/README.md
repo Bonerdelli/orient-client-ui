@@ -1,4 +1,4 @@
-# ORIENT Web Application for Clients
+# ORIENT Web Application for Banks
 
 ## Development
 

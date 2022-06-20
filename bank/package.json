@@ -1,7 +1,7 @@
 {
-  "name": "orient-client-ui",
-  "version": "0.0.1",
-  "description": "ORIENT: React-based Web Application for Clients",
+  "name": "orient-bank-ui",
+  "version": "0.2.0",
+  "description": "ORIENT: React-based Web Application for Banks",
   "author": "Andrew Nekrasov <bonerdelli@gmail.com>",
   "license": "UNLICENSED",
   "source": "src/index.html",
