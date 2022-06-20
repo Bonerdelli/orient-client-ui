@@ -1,0 +1,165 @@
+###
+# Localization for common models
+###
+
+common:
+  id:
+    title: Identifier
+  createdAt:
+    title: Date Created
+  updatedAt:
+    title: Date Updated
+
+customer:
+  title: customer
+  fields:
+    inn:
+      title: INN
+    shortName:
+      title: Legal Entity Name
+    chief:
+      title: Head of company
+    soato:
+      title: SOATO Code
+    address:
+      title: Address
+
+company:
+  title: Company
+  fields:
+    fullName:
+      title: Name of the Legal Entity
+    shortName:
+      title: Short Name of the Legal Entity
+    inn:
+      title: INN
+    isMsp:
+      title: Small business company
+    capital:
+      title: Authorized fund
+    currency:
+      title: Currency
+    regAuthority:
+      title: Registration Authority
+    regDate:
+      title: Registration Date
+    regNumber:
+      title: Registration Number
+    address:
+      title: Address
+    phones:
+      title: Contact phone numbers
+    email:
+      title: E-mail Address
+    opf:
+      title: OPF Code
+    oked:
+      title: OKED Code
+      description: OKED Type Code(s)
+    soogu:
+      title: SOOGU Code
+    soato:
+      title: SOATO Code
+    state:
+      title: State
+
+companyContact:
+  title: Company Contact
+  fields:
+    primaryEmail:
+      title: Primary E-mail Address
+    additionalEmail:
+      title: Additional E-mail Address
+    primaryPhone:
+      title: Primary Phone
+    additionalPhone:
+      title: Additional Phone
+    site:
+      title: Web-сайт
+
+companyFounder:
+  title: Company Founder
+  fields:
+    lastName:
+      title: Last Name
+    firstName:
+      title: First Name
+    secondName:
+      title: Second Name
+    inn:
+      title: INN
+    ownership:
+      title: Share
+    isIo:
+      title: Executive agency
+    isAttorney:
+      title: Attorney-in-fact
+    passportType:
+      title: Document Type
+    passportSeries:
+      title: Series
+    passportNumber:
+      title: Number
+    passportIssueDate:
+      title: Date of Issue
+    passportIssuePlace:
+      title: Place of Passport
+    passportIssuerCode:
+      title: Issuer Code
+    passportIssuerName:
+      title: Issuer Name
+    birthdate:
+      title: Date of Birth
+    birthplace:
+      title: Place of Birth
+    isMaleGender:
+      title: Gender
+    passportValidDate:
+      title: Expiration Date
+    nationality:
+      title: Nationality
+    address:
+      title: Registration address
+
+companyRequisites:
+  title: Company Requisites
+  fields:
+    bankName:
+      title: Bank Name
+    mfo:
+      title: MFO
+    accountNumber:
+      title: Account Number
+
+order:
+  title: Application
+  types:
+    frameOrder:
+      title: Application for a Framework Contract
+    frameSimpleOrder:
+      title: Application for a Simplified Framework Contract
+    factoring:
+      title: Factoring Application
+  fields:
+    id:
+      title: Application Num
+    clientInn:
+      title: Client INN
+    clientName:
+      title: Client Name
+    updatedAt:
+      title: Updated
+    createdAt:
+      title: Created
+    statusCode:
+      title: Status Code
+    statusName:
+      title: Status Name
+    amount:
+      title: Amount
+    currencyCode:
+      title: Currency Code
+    currencyName:
+      title: Currency Name
+    typeCode:
+      title: Type Code

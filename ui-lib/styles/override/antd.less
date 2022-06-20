@@ -1,0 +1,24 @@
+@import '../vars.less';
+
+/**
+ * Side Menu styles
+ */
+
+.ant-menu-vertical .ant-menu-item {
+  transition: border-right-width @animation-duration-slow,
+              border-right-color @animation-duration-slow;
+  &:first-child {
+    margin-top: @border-width-base;
+  }
+  &.ant-menu-item-selected {
+    background-color: @menu-item-active-bg;
+    border-right: .35em solid @menu-item-active-mark;
+  }
+}
+
+.ant-menu.ant-menu-inline-collapsed > .ant-menu-item {
+  &.ant-menu-item-selected {
+    border-right-color: @menu-item-active-bg;
+    border-right-width: 0;
+  }
+}

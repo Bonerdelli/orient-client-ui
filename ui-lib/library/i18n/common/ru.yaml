@@ -1,0 +1,97 @@
+user:
+  title: Пользователь
+  actions:
+    login:
+      title: Вход
+    logout:
+      title: Выйти
+
+forms:
+  select:
+    placeholder: Выберите значение
+    noData: Не найдено
+  numericInput:
+    placeholder: Введите число
+  authenticate:
+    login:
+      label: Пользователь
+      validation:
+        required: Имя пользователя обязательно для заполнения
+      placeholder: Введите имя пользователя
+    password:
+      label: Пароль
+      validation:
+        required: Пароль обязателен для заполнения
+      placeholder: Введите пароль
+
+actions:
+  add:
+    title: Добавить
+  edit:
+    title: Редактировать
+  delete:
+    title: Удалить
+    confirmOne: Вы уверены, что хотите удалить выбранную запись?
+    confirmFew: Вы уверены, что хотите удалить выбранные записи?
+  refresh:
+    title: Обновить
+  reload:
+    title: Перезагрузить
+  save:
+    title: Сохранить
+  apply:
+    title: Применить
+  cancel:
+    title: Отменить
+  close:
+    title: Закрыть
+  back:
+    title: Назад
+  forward:
+    title: Вперёд
+
+documents:
+  fields:
+    type:
+      title: Наименование документа
+    status:
+      title: Статус документа
+  actions:
+    upload:
+      title: Загрузить
+    download:
+      title: Скачать
+  statuses:
+    uploaded: Загружен
+    notUploaded: Не загружен
+    uploadingError: Ошибка загрузки
+    signed: Подписан
+    unsigned: Не подписан
+  statusMessages:
+    uploaded: Файл «{{name}}» успешно загружен
+    uploadingError: Ошибка загрузки файла «{{name}}»
+    downloadingError: Ошибка скачивания файла
+    deletingError: Ошибка удаления файла
+
+errors:
+  startupError:
+    title: Ошибка инициализации приложения
+  dataLoadingError:
+    title: Ошибка загрузки данных
+    desc: Во время загрузки данных произошла ошибка. Попробуйте обновить страницу
+  requestError:
+    title: Ошибка выполнения запроса
+    desc: Произошла ошибка при выполнении запроса на сервере
+  apiUnavailable:
+    title: Сервер недоступен
+    desc: Нет подключения к серверу. Проверьте Интернет-соединение
+  apiTimeout:
+    title: Превышен интервал ожидания данных от сервера
+    desc: Сервер не ответил за допустимое время. Проверьте Интернет-соединение
+  authError:
+    title: Ошибка аутентификации
+    desc: Проверьте правильность ввода логина и пароля
+  pageNotFound:
+    title: 404
+    desc: Запрашиваемая страница не найдена
+    action: На главную
