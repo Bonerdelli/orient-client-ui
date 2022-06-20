@@ -2,18 +2,3 @@
 
 # dependencies
 /node_modules
-
-# bundler
-.parcel-cache
-
-# production
-/dist
-
-# misc
-.eslintcache
-/server
-
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
