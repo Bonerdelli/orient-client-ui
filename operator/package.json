@@ -13,7 +13,7 @@
     "lint:fix": "eslint ./src -f table --fix --ext .js,.jsx,.ts,.tsx",
     "prettier": "prettier --check ./src",
     "prettier:fix": "prettier --write ./src",
-    "serve": "parcel serve",
+    "serve": "parcel serve --port 1244",
     "generate": "generate-react component --",
     "generate:page": "generate-react component --type=page --",
     "parcel:build": "parcel build --no-cache --no-source-maps --log-level error",

@@ -8,7 +8,7 @@
 
 1. Start development server using `yarn start`
 
-1. Open http://localhost:1234/ in your favourite browser
+1. Open http://localhost:1254/ in your favourite browser
 
 1. Write a some great thing! You can generate components using `yarn generate NewGreatThing`
 

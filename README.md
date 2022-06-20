@@ -14,9 +14,21 @@ Additional resources:
 
 ## Start local Dev Servers
 
-- `npm run start:cabinet` Clients and Customers UI
-- `npm run start:operator` Operators UI
-- `npm run start:bank` Banks UI
+#### `npm run start:cabinet`
+
+Starts Clients and Customers UI, open http://localhost:1234
+
+#### `npm run start:operator`
+
+Starts Operators UI, open http://localhost:1244
+
+#### `npm run start:bank`
+
+Starts Banks UI, open http://localhost:1254
+
+#### `npm run start`
+
+Starts *All* UI Clients
 
 ## Additional Scripts
 
