@@ -2,15 +2,15 @@
 
 ## Development
 
-1. ~~Connect UI library using `yarn link orient-ui-library`~~
+1. ~~Connect UI library using `npm link orient-ui-library`~~
 
-1. Install dependencies using `yarn install`
+1. Install dependencies using `npm install`
 
-1. Start development server using `yarn start`
+1. Start development server using `npm start`
 
 1. Open http://localhost:1244/ in your favourite browser
 
-1. Write a some great thing! You can generate components using `yarn generate NewGreatThing`
+1. Write a some great thing! You can generate components using `npm generate NewGreatThing`
 
 1. Make a commit. Code linter and prettier will be runs automatically
 
@@ -18,25 +18,25 @@
 
 *NOTE: part of monorepo, use parent project for run scripts*
 
-#### `yarn build`
+#### `npm build`
 
 Builds production bundle into the `dist` folder
 
-#### `yarn start`
+#### `npm start`
 
 Runs application with development environment
 
-#### `yarn lint`
+#### `npm lint`
 
-Runs code linter. To fix issues that could be fixed automatically, use the `yarn lint:fix` command
+Runs code linter. To fix issues that could be fixed automatically, use the `npm lint:fix` command
 
-#### `yarn prettier`
+#### `npm prettier`
 
-Check the code style. Use the `yarn prettier:fix` command to fix code style automatically
+Check the code style. Use the `npm prettier:fix` command to fix code style automatically
 
-#### `yarn generate <ComponentName>`
+#### `npm generate <ComponentName>`
 
-Generate a component draft, for example `yarn generate SampleThing`
+Generate a component draft, for example `npm generate SampleThing`
 
 ## Tech stack
 
