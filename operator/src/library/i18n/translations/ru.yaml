@@ -1,0 +1,83 @@
+portalTitle: Планета ORIENT
+shortTitle: ORIENT
+
+sections:
+  frameOrders:
+    title: Заявки на рамочный договор
+
+frameOrdersPage:
+  tableColumnTitles:
+    id: Номер заявки
+    clientInn: ИНН Поставщика
+    clientName: Наименование Поставщика
+    updatedAt: Дата и время статуса
+    statusName: Статус
+
+frameWizard:
+  title: Заявка на заключение рамочного договора
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы / БО
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Проверка на стоп-факторы
+  fourthStep:
+    title: Дополнительные параметры
+    desc: Дополнительные параметры
+  fifthStep:
+    title: Результаты скоринга
+
+orderStepParameters:
+  title: Параметры заявки и клиента
+
+orderStepDocuments:
+  title: Документы / БО
+  sectionTitles:
+    mainDocs: Обязательные документы
+    additionalDocs: Дополнительные документы
+    companyHeadInfo: Данные о руководителе
+    finStatements: Бухгалтерская отчетность (Форма 1)
+
+orderStepStopFactors:
+  title: Проверка на стоп-факторы
+  sectionTitles:
+    stopFactors: Стоп-факторы
+    banksWhereTrigerred: Банки, в которых сработали стоп-факторы
+
+orderStepScoringResult:
+  title: Результаты скоринга
+  compliant:
+    title: Соответствует параметрам
+  nonCompliant:
+    title: Не соответствует параметрам
+
+orderStepOptionalParameters:
+  title: Дополнительные параметры
+
+orderActions:
+  cancel:
+    title: Отказать
+  next:
+    title: Далее
+  submitForRevision:
+      Отправить на доработку
+  saveAndContinue:
+    title: Сохранить и продолжить
+  sendToBanks:
+    title: Отправить в Банки
+
+orderStatuses:
+  # Ожидает проверки
+  # Просмотрена
+  # Проверка
+  # На доработке
+  # Проверка исправлений
+  # Формирование предложения
+  # Формирование документов
+  # Отправлено предложение
+  # Требует подписи Заказчика
+  # Договор заключен
+  # Отказ Банка
+  # Отмена заявки
+  # Отказ от предложения
