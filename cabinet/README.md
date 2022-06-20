@@ -1,4 +1,4 @@
-# ORIENT Web Application for Clients and Customer
+# ORIENT Web Application for Clients and Customers
 
 ## Development
 

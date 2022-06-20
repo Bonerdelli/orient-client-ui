@@ -5,7 +5,16 @@
   "author": "Andrew Nekrasov <bonerdelli@gmail.com>",
   "license": "UNLICENSED",
   "source": "src/index.html",
-  "scripts": {},
+  "scripts": {
+    "build": "nx run-many --target=build --projects=cabinet,operator,bank",
+    "build:cabinet": "nx build cabinet",
+    "build:operator": "nx build operator",
+    "build:bank": "nx build bank",
+    "start:cabinet": "nx run orient-cabinet-ui:start",
+    "start:operator": "nx run orient-operator-ui:start",
+    "start:bank": "nx run orient-bank-ui:start",
+    "nx:graph": "nx graph"
+  },
   "alias": {},
   "engines": {
     "node": "12.18.3 || >=14"
