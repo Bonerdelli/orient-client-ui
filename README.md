@@ -31,6 +31,21 @@ Starts Banks UI, open http://localhost:1254
 Starts **All** UI Clients
 *NOTE: This mode may cause some issues, e.g. incorrectly applied style config*
 
+## Build the Portals
+
+#### `npm run build:cabinet`
+
+Builds Clients and Customers UI
+
+#### `npm run build:operator`
+
+Builds Operators UI
+
+#### `npm run build:bank`
+
+Builds Banks UI
+
+
 ## Additional Scripts
 
 #### `npm run nx:graph`
