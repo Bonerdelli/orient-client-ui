@@ -8,6 +8,12 @@
 
 # production
 /dist
+/bank/dist
+/cabinet/dist
+/operator/dist
+
+# editor
+/.idea
 
 # misc
 .eslintcache
