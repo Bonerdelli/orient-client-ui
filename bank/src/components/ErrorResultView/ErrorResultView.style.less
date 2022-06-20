@@ -1,0 +1,24 @@
+@import 'orient-ui-library/styles/vars.less';
+
+.ErrorResultView {
+  &--centered {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &--fullHeight {
+    // margin-top: -@result-icon-font-size; // TODO: fix or
+  }
+  &--compact {
+    .ant-result {
+      padding: @padding-sm @padding-md @padding-md;
+    }
+    .ant-result-icon {
+      margin-bottom: @margin-xs;
+    }
+    .ant-result-icon > .anticon {
+      font-size: calc(@result-icon-font-size / 1.4);
+    }
+  }
+}

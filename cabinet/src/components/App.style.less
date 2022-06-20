@@ -1,0 +1,83 @@
+// TODO: remove after debugging and libs separation
+// @import 'antd/dist/antd.less'; // DEBUG: uncomment for debug with lib sources
+@import 'orient-ui-library/styles/vars.less';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+#root > .ant-alert-error {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+  // TODO: fix antd theme overriding
+  font-weight: 500 !important;
+}
+
+.App__loader {
+  position: absolute;
+  margin-left: -16px;
+  top: 45%;
+  left: 50%;
+}
+
+.ant-table-row:hover .DataTable__ghostActions {
+  visibility: visible;
+}
+
+// Small helpers
+// TODO: move to ui-lib
+.relative {
+  position: relative;
+}
+
+/**
+ * Cross-component classes
+ * TODO: move it somewhere
+ */
+
+.DataTable__ghostActions {
+  visibility: hidden;
+}
+
+.Form__actions {
+  padding-top: @padding-sm;
+  text-align: right;
+}
+
+/**
+ * Ant overriding
+ * TODO: move to ui-lib
+ */
+
+.ant-steps-item-wait:not(.ant-steps-item-disabled) {
+  > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+    color: @text-color;
+  }
+  .ant-steps-item-icon {
+    border-color: @text-color;
+    > .ant-steps-icon {
+      color: @text-color;
+    }
+  }
+}
+
+.ant-steps:not(.ant-steps-vertical) {
+  .ant-steps-item-title {
+    line-height: 1.25em;
+    white-space: normal;
+    padding-top: 6px;
+  }
+}

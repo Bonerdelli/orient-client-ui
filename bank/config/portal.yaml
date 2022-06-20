@@ -1,0 +1,21 @@
+token:
+  lifespan: 300
+
+l10n:
+  defaultLocale: 'ru'
+
+dataDisplay:
+  quickSearchMaxItems: 15
+  numberFractionalLength: 2
+
+dataEntry:
+  accountNumberLength: 20
+
+sections:
+  frameOrders: /frame-orders
+
+roles:
+  pages:
+    all:
+      - admin
+      - bank

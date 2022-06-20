@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "orient-ui-library/*": ["../ui-lib/*"],
+      "config/*": ["config/*"],
+      "assets/*": ["src/assets/*"],
+      "components/*": ["src/components/*"],
+      "ui-components/*": ["src/components/*"],
+      "library/*": ["src/library/*"],
+      "pages/*": ["src/pages/*"]
+    }
+  }
+}

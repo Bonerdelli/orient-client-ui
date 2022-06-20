@@ -1,0 +1,165 @@
+###
+# Localization for common models
+###
+
+common:
+  id:
+    title: Идентификатор
+  createdAt:
+    title: Дата создания
+  updatedAt:
+    title: Дата обновления
+
+customer:
+  title: Заказчик
+  fields:
+    inn:
+      title: Инн
+    shortName:
+      title: Наименование юр. лица
+    chief:
+      title: Руководитель
+    soato:
+      title: СОАТО
+    address:
+      title: Адрес
+
+company:
+  title: Компания
+  fields:
+    fullName:
+      title: Наименование юридического лица
+    shortName:
+      title: Сокращенное наименование юридического лица
+    inn:
+      title: ИНН
+    isMsp:
+      title: Принадлежность к субъектам малого предпринимательства
+    capital:
+      title: Уставный фонд
+    currency:
+      title: Валюта
+    regAuthority:
+      title: Регистрирующий орган
+    regDate:
+      title: Дата регистрации
+    regNumber:
+      title: Номер регистрации
+    address:
+      title: Адрес
+    phones:
+      title: Контактные телефоны
+    email:
+      title: Адрес электронной почты
+    opf:
+      title: Код ОПФ
+    oked:
+      title: Код ОКЭД
+      description: Вид(ы) осуществляемой деятельности
+    soogu:
+      title: Код СООГУ
+    soato:
+      title: Код СОАТО
+    state:
+      title: Состояние                                          # TODO: Что это?
+
+companyContact:
+  title: Контакт компании
+  fields:
+    primaryEmail:
+      title: Основной адрес электронной почты
+    additionalEmail:
+      title: Дополнительный адрес электронной почты
+    primaryPhone:
+      title: Рабочий телефон
+    additionalPhone:
+      title: Дополнительный телефон
+    site:
+      title: Web-сайт
+
+companyFounder:
+  title: Основатель компании
+  fields:
+    lastName:
+      title: Фамилия
+    firstName:
+      title: Имя
+    secondName:
+      title: Отчество
+    inn:
+      title: ИНН
+    ownership:
+      title: Доля
+    isIo:
+      title: Исполнительный орган
+    isAttorney:
+      title: Представитель по доверенности
+    passportType:
+      title: Тип документа
+    passportSeries:
+      title: Серия
+    passportNumber:
+      title: Номер
+    passportIssueDate:
+      title: Дата выдачи
+    passportIssuePlace:
+      title: Место выдачи
+    passportIssuerCode:
+      title: Код подразделения
+    passportIssuerName:
+      title: Орган власти, выдавший документ
+    birthdate:
+      title: Дата рождения
+    birthplace:
+      title: Место рождения
+    isMaleGender:                                                # TODO: почему?
+      title: Пол
+    passportValidDate:
+      title: Дата окончания срока действия
+    nationality:
+      title: Национальность
+    address:
+      title: Адрес регистрации
+
+companyRequisites:
+  title: Реквизиты компании
+  fields:
+    bankName:
+      title: Название банка
+    mfo:
+      title: МФО
+    accountNumber:
+      title: Номер счёта
+
+order:
+  title: Заявка
+  types:
+    frameOrder:
+      title: Заявка на рамочный договор
+    frameSimpleOrder:
+      title: Заявка на упрощенный рамочный договор
+    factoring:
+      title: Заявка на факторинг
+  fields:
+    id:
+      title: Номер заявки
+    clientInn:
+      title: ИНН Клиента
+    clientName:
+      title: Наименование юр. лица Клиента
+    updatedAt:
+      title: Дата и время модификации
+    createdAt:
+      title: Дата и время создания заявки
+    statusCode:
+      title: Код статуса
+    statusName:
+      title: Статус
+    amount:
+      title: Сумма
+    currencyCode:
+      title: Код валюты
+    currencyName:
+      title: Названик валюты
+    typeCode:
+      title: Вид заявки

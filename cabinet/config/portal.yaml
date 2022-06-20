@@ -1,0 +1,25 @@
+token:
+  lifespan: 300
+
+l10n:
+  defaultLocale: 'ru'
+
+dataDisplay:
+  quickSearchMaxItems: 15
+  numberFractionalLength: 2
+
+dataEntry:
+  accountNumberLength: 20
+
+sections:
+  company: /my-company
+  heads: /company-heads
+  bankDetails: /bank-details
+  documents: /documents
+  requests: /requests
+
+roles:
+  pages:
+    all:
+      - admin
+      - operator

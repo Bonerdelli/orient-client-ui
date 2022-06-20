@@ -1,0 +1,97 @@
+user:
+  title: User
+  actions:
+    login:
+      title: Login
+    logout:
+      title: Logout
+
+forms:
+  select:
+    placeholder: Select an option
+    noData: No data
+  numericInput:
+    placeholder: Input a number
+  authenticate:
+    login:
+      label: Login
+      validation:
+        required: Login is required
+      placeholder: Please type login
+    password:
+      label: Password
+      validation:
+        required: Password is required
+      placeholder: Please type password
+
+actions:
+  add:
+    title: Add
+  edit:
+    title: Edit
+  delete:
+    title: Delete
+    confirmOne: Are you sure you want to delete the selected entry?
+    confirmFew: Are you sure you want to delete selected entries?
+  refresh:
+    title: Refresh
+  reload:
+    title: Reload
+  save:
+    title: Save
+  apply:
+    title: Apply
+  cancel:
+    title: Cancel
+  close:
+    title: Close
+  back:
+    title: Back
+  forward:
+    title: Forward
+
+documents:
+  fields:
+    type:
+      title: Document name
+    status:
+      title: Status
+  actions:
+    upload:
+      title: Upload
+    download:
+      title: Download
+  statuses:
+    uploaded: Uploaded
+    notUploaded: Not Uploaded
+    uploadingError: Uploading Error
+    signed: Signed
+    unsigned: Unsigned
+  statusMessages:
+    uploaded: File "{{name}}" uploaded successfully
+    uploadingError: Error loading file "{{name}}"
+    downloadingError: File download error
+    deletingError: File deletion error
+
+errors:
+  startupError:
+    title: Application initialization error
+  dataLoadingError:
+    title: Data loading error
+    desc: An error occurred while loading data. Try to refresh the page
+  requestError:
+    title: Request execution error
+    desc: An error occurred while executing the request on the server
+  apiUnavailable:
+    title: Server is not available
+    desc: There is no connection to the server. Check Internet connection
+  apiTimeout:
+    title: Server response timed out
+    desc: The server did not respond within allowed time. Check Internet connection
+  authError:
+    title: Authentication error
+    desc: Check are login and password entered correctly
+  pageNotFound:
+    title: 404
+    desc: Page not found
+    action: Go to main page

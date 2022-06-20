@@ -1,0 +1,14 @@
+/**
+ * NOTE: doesn't used, style draft for custom inputs style
+ */
+
+.ant-input {
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-left-color: transparent;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: #f5f5f585;
+  border-bottom-color: #c6c6c675;
+  border-bottom-width: 2px;
+}

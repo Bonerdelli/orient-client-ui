@@ -1,46 +1,53 @@
-# ORIENT Web Application for Clients
+# ORIENT Front-end Monorepositoty
 
-## Development
+See subprojects readme's for details:
 
-1. ~~Connect UI library using `yarn link orient-ui-library`~~
+1. `cabinet/` Web Application for Clients and Customers
+1. `operator/` Web Application for Operators
+1. `bank/` Web Application for Banks
+1. `ui-lib/` UI components and helpers library
 
-1. Install dependencies using `yarn install`
+Additional resources:
 
-1. Start development server using `yarn start`
+1. `config/` Common configuration
+1. `static/` Common static assets
 
-1. Open http://localhost:1234/ in your favourite browser
+## Start local Dev Servers
 
-1. Write a some great thing! You can generate components using `yarn generate NewGreatThing`
+#### `npm run start:cabinet`
 
-1. Make a commit. Code linter and prettier will be runs automatically
+Starts Clients and Customers UI, open http://localhost:1234
 
-## Scripts
+#### `npm run start:operator`
 
-#### `yarn build`
+Starts Operators UI, open http://localhost:1244
 
-Builds production bundle into the `dist` folder
+#### `npm run start:bank`
 
-#### `yarn start`
+Starts Banks UI, open http://localhost:1254
 
-Runs application with development environment
+#### `npm run start`
 
-#### `yarn lint`
+Starts **All** UI Clients
+*NOTE: This mode may cause some issues, e.g. incorrectly applied style config*
 
-Runs code linter. To fix issues that could be fixed automatically, use the `yarn lint:fix` command
+## Build the Portals
 
-#### `yarn prettier`
+#### `npm run build:cabinet`
 
-Check the code style. Use the `yarn prettier:fix` command to fix code style automatically
+Builds Clients and Customers UI
 
-#### `yarn generate <ComponentName>`
+#### `npm run build:operator`
 
-Generate a component draft, for example `yarn generate SampleThing`
+Builds Operators UI
 
-## Tech stack
+#### `npm run build:bank`
 
-- React-based application
-- UI Framework: [And Design](https://ant.design)
-- State management: Redux with [easy-peasy](https://github.com/ctrlplusb/easy-peasy) on top
-- Router: [react-router](https://github.com/remix-run/react-router)
-- Code purity: [ESLint](https://eslint.org/) and [prettier](https://prettier.io/)
-- Helper libs: [dayjs](https://day.js.org/), [axios](https://github.com/axios/axios)
+Builds Banks UI
+
+
+## Additional Scripts
+
+#### `npm run nx:graph`
+
+See the structure of the monorepo
