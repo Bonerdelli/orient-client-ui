@@ -1,0 +1,19 @@
+###
+# Antd theme vars (used for override default LESS variables)
+# TODO: make auto-generation of styles/theme.less to avoid dups
+###
+
+layout-header-color: '#ffffff' # Header text color
+layout-header-background: '#8141a8'
+layout-header-height: 48px
+
+typography-title-font-weight: 600
+typography-title-margin-top: 1.2em
+
+###
+# Project-specific theme variables, used both in styles and components
+###
+
+primary-color: '#8141a8'
+side-navigation-width: 260 # NOTE: default is 200 # TODO: universalize optionCase and units
+side-navigation-collapsed-width: 60 # NOTE: default is 80

@@ -7,7 +7,7 @@
   "source": "src/index.html",
   "scripts": {
     "start": "run-s clean serve",
-    "clean": "rimraf ./dist/* ./.parcel-cache",
+    "clean": "rimraf ./dist/* ./.parcel-cache ../.parcel-cache",
     "build": "run-s clean parcel:build",
     "lint": "eslint ./src -f table --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint ./src -f table --fix --ext .js,.jsx,.ts,.tsx",
@@ -23,6 +23,7 @@
     "tsc": "tsc"
   },
   "alias": {
+    "orient-ui-library": "../ui-lib",
     "assets": "./assets",
     "config": "./config",
     "components": "./src/components",
