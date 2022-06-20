@@ -12,18 +12,10 @@ dataEntry:
   accountNumberLength: 20
 
 sections:
-  company: /my-company
-  heads: /company-heads
-  bankDetails: /bank-details
-  documents: /documents
-  requests: /my-requests
-  toSign: /to-sign
+  frameOrders: /frame-orders
 
 roles:
   pages:
     all:
       - admin
-      - client
-      - customer
-      - operator
       - bank
