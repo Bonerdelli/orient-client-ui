@@ -16,6 +16,9 @@
 
 ## Scripts
 
+*NOTE: part of monorepo, use parent project for run scripts*
+
+
 #### `yarn build`
 
 Builds production bundle into the `dist` folder

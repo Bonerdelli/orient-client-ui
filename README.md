@@ -28,7 +28,8 @@ Starts Banks UI, open http://localhost:1254
 
 #### `npm run start`
 
-Starts *All* UI Clients
+Starts **All** UI Clients
+*NOTE: This mode may cause some issues, e.g. incorrectly applied style config*
 
 ## Additional Scripts
 
