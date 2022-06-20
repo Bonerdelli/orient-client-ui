@@ -14,6 +14,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
+    // NOTE: this path is relative to subproject root
     project: './tsconfig.json',
   },
   rules: {
