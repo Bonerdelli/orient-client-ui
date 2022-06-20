@@ -1,6 +1,6 @@
 import { Layout } from 'antd'
 
-import themeConfig from 'orient-ui-library/config/theme.yaml'
+import themeConfig from 'config/theme.yaml'
 
 import CompanyWrapper from 'components/CompanyWrapper'
 import ClientAppHeader from 'components/ClientAppHeader'

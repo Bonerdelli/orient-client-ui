@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "orient-ui-library/*": ["../ui-lib/*"],
       "config/*": ["config/*"],
       "assets/*": ["src/assets/*"],
       "components/*": ["src/components/*"],
