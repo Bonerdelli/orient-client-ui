@@ -4,7 +4,7 @@ import { Card, Form, Grid, Row, Col, Spin, Skeleton, Divider, Button } from 'ant
 import { SaveOutlined } from '@ant-design/icons'
 import { isUndefined } from 'lodash'
 
-import ErrorResultView from 'ui-components/ErrorResultView'
+import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { CompanyContacts } from 'library/models/proxy' // TODO: to ui-lib
 import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib

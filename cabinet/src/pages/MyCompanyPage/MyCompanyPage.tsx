@@ -3,7 +3,7 @@ import { Layout, Tabs, Spin } from 'antd'
 
 import { useStoreState } from 'library/store'
 
-import Div from 'ui-components/Div'
+import Div from 'orient-ui-library/components/Div'
 
 import CompanyForm from 'components/CompanyForm'
 import CompanyContactsForm from 'components/CompanyContactsForm'

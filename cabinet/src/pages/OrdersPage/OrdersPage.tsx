@@ -5,7 +5,7 @@ import { Space, Layout, Spin } from 'antd'
 
 import { useStoreState } from 'library/store'
 
-import Div from 'components/Div' // TODO: from ui-lib
+import Div from 'orient-ui-library/components/Div'
 
 import OrdersList from 'components/OrdersList'
 import FrameWizard from 'components/FrameWizard'

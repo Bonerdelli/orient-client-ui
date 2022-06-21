@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
-import ErrorResultView from 'components/ErrorResultView' // TODO: from ui-lib
+import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'

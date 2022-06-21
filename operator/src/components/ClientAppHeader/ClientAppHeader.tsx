@@ -1,6 +1,6 @@
 // import { useTranslation } from 'react-i18next'
 
-import AppHeader from 'components/AppHeader' // TODO: from ui-lib
+import AppHeader from 'orient-ui-library/components/AppHeader' // TODO: from ui-lib
 
 import './ClientAppHeader.style.less'
 

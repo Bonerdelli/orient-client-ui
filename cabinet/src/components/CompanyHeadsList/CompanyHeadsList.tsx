@@ -7,7 +7,7 @@ import { Table, Button, Space, Popconfirm } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
-import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
+import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { CompanyHead } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib

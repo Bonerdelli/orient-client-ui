@@ -9,7 +9,7 @@ import { useStoreState } from 'library/store'
 
 import CompanyHeadsList from 'components/CompanyHeadsList'
 import CompanyHeadForm from 'components/CompanyHeadForm'
-import Div from 'components/Div' // TODO: from ui-lib
+import Div from 'orient-ui-library/components/Div'
 
 import './CompanyHeadsPage.style.less'
 

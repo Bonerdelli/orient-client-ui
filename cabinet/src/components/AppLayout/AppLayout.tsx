@@ -3,9 +3,9 @@ import { BrowserRouter } from 'react-router-dom'
 import { useStoreRehydrated } from 'easy-peasy'
 import { Spin } from 'antd'
 
-import { healthCheck } from 'orient-ui-library'
-import ErrorResultView from 'ui-components/ErrorResultView'
-import Div from 'ui-components/Div'
+import { healthCheck } from 'orient-ui-library/library/api/healthCheck'
+import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import Div from 'orient-ui-library/components/Div'
 
 import { useStoreState } from 'library/store'
 

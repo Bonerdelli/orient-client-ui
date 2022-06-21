@@ -1,5 +1,5 @@
-import FormTextItem from 'components/FormTextItem'
-import FormTextItemEditable from 'components/FormTextItemEditable'
+import FormTextItem from 'orient-ui-library/components/FormTextItem'
+import FormTextItemEditable from 'orient-ui-library/components/FormTextItemEditable'
 
 export type CompanyFormInputConfig = [
   string,   // Model

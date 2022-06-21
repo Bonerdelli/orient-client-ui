@@ -6,7 +6,7 @@ import { getCompany } from 'library/api'
 
 import { useStoreActions } from 'library/store'
 
-import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
+import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 export interface CompanyWrapperProps {
   children: JSX.Element

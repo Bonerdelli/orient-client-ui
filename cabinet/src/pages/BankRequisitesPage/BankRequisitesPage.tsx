@@ -6,7 +6,7 @@ import { PlusOutlined } from '@ant-design/icons'
 
 import { useStoreState } from 'library/store'
 
-import Div from 'components/Div' // TODO: from ui-lib
+import Div from 'orient-ui-library/components/Div'
 
 import BankRequisitesList from 'components/BankRequisitesList'
 import { BankRequisitesAddForm, BankRequisitesEditForm } from 'components/BankRequisitesForm'

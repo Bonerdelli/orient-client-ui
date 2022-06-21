@@ -2,7 +2,7 @@ import { Row, Col } from 'antd'
 import { useHistory } from 'react-router-dom'
 import { AuthResult } from 'orient-ui-library'
 
-import LoginForm from 'ui-components/LoginForm' // TODO: move out to ui-lib
+import LoginForm from 'orient-ui-library/components/LoginForm' // TODO: move out to ui-lib
 
 import { useStoreActions } from 'library/store'
 
