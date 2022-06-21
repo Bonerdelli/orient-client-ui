@@ -35,10 +35,23 @@ export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse
  * Redux Middleware to set-up authorization header
  */
 function createAuthMiddleware(): Middleware {
-  return ({ getState }) => next => action => {
-    const { user } = getState()
-    const token = user?.currentAuth?.accessToken ?? false
-    axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
+  return () => next => action => {
+    let token: string | null = null
+    switch (action.type) {
+      case '@action.ePRS':
+        token = action.payload?.user?.currentAuth?.accessToken ?? ''
+        break
+      case '@action.user.setAuth':
+        token = action.payload?.accessToken ?? ''
+        break
+      case '@action.user.setLogout':
+        token = ''
+        break
+      default:
+    }
+    if (token !== null) {
+      axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
+    }
     return next(action)
   };
 }
