@@ -4,13 +4,13 @@ import AppHeader from 'orient-ui-library/components/AppHeader'
 
 import { useStoreActions, useStoreState } from 'library/store'
 
-import './BankAppHeader.style.less'
+import './OperatorAppHeader.style.less'
 
-export interface BankAppHeaderProps {
+export interface OperatorAppHeaderProps {
 
 }
 
-const BankAppHeader: React.FC<BankAppHeaderProps> = ({}) => {
+const OperatorAppHeader: React.FC<OperatorAppHeaderProps> = ({}) => {
   const history = useHistory()
   const { setLogout } = useStoreActions(actions => actions.user)
   const user = useStoreState(state => state.user.current)
@@ -28,4 +28,4 @@ const BankAppHeader: React.FC<BankAppHeaderProps> = ({}) => {
   )
 }
 
-export default BankAppHeader
+export default OperatorAppHeader

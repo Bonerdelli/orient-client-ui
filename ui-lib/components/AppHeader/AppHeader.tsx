@@ -16,7 +16,7 @@ export interface AppHeaderProps {
   title?: string
   mainAction?: JSX.Element
   user?: User
-  onLogout: () => {}
+  onLogout: () => void
 }
 
 const AppHeader: React.FC<AppHeaderProps> = (props) => {

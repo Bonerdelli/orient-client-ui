@@ -2,8 +2,28 @@ portalTitle: Планета ORIENT
 shortTitle: ORIENT
 
 sections:
+  banks:
+    title: Банки
+  orders:
+    title: Заявки
   frameOrders:
-    title: Заявки на рамочный договор
+    title: Рамочный договор
+  simpleFrameOrders:
+    title: Упрощенный рамочный договор
+  factoringOrders:
+    title: Факторинг
+  config:
+    title: Настройки
+  configCommon:
+    title: Общие настройки
+  configGlobalDocs:
+    title: Глобальные документы
+  configOrderReqiurements:
+    title: Требования к заявкам
+  configRevisionReasons:
+    title: Причины доработки
+  configRejectReasons:
+    title: Причины отказа
 
 frameOrdersPage:
   tableColumnTitles:

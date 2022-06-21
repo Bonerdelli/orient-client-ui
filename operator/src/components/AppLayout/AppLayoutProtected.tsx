@@ -2,7 +2,7 @@ import { Layout } from 'antd'
 
 import themeConfig from 'config/theme.yaml'
 
-import ClientAppHeader from 'components/ClientAppHeader'
+import OperatorAppHeader from 'components/OperatorAppHeader'
 import SideMenu from 'components/SideMenu'
 
 import { ProtectedRoutes } from 'library/routes'
@@ -11,7 +11,7 @@ const { Sider, Content } = Layout
 
 const AppLayoutProtected = () => (
   <Layout className="AppLayout AppLayout--protected">
-    <ClientAppHeader />
+    <OperatorAppHeader />
     <Layout>
       <Sider
         theme="light"

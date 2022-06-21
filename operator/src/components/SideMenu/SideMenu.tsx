@@ -3,41 +3,79 @@ import { Menu } from 'antd'
 import { NavLink, useLocation } from 'react-router-dom'
 
 import {
-  HomeOutlined,
-  UserOutlined,
-  BankOutlined,
-  FileProtectOutlined,
   UnorderedListOutlined,
-  FormOutlined,
+  SettingOutlined,
+  BankOutlined,
 } from '@ant-design/icons'
 
 import './SideMenu.style.less'
-import config from 'config/portal.yaml'
 
-const { Item: MenuItem } = Menu
-
-const MENU_ICONS: Record<string, JSX.Element> = {
-  company: <HomeOutlined />,
-  heads: <UserOutlined />,
-  bankDetails: <BankOutlined />,
-  documents: <FileProtectOutlined />,
-  requests: <UnorderedListOutlined />,
-  toSign: <FormOutlined />,
-}
+const { Item: MenuItem, SubMenu } = Menu
 
 const SideMenu = () => {
-  const { sections } = config
   const { t } = useTranslation()
   const location = useLocation()
   return (
-    <Menu selectedKeys={[location.pathname]}>
-      {Object.entries(sections).map(([section, link]) => (
-        <MenuItem key={link} icon={MENU_ICONS[section]}>
-          <NavLink to={link}>
-            <>{t(`sections.${section}.title`)}</>
+    <Menu
+      mode="inline"
+      selectedKeys={[location.pathname]}
+      defaultOpenKeys={['orders', 'config']}
+    >
+      <MenuItem key="banks" icon={<BankOutlined />}>
+        <>{t('sections.banks.title')}</>
+      </MenuItem>
+      <SubMenu
+        key="orders"
+        title={t('sections.orders.title')}
+        icon={<UnorderedListOutlined />}
+      >
+        <MenuItem key="/frame-orders">
+          <NavLink to="frame-orders">
+            <>{t('sections.frameOrders.title')}</>
           </NavLink>
         </MenuItem>
-      ))}
+        <MenuItem key="simpleFrameOrders">
+          <NavLink to="">
+            <>{t('sections.simpleFrameOrders.title')}</>
+          </NavLink>
+        </MenuItem>
+        <MenuItem key="factoringOrders">
+          <NavLink to="">
+            <>{t('sections.factoringOrders.title')}</>
+          </NavLink>
+        </MenuItem>
+      </SubMenu>
+      <SubMenu
+        key="config"
+        title={t('sections.config.title')}
+        icon={<SettingOutlined />}
+      >
+        <MenuItem key="configCommon">
+          <NavLink to="">
+            <>{t('sections.configCommon.title')}</>
+          </NavLink>
+        </MenuItem>
+        <MenuItem key="configGlobalDocs">
+          <NavLink to="">
+            <>{t('sections.configGlobalDocs.title')}</>
+          </NavLink>
+        </MenuItem>
+        <MenuItem key="configOrderReqiurements">
+          <NavLink to="">
+            <>{t('sections.configOrderReqiurements.title')}</>
+          </NavLink>
+        </MenuItem>
+        <MenuItem key="configRevisionReasons">
+          <NavLink to="">
+            <>{t('sections.configRevisionReasons.title')}</>
+          </NavLink>
+        </MenuItem>
+        <MenuItem key="configRejectReasons">
+          <NavLink to="">
+            <>{t('sections.configRejectReasons.title')}</>
+          </NavLink>
+        </MenuItem>
+      </SubMenu>
     </Menu>
   )
 }

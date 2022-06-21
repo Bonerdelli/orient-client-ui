@@ -1,8 +1,7 @@
 import { persist, createStore, createTypedHooks } from 'easy-peasy'
 
 import { axiosMiddleware } from 'orient-ui-library/library/helpers/api'
-
-import { UserStoreModel, userStoreModel } from './user'
+import { UserStoreModel, userStoreModel } from 'orient-ui-library/library/store/user'
 
 export const STORAGE_KEY_VERSION = 1
 

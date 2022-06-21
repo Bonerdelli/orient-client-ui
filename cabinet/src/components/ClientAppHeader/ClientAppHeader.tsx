@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
@@ -17,8 +17,14 @@ export interface ClientAppHeaderProps {
 
 const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
   const { t } = useTranslation()
+  const history = useHistory()
   const { setLogout } = useStoreActions(actions => actions.user)
   const user = useStoreState(state => state.user.current)
+
+  const handleLogout = () => {
+    history.push('/')
+    setLogout()
+  }
 
   const renderMainAction = () => (
     <NavLink to={FRAME_ORDER_PATH} className="ClientAppHeader__buttonLink">
@@ -28,7 +34,7 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
     </NavLink>
   )
   return (
-    <AppHeader user={user} onLogout={() => setLogout()} mainAction={renderMainAction()} />
+    <AppHeader user={user} onLogout={handleLogout} mainAction={renderMainAction()} />
   )
 }
 
