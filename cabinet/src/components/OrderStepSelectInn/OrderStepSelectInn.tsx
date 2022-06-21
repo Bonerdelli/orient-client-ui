@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Typography, Descriptions, Space, Row, Col, Card, Skeleton, Select, Button, message } from 'antd'
 import { BaseOptionType } from 'antd/es/select'
 
-import Div from 'orient-ui-library/components/Div' // TODO: from ui-lib
+import Div from 'orient-ui-library/components/Div'
 import EmptyResult from 'orient-ui-library/components/EmptyResult' // TODO: from ui-lib
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 

@@ -5,7 +5,7 @@ import { AuthResult } from 'orient-ui-library'
 // TODO: use a REAL user when be will be ready
 import mockUser from 'orient-ui-library/library/mock/user'
 
-import LoginForm from 'ui-components/LoginForm' // TODO: move out to ui-lib
+import LoginForm from 'orient-ui-library/components/LoginForm' // TODO: move out to ui-lib
 
 import { useStoreActions } from 'library/store'
 

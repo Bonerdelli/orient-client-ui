@@ -6,8 +6,8 @@ import { Rule as ValidationRule } from 'antd/es/form'
 import { FormProps } from 'antd/es/form/'
 import { ScreenMap } from 'antd/es/_util/responsiveObserve'
 
-import FormTextItem from 'components/FormTextItem'
-import FormItemWrapper from 'components/FormItemWrapper'
+import FormTextItem from 'orient-ui-library/components/FormTextItem'
+import FormItemWrapper from 'orient-ui-library/components/FormItemWrapper'
 
 import portalConfig from 'config/portal.yaml'
 

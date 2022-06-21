@@ -27,7 +27,6 @@
     "assets": "./assets",
     "config": "./config",
     "components": "./src/components",
-    "ui-components": "./src/components",
     "library": "./src/library",
     "pages": "./src/pages"
   },

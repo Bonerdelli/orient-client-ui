@@ -5,11 +5,11 @@ import { Table, Button, Space, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
-import ErrorResultView from 'ui-components/ErrorResultView' // TODO: from ui-lib
+import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { Order, GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-import { formatDate } from 'library/helpers/date' // TODO: to ui-lib
+import { formatDate } from 'orient-ui-library/library/helpers/date'
 
 import { getCompanyOrdersList } from 'library/api'
 

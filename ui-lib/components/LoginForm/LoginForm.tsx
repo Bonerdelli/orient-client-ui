@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, Input, Button, Space, Typography } from 'antd'
 
-import { AuthResult, auth } from 'orient-ui-library' // TODO: migrate to ui-lib, make local import
-// import { User } from 'orient-ui-library' // TODO: migrate to ui-lib, make local import
+import { AuthResult, auth } from 'library/api/auth'
 
 import './LoginForm.style.less'
 
@@ -16,7 +15,6 @@ const DEFAULT_USERNAME = 'admin'
 const DEFAULT_PASSWORD = 'admin'
 
 export interface LoginFormProps {
-  // onLogin: (user: User) => void // TODO: retrieve current user from JWT
   onLogin: (user: AuthResult) => void
 }
 

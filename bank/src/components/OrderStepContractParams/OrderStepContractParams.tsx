@@ -3,7 +3,7 @@ import { Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 
-import { OrderWizardType } from 'library/models' // TODO: from ui-lib
+import { OrderWizardType } from 'orient-ui-library/library/models'
 
 import './OrderStepContractParams.style.less'
 

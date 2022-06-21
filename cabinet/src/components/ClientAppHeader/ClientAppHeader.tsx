@@ -7,6 +7,8 @@ import AppHeader from 'orient-ui-library/components/AppHeader' // TODO: from ui-
 
 import { FRAME_ORDER_PATH } from 'library/routes'
 
+import { useStoreActions, useStoreState } from 'library/store'
+
 import './ClientAppHeader.style.less'
 
 export interface ClientAppHeaderProps {
@@ -15,6 +17,8 @@ export interface ClientAppHeaderProps {
 
 const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
   const { t } = useTranslation()
+  const { setLogout } = useStoreActions(actions => actions.user)
+  const user = useStoreState(state => state.user.current)
 
   const renderMainAction = () => (
     <NavLink to={FRAME_ORDER_PATH} className="ClientAppHeader__buttonLink">
@@ -24,7 +28,7 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
     </NavLink>
   )
   return (
-    <AppHeader mainAction={renderMainAction()} />
+    <AppHeader user={user} onLogout={() => setLogout()} mainAction={renderMainAction()} />
   )
 }
 

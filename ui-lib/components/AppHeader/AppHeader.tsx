@@ -3,11 +3,10 @@ import { Layout, Row, Col, Typography, Avatar, Button, Select } from 'antd'
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons'
 
 import './AppHeader.style.less'
-import Logo from 'orient-ui-library/assets/orient-logo.svg'
+import Logo from '../../assets/orient-logo.svg'
+import Div from 'components/Div'
 
-import Div from 'orient-ui-library/components/Div'
-
-import { useStoreActions, useStoreState } from 'library/store'
+import { User } from 'library/models'
 
 const { Header } = Layout
 const { Text } = Typography
@@ -16,14 +15,13 @@ const { Option } = Select
 export interface AppHeaderProps {
   title?: string
   mainAction?: JSX.Element
+  user?: User
+  onLogout: () => {}
 }
 
-const AppHeader: React.FC<AppHeaderProps> = ({ title, mainAction }) => {
-  const { setLogout } = useStoreActions(actions => actions.user)
-  const user = useStoreState(state => state.user.current)
+const AppHeader: React.FC<AppHeaderProps> = (props) => {
+  const { title, mainAction, user, onLogout } = props
   const { t, i18n } = useTranslation()
-
-  console.log('### user', user)
 
   const renderLangSwitcher = () => (
     <Select
@@ -64,7 +62,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ title, mainAction }) => {
             type="link"
             className="AppHeader__actions__button"
             icon={<LogoutOutlined />}
-            onClick={() => setLogout()}
+            onClick={onLogout}
           >
             <span className="AppHeader__actions__button__title">{t('common.user.actions.logout.title')}</span>
           </Button>
