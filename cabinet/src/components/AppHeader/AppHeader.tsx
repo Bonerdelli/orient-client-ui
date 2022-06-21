@@ -23,6 +23,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({ title, mainAction }) => {
   const user = useStoreState(state => state.user.current)
   const { t, i18n } = useTranslation()
 
+  console.log('### user', user)
+
   const renderLangSwitcher = () => (
     <Select
       defaultValue={i18n.language}
@@ -53,7 +55,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ title, mainAction }) => {
         <Col className="AppHeader__spacer" />
         <Col className="AppHeader__user">
           <Avatar className="AppHeader__user__avatar" icon={<UserOutlined />} />
-          <Text className="AppHeader__user__name">{user?.fullName}</Text>
+          <Text className="AppHeader__user__name">{user?.name}</Text>
         </Col>
         <Col className="AppHeader__separator" />
         <Col className="AppHeader__actions">
