@@ -11,11 +11,11 @@ import Div from 'components/Div'
 
 import { FrameWizardType, sendFrameWizardStep3 } from 'library/api'
 
-import './FrameSignDocuments.style.less'
+import './OrderSignDocuments.style.less'
 
 const { Title } = Typography
 
-export interface FrameSignDocumentsProps {
+export interface OrderSignDocumentsProps {
   wizardType?: FrameWizardType
   orderId?: number
   companyId?: number
@@ -24,7 +24,7 @@ export interface FrameSignDocumentsProps {
   setCurrentStep: (step: number) => void
 }
 
-const FrameSignDocuments: React.FC<FrameSignDocumentsProps> = ({
+const OrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
@@ -105,7 +105,7 @@ const FrameSignDocuments: React.FC<FrameSignDocumentsProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="FrameSignDocuments">
+    <Div className="OrderSignDocuments">
       <Title level={5}>{t('frameSteps.signDocuments.sectionTitles.signDocuments')}</Title>
     </Div>
   )
@@ -118,4 +118,4 @@ const FrameSignDocuments: React.FC<FrameSignDocumentsProps> = ({
   )
 }
 
-export default FrameSignDocuments
+export default OrderSignDocuments

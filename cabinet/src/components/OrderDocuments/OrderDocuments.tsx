@@ -10,12 +10,12 @@ import ErrorResultView from 'components/ErrorResultView'
 import { FrameWizardType, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api'
 import { OrderDocument } from 'library/models/proxy'
 
-import './FrameDocuments.style.less'
+import './OrderDocuments.style.less'
 
 const { Title } = Typography
 const { Item: TimelineItem } = Timeline
 
-export interface FrameDocumentsProps {
+export interface OrderDocumentsProps {
   wizardType?: FrameWizardType
   companyId?: number
   orderId?: number
@@ -27,7 +27,7 @@ export interface FrameDocumentsProps {
 const PRIMARY_DOC_TYPES = [6, 7] // TODO: FIXME look in db, there is no augmentable types
 const SECONDARY_DOC_TYPES = [8] // TODO: FIXME look in db, there is no augmentable types
 
-const FrameDocuments: React.FC<FrameDocumentsProps> = ({
+const OrderDocuments: React.FC<OrderDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
@@ -146,7 +146,7 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
 
   const dotParams = (ready: boolean) => ({
     dot: ready
-      ? <CheckCircleFilled className="FrameDocuments__companyDataStatus__okIcon" />
+      ? <CheckCircleFilled className="OrderDocuments__companyDataStatus__okIcon" />
       : <ExclamationCircleOutlined />,
     color: ready ? 'green' : 'red',
   })
@@ -154,11 +154,11 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
   // TODO: check using companyId and customerId
 
   const renderStepContent = () => (
-    <Div className="FrameDocuments">
-      <Div className="FrameDocuments__title">
+    <Div className="OrderDocuments">
+      <Div className="OrderDocuments__title">
         <Title level={4}>{t('frameSteps.documents.title')}</Title>
       </Div>
-      <Div className="FrameDocuments__section">
+      <Div className="OrderDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
         <OrderDocumentsList
           companyId={companyId as number}
@@ -168,7 +168,7 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
           onChange={loadCurrentStepData}
         />
       </Div>
-      <Div className="FrameDocuments__section">
+      <Div className="OrderDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
         <OrderDocumentsList
           companyId={companyId as number}
@@ -178,9 +178,9 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
           onChange={loadCurrentStepData}
         />
       </Div>
-      <Div className="FrameDocuments__section">
+      <Div className="OrderDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
-        <Timeline className="FrameDocuments__companyDataStatus">
+        <Timeline className="OrderDocuments__companyDataStatus">
           <TimelineItem {...dotParams(сompanyDataReady.сompanyHead)}>
             {t('frameSteps.documents.сompanyData.сompanyHead')}
           </TimelineItem>
@@ -215,4 +215,4 @@ const FrameDocuments: React.FC<FrameDocumentsProps> = ({
   )
 }
 
-export default FrameDocuments
+export default OrderDocuments
