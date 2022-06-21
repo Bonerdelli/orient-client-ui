@@ -8,7 +8,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { Card, Form, Grid, Row, Col, Space, Spin, Button, message } from 'antd'
 import { PlusOutlined, ArrowLeftOutlined, StopOutlined } from '@ant-design/icons'
 
-import Div from 'components/Div' // TODO: from ui-lib
+import Div from 'orient-ui-library/components/Div' // TODO: from ui-lib
 
 import { Order } from 'library/models/order'
 import { callApi } from 'library/helpers/api' // TODO: to ui-lib

@@ -4,12 +4,12 @@ import { Link, useParams } from 'react-router-dom'
 import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
-import ErrorResultView from 'components/ErrorResultView' // TODO: from ui-lib
+import ErrorResultView from 'orient-ui-library/components/ErrorResultView' // TODO: from ui-lib
 
-import OrderSelectInn from 'components/OrderSelectInn'
-import OrderDocuments from 'components/OrderDocuments'
-import OrderSignDocuments from 'components/OrderSignDocuments'
-import OrderBankOffers from 'components/OrderBankOffers'
+import OrderStepSelectInn from 'components/OrderStepSelectInn'
+import OrderStepDocuments from 'components/OrderStepDocuments'
+import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
+import OrderStepBankOffers from 'components/OrderStepBankOffers'
 
 import { Customer } from 'library/models'
 import { useStoreState } from 'library/store'
@@ -88,7 +88,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
     }
     switch (selectedStep) {
       case 1:
-        return <OrderSelectInn
+        return <OrderStepSelectInn
           companyId={companyId}
           orderId={Number(itemId) || orderId}
           setOrderId={setOrderId}
@@ -99,7 +99,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           setSelectedCustomer={setSelectedCustomer}
         />
       case 2:
-        return <OrderDocuments
+        return <OrderStepDocuments
           companyId={companyId}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
@@ -107,7 +107,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           customerId={selectedCustomer?.id}
         />
       case 3:
-        return <OrderSignDocuments
+        return <OrderStepSignDocuments
           companyId={companyId}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
@@ -115,7 +115,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           customerId={selectedCustomer?.id}
         />
       case 4:
-        return <OrderBankOffers
+        return <OrderStepBankOffers
           companyId={company?.id as number}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}

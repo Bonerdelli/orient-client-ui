@@ -10,7 +10,7 @@ import { SaveOutlined, ArrowLeftOutlined, StopOutlined } from '@ant-design/icons
 import { isUndefined, isNull } from 'lodash'
 
 import ErrorResultView from 'ui-components/ErrorResultView'
-import Div from 'components/Div' // TODO: from ui-lib
+import Div from 'orient-ui-library/components/Div' // TODO: from ui-lib
 
 import { Order } from 'library/models/order'
 import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib

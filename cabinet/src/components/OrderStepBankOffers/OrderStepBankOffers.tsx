@@ -3,34 +3,32 @@ import { Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 
-import { OrderWizardType } from 'library/models' // TODO: from ui-lib
+import { FrameWizardType } from 'library/api'
 
-import './OrderStepParameters.style.less'
+import './OrderStepBankOffers.style.less'
 
 const { Title } = Typography
 
-export interface OrderStepParametersProps {
-  bankId?: number
+export interface OrderBankOffersProps {
+  wizardType?: FrameWizardType
+  companyId?: number
   orderId?: number
-  oprderType?: OrderWizardType
+  customerId?: number
   currentStep: number
   setCurrentStep: (step: number) => void
 }
 
-const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
-  // bankId,
-  // orderId,
-  // oprderType,
-  // currentStep,
-  // setCurrentStep,
+const OrderStepBankOffers: React.FC<OrderBankOffersProps> = ({
+  // wizardType = FrameWizardType.Full,
+  // companyId,
 }) => {
   const { t } = useTranslation()
   const renderActions = () => (
     <></>
   )
   const renderStepContent = () => (
-    <Div className="OrderStepParameters">
-      <Title level={5}>{t('orderStepParameters.title')}</Title>
+    <Div className="OrderStepBankOffers">
+      <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
     </Div>
   )
   return (
@@ -41,4 +39,4 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   )
 }
 
-export default OrderStepParameters
+export default OrderStepBankOffers

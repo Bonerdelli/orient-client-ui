@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Table, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
+import { isUndefined } from 'lodash'
 
 import { getEndpointUrl } from 'orient-ui-library/library'
 
@@ -9,49 +10,44 @@ import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { CompanyDocument } from 'library/models/proxy'
-import { useApi } from 'library/helpers/api'
+import { OrderDocument } from 'library/models/proxy'
 
 import {
-  getCompanyDocuments,
-  getCompanyDocumentUploadUrl,
-  deleteCompanyDocument,
-  downloadCompanyDocument,
+  getOrderDocumentUploadUrl,
+  deleteOrderDocument,
+  downloadOrderDocument,
 } from 'library/api'
 
-import './CompanyDocumentsList.style.less'
+import './OrderStepDocumentsList.style.less'
 
 const { Text } = Typography
 
-export interface CompanyDocumentsListProps {
+export interface OrderDocumentsListProps {
   companyId: number
+  orderId: number
   types: number[]
+  current?: OrderDocument[]
+  onChange: () => {}
 }
 
-const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
-  const { companyId, types } = props
+const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
+  const { companyId, orderId, types, current, onChange } = props
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
 
-  const [
-    companyDocuments,
-    documentsLoading,
-    companyDocumentsReload,
-  ] = useApi<CompanyDocument[]>(getCompanyDocuments, { companyId })
-
   useEffect(() => {
-    if (companyDocuments === null) {
+    if (!current) {
       return
     }
     const updatedItems = types.map(typeId => {
-      const existsDoc = companyDocuments?.find((datum) => datum.typeId === typeId)
+      const existsDoc = current?.find((datum) => datum.typeId === typeId)
       return composeDocument(typeId, existsDoc)
     })
     setItems(updatedItems)
-  }, [types, documentsLoading, companyDocuments])
+  }, [types, current])
 
-  const composeDocument = (typeId: number, document?: CompanyDocument): Document => {
+  const composeDocument = (typeId: number, document?: OrderDocument): Document => {
     if (!document?.info) {
       return {
         type: typeId,
@@ -66,18 +62,28 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   }
 
   const getUploadUrl = useCallback((typeId: number) => {
-    const apiPath = getCompanyDocumentUploadUrl(companyId, typeId)
+    const apiPath = getOrderDocumentUploadUrl(companyId, orderId, typeId)
     return getEndpointUrl(apiPath)
-  }, [companyId])
+  }, [companyId, orderId])
 
   const handleItemDelete = async (item: Document) => {
-    const result = await deleteCompanyDocument({ companyId, documentId: item.id as number })
+    const documentId = item.id as number
+    const result = await deleteOrderDocument({
+      companyId,
+      orderId,
+      documentId,
+    })
     return result
   }
 
   const handleItemDownload = async (item: Document) => {
-    const result = await downloadCompanyDocument({ companyId, documentId: item.id as number })
-    return result.success
+    const documentId = item.id as number
+    const result = await downloadOrderDocument({
+      companyId,
+      orderId,
+      documentId,
+    })
+    return result as any // TODO: check this
   }
 
   const renderDocumentStatus = (status: DocumentStatus) => {
@@ -95,6 +101,8 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     }
   }
 
+
+
   const renderActions = (_val: unknown, item: Document) => (
     <Space className="DataTable__actions DataTable__ghostActions--">
       <DocumentActions
@@ -102,7 +110,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
         uploadUrl={getUploadUrl(item.type)}
         deleteHandler={handleItemDelete}
         downloadHandler={handleItemDownload}
-        onChange={companyDocumentsReload}
+        onChange={onChange}
       />
     </Space>
   )
@@ -131,17 +139,18 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   ]
 
   return (
-    <Div className="CompanyDocumentsList" data-testid="CompanyDocumentsList">
+    <Div className="OrderStepDocumentsList" data-testid="OrderStepDocumentsList">
       <Table
-        size={'large'}
-        loading={documentsLoading === null}
-        className="CompanyDocumentsList__table"
+        size={'middle'}
+        loading={isUndefined(current)}
+        className="OrderDocumentsList__table"
         columns={columns}
         dataSource={items}
         pagination={false}
+        showHeader={false}
       />
     </Div>
   )
 }
 
-export default CompanyDocumentsList
+export default OrderStepDocumentsList

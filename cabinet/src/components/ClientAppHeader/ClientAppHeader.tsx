@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
-import AppHeader from 'components/AppHeader' // TODO: from ui-lib
+import AppHeader from 'orient-ui-library/components/AppHeader' // TODO: from ui-lib
 
 import { FRAME_ORDER_PATH } from 'library/routes'
 

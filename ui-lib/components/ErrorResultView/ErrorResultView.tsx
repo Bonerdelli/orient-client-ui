@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Result, Button } from 'antd'
 
-import { composeClasses } from 'library/helpers'
-import Div from 'components/Div'
+import { composeClasses } from 'orient-ui-library'
+// import { composeClasses } from 'library/helpers' // TODO: migrate to ui-library
+import Div from 'orient-ui-library/components/Div'
 
 import './ErrorResultView.style.less'
 
@@ -12,6 +13,8 @@ type ErrorResultViewProps = {
   status?: 'error' | 'warning' | 403 | 404 | 500
   reloadCallback?: () => void
   centered?: boolean
+  compact?: boolean
+  fullHeight?: boolean
 }
 
 const ErrorResultView: React.FC<ErrorResultViewProps> = ({
@@ -19,6 +22,8 @@ const ErrorResultView: React.FC<ErrorResultViewProps> = ({
   message = 'common.errors.dataLoadingError.desc',
   status = 'error',
   centered = false,
+  fullHeight = false,
+  compact = false,
   reloadCallback,
 }) => {
   const { t } = useTranslation()
@@ -26,6 +31,8 @@ const ErrorResultView: React.FC<ErrorResultViewProps> = ({
     <Div className={composeClasses({
       ErrorResultView: true,
       'ErrorResultView--centered': centered,
+      'ErrorResultView--fullHeight': fullHeight,
+      'ErrorResultView--compact': compact,
     })}>
       <Result
         status={status}
