@@ -24,14 +24,20 @@ export interface OrderDocumentsProps {
   setCurrentStep: (step: number) => void
 }
 
-const PRIMARY_DOC_TYPES = [6, 7] // TODO: FIXME look in db, there is no augmentable types
-const SECONDARY_DOC_TYPES = [8] // TODO: FIXME look in db, there is no augmentable types
+const PRIMARY_DOC_TYPES = [6, 7]
+const SECONDARY_DOC_TYPES = [8]
+const ORDER_DOC_TYPES = [
+  ...PRIMARY_DOC_TYPES,
+  ...SECONDARY_DOC_TYPES,
+]
+
+const WIZARD_STEP_NUMBER = 2 // TODO: pass as props maybe?
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
-  customerId,
+  // customerId,
   currentStep,
   setCurrentStep,
 }) => {
@@ -52,8 +58,16 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }, [])
 
   useEffect(() => {
+    let isAllDocumentsReady = true
     // TODO: ask BE to fix model generation and fix typings
-    setDocuments((stepData as any)?.documents ?? [])
+    const currentDocuments = (stepData as any)?.documents ?? []
+    currentDocuments.forEach((doc: OrderDocument) => {
+      if (ORDER_DOC_TYPES.includes(doc.typeId)) {
+        isAllDocumentsReady = isAllDocumentsReady && doc.info !== null
+      }
+    })
+    setIsNextStepAllowed(isAllDocumentsReady)
+    setDocuments(currentDocuments)
   }, [stepData])
 
   const loadCurrentStepData = async () => {
@@ -75,7 +89,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const сompanyDataReady = {
     сompanyHead: true,
     bankRequisites: true,
-    questionnaire: true,
+    questionnaire: false, // FIXME: make actual checking
   }
 
   const sendNextStep = async () => {
@@ -92,14 +106,14 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setIsNextStepAllowed(false)
     } else {
-      setCurrentStep(currentStep)
+      setCurrentStep(WIZARD_STEP_NUMBER)
     }
     setSubmitting(false)
   }
 
   const handlePrevStep = () => {
     if (isPrevStepAllowed) {
-      setCurrentStep(currentStep)
+      setCurrentStep(WIZARD_STEP_NUMBER - 1)
     }
   }
 

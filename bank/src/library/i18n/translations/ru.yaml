@@ -2,8 +2,16 @@ portalTitle: Планета ORIENT
 shortTitle: ORIENT
 
 sections:
+  orders:
+    title: Заявки
   frameOrders:
-    title: Заявки на рамочный договор
+    title: Рамочный договор
+  simpleFrameOrders:
+    title: Упрощенный рамочный договор
+  factoringOrders:
+    title: Факторинг
+  reports:
+    title: Отчеты
 
 frameOrdersPage:
   tableColumnTitles:

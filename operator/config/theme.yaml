@@ -15,5 +15,5 @@ typography-title-margin-top: 1.2em
 ###
 
 primary-color: '#a263c8'
-side-navigation-width: 260 # NOTE: default is 200 # TODO: universalize optionCase and units
+side-navigation-width: 300 # NOTE: default is 200 # TODO: universalize optionCase and units
 side-navigation-collapsed-width: 60 # NOTE: default is 80

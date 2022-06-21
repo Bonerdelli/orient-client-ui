@@ -21,11 +21,12 @@ export interface OrderSelectInnProps {
   orderId?: number
   setOrderId: (orderId: number) => void
   currentStep: number
-  currentStepData?: unknown
   setCurrentStep: (step: number) => void
   selectedCustomer: Customer | undefined
   setSelectedCustomer: (customer: Customer | undefined) => void
 }
+
+const WIZARD_STEP_NUMBER = 1
 
 const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   wizardType = FrameWizardType.Full,
@@ -33,7 +34,6 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   orderId,
   setOrderId,
   currentStep,
-  currentStepData,
   setCurrentStep,
   selectedCustomer,
   setSelectedCustomer,
@@ -53,7 +53,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   useEffect(() => {
-    if (currentStep >= 1) {
+    if (currentStep >= WIZARD_STEP_NUMBER) {
       setNextStepAllowed(true)
     }
   }, [currentStep])
@@ -76,9 +76,10 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   }, [companyId, orderId])
 
   useEffect(() => {
-    if ((stepData as any)?.requisites?.ownership) {
-      // TODO: ask BE why not customer: { id }
-      setSelectedId((stepData as any)?.requisites?.ownership)
+    // TODO: ask be generate models for this
+    if ((stepData as any)?.customerCompany?.id) {
+      setSelectedId((stepData as any)?.customerCompany.id)
+      setSearch('')
     }
   }, [stepData])
 
@@ -86,7 +87,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     const result = await getFrameWizardStep({
       type: wizardType,
       companyId: companyId as number,
-      step: currentStep,
+      step: WIZARD_STEP_NUMBER,
       orderId,
     })
     if (result.success) {
@@ -97,13 +98,6 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     }
     setStepDataLoading(false)
   }
-
-  useEffect(() => {
-    if ((currentStepData as any)?.founder?.id) {
-      setSelectedId((currentStepData as any)?.founder?.id)
-      setSearch('') // TODO: switch to getting customer by ID after BE will ready
-    }
-  }, [currentStepData])
 
   useEffect(() => {
     const updatedResult = foundItems.map(datum => ({
@@ -146,7 +140,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       setNextStepAllowed(false)
     } else {
       setOrderId((result as any)?.data?.orderId as number)
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(WIZARD_STEP_NUMBER + 1)
     }
     setSubmitting(false)
   }
@@ -190,7 +184,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
 
   const handleNextStep = () => {
     if (orderId && isNextStepAllowed) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(WIZARD_STEP_NUMBER + 1)
     } else if (isNextStepAllowed) {
       sendNextStep()
     }
@@ -224,6 +218,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
 
   const renderInnSelector = () => (
     <Col lg={12} xl={10}>
+      <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Select
         className="OrderSelectInn__select"
         onSearch={setSearch}
@@ -238,9 +233,8 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
 
   const renderStepContent = () => (
     <Div className="OrderStepSelectInn">
-      <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Row>
-        {renderInnSelector()}
+        {!orderId && renderInnSelector()}
         {renderCustomerInfo()}
       </Row>
     </Div>
