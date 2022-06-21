@@ -5,6 +5,7 @@ import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { OrderWizardType } from 'orient-ui-library/library/models'
 
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
@@ -12,7 +13,6 @@ import OrderStepStopFactors from 'components/OrderStepStopFactors'
 import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
 
-import { OrderWizardType } from 'library/models'
 import { useStoreState } from 'library/store'
 
 import { getFrameOrderWizard } from 'library/api/frameOrder'
