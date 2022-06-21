@@ -10,12 +10,12 @@ import ErrorResultView from 'components/ErrorResultView'
 import { Customer } from 'library/models' // TODO: check API schema, why not from proxy?
 import { FrameWizardType, searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
 
-import './FrameSelectInn.style.less'
+import './OrderSelectInn.style.less'
 
 const { Title, Text } = Typography
 const { Item: DescItem } = Descriptions
 
-export interface FrameSelectInnProps {
+export interface OrderSelectInnProps {
   wizardType?: FrameWizardType
   companyId: number
   orderId?: number
@@ -27,7 +27,7 @@ export interface FrameSelectInnProps {
   setSelectedCustomer: (customer: Customer | undefined) => void
 }
 
-const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
+const OrderSelectInn: React.FC<OrderSelectInnProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
@@ -174,7 +174,7 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
     }
     const customer = selectedCustomer
     return (
-      <Div className="FrameSelectInn__customerInfo">
+      <Div className="OrderSelectInn__customerInfo">
         <Title level={5}>{t('frameSteps.selectInn.customerInfo.title')}</Title>
         <Card>
           <Descriptions title={customer.shortName}>
@@ -225,7 +225,7 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
   const renderInnSelector = () => (
     <Col lg={12} xl={10}>
       <Select
-        className="FrameSelectInn__select"
+        className="OrderSelectInn__select"
         onSearch={setSearch}
         loading={searching}
         notFoundContent={search && <EmptyResult />}
@@ -237,7 +237,7 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="FrameSelectInn">
+    <Div className="OrderSelectInn">
       <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Row>
         {renderInnSelector()}
@@ -265,4 +265,4 @@ const FrameSelectInn: React.FC<FrameSelectInnProps> = ({
 //   showSearch
 //   placeholder={t('frameSteps.selectInn.placeholder')}
 
-export default FrameSelectInn
+export default OrderSelectInn

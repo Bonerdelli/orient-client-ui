@@ -5,11 +5,11 @@ import Div from 'components/Div'
 
 import { FrameWizardType } from 'library/api'
 
-import './FrameBankOffers.style.less'
+import './OrderBankOffers.style.less'
 
 const { Title } = Typography
 
-export interface FrameBankOffersProps {
+export interface OrderBankOffersProps {
   wizardType?: FrameWizardType
   companyId?: number
   orderId?: number
@@ -18,7 +18,7 @@ export interface FrameBankOffersProps {
   setCurrentStep: (step: number) => void
 }
 
-const FrameBankOffers: React.FC<FrameBankOffersProps> = ({
+const OrderBankOffers: React.FC<OrderBankOffersProps> = ({
   // wizardType = FrameWizardType.Full,
   // companyId,
 }) => {
@@ -27,7 +27,7 @@ const FrameBankOffers: React.FC<FrameBankOffersProps> = ({
     <></>
   )
   const renderStepContent = () => (
-    <Div className="FrameBankOffers">
+    <Div className="OrderBankOffers">
       <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
     </Div>
   )
@@ -39,4 +39,4 @@ const FrameBankOffers: React.FC<FrameBankOffersProps> = ({
   )
 }
 
-export default FrameBankOffers
+export default OrderBankOffers

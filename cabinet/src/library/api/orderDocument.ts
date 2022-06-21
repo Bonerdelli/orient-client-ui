@@ -27,11 +27,11 @@ export async function getOrderDocuments(params: OrderDocumentListParams) {
 }
 
 export async function deleteOrderDocument(params: OrderDocumentItemParams) {
-  const { companyId, documentId } = params
-  return await del(`/client/company/${companyId}/document/${documentId}`)
+  const { companyId, documentId, orderId } = params
+  return await del(`/client/company/${companyId}/order/${orderId}/document/${documentId}`)
 }
 
 export async function downloadOrderDocument(params: OrderDocumentItemParams) {
-  const { companyId, documentId } = params
-  return await get<File>(`/common/download/company/${companyId}/${documentId}`)
+  const { orderId, documentId } = params
+  return await get<File>(`common/download/order/${orderId}/${documentId}`)
 }
