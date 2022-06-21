@@ -31,11 +31,13 @@ const ORDER_DOC_TYPES = [
   ...SECONDARY_DOC_TYPES,
 ]
 
+const WIZARD_STEP_NUMBER = 2 // TODO: pass as props maybe?
+
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
-  customerId,
+  // customerId,
   currentStep,
   setCurrentStep,
 }) => {
@@ -104,14 +106,14 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setIsNextStepAllowed(false)
     } else {
-      setCurrentStep(currentStep)
+      setCurrentStep(WIZARD_STEP_NUMBER)
     }
     setSubmitting(false)
   }
 
   const handlePrevStep = () => {
     if (isPrevStepAllowed) {
-      setCurrentStep(currentStep)
+      setCurrentStep(WIZARD_STEP_NUMBER - 1)
     }
   }
 
