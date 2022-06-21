@@ -16,6 +16,7 @@ sections:
   heads: /company-heads
   bankDetails: /bank-details
   documents: /documents
+  questionnaire: /questionnaire
   requests: /requests
 
 roles:

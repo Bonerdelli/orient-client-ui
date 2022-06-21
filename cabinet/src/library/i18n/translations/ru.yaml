@@ -10,6 +10,8 @@ sections:
     title: Банковские реквизиты
   documents:
     title: Документы
+  questionnaire:
+    title: Анкета
   requests:
     title: Мои заявки
   toSign:
@@ -159,3 +161,24 @@ frameSteps:
       title: С текущим Банком договор заключен # The contract is concluded
     orderFactoring:
       title: Теперь вы можете создать заявку на факторинг
+
+questionnaire:
+  heading: Анкета
+  common:
+    yes: Да
+    no: Нет
+  generalInfo:
+    title: Общая информация
+    averageEmployeesCount:
+      label: Среднняя численность сотруднников
+    taxSystem:
+      label: Система налогообложения
+  holdings:
+    title: Принадлежность компании к объединениям (группам)
+    belongsToHoldings: Принадлежит ли компания к объединениям (группам)
+    holdingName: Название холдинга
+    headCompanyName: Название головной компании
+    headCompanyInn: ИНН головной компании
+  credits:
+    title: Информация о крупнейших текущих/полученных кредитах в банках за последние 2 года
+    hasCredits: Наличие текущих/полученных кредитов в банках за последние 2 года

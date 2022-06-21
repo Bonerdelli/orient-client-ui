@@ -1,19 +1,19 @@
-import { useTranslation } from 'react-i18next'
-import { Menu } from 'antd'
-import { NavLink, useLocation } from 'react-router-dom'
+import {useTranslation} from 'react-i18next';
+import {Menu} from 'antd';
+import {NavLink, useLocation} from 'react-router-dom';
 
 import {
-  HomeOutlined,
-  UserOutlined,
   BankOutlined,
   FileProtectOutlined,
-  UnorderedListOutlined,
   FormOutlined,
-  EllipsisOutlined,
-} from '@ant-design/icons'
+  HomeOutlined,
+  ProfileOutlined,
+  UnorderedListOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 
-import './SideMenu.style.less'
-import config from 'config/portal.yaml'
+import './SideMenu.style.less';
+import config from 'config/portal.yaml';
 
 const { Item: MenuItem } = Menu
 
@@ -24,6 +24,7 @@ const MENU_ICONS: Record<string, JSX.Element> = {
   documents: <FileProtectOutlined />,
   requests: <UnorderedListOutlined />,
   toSign: <FormOutlined />,
+  questionnaire: <ProfileOutlined />
 }
 
 const SideMenu = () => {
