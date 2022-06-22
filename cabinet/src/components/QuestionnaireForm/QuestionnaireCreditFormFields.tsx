@@ -1,9 +1,8 @@
 import {useTranslation} from 'react-i18next';
-import {Form, Radio, Typography} from 'antd';
+import {Button, Checkbox, Col, Form, Input, Radio, Row, Typography} from 'antd';
 import {useState} from 'react';
-import {EditOutlined} from '@ant-design/icons';
+import {CalendarOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {QuestionnaireFormData} from 'components/QuestionnaireForm/questionnaire-form.interface';
-
 
 const QuestionnaireCreditFormFields: React.FC = () => {
   const {t} = useTranslation();
@@ -21,6 +20,8 @@ const QuestionnaireCreditFormFields: React.FC = () => {
   const formItemLayout = {
     required: true,
     labelAlign: 'left' as any,
+    labelCol: {span: 10},
+    wrapperCol: {span: 'auto'},
   };
   const inputLayout = {
     suffix: <EditOutlined/>,
@@ -30,17 +31,90 @@ const QuestionnaireCreditFormFields: React.FC = () => {
     setCreditFieldsVisible(!isCreditFieldsVisible);
   };
 
-  const renderCreditRows = () => (<>
-    {/* TODO: https://ant.design/components/form/?theme=compact#components-form-demo-dynamic-form-items-complex */}
-  </>);
+  const renderCreditRows = () => (
+    <Form.List name="credits">
+      {(fields, {add, remove}) => (<>
+        {fields.map((field, index) => (<>
+          <Row key={field.key}
+               gutter={16}
+               wrap
+          >
+            <Col span={11}>
+              <Form.Item
+                {...field}
+                {...formItemLayout}
+                label="Наименование Банка"
+                name={[field.name, 'bankName']}
+              >
+                <Input {...inputLayout} />
+              </Form.Item>
+            </Col>
+
+            <Col span={6}>
+              <Form.Item
+                {...field}
+                {...formItemLayout}
+                label="Сумма кредита, тыс. сум"
+                name={[field.name, 'creditAmount']}
+              >
+                <Input {...inputLayout} />
+              </Form.Item>
+            </Col>
+
+            <Col span={6}>
+              <Form.Item
+                {...field}
+                {...formItemLayout}
+                label="Остаток  задолженнности, тыс. сум"
+                name={[field.name, 'remainAmount']}
+              >
+                <Input {...inputLayout}/>
+              </Form.Item>
+            </Col>
+
+            <Col span={1}>
+              {index > 0 && <MinusCircleOutlined onClick={() => remove(field.name)}/>}
+            </Col>
+            {/* wrap here */}
+            <Col span={7}>
+              <Form.Item
+                {...field}
+                {...formItemLayout}
+                label="Дата погашения"
+                name={[field.name, 'creditDate']}
+              >
+                {/*TODO: replace to <DatePicker format="YYYY-MM-DD"/>*/}
+                <Input suffix={<CalendarOutlined/>}/>
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+              <Form.Item
+                {...field}
+                name={[field.name, 'isExpired']}
+              >
+                <Checkbox>Наличие просрочки</Checkbox>
+              </Form.Item>
+            </Col>
+          </Row>
+        </>))}
+
+        <Button onClick={() => add()}
+                type="primary"
+                icon={<PlusOutlined/>}
+        >
+          Добавить
+        </Button>
+      </>)}
+    </Form.List>
+  );
 
   return (
     <>
       <Title level={5}>
         {t('questionnaire.credits.title')}
       </Title>
-      <Form.Item name="hasCredit"
-                 labelCol={{span: 7}}
+      <Form.Item name="hasCredits"
+                 labelCol={{span: 9}}
                  labelAlign="left"
                  label={t('questionnaire.credits.hasCredits')}
       >

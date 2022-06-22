@@ -23,6 +23,7 @@ const QuestionnaireHoldingFormFields: React.FC = () => {
     {label: t('questionnaire.common.yes'), value: true},
     {label: t('questionnaire.common.no'), value: false},
   ];
+
   const onBelongsToHoldingsChange = () => {
     setHoldingFieldsVisible(!isHoldingFieldsVisible);
   };

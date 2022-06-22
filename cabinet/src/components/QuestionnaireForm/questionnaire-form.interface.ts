@@ -52,7 +52,7 @@ export interface QuestionnaireFormSupplierOrBuyer {
 }
 
 export interface QuestionnaireFormEasyFinanceLegal {
-  memberName: string
+  memberName: string;
 }
 
 export interface QuestionnaireFormEasyFinanceIndividual {
@@ -61,6 +61,3 @@ export interface QuestionnaireFormEasyFinanceIndividual {
   relation: string
 }
 
-export interface QuestionnaireFormPartComponentsProps {
-  form: QuestionnaireFormData
-}

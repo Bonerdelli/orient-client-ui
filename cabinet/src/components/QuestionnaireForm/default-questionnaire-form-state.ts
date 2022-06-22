@@ -1,8 +1,16 @@
-import {QuestionnaireFormData} from './questionnaire-form.interface';
+import {QuestionnaireFormCredit, QuestionnaireFormData} from './questionnaire-form.interface';
 import {
   AverageEmployeesCountIdEnum,
   TaxationSystemIdEnum,
 } from 'components/QuestionnaireForm/QuestionnaireGeneralInfoFormFields';
+
+export const emptyCredit: QuestionnaireFormCredit = {
+  bankName: "",
+  creditAmount: 0,
+  remainAmount: 0,
+  creditDate: '1990-12-12',
+  isExpired: true,
+};
 
 export const defaultQuestionnaireFormState: QuestionnaireFormData = {
   averageEmployeesCountId: AverageEmployeesCountIdEnum.LessThan100,
@@ -13,7 +21,7 @@ export const defaultQuestionnaireFormState: QuestionnaireFormData = {
   headCompanyName: '',
   headCompanyInn: '',
   hasCredits: false,
-  credits: [],
+  credits: [emptyCredit],
   creditExpirations: [],
   hasTrials: false,
   trials: [],
@@ -22,5 +30,5 @@ export const defaultQuestionnaireFormState: QuestionnaireFormData = {
   hasEasyFinansIndividuals: false,
   easyFinanceIndividuals: [],
   hasEasyFinansLegals: false,
-  easyFinanceLegals: []
-}
+  easyFinanceLegals: [],
+};

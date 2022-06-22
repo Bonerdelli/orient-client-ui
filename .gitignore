@@ -8,3 +8,6 @@
 
 # editors
 /.idea
+
+# misc
+.DS_STORE

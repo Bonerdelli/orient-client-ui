@@ -1,6 +1,6 @@
 import './QuestionnaireForm.style.less';
 import {useApi} from 'library/helpers/api';
-import {getQuestionnaire, QuestionnaireResponse} from 'library/api/questionnaire';
+import {getQuestionnaire, QuestionnaireApiResponse} from 'library/api/questionnaire';
 import QuestionnaireGeneralFormFields from './QuestionnaireGeneralInfoFormFields';
 import {Form, Spin} from 'antd';
 import {QuestionnaireFormData} from './questionnaire-form.interface';
@@ -14,7 +14,7 @@ interface QuestionnaireFormProps {
 
 const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({companyId}) => {
   const [form] = Form.useForm<QuestionnaireFormData>();
-  const [data, isDataLoaded] = useApi<QuestionnaireResponse>(getQuestionnaire, companyId);
+  const [data, isDataLoaded] = useApi<QuestionnaireApiResponse>(getQuestionnaire, companyId);
 
   const formSettings = {
     form,
@@ -22,6 +22,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({companyId}) => {
     wrapperCol: {span: 8},
     initialValues: isDataLoaded && data ? data : defaultQuestionnaireFormState,
     labelWrap: true,
+    colon: false,
   };
 
   return (
