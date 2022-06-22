@@ -4,9 +4,10 @@ import {getQuestionnaire, QuestionnaireApiResponse} from 'library/api/questionna
 import QuestionnaireGeneralFormFields from './QuestionnaireGeneralInfoFormFields';
 import {Form, Spin} from 'antd';
 import {QuestionnaireFormData} from './questionnaire-form.interface';
-import {defaultQuestionnaireFormState} from './default-questionnaire-form-state';
-import QuestionnaireHoldingFormFields from 'components/QuestionnaireForm/QuestionnaireHoldingFormFields';
-import QuestionnaireCreditFormFields from 'components/QuestionnaireForm/QuestionnaireCreditFormFields';
+import QuestionnaireHoldingFormFields from './QuestionnaireHoldingFormFields';
+import QuestionnaireCreditFormFields from './QuestionnaireCreditFormFields';
+import {getQuestionnaireFormInitialValues} from './get-questionnaire-form-initial-values.func';
+import QuestionnaireCreditExpirationsFormFields from './QuestionnaireCreditExpirationFormFields';
 
 interface QuestionnaireFormProps {
   companyId: string;
@@ -16,11 +17,13 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({companyId}) => {
   const [form] = Form.useForm<QuestionnaireFormData>();
   const [data, isDataLoaded] = useApi<QuestionnaireApiResponse>(getQuestionnaire, companyId);
 
+  const initialValues = getQuestionnaireFormInitialValues(data);
+
   const formSettings = {
     form,
     labelCol: {span: 6},
     wrapperCol: {span: 8},
-    initialValues: isDataLoaded && data ? data : defaultQuestionnaireFormState,
+    initialValues,
     labelWrap: true,
     colon: false,
   };
@@ -28,10 +31,11 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({companyId}) => {
   return (
     <Spin spinning={isDataLoaded === null}>
       <Form {...formSettings}
-            onFieldsChange={console.log}>
+            onFieldsChange={() => {}}>
         <QuestionnaireGeneralFormFields/>
         <QuestionnaireHoldingFormFields/>
         <QuestionnaireCreditFormFields/>
+        <QuestionnaireCreditExpirationsFormFields/>
       </Form>
     </Spin>
   );

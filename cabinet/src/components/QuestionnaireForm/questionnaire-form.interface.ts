@@ -4,9 +4,9 @@ import {
 } from 'components/QuestionnaireForm/QuestionnaireGeneralInfoFormFields';
 
 export interface QuestionnaireFormData {
-  averageEmployeesCountId: AverageEmployeesCountIdEnum,
-  taxationSystemId: TaxationSystemIdEnum,
-  paymentFormId: number,
+  averageEmployeesCountId: AverageEmployeesCountIdEnum, // todo: replace with enum from dict
+  taxationSystemId: TaxationSystemIdEnum, // todo: replace with enum from dict
+  paymentFormId: number, // todo: replace with enum from dict
   belongsToHoldings: boolean,
   holdingName: string,
   headCompanyName: string,
@@ -25,7 +25,7 @@ export interface QuestionnaireFormData {
 }
 
 export interface QuestionnaireFormCreditExpiration {
-  expirationId: number,
+  expirationId: number, // todo: replace with enum from dict
   isExpired: boolean,
   reason: string
 }
@@ -48,7 +48,7 @@ export interface QuestionnaireFormTrial {
 export interface QuestionnaireFormSupplierOrBuyer {
   name: string,
   term: string,
-  paymentFormId: number
+  paymentFormId: number // todo: replace with enum from dict
 }
 
 export interface QuestionnaireFormEasyFinanceLegal {

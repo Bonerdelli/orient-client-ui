@@ -4,7 +4,6 @@ import React, {useState} from 'react';
 import {CalendarOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {QuestionnaireFormData} from 'components/QuestionnaireForm/questionnaire-form.interface';
 
-// TODO: add translations
 const QuestionnaireCreditFormFields: React.FC = () => {
   const {t} = useTranslation();
   const {Title} = Typography;
@@ -103,12 +102,14 @@ const QuestionnaireCreditFormFields: React.FC = () => {
           </React.Fragment>
         ))}
 
-        <Button onClick={() => add()}
-                type="primary"
-                icon={<PlusOutlined/>}
-        >
-          {t('questionnaire.common.add')}
-        </Button>
+        <Form.Item>
+          <Button onClick={() => add()}
+                  type="primary"
+                  icon={<PlusOutlined/>}
+          >
+            {t('questionnaire.common.add')}
+          </Button>
+        </Form.Item>
       </>)}
     </Form.List>
   );

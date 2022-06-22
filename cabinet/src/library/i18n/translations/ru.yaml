@@ -194,3 +194,15 @@ questionnaire:
       placeholder: Введите остаток  задолженнности...
     creditDate: Дата погашения
     isExpired: Наличие просрочки
+  creditExpirations:
+    title: Информация о просроченной задолженности компании
+    debtReason: Причина задолженности
+    toBudget: Перед бюджетом
+    toNonBudgetFunds: Перед внебюджетными фондами
+    toSalairy: По заработной плате
+    toCredits: По кредитам и займам
+    hasTrials: Участвует (участвовала ранее) ли компания в судебных разбирательствах, как ответчик
+    complainant: Истец
+    reason: Основание
+    amount: Сумма
+    result: Результат
