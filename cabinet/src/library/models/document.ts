@@ -26,4 +26,5 @@ export interface Document {
   type: number // keyof typeof DOCUMENT_TYPE
   status: DocumentStatus
   fileId?: number
+  name?: string
 }

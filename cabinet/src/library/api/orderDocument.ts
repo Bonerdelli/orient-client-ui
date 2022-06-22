@@ -1,4 +1,4 @@
-import { get, del } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
+import { get, getFile, del } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 
@@ -11,6 +11,7 @@ export interface OrderDocumentItemParams {
   companyId: number | bigint
   orderId: number | bigint
   documentId: bigint | number
+  fileName?: string
 }
 
 export const getOrderDocumentUploadUrl = (
@@ -32,6 +33,6 @@ export async function deleteOrderDocument(params: OrderDocumentItemParams) {
 }
 
 export async function downloadOrderDocument(params: OrderDocumentItemParams) {
-  const { orderId, documentId } = params
-  return await get<File>(`common/download/order/${orderId}/${documentId}`)
+  const { orderId, documentId, fileName } = params
+  return await getFile(`common/download/order/${orderId}/${documentId}`, fileName)
 }

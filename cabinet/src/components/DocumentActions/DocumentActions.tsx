@@ -13,7 +13,7 @@ export interface DocumentActionsProps {
   document: Document
   uploadUrl: string
   deleteHandler: (doc: Document) => Promise<boolean>
-  downloadHandler: (doc: Document) => Promise<File>
+  downloadHandler: (doc: Document) => Promise<boolean>
   onChange: () => {}
   onUploadSuccess?: () => {}
   onUploadError?: () => {}

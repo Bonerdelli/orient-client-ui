@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Timeline, Skeleton, Row, Col, Button, message } from 'antd'
 import { CheckCircleFilled, ExclamationCircleOutlined, ClockCircleOutlined } from '@ant-design/icons'
+import { every } from 'lodash'
 
 import Div from 'orient-ui-library/components/Div'
-import OrderStepDocumentsList from 'components/OrderStepDocumentsList'
+import OrderDocumentsList from 'components/OrderDocumentsList'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 
@@ -84,8 +85,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       bankRequisites: Boolean(stepData?.requisites),
       questionnaire: Boolean(stepData?.questionnaire),
     }
+    const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
+    setIsNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
     setСompanyDataStatus(updatedCompanyStatus)
-    setIsNextStepAllowed(isAllDocumentsReady)
     setDocuments(currentDocuments)
   }, [stepData])
 
@@ -173,7 +175,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const dotParams = (ready: boolean | null) => ({
     dot: ready === true
-      ? <CheckCircleFilled className="OrderDocuments__companyDataStatus__okIcon" />
+      ? <CheckCircleFilled className="OrderStepDocuments__companyDataStatus__okIcon" />
       : (ready === null ? <ClockCircleOutlined /> : <ExclamationCircleOutlined />),
     color: ready === true ? 'green'
       : (ready === null ? 'grey' : 'red'),
@@ -183,12 +185,12 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const renderStepContent = () => (
     <Div className="OrderStepDocuments">
-      <Div className="OrderDocuments__title">
+      <Div className="OrderStepDocuments__title">
         <Title level={4}>{t('frameSteps.documents.title')}</Title>
       </Div>
-      <Div className="OrderDocuments__section">
+      <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
-        <OrderStepDocumentsList
+        <OrderDocumentsList
           companyId={companyId as number}
           orderId={orderId as number}
           types={PRIMARY_DOC_TYPES}
@@ -196,9 +198,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
           onChange={loadCurrentStepData}
         />
       </Div>
-      <Div className="OrderDocuments__section">
+      <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
-        <OrderStepDocumentsList
+        <OrderDocumentsList
           companyId={companyId as number}
           orderId={orderId as number}
           types={SECONDARY_DOC_TYPES}
@@ -206,9 +208,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
           onChange={loadCurrentStepData}
         />
       </Div>
-      <Div className="OrderDocuments__section">
+      <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
-        <Timeline className="OrderDocuments__companyDataStatus">
+        <Timeline className="OrderStepDocuments__companyDataStatus">
           <TimelineItem {...dotParams(сompanyDataStatus?.сompanyHead ?? null)}>
             {t('frameSteps.documents.сompanyData.сompanyHead')}
           </TimelineItem>

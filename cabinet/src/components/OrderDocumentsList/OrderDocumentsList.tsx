@@ -18,7 +18,7 @@ import {
   downloadOrderDocument,
 } from 'library/api'
 
-import './OrderStepDocumentsList.style.less'
+import './OrderDocumentsList.style.less'
 
 const { Text } = Typography
 
@@ -30,7 +30,7 @@ export interface OrderDocumentsListProps {
   onChange: () => {}
 }
 
-const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
+const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   const { companyId, orderId, types, current, onChange } = props
   const { t } = useTranslation()
 
@@ -56,6 +56,7 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     }
     return {
       type: typeId,
+      name: document.type, // NOTE: this is cyrillic doc name, eg. Устав компании
       id: document.info.documentId,
       status: DocumentStatus.Uploaded,
     }
@@ -82,8 +83,9 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       companyId,
       orderId,
       documentId,
+      fileName: item.name,
     })
-    return result as any // TODO: check this
+    return result
   }
 
   const renderDocumentStatus = (status: DocumentStatus) => {
@@ -100,7 +102,6 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
         return <Text>{t('common.documents.statuses.unsigned')}</Text>
     }
   }
-
 
 
   const renderActions = (_val: unknown, item: Document) => (
@@ -139,7 +140,7 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   ]
 
   return (
-    <Div className="OrderStepDocumentsList" data-testid="OrderStepDocumentsList">
+    <Div className="OrderDocumentsList" data-testid="OrderDocumentsList">
       <Table
         size={'middle'}
         loading={isUndefined(current)}
@@ -153,4 +154,4 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   )
 }
 
-export default OrderStepDocumentsList
+export default OrderDocumentsList
