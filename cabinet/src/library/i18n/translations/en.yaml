@@ -123,6 +123,8 @@ frameSteps:
 
   documents:
     desc: Приложите пакет документов для оформления заявки
+    fillDataButton:
+      title: Заполнить
     sectionTitles:
       mainDocs: Обязательные документы
       additionalDocs: Дополнительные документы

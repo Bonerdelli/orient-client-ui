@@ -168,7 +168,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     }
     const customer = selectedCustomer
     return (
-      <Div className="OrderSelectInn__customerInfo">
+      <Div className="OrderStepSelectInn__customerInfo">
         <Title level={5}>{t('frameSteps.selectInn.customerInfo.title')}</Title>
         <Card>
           <Descriptions title={customer.shortName}>
@@ -220,7 +220,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     <Col lg={12} xl={10}>
       <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Select
-        className="OrderSelectInn__select"
+        className="OrderStepSelectInn__select"
         onSearch={setSearch}
         loading={searching}
         notFoundContent={search && <EmptyResult />}

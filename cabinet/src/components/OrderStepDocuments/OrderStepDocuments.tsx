@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom'
+
 import { Typography, Timeline, Skeleton, Row, Col, Button, message } from 'antd'
-import { CheckCircleFilled, ExclamationCircleOutlined, ClockCircleOutlined } from '@ant-design/icons'
+import { CheckCircleFilled, ExclamationCircleOutlined, ClockCircleOutlined, FormOutlined } from '@ant-design/icons'
 import { every } from 'lodash'
 
 import Div from 'orient-ui-library/components/Div'
@@ -65,7 +67,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
-  const [ documents, setDocuments ] = useState<OrderDocument[]>()
+  const [ documents, setDocuments ] = useState<OrderDocument[]>([])
 
   useEffect(() => {
     loadCurrentStepData()
@@ -85,10 +87,11 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       bankRequisites: Boolean(stepData?.requisites),
       questionnaire: Boolean(stepData?.questionnaire),
     }
+    const attachedDocs = currentDocuments.filter(doc => ORDER_DOC_TYPES.includes(doc.typeId))
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
     setIsNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
     setСompanyDataStatus(updatedCompanyStatus)
-    setDocuments(currentDocuments)
+    setDocuments(attachedDocs)
   }, [stepData])
 
   const loadCurrentStepData = async () => {
@@ -108,14 +111,20 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const sendNextStep = async () => {
-    if (!orderId || !companyId) return
+    if (!orderId || !companyId) {
+      return
+    }
     setSubmitting(true)
+    const documentStatuses = documents.map(document => ({
+      documentId: document.info?.documentId,
+      stauts: document.info?.documentStatus,
+    }))
     const result = await sendFrameWizardStep2({
       type: wizardType,
       companyId,
       orderId,
     }, {
-
+      documentStatuses,
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
@@ -213,12 +222,33 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         <Timeline className="OrderStepDocuments__companyDataStatus">
           <TimelineItem {...dotParams(сompanyDataStatus?.сompanyHead ?? null)}>
             {t('frameSteps.documents.сompanyData.сompanyHead')}
+            {!сompanyDataStatus?.сompanyHead && (
+              <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
+                <Button size="small" type="link" icon={<FormOutlined />}>
+                  {t('frameSteps.documents.fillDataButton.title')}
+                </Button>
+              </NavLink>
+            )}
           </TimelineItem>
           <TimelineItem {...dotParams(сompanyDataStatus?.bankRequisites ?? null)}>
             {t('frameSteps.documents.сompanyData.bankRequisites')}
+            {!сompanyDataStatus?.bankRequisites && (
+              <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
+                <Button size="small" type="link" icon={<FormOutlined />}>
+                  {t('frameSteps.documents.fillDataButton.title')}
+                </Button>
+              </NavLink>
+            )}
           </TimelineItem>
           <TimelineItem {...dotParams(сompanyDataStatus?.questionnaire ?? null)}>
             {t('frameSteps.documents.сompanyData.questionnaire')}
+            {!сompanyDataStatus?.questionnaire && (
+              <NavLink to="/questionnaire" className="OrderStepDocuments__companyDataStatus__link">
+                <Button size="small" type="link" icon={<FormOutlined />}>
+                  {t('frameSteps.documents.fillDataButton.title')}
+                </Button>
+              </NavLink>
+            )}
           </TimelineItem>
         </Timeline>
       </Div>
