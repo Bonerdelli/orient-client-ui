@@ -6,6 +6,7 @@
   "license": "UNLICENSED",
   "source": "src/index.html",
   "scripts": {
+    "build": "nx run-many --parallel 1 --target=build --projects=orient-cabinet-ui,orient-operator-ui,orient-bank-ui",
     "build:cabinet": "nx build orient-cabinet-ui:build",
     "build:operator": "nx build orient-operator-ui:build",
     "build:bank": "nx build orient-bank-ui:build",
