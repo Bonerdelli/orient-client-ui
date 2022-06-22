@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Timeline, Skeleton, Row, Col, Button, message } from 'antd'
-import { CheckCircleFilled, ExclamationCircleOutlined } from '@ant-design/icons'
+import { CheckCircleFilled, ExclamationCircleOutlined, ClockCircleOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import OrderStepDocumentsList from 'components/OrderStepDocumentsList'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 
-import { FrameWizardType, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api'
-import { OrderDocument } from 'library/models/proxy'
+import {
+  WizardStepResponse,
+  WizardStep2Data,
+  FrameWizardType,
+  getFrameWizardStep,
+  sendFrameWizardStep2,
+} from 'library/api'
 
 import './OrderStepDocuments.style.less'
 
@@ -33,6 +39,12 @@ const ORDER_DOC_TYPES = [
 
 const WIZARD_STEP_NUMBER = 2 // TODO: pass as props maybe?
 
+const сompanyDataInitialStatus: Record<string, boolean | null> = {
+  сompanyHead: null,
+  bankRequisites: null,
+  questionnaire: null,
+}
+
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
@@ -46,8 +58,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>()
+  const [ stepData, setStepData ] = useState<WizardStep2Data>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ сompanyDataStatus, setСompanyDataStatus ] = useState({ ...сompanyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
@@ -60,12 +73,18 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   useEffect(() => {
     let isAllDocumentsReady = true
     // TODO: ask BE to fix model generation and fix typings
-    const currentDocuments = (stepData as any)?.documents ?? []
+    const currentDocuments = stepData?.documents ?? []
     currentDocuments.forEach((doc: OrderDocument) => {
       if (ORDER_DOC_TYPES.includes(doc.typeId)) {
         isAllDocumentsReady = isAllDocumentsReady && doc.info !== null
       }
     })
+    const updatedCompanyStatus = {
+      сompanyHead: Boolean(stepData?.founder),
+      bankRequisites: Boolean(stepData?.requisites),
+      questionnaire: Boolean(stepData?.questionnaire),
+    }
+    setСompanyDataStatus(updatedCompanyStatus)
     setIsNextStepAllowed(isAllDocumentsReady)
     setDocuments(currentDocuments)
   }, [stepData])
@@ -78,18 +97,12 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as any).data)
+      setStepData((result.data as WizardStepResponse<WizardStep2Data>).data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-  }
-
-  const сompanyDataReady = {
-    сompanyHead: true,
-    bankRequisites: true,
-    questionnaire: false, // FIXME: make actual checking
   }
 
   const sendNextStep = async () => {
@@ -158,11 +171,12 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Row>
   )
 
-  const dotParams = (ready: boolean) => ({
-    dot: ready
+  const dotParams = (ready: boolean | null) => ({
+    dot: ready === true
       ? <CheckCircleFilled className="OrderDocuments__companyDataStatus__okIcon" />
-      : <ExclamationCircleOutlined />,
-    color: ready ? 'green' : 'red',
+      : (ready === null ? <ClockCircleOutlined /> : <ExclamationCircleOutlined />),
+    color: ready === true ? 'green'
+      : (ready === null ? 'grey' : 'red'),
   })
 
   // TODO: check using companyId and customerId
@@ -195,13 +209,13 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <Div className="OrderDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
         <Timeline className="OrderDocuments__companyDataStatus">
-          <TimelineItem {...dotParams(сompanyDataReady.сompanyHead)}>
+          <TimelineItem {...dotParams(сompanyDataStatus?.сompanyHead ?? null)}>
             {t('frameSteps.documents.сompanyData.сompanyHead')}
           </TimelineItem>
-          <TimelineItem {...dotParams(сompanyDataReady.bankRequisites)}>
+          <TimelineItem {...dotParams(сompanyDataStatus?.bankRequisites ?? null)}>
             {t('frameSteps.documents.сompanyData.bankRequisites')}
           </TimelineItem>
-          <TimelineItem {...dotParams(сompanyDataReady.questionnaire)}>
+          <TimelineItem {...dotParams(сompanyDataStatus?.questionnaire ?? null)}>
             {t('frameSteps.documents.сompanyData.questionnaire')}
           </TimelineItem>
         </Timeline>

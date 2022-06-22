@@ -1,11 +1,26 @@
 import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
 
+import {
+  CompanyRequisites,
+  CompanyHead,
+  OrderDocument,
+  CompanyQuestionnaire,
+} from 'orient-ui-library/library/models/proxy'
+
 export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
 
+
+// TODO: share with other types
 export enum FrameWizardType {
   Simple,
   Full,
+}
+
+// TODO: share with other types
+export interface WizardStepResponse<T = Record<string, unknown>> {
+  step: number
+  data: T
 }
 
 interface FrameWizardCommonParameters {
@@ -19,13 +34,21 @@ export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
   orderId: number
 }
 
+// TODO: ask be generate models for this
+export interface WizardStep2Data {
+  documents: OrderDocument[] | null
+  founder: CompanyHead | null
+  requisites: CompanyRequisites | null
+  questionnaire: CompanyQuestionnaire | null
+}
+
 const getBasePath = (companyId: number, type: FrameWizardType) => {
   const typePath = type === FrameWizardType.Full ? 'frame' : 'frameSimple'
   return `/client/company/${companyId}/wizard/${typePath}`
 }
 
 /**
- * Wizard start (step 1)
+ * Wizard start (send step 1)
  */
 export async function startFrameWizard(
   params: FrameWizardCommonParameters,
@@ -62,7 +85,6 @@ export async function sendFrameWizardStep3(
 
 /**
  * Get current step
- * TODO: check this
  */
 export async function getCurrentFrameWizardStep(
   params: FrameWizardCommonParameters,
@@ -73,7 +95,7 @@ export async function getCurrentFrameWizardStep(
 }
 
 /**
- * Get wizard step
+ * Get wizard step by number
  */
 export async function getFrameWizardStep(
   params: FrameWizardCommonParameters,

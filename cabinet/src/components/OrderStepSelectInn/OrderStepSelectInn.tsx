@@ -76,7 +76,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   }, [companyId, orderId])
 
   useEffect(() => {
-    // TODO: ask be generate models for this
+    // TODO: ask be generate models for this and remove any
     if ((stepData as any)?.customerCompany?.id) {
       setSelectedId((stepData as any)?.customerCompany.id)
       setSearch('')
