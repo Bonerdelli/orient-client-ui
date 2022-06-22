@@ -167,6 +167,7 @@ questionnaire:
   common:
     yes: Да
     no: Нет
+    add: Добавить
   generalInfo:
     title: Общая информация
     averageEmployeesCount:
@@ -182,3 +183,14 @@ questionnaire:
   credits:
     title: Информация о крупнейших текущих/полученных кредитах в банках за последние 2 года
     hasCredits: Наличие текущих/полученных кредитов в банках за последние 2 года
+    bankName:
+      label: Наименование Банка
+      placeholder: Введите наименование Банка...
+    creditAmount:
+      label: Сумма кредита, тыс. сум
+      placeholder: Введите сумму кредита...
+    remainAmount:
+      label: Остаток  задолженнности, тыс. сум
+      placeholder: Введите остаток  задолженнности...
+    creditDate: Дата погашения
+    isExpired: Наличие просрочки

@@ -1,9 +1,10 @@
 import {useTranslation} from 'react-i18next';
-import {Button, Checkbox, Col, Form, Input, Radio, Row, Typography} from 'antd';
-import {useState} from 'react';
+import {Button, Checkbox, Col, Divider, Form, Input, Radio, Row, Typography} from 'antd';
+import React, {useState} from 'react';
 import {CalendarOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {QuestionnaireFormData} from 'components/QuestionnaireForm/questionnaire-form.interface';
 
+// TODO: add translations
 const QuestionnaireCreditFormFields: React.FC = () => {
   const {t} = useTranslation();
   const {Title} = Typography;
@@ -34,75 +35,79 @@ const QuestionnaireCreditFormFields: React.FC = () => {
   const renderCreditRows = () => (
     <Form.List name="credits">
       {(fields, {add, remove}) => (<>
-        {fields.map((field, index) => (<>
-          <Row key={field.key}
-               gutter={16}
-               wrap
-          >
-            <Col span={11}>
-              <Form.Item
-                {...field}
-                {...formItemLayout}
-                label="Наименование Банка"
-                name={[field.name, 'bankName']}
-              >
-                <Input {...inputLayout} />
-              </Form.Item>
-            </Col>
+        {fields.map((field, index) => (
+          <React.Fragment key={field.key}>
+            <Row key={field.key}
+                 gutter={16}
+                 wrap
+            >
+              <Col span={11}>
+                <Form.Item
+                  {...formItemLayout}
+                  label={t('questionnaire.credits.bankName.label')}
+                  name={[field.name, 'bankName']}
+                >
+                  <Input placeholder={t('questionnaire.credits.bankName.placeholder')}
+                         {...inputLayout} />
+                </Form.Item>
+              </Col>
 
-            <Col span={6}>
-              <Form.Item
-                {...field}
-                {...formItemLayout}
-                label="Сумма кредита, тыс. сум"
-                name={[field.name, 'creditAmount']}
-              >
-                <Input {...inputLayout} />
-              </Form.Item>
-            </Col>
+              <Col span={6}>
+                <Form.Item
+                  {...formItemLayout}
+                  label={t('questionnaire.credits.creditAmount.label')}
+                  name={[field.name, 'creditAmount']}
+                >
+                  <Input {...inputLayout} placeholder={t('questionnaire.credits.creditAmount.placeholder')}/>
+                </Form.Item>
+              </Col>
 
-            <Col span={6}>
-              <Form.Item
-                {...field}
-                {...formItemLayout}
-                label="Остаток  задолженнности, тыс. сум"
-                name={[field.name, 'remainAmount']}
-              >
-                <Input {...inputLayout}/>
-              </Form.Item>
-            </Col>
+              <Col span={6}>
+                <Form.Item
+                  {...formItemLayout}
+                  label={t('questionnaire.credits.remainAmount.label')}
+                  name={[field.name, 'remainAmount']}
+                >
+                  <Input {...inputLayout} placeholder={'questionnaire.credits.remainAmount.placeholder'}/>
+                </Form.Item>
+              </Col>
 
-            <Col span={1}>
-              {index > 0 && <MinusCircleOutlined onClick={() => remove(field.name)}/>}
-            </Col>
-            {/* wrap here */}
-            <Col span={7}>
-              <Form.Item
-                {...field}
-                {...formItemLayout}
-                label="Дата погашения"
-                name={[field.name, 'creditDate']}
-              >
-                {/*TODO: replace to <DatePicker format="YYYY-MM-DD"/>*/}
-                <Input suffix={<CalendarOutlined/>}/>
-              </Form.Item>
-            </Col>
-            <Col span={4}>
-              <Form.Item
-                {...field}
-                name={[field.name, 'isExpired']}
-              >
-                <Checkbox>Наличие просрочки</Checkbox>
-              </Form.Item>
-            </Col>
-          </Row>
-        </>))}
+              <Col span={1}>
+                {index > 0 && <MinusCircleOutlined onClick={() => remove(field.name)}/>}
+              </Col>
+              {/* wrap here */}
+              <Col span={7}>
+                <Form.Item
+                  {...formItemLayout}
+                  style={{marginBottom: '0px'}}
+                  label={t('questionnaire.credits.creditDate')}
+                  name={[field.name, 'creditDate']}
+                >
+                  {/*TODO: replace to <DatePicker format="YYYY-MM-DD"/> after adding moment*/}
+                  <Input suffix={<CalendarOutlined/>}/>
+                </Form.Item>
+              </Col>
+              <Col span={4}>
+                <Form.Item
+                  {...formItemLayout}
+                  style={{marginBottom: '0px'}}
+                  labelCol={{span: 0}}
+                  valuePropName="checked"
+                  name={[field.name, 'isExpired']}
+                >
+                  <Checkbox>{t('questionnaire.credits.isExpired')}</Checkbox>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Divider/>
+          </React.Fragment>
+        ))}
 
         <Button onClick={() => add()}
                 type="primary"
                 icon={<PlusOutlined/>}
         >
-          Добавить
+          {t('questionnaire.common.add')}
         </Button>
       </>)}
     </Form.List>
