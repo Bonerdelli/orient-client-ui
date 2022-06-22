@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { Company } from 'library/models/proxy' // TODO: to ui-lib
+import { Company } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompany } from 'library/api'
 

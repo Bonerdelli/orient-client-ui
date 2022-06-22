@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Form, Grid, Row, Col, Spin, message } from 'antd'
 
-import { Company } from 'library/models/proxy' // TODO: to ui-lib
+import { Company } from 'orient-ui-library/library/models/proxy'
 import { setCompanyShortName } from 'library/api'
 import { twoColumnFormConfig } from 'library/helpers/form'
 

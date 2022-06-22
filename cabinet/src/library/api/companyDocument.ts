@@ -1,6 +1,6 @@
 import { get, del } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 
-import { CompanyDocument } from 'library/models/proxy'
+import { CompanyDocument } from 'orient-ui-library/library/models/proxy'
 
 export interface CompanyDocumentsListParams {
   companyId: bigint | number

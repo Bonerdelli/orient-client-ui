@@ -1,7 +1,7 @@
 import { get, post, del } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
 
-import { CompanyHead } from 'library/models/proxy' // TODO: move to ui-lib after debugging
+import { CompanyHead } from 'orient-ui-library/library/models/proxy'
 
 export type CompanyHeadSaveRequest = schema.components['schemas']['CompanyFounderSaveRequest']
 

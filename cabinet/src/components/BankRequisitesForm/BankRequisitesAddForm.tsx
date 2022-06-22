@@ -6,7 +6,7 @@ import { PlusOutlined, ArrowLeftOutlined, StopOutlined } from '@ant-design/icons
 
 import Div from 'orient-ui-library/components/Div'
 
-import { CompanyRequisites } from 'library/models/proxy' // TODO: to ui-lib
+import { CompanyRequisites } from 'orient-ui-library/library/models/proxy'
 import { callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
 import { addCompanyRequisites } from 'library/api'

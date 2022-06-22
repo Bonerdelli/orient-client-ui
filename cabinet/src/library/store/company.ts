@@ -1,6 +1,6 @@
 import { Action, action } from 'easy-peasy'
 
-import { Company } from 'library/models/proxy' // TODO: to ui-lib
+import { Company } from 'orient-ui-library/library/models/proxy'
 
 /**
  * Company application state (example)

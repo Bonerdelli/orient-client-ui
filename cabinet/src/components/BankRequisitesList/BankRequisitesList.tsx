@@ -7,7 +7,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { CompanyRequisites } from 'library/models/proxy'
+import { CompanyRequisites } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
 import { getCompanyRequisitesList, deleteCompanyRequisites } from 'library/api'

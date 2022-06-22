@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Typography, Table, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 
-import { getEndpointUrl } from 'orient-ui-library/library'
+import { downloadBinaryFile, getEndpointUrl } from 'orient-ui-library/library'
 
 import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { CompanyDocument } from 'library/models/proxy'
+import { CompanyDocument } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api'
 
 import {
@@ -77,7 +77,10 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
 
   const handleItemDownload = async (item: Document) => {
     const result = await downloadCompanyDocument({ companyId, documentId: item.id as number })
-    return result.success
+    console.log('handleItemDownload', result)
+    if ((result as BinaryFile)) { // BinaryFile
+      downloadBinaryFile(result as any, 'tmp.csv')
+    }
   }
 
   const renderDocumentStatus = (status: DocumentStatus) => {
