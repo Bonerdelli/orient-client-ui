@@ -196,6 +196,7 @@ questionnaire:
     isExpired: Наличие просрочки
   creditExpirations:
     title: Информация о просроченной задолженности компании
+    # todo: add debts variants translations
     debtReason: Причина задолженности
     toBudget: Перед бюджетом
     toNonBudgetFunds: Перед внебюджетными фондами
@@ -206,3 +207,22 @@ questionnaire:
     reason: Основание
     amount: Сумма
     result: Результат
+  suppliersAndBuyers:
+    suppliers:
+      title: Крупнейшие деловые партнеры компании (поставщики)
+      subtitle: Укажите не более 5 основных Поставщиков
+    buyers:
+      title: Крупнейшие деловые партнеры компании (покупатели)
+      subtitle: Укажите не более 5 основных Покупателей
+    fields:
+      name: Наименование компании
+      term: Срок сотрудничества
+      paymentFormId: Форма расчета
+    buyersTotalCount: Общее количество действующих покупателей, шт.
+    buyersPayDelayCount: Общее количество действующих покупателей которые получают отсрочку платежа, шт.
+    payDelay:
+      title: Предоставляемая покупателям отсрочка платежа, дни
+      min: Минимальная
+      avg: Средняя
+      max: Максимальная
+

@@ -8,6 +8,7 @@ import QuestionnaireHoldingFormFields from './QuestionnaireHoldingFormFields';
 import QuestionnaireCreditFormFields from './QuestionnaireCreditFormFields';
 import {getQuestionnaireFormInitialValues} from './get-questionnaire-form-initial-values.func';
 import QuestionnaireCreditExpirationsFormFields from './QuestionnaireCreditExpirationFormFields';
+import QuestionnaireSuppliersAndBuyersFormFields from './QuestionnaireSuppliersAndBuyersFormFields';
 
 interface QuestionnaireFormProps {
   companyId: string;
@@ -36,6 +37,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({companyId}) => {
         <QuestionnaireHoldingFormFields/>
         <QuestionnaireCreditFormFields/>
         <QuestionnaireCreditExpirationsFormFields/>
+        <QuestionnaireSuppliersAndBuyersFormFields/>
       </Form>
     </Spin>
   );
