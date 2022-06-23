@@ -1,5 +1,5 @@
 import {useTranslation} from 'react-i18next';
-import {Button, Divider, Form, Input, Radio, Row, Typography} from 'antd';
+import {Button, Col, Divider, Form, Input, Radio, Row, Typography} from 'antd';
 import React, {useState} from 'react';
 import {EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {QuestionnaireFormData} from 'components/QuestionnaireForm/questionnaire-form.interface';
@@ -64,8 +64,7 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
         {fields.map((field, index) => (
           <React.Fragment key={`${field.name}__${index}`}>
             {renderTrialsRow(field, ['complainant', 'reason'], false)}
-            {renderTrialsRow(field, ['amount', 'result'], true)}
-            {index > 0 && <MinusCircleOutlined onClick={() => remove(field.name)}/>}
+            {renderTrialsRow(field, ['amount', 'result'], true, index > 0 ? remove : undefined)}
             <Divider/>
           </React.Fragment>
         ))}
@@ -82,21 +81,35 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
     </Form.List>
   );
 
-  const renderTrialsRow = (field: any, controlNames: string[], noMarginBottom: boolean) => {
+  const renderTrialsRow = (
+    field: any,
+    controlNames: string[],
+    noMarginBottom: boolean,
+    remove?: (index: number | number[]) => void,
+  ) => {
     return (
-      <Row>
+      <Row gutter={16}>
         {controlNames.map((controlName, index) => (
-          <Form.Item name={[field.name, controlName]}
-                     key={`${field.key}_${controlName}`}
-                     labelCol={{span: !!index ? 9 : 6}}
-                     wrapperCol={{span: !!index ? 16 : 12}}
-                     labelAlign="left"
-                     required
-                     style={noMarginBottom ? {marginBottom: '0px'} : undefined}
-                     label={t(`questionnaire.creditExpirations.${controlName}`)}>
-            <Input {...inputLayout}/>
-          </Form.Item>
+          <Col key={`${field.key}_${controlName}`}
+               span={!!index ? 9 : 6}
+          >
+            <Form.Item name={[field.name, controlName]}
+                       wrapperCol={{span: 'auto'}}
+                       labelAlign="left"
+                       required
+                       style={noMarginBottom ? {marginBottom: '0px'} : undefined}
+                       label={t(`questionnaire.creditExpirations.${controlName}`)}>
+              <Input {...inputLayout}/>
+            </Form.Item>
+          </Col>
         ))}
+        {!!remove && <Col span={1}>
+          <Form.Item wrapperCol={{span: 'auto'}}
+                     style={noMarginBottom ? {marginBottom: '0px'} : undefined}
+          >
+            <MinusCircleOutlined onClick={() => remove(field.name)}/>
+          </Form.Item>
+        </Col>}
       </Row>
     );
   };
