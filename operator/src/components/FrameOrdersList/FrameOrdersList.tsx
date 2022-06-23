@@ -74,7 +74,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
       key: 'statusName',
       dataIndex: 'statusName',
       title: t('frameOrdersPage.tableColumnTitles.statusName'),
-      render: (val) => <Tag>{val}</Tag>,
+      render: () => <Tag color="green">Ожидает проверки</Tag>,
       align: 'center',
     },
 

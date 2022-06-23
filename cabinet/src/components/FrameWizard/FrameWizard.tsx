@@ -157,7 +157,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
         >
           <Step title={t('frameOrder.firstStep.title')} />
           <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
-          <Step disabled title={t('frameOrder.thirdStep.title')} />
+          <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')} />
           <Step disabled title={t('frameOrder.fourthStep.title')} />
         </Steps>
       </Card>

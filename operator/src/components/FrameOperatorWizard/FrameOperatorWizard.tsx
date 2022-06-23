@@ -39,27 +39,17 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FrameOperatorWizardPathParams>()
-  const company = useStoreState(state => state.company.current)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
-  const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
+  const [ currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ companyId, setCompanyId ] = useState<number>()
 
   useEffect(() => {
-    if (companyId) {
-      setStepDataLoading(true)
-      loadCurrentStepData()
-    }
-  }, [companyId])
-
-  useEffect(() => {
-    if (company) {
-      setCompanyId(company.id)
-    }
-  }, [company])
+    setStepDataLoading(true)
+    loadCurrentStepData()
+  }, [])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameOrderWizard({
@@ -84,7 +74,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const isFifthStepActive = (): boolean => true
 
   const renderCurrentStep = () => {
-    if (!companyId || stepDataLoading) {
+    if (stepDataLoading) {
       return <Skeleton active={true} />
     }
     const stepBaseProps = {
@@ -95,7 +85,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps}/>
+        return <OrderStepParameters currentStepData={currentStepData} {...stepBaseProps}/>
       case 2:
         return <OrderStepDocuments {...stepBaseProps}/>
       case 3:
@@ -122,11 +112,11 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     )
   }
 
-  // if (dataLoaded === false) {
+  if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
     )
-  // }
+  }
 
   return (
     <>

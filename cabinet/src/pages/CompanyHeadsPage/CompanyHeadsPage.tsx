@@ -1,7 +1,6 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 // import SlideRoutes from 'react-slide-routes' // TODO: make slide animation works
-import { Router, Switch, Route, Link, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
 import { Space, Layout, Spin, Button } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 

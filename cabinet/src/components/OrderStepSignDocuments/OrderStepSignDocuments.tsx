@@ -5,11 +5,12 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, message } from 'antd'
+import { Typography, Row, Col, Button, Result, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 
 import { FrameWizardType, sendFrameWizardStep3 } from 'library/api'
+import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
 
 import './OrderStepSignDocuments.style.less'
 
@@ -18,6 +19,7 @@ const { Title } = Typography
 export interface OrderSignDocumentsProps {
   wizardType?: FrameWizardType
   orderId?: number
+  orderStatus?: FrameOrderStatus
   companyId?: number
   customerId?: number
   currentStep: number
@@ -26,6 +28,7 @@ export interface OrderSignDocumentsProps {
 
 const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
+  orderStatus = FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY,
   companyId,
   orderId,
   currentStep,
@@ -82,6 +85,16 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     )
   }
 
+  const renderRejectButton = () => (
+    <Button
+      danger
+      size="large"
+      type="default"
+    >
+      {t('frameSteps.signDocuments.actions.reject.title')}
+    </Button>
+  )
+
   const renderNextButton = () => {
     return (
       <Button
@@ -96,12 +109,25 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     )
   }
 
-  const renderActions = () => (
+  const renderStepActions = () => (
     <Row className="FrameWizard__step__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
     </Row>
+  )
+
+  const renderWaitActions = () => (
+    <Row className="FrameWizard__step__actions">
+      <Col>{renderRejectButton()}</Col>
+    </Row>
+  )
+
+  const renderWaitMessage = () => (
+    <Result
+      title={t('frameSteps.signDocuments.waitForOperator.title')}
+      subTitle={t('frameSteps.signDocuments.waitForOperator.desc')}
+    />
   )
 
   const renderStepContent = () => (
@@ -110,10 +136,12 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     </Div>
   )
 
+  const isVerifying = orderStatus === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+
   return (
     <Div className="FrameWizard__step__content">
-      {renderStepContent()}
-      {renderActions()}
+      {isVerifying ? renderWaitMessage() : renderStepContent()}
+      {isVerifying ? renderWaitActions() : renderStepActions()}
     </Div>
   )
 }

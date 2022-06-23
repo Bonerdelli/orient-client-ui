@@ -9,12 +9,15 @@ import { every } from 'lodash'
 import Div from 'orient-ui-library/components/Div'
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { OrderDocument } from 'orient-ui-library/library/models/proxy'
+import { OrderDocument, CompanyDocument } from 'orient-ui-library/library/models/proxy'
+
+import { useApi } from 'library/helpers/api'
 
 import {
   WizardStepResponse,
   WizardStep2Data,
   FrameWizardType,
+  getCompanyDocuments,
   getFrameWizardStep,
   sendFrameWizardStep2,
 } from 'library/api'
@@ -33,13 +36,7 @@ export interface OrderDocumentsProps {
   setCurrentStep: (step: number) => void
 }
 
-const PRIMARY_DOC_TYPES = [6, 7]
-const SECONDARY_DOC_TYPES = [8]
-const ORDER_DOC_TYPES = [
-  ...PRIMARY_DOC_TYPES,
-  ...SECONDARY_DOC_TYPES,
-]
-
+const ORDER_DOCUMENT_TYPES = [8]
 const WIZARD_STEP_NUMBER = 2 // TODO: pass as props maybe?
 
 const сompanyDataInitialStatus: Record<string, boolean | null> = {
@@ -68,6 +65,12 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
+  const [ companyDocumentTypes, setCompanyDocumentTypes ] = useState<number[] | null>()
+
+  const [
+    companyDocuments,
+    companyDocumentsLoaded,
+  ] = useApi<CompanyDocument[]>(getCompanyDocuments, { companyId })
 
   useEffect(() => {
     loadCurrentStepData()
@@ -75,10 +78,13 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   useEffect(() => {
     let isAllDocumentsReady = true
+    let newCompanyDocumentTypes: number[] = []
     // TODO: ask BE to fix model generation and fix typings
     const currentDocuments = stepData?.documents ?? []
     currentDocuments.forEach((doc: OrderDocument) => {
-      if (ORDER_DOC_TYPES.includes(doc.typeId)) {
+      if (!ORDER_DOCUMENT_TYPES.includes(doc.typeId)) {
+        newCompanyDocumentTypes.push(doc.typeId)
+      } else {
         isAllDocumentsReady = isAllDocumentsReady && doc.info !== null
       }
     })
@@ -87,9 +93,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       bankRequisites: Boolean(stepData?.requisites),
       questionnaire: Boolean(stepData?.questionnaire),
     }
-    const attachedDocs = currentDocuments.filter(doc => ORDER_DOC_TYPES.includes(doc.typeId))
+    const attachedDocs = currentDocuments
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
     setIsNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
+    setCompanyDocumentTypes(newCompanyDocumentTypes)
     setСompanyDataStatus(updatedCompanyStatus)
     setDocuments(attachedDocs)
   }, [stepData])
@@ -111,13 +118,16 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const sendNextStep = async () => {
-    if (!orderId || !companyId) {
+    if (!orderId || !companyId || !companyDocuments) {
       return
     }
     setSubmitting(true)
-    const documentStatuses = documents.map(document => ({
+    const documentStatuses = [
+      ...companyDocuments,
+      ...documents,
+    ].map(document => ({
       documentId: document.info?.documentId,
-      stauts: document.info?.documentStatus,
+      status: document.info?.documentStatus,
     }))
     const result = await sendFrameWizardStep2({
       type: wizardType,
@@ -130,7 +140,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setIsNextStepAllowed(false)
     } else {
-      setCurrentStep(WIZARD_STEP_NUMBER)
+      setCurrentStep(WIZARD_STEP_NUMBER + 1)
     }
     setSubmitting(false)
   }
@@ -190,7 +200,54 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       : (ready === null ? 'grey' : 'red'),
   })
 
-  // TODO: check using companyId and customerId
+  const renderReadyStatuses = () => (
+    <Timeline className="OrderStepDocuments__companyDataStatus">
+      <TimelineItem {...dotParams(сompanyDataStatus?.сompanyHead ?? null)}>
+        {t('frameSteps.documents.сompanyData.сompanyHead')}
+        {!сompanyDataStatus?.сompanyHead && (
+          <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
+            <Button size="small" type="link" icon={<FormOutlined />}>
+              {t('frameSteps.documents.fillDataButton.title')}
+            </Button>
+          </NavLink>
+        )}
+      </TimelineItem>
+      <TimelineItem {...dotParams(сompanyDataStatus?.bankRequisites ?? null)}>
+        {t('frameSteps.documents.сompanyData.bankRequisites')}
+        {!сompanyDataStatus?.bankRequisites && (
+          <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
+            <Button size="small" type="link" icon={<FormOutlined />}>
+              {t('frameSteps.documents.fillDataButton.title')}
+            </Button>
+          </NavLink>
+        )}
+      </TimelineItem>
+      <TimelineItem {...dotParams(сompanyDataStatus?.questionnaire ?? null)}>
+        {t('frameSteps.documents.сompanyData.questionnaire')}
+        {!сompanyDataStatus?.questionnaire && (
+          <NavLink to="/questionnaire" className="OrderStepDocuments__companyDataStatus__link">
+            <Button size="small" type="link" icon={<FormOutlined />}>
+              {t('frameSteps.documents.fillDataButton.title')}
+            </Button>
+          </NavLink>
+        )}
+      </TimelineItem>
+    </Timeline>
+  )
+
+  const renderCompanyDocuments = () => {
+    if (!companyDocumentsLoaded || !companyDocumentTypes) {
+      return <Skeleton active={true} />
+    }
+    return (
+      <OrderDocumentsList
+        companyId={companyId as number}
+        orderId={orderId as number}
+        types={companyDocumentTypes}
+        current={companyDocuments as CompanyDocument[]}
+      />
+    )
+  }
 
   const renderStepContent = () => (
     <Div className="OrderStepDocuments">
@@ -199,58 +256,21 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       </Div>
       <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
-        <OrderDocumentsList
-          companyId={companyId as number}
-          orderId={orderId as number}
-          types={PRIMARY_DOC_TYPES}
-          current={documents}
-          onChange={loadCurrentStepData}
-        />
+        {renderCompanyDocuments()}
       </Div>
       <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
         <OrderDocumentsList
           companyId={companyId as number}
           orderId={orderId as number}
-          types={SECONDARY_DOC_TYPES}
+          types={ORDER_DOCUMENT_TYPES}
           current={documents}
           onChange={loadCurrentStepData}
         />
       </Div>
       <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
-        <Timeline className="OrderStepDocuments__companyDataStatus">
-          <TimelineItem {...dotParams(сompanyDataStatus?.сompanyHead ?? null)}>
-            {t('frameSteps.documents.сompanyData.сompanyHead')}
-            {!сompanyDataStatus?.сompanyHead && (
-              <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-                <Button size="small" type="link" icon={<FormOutlined />}>
-                  {t('frameSteps.documents.fillDataButton.title')}
-                </Button>
-              </NavLink>
-            )}
-          </TimelineItem>
-          <TimelineItem {...dotParams(сompanyDataStatus?.bankRequisites ?? null)}>
-            {t('frameSteps.documents.сompanyData.bankRequisites')}
-            {!сompanyDataStatus?.bankRequisites && (
-              <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-                <Button size="small" type="link" icon={<FormOutlined />}>
-                  {t('frameSteps.documents.fillDataButton.title')}
-                </Button>
-              </NavLink>
-            )}
-          </TimelineItem>
-          <TimelineItem {...dotParams(сompanyDataStatus?.questionnaire ?? null)}>
-            {t('frameSteps.documents.сompanyData.questionnaire')}
-            {!сompanyDataStatus?.questionnaire && (
-              <NavLink to="/questionnaire" className="OrderStepDocuments__companyDataStatus__link">
-                <Button size="small" type="link" icon={<FormOutlined />}>
-                  {t('frameSteps.documents.fillDataButton.title')}
-                </Button>
-              </NavLink>
-            )}
-          </TimelineItem>
-        </Timeline>
+        {renderReadyStatuses()}
       </Div>
     </Div>
   )
@@ -270,7 +290,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {renderActions()}
+      {currentStep <= WIZARD_STEP_NUMBER && renderActions()}
     </Div>
   )
 }

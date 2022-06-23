@@ -11,7 +11,7 @@ common:
     title: Date Updated
 
 customer:
-  title: customer
+  title: Customer
   fields:
     inn:
       title: INN

@@ -14,9 +14,10 @@ export interface DocumentActionsProps {
   uploadUrl: string
   deleteHandler: (doc: Document) => Promise<boolean>
   downloadHandler: (doc: Document) => Promise<boolean>
-  onChange: () => {}
   onUploadSuccess?: () => {}
   onUploadError?: () => {}
+  onChange?: () => {}
+  loading?: boolean | null
 }
 
 const DocumentActions: React.FC<DocumentActionsProps> = ({
@@ -27,6 +28,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   onChange,
   onUploadSuccess,
   onUploadError,
+  loading,
 }) => {
   const { t } = useTranslation()
   const user = useStoreState(state => state.user)
@@ -110,6 +112,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
         shape="circle"
         loading={operationInProccess}
         title={t('common.documents.actions.upload.title')}
+        disabled={loading === true}
         icon={<UploadOutlined />}
       />
     </Upload>
@@ -122,6 +125,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       shape="circle"
       title={t('common.documents.actions.download.title')}
       onClick={handleDownload}
+      disabled={loading === true}
       icon={<DownloadOutlined />}
     />
   )
@@ -135,6 +139,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       loading={operationInProccess}
       title={t('common.actions.delete.title')}
       onClick={handleDelete}
+      disabled={loading === true}
       icon={<DeleteOutlined />}
     />
   )

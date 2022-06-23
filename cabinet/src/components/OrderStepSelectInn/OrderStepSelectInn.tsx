@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+
 import { Typography, Descriptions, Space, Row, Col, Card, Skeleton, Select, Button, message } from 'antd'
 import { BaseOptionType } from 'antd/es/select'
 
@@ -39,6 +41,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   setSelectedCustomer,
 }) => {
   const { t } = useTranslation()
+  const history = useHistory()
 
   const [ search, setSearch ] = useState<string>()
   const [ searching, setSearching ] = useState<boolean>(false)
@@ -139,8 +142,9 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderId((result as any)?.data?.orderId as number)
-      setCurrentStep(WIZARD_STEP_NUMBER + 1)
+      const orderId = (result as any)?.data?.orderId as number
+      history.push(`/requests/${orderId}`)
+      setOrderId(orderId)
     }
     setSubmitting(false)
   }
@@ -249,7 +253,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {renderActions()}
+      {currentStep <= WIZARD_STEP_NUMBER && renderActions()}
     </Div>
   )
 }

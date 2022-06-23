@@ -10,7 +10,7 @@ import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { OrderDocument } from 'orient-ui-library/library/models/proxy'
+import { OrderDocument, CompanyDocument } from 'orient-ui-library/library/models/proxy'
 
 import {
   getOrderDocumentUploadUrl,
@@ -22,12 +22,14 @@ import './OrderDocumentsList.style.less'
 
 const { Text } = Typography
 
+type OrderDocumentType = OrderDocument & CompanyDocument
+
 export interface OrderDocumentsListProps {
   companyId: number
   orderId: number
   types: number[]
-  current?: OrderDocument[]
-  onChange: () => {}
+  current?: OrderDocument[] | CompanyDocument[]
+  onChange?: () => {}
 }
 
 const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
@@ -47,7 +49,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     setItems(updatedItems)
   }, [types, current])
 
-  const composeDocument = (typeId: number, document?: OrderDocument): Document => {
+  const composeDocument = (typeId: number, document?: OrderDocumentType): Document => {
     if (!document?.info) {
       return {
         type: typeId,
@@ -74,6 +76,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       orderId,
       documentId,
     })
+    item.status = DocumentStatus.NotUploaded
     return result
   }
 

@@ -24,19 +24,20 @@ import './CompanyDocumentsList.style.less'
 const { Text } = Typography
 
 export interface CompanyDocumentsListProps {
+  compact?: boolean
   companyId: number
   types: number[]
 }
 
 const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
-  const { companyId, types } = props
+  const { compact, companyId, types } = props
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
 
   const [
     companyDocuments,
-    documentsLoading,
+    documentsLoaded,
     companyDocumentsReload,
   ] = useApi<CompanyDocument[]>(getCompanyDocuments, { companyId })
 
@@ -49,7 +50,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
       return composeDocument(typeId, existsDoc)
     })
     setItems(updatedItems)
-  }, [types, documentsLoading, companyDocuments])
+  }, [types, documentsLoaded, companyDocuments])
 
   const composeDocument = (typeId: number, document?: CompanyDocument): Document => {
     if (!document?.info) {
@@ -104,6 +105,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     <Space className="DataTable__actions DataTable__ghostActions--">
       <DocumentActions
         document={item}
+        loading={!documentsLoaded}
         uploadUrl={getUploadUrl(item.type)}
         deleteHandler={handleItemDelete}
         downloadHandler={handleItemDownload}
@@ -138,12 +140,14 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   return (
     <Div className="CompanyDocumentsList" data-testid="CompanyDocumentsList">
       <Table
-        size={'large'}
-        loading={documentsLoading === null}
+        size={compact ? 'middle' : 'large'}
+        showHeader={!compact}
+        loading={documentsLoaded === null}
         className="CompanyDocumentsList__table"
         columns={columns}
         dataSource={items}
         pagination={false}
+        rowKey="typeId"
       />
     </Div>
   )
