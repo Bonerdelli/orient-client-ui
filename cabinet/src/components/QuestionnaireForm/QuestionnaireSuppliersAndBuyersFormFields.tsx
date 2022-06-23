@@ -2,12 +2,11 @@ import {useTranslation} from 'react-i18next';
 import {Button, Col, Form, Input, Row, Select, Typography} from 'antd';
 import React from 'react';
 import {EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
-import {QuestionnaireFormData} from 'components/QuestionnaireForm/questionnaire-form.interface';
 
 const QuestionnaireSuppliersAndBuyersFormFields: React.FC = () => {
   const {t} = useTranslation();
   const {Title, Text} = Typography;
-  const form = Form.useFormInstance<QuestionnaireFormData>();
+  // const form = Form.useFormInstance<QuestionnaireFormData>();
 
   const inputLayout = {
     suffix: <EditOutlined/>,
@@ -109,21 +108,21 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC = () => {
                  label={t('questionnaire.suppliersAndBuyers.payDelay.title')}/>
       <Row gutter={16}>
         <Col span={6}>
-          <Form.Item name={['payDelay', 'min']}
+          <Form.Item name="payDelayMin"
                      {...delayFieldsFormFieldsLayout}
                      label={t('questionnaire.suppliersAndBuyers.payDelay.min')}>
             <Input {...inputLayout}/>
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item name={['payDelay', 'avg']}
+          <Form.Item name="payDelayAvg"
                      {...delayFieldsFormFieldsLayout}
                      label={t('questionnaire.suppliersAndBuyers.payDelay.avg')}>
             <Input {...inputLayout}/>
           </Form.Item>
         </Col>
         <Col span={6}>
-          <Form.Item name={['payDelay', 'max']}
+          <Form.Item name="payDelayMax"
                      {...delayFieldsFormFieldsLayout}
                      label={t('questionnaire.suppliersAndBuyers.payDelay.max')}>
             <Input {...inputLayout}/>

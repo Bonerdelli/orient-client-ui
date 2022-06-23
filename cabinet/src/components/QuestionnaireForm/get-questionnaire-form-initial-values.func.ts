@@ -3,7 +3,7 @@ import {QuestionnaireFormData} from 'components/QuestionnaireForm/questionnaire-
 import {defaultQuestionnaireFormState} from 'components/QuestionnaireForm/default-questionnaire-form-state';
 
 export const getQuestionnaireFormInitialValues = (data: QuestionnaireApiResponse | null): QuestionnaireFormData => {
-  console.log(data);
+  // console.log(data);
   // if (!data) {
   return defaultQuestionnaireFormState;
   // }
