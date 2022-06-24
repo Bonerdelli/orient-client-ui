@@ -30,10 +30,10 @@ export const defaultQuestionnaireFormState: QuestionnaireFormData = {
     result: '',
   }],
   suppliers: [
-    {name: '', term: '', paymentFormId: 0}, // TODO: Replace with enum
+    {name: '', term: '', paymentFormId: 1}, // TODO: Replace with enum
   ],
   buyers: [
-    {name: '', term: '', paymentFormId: 0}, // TODO: Replace with enum
+    {name: '', term: '', paymentFormId: 1}, // TODO: Replace with enum
   ],
   hasEasyFinansIndividuals: false,
   easyFinanceIndividuals: [
