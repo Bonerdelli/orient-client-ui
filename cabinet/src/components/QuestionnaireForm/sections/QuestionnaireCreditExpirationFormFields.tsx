@@ -4,25 +4,46 @@ import React, {useState} from 'react';
 import {EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {QuestionnaireFormData} from 'components/QuestionnaireForm/models/questionnaire-form.interface';
 
+type ExpirationsState = [
+  budget: boolean,
+  offBudget: boolean,
+  salary: boolean,
+  credits: boolean,
+]
+
 const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
   const {t} = useTranslation();
   const {Title} = Typography;
   const form = Form.useFormInstance<QuestionnaireFormData>();
-  // const [] = form.getFieldValue('creditExpirations') ?? [];
   const [hasTrials, setHasTrials] = useState<boolean>(form.getFieldValue('hasTrials'));
+  const [expirationsState, setExpirationsState] = useState<ExpirationsState>([
+    form.getFieldValue('creditExpirations')[0].isExpired,
+    form.getFieldValue('creditExpirations')[1].isExpired,
+    form.getFieldValue('creditExpirations')[2].isExpired,
+    form.getFieldValue('creditExpirations')[3].isExpired,
+  ]);
 
   const yesNoOptions = [
     {label: t('questionnaire.common.yes'), value: true},
     {label: t('questionnaire.common.no'), value: false},
   ];
 
+  const formItemLayout = {
+    labelCol: {span: 9},
+    wrapperCol: {span: 'auto'},
+    labelAlign: 'left' as any,
+    required: true,
+  };
   const inputLayout = {
     suffix: <EditOutlined/>,
   };
 
-  const handleIsExpiredChange = (name: string, x: unknown) => {
-    console.log(name);
-    console.log(x);
+  const handleIsExpiredChange = (expirationIndex: number) => {
+    setExpirationsState(state => {
+      const newState = [...state];
+      newState[expirationIndex] = !newState[expirationIndex];
+      return newState as any;
+    });
   };
 
   const handleTrialsChange = () => {
@@ -32,26 +53,26 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
   const renderCreditExpirationsRows = () => (
     <Form.List name="creditExpirations">
       {(fields) => (<>
-        <Title level={5}>[Тут должно быть 4 строки]</Title>
         {fields.map((field) => (
-          <Row key={field.key}>
-            <Form.Item name={[field.name, 'isExpired']}
-                       labelCol={{span: 9}}
-                       labelAlign="left"
-                       label={t('questionnaire.creditExpirations.isExpired')}>
-              <Radio.Group options={yesNoOptions}
-                           onChange={(x) => handleIsExpiredChange(
-                             `${field.name}_${field.key}`,
-                             x,
-                           )}/>
-            </Form.Item>
-            <Form.Item name={[field.name, 'reason']}
-                       labelCol={{span: 9}}
-                       labelAlign="left"
-                       required
-                       label={t('questionnaire.creditExpirations.debtReason')}>
-              <Input {...inputLayout}/>
-            </Form.Item>
+          <Row key={field.key}
+               gutter={16}
+          >
+            <Col span={9}>
+              <Form.Item name={[field.name, 'isExpired']}
+                         {...formItemLayout}
+                         labelCol={{span: 12}}
+                         label={t(`questionnaire.creditExpirations.${field.key}`)}>
+                <Radio.Group options={yesNoOptions}
+                             onChange={() => handleIsExpiredChange(field.key)}/>
+              </Form.Item>
+            </Col>
+            {expirationsState[field.key] && <Col span={12}>
+              <Form.Item name={[field.name, 'reason']}
+                         {...formItemLayout}
+                         label={t('questionnaire.creditExpirations.debtReason')}>
+                <Input {...inputLayout}/>
+              </Form.Item>
+            </Col>}
           </Row>
         ))}
       </>)}

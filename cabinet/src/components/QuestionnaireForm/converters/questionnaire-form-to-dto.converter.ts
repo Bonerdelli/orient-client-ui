@@ -1,5 +1,5 @@
-import {QuestionnaireDto} from 'library/api/questionnaire';
 import {QuestionnaireFormData} from '../models/questionnaire-form.interface';
+import {QuestionnaireDto} from 'library/models/proxy';
 
 export const convertQuestionnaireFormToDto = (data: QuestionnaireFormData): QuestionnaireDto => {
   return {

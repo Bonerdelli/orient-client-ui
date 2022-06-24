@@ -22,6 +22,11 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
     labelCol: {span: 6},
     wrapperCol: {span: 'auto'},
   };
+  const radioLayout = {
+    labelAlign: 'left' as any,
+    labelCol: {span: 20},
+    wrapperCol: {span: 'auto'},
+  };
   const inputLayout = {
     suffix: <EditOutlined/>,
   };
@@ -105,8 +110,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
         {t('questionnaire.easyFinansRelationships.title')}
       </Title>
       <Form.Item name="hasEasyFinansIndividuals"
-                 labelCol={{span: 12}}
-                 labelAlign="left"
+                 {...radioLayout}
                  label={t('questionnaire.easyFinansRelationships.hasEasyFinansIndividuals')}
       >
         <Radio.Group onChange={onHasIndividualsChange}
@@ -114,8 +118,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
       </Form.Item>
       {isIndividualRowsVisible && renderRows('easyFinanceIndividuals')}
       <Form.Item name="hasEasyFinansLegals"
-                 labelCol={{span: 12}}
-                 labelAlign="left"
+                 {...radioLayout}
                  label={t('questionnaire.easyFinansRelationships.hasEasyFinansLegals')}
       >
         <Radio.Group onChange={onHasLegalsChange}

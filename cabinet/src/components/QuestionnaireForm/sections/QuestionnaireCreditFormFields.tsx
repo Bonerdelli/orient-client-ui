@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
-import {Button, Checkbox, Col, Divider, Form, Input, Radio, Row, Typography} from 'antd';
+import {Button, Checkbox, Col, DatePicker, Divider, Form, Input, Radio, Row, Typography} from 'antd';
 import React, {useState} from 'react';
-import {CalendarOutlined, EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
 import {QuestionnaireFormData} from 'components/QuestionnaireForm/models/questionnaire-form.interface';
 
 const QuestionnaireCreditFormFields: React.FC = () => {
@@ -40,9 +40,10 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                  gutter={16}
                  wrap
             >
-              <Col span={11}>
+              <Col span={10}>
                 <Form.Item
                   {...formItemLayout}
+                  labelCol={{span: 8}}
                   label={t('questionnaire.credits.bankName.label')}
                   name={[field.name, 'bankName']}
                 >
@@ -54,6 +55,7 @@ const QuestionnaireCreditFormFields: React.FC = () => {
               <Col span={6}>
                 <Form.Item
                   {...formItemLayout}
+                  labelCol={{span: 14}}
                   label={t('questionnaire.credits.creditAmount.label')}
                   name={[field.name, 'creditAmount']}
                 >
@@ -61,9 +63,10 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                 </Form.Item>
               </Col>
 
-              <Col span={6}>
+              <Col span={7}>
                 <Form.Item
                   {...formItemLayout}
+                  labelCol={{span: 14}}
                   label={t('questionnaire.credits.remainAmount.label')}
                   name={[field.name, 'remainAmount']}
                 >
@@ -82,8 +85,7 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                   label={t('questionnaire.credits.creditDate')}
                   name={[field.name, 'creditDate']}
                 >
-                  {/*TODO: replace to <DatePicker format="YYYY-MM-DD"/> after adding moment*/}
-                  <Input suffix={<CalendarOutlined/>}/>
+                  <DatePicker/>
                 </Form.Item>
               </Col>
               <Col span={4}>

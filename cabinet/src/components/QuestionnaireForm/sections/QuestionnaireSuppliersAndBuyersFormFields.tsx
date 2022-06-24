@@ -2,38 +2,38 @@ import {useTranslation} from 'react-i18next';
 import {Button, Col, Form, Input, Row, Select, Typography} from 'antd';
 import React from 'react';
 import {EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {Dictionaries} from 'library/models/dictionaries';
+import {
+  convertDictionaryToSelectOptions,
+} from 'components/QuestionnaireForm/converters/dictionary-to-select-options.converter';
 
-const QuestionnaireSuppliersAndBuyersFormFields: React.FC = () => {
+interface QuestionnaireSuppliersAndBuyersFormFieldsProps {
+  dictionaries: Dictionaries,
+}
+
+const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliersAndBuyersFormFieldsProps> = ({
+  dictionaries,
+}) => {
   const {t} = useTranslation();
   const {Title, Text} = Typography;
-  // const form = Form.useFormInstance<QuestionnaireFormData>();
 
   const inputLayout = {
     suffix: <EditOutlined/>,
   };
-
   const formItemRowLayout = {
     labelAlign: 'left' as any,
     required: true,
     wrapperCol: {span: 'auto'},
     labelCol: {span: 8},
   };
-
   const buyersFieldsFormFieldsLayout = {
     ...formItemRowLayout,
     wrapperCol: {span: 3},
   };
-
   const delayFieldsFormFieldsLayout = {
     ...formItemRowLayout,
     labelCol: {span: 10},
   };
-
-  // TODO: replace with values from dict
-  const paymentFormOptions = [
-    {value: 0, label: 'Наличная'},
-    {value: 1, label: 'Безналичная'},
-  ];
 
   const renderRows = (name: 'suppliers' | 'buyers') => (<>
     <Title level={5}>{t(`questionnaire.suppliersAndBuyers.${name}.title`)}</Title>
@@ -56,6 +56,7 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC = () => {
             <Col span={7}>
               <Form.Item name={[field.name, 'term']}
                          {...formItemRowLayout}
+                         labelCol={{span: 14}}
                          label={t('questionnaire.suppliersAndBuyers.fields.term')}>
                 <Input {...inputLayout}/>
               </Form.Item>
@@ -65,7 +66,7 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC = () => {
                          {...formItemRowLayout}
                          label={t('questionnaire.suppliersAndBuyers.fields.paymentFormId')}>
                 <Select defaultActiveFirstOption
-                        options={paymentFormOptions}/>
+                        options={convertDictionaryToSelectOptions(dictionaries.paymentForm)}/>
               </Form.Item>
             </Col>
             <Col span={1}>

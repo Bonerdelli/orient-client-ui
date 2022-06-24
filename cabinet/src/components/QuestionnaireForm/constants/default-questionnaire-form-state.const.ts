@@ -1,13 +1,9 @@
 import {QuestionnaireFormData} from '../models/questionnaire-form.interface';
-import {
-  AverageEmployeesCountIdEnum,
-  TaxationSystemIdEnum,
-} from 'components/QuestionnaireForm/sections/QuestionnaireGeneralInfoFormFields';
 
 export const defaultQuestionnaireFormState: QuestionnaireFormData = {
-  averageEmployeesCountId: AverageEmployeesCountIdEnum.LessThan100, // TODO: Replace with enum from dict
-  taxationSystemId: TaxationSystemIdEnum.Common, // TODO: Replace with enum from dict
-  paymentFormId: 0, // TODO: Replace with enum
+  averageEmployeesCountId: 1, // TODO: Replace with enum from dict
+  taxationSystemId: 1, // TODO: Replace with enum from dict
+  paymentFormId: 1, // TODO: Replace with enum
   belongsToHoldings: false,
   holdingName: '',
   headCompanyName: '',

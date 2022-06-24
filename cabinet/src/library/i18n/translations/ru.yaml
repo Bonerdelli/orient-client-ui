@@ -197,7 +197,10 @@ questionnaire:
     isExpired: Наличие просрочки
   creditExpirations:
     title: Информация о просроченной задолженности компании
-    # todo: add debts variants translations
+    0: Перед бюджетом
+    1: Перед внебюджетными фондами
+    2: По заработной плате
+    3: По кредитам и займам
     debtReason: Причина задолженности
     toBudget: Перед бюджетом
     toNonBudgetFunds: Перед внебюджетными фондами

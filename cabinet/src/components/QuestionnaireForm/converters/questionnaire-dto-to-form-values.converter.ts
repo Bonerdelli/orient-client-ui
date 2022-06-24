@@ -1,6 +1,6 @@
-import {QuestionnaireDto} from 'library/api/questionnaire';
 import {QuestionnaireFormData} from '../models/questionnaire-form.interface';
 import {defaultQuestionnaireFormState} from '../constants/default-questionnaire-form-state.const';
+import {QuestionnaireDto} from 'library/models/proxy';
 
 export const convertQuestionnaireDtoToFormValues = (dto: QuestionnaireDto | null): QuestionnaireFormData => {
   if (!dto) {
