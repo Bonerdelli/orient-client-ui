@@ -2,7 +2,7 @@ import {useTranslation} from 'react-i18next';
 import {Button, Col, Divider, Form, Input, Radio, Row, Typography} from 'antd';
 import React, {useState} from 'react';
 import {EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
-import {QuestionnaireFormData} from 'components/QuestionnaireForm/questionnaire-form.interface';
+import {QuestionnaireFormData} from 'components/QuestionnaireForm/models/questionnaire-form.interface';
 
 const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
   const {t} = useTranslation();

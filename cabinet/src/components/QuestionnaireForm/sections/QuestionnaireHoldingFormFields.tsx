@@ -2,7 +2,7 @@ import {useTranslation} from 'react-i18next';
 import {Form, Input, Radio, Typography} from 'antd';
 import {useState} from 'react';
 import {EditOutlined} from '@ant-design/icons';
-import {QuestionnaireFormData} from 'components/QuestionnaireForm/questionnaire-form.interface';
+import {QuestionnaireFormData} from 'components/QuestionnaireForm/models/questionnaire-form.interface';
 
 
 const QuestionnaireHoldingFormFields: React.FC = () => {
