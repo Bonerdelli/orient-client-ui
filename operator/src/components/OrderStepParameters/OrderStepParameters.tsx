@@ -5,7 +5,6 @@ import { Descriptions, Row, Col, Button, Skeleton, message } from 'antd'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { OrderWizardType } from 'orient-ui-library/library/models/order'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { getFrameWizardStep, sendFrameWizardStep1 } from 'library/api/frameWizard'
 
@@ -14,7 +13,6 @@ import './OrderStepParameters.style.less'
 
 export interface OrderStepParametersProps {
   orderId?: number
-  orderType?: OrderWizardType
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -22,7 +20,7 @@ export interface OrderStepParametersProps {
 
 const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   orderId,
-  // orderType,
+  currentStep,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
@@ -31,7 +29,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to make typings
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -46,7 +44,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to make typings
+      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -79,22 +77,33 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   const renderActions = () => (
     <Row className="FrameWizard__step__actions">
       <Col flex={1}></Col>
-      <Col>{renderNextButton()}</Col>
+      <Col>{currentStep > sequenceStepNumber
+        ? renderNextButton()
+        : renderSubmitButton()}</Col>
     </Row>
   )
 
-  const renderNextButton = () => {
-    return (
-      <Button
-        size="large"
-        type="primary"
-        disabled={submitting}
-        onClick={handleNextStep}
-      >
-        Взять на проверку
-      </Button>
-    )
-  }
+  const renderNextButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      onClick={() => setCurrentStep(sequenceStepNumber + 1)}
+      disabled={!isNextStepAllowed}
+    >
+      {t('common.actions.next.title')}
+    </Button>
+  )
+
+  const renderSubmitButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleNextStep}
+    >
+      Взять на проверку
+    </Button>
+  )
 
   const renderOrderInfo = () => (
     <Descriptions title="Заявка" bordered column={1}>
@@ -102,10 +111,10 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
         {orderId}
       </Descriptions.Item>
       <Descriptions.Item label="ИНН Заказчика">
-        {currentStepData.customerCompany.inn}
+        {stepData?.customerCompany.inn}
       </Descriptions.Item>
       <Descriptions.Item label="Наименование Заказчика">
-        {currentStepData.customerCompany.shortName}
+        {stepData?.customerCompany.shortName}
       </Descriptions.Item>
     </Descriptions>
   )
@@ -113,56 +122,56 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   const renderCompanyInfo = () => (
     <Descriptions title="Клиент" bordered column={1}>
       <Descriptions.Item label="Клиент">
-        {currentStepData.clientCompany.shortName}
+        {stepData?.clientCompany.shortName}
       </Descriptions.Item>
       <Descriptions.Item label="Наименование юридического лица">
-        {currentStepData.clientCompany.fullName}
+        {stepData?.clientCompany.fullName}
       </Descriptions.Item>
       <Descriptions.Item label="Номер заявки">
         {orderId}
       </Descriptions.Item>
       <Descriptions.Item label="ИНН">
-        {currentStepData.clientCompany.inn}
+        {stepData?.clientCompany.inn}
       </Descriptions.Item>
       <Descriptions.Item label="ИНН Заказчика">
-        {currentStepData.customerCompany.inn}
+        {stepData?.customerCompany.inn}
       </Descriptions.Item>
       <Descriptions.Item label="Код ОПФ">
-        {currentStepData.customerCompany.opf}
+        {stepData?.customerCompany.opf}
       </Descriptions.Item>
       <Descriptions.Item label="Наименование Заказчика">
-        {currentStepData.customerCompany.shortName}
+        {stepData?.customerCompany.shortName}
       </Descriptions.Item>
       <Descriptions.Item label="Принадлежность к МСП">
         Нет
       </Descriptions.Item>
       <Descriptions.Item label="Уставный фонд">
-        {/* currentStepData.clientCompany */}
+        {/* stepData?.clientCompany */}
       </Descriptions.Item>
       <Descriptions.Item label="Код ОКЭД">
-        {currentStepData.customerCompany.oked}
+        {stepData?.customerCompany.oked}
       </Descriptions.Item>
       <Descriptions.Item label="Код СООГУ">
-        {currentStepData.customerCompany.soogu}
+        {stepData?.customerCompany.soogu}
       </Descriptions.Item>
       <Descriptions.Item label="Состояние активности">
-        {/* currentStepData.clientCompany */}
+        {/* stepData?.clientCompany */}
       </Descriptions.Item>
       <Descriptions.Item label="Действующие предприятия">
-        {/* currentStepData.clientCompany */}
+        {/* stepData?.clientCompany */}
       </Descriptions.Item>
       <Descriptions.Item label="Код СОАТО">
-        {currentStepData.customerCompany.soato}
+        {stepData?.customerCompany.soato}
       </Descriptions.Item>
       <Descriptions.Item label="Адрес">
-        {currentStepData.customerCompany.address}
+        {stepData?.customerCompany.address}
       </Descriptions.Item>
       <Descriptions.Item label="Руководитель">
-        {currentStepData.clientCompanyFounder.firstName}
-        {currentStepData.clientCompanyFounder.lastName}
+        {stepData?.clientCompanyFounder.firstName}
+        {stepData?.clientCompanyFounder.lastName}
       </Descriptions.Item>
       <Descriptions.Item label="Выписка ЕГРПО">
-        {/* currentStepData.clientCompany */}
+        {/* stepData?.clientCompany */}
       </Descriptions.Item>
     </Descriptions>
   )

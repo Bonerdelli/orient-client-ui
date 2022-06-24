@@ -10,7 +10,8 @@ import EmptyResult from 'orient-ui-library/components/EmptyResult' // TODO: from
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { Customer } from 'library/models' // TODO: check API schema, why not from proxy?
-import { FrameWizardType, searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
+import { searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import './OrderStepSelectInn.style.less'
 
@@ -23,12 +24,11 @@ export interface OrderSelectInnProps {
   orderId?: number
   setOrderId: (orderId: number) => void
   currentStep: number
+  sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   selectedCustomer: Customer | undefined
   setSelectedCustomer: (customer: Customer | undefined) => void
 }
-
-const WIZARD_STEP_NUMBER = 1
 
 const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   wizardType = FrameWizardType.Full,
@@ -36,6 +36,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   orderId,
   setOrderId,
   currentStep,
+  sequenceStepNumber,
   setCurrentStep,
   selectedCustomer,
   setSelectedCustomer,
@@ -56,7 +57,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   useEffect(() => {
-    if (currentStep >= WIZARD_STEP_NUMBER) {
+    if (currentStep >= sequenceStepNumber) {
       setNextStepAllowed(true)
     }
   }, [currentStep])
@@ -90,7 +91,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     const result = await getFrameWizardStep({
       type: wizardType,
       companyId: companyId as number,
-      step: WIZARD_STEP_NUMBER,
+      step: sequenceStepNumber,
       orderId,
     })
     if (result.success) {
@@ -188,7 +189,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
 
   const handleNextStep = () => {
     if (orderId && isNextStepAllowed) {
-      setCurrentStep(WIZARD_STEP_NUMBER + 1)
+      setCurrentStep(sequenceStepNumber + 1)
     } else if (isNextStepAllowed) {
       sendNextStep()
     }
@@ -253,7 +254,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {currentStep <= WIZARD_STEP_NUMBER && renderActions()}
+      {currentStep <= sequenceStepNumber && renderActions()}
     </Div>
   )
 }

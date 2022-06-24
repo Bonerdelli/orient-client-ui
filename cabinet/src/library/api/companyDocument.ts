@@ -1,6 +1,8 @@
-import { get, getFile, del } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
-
+import { ApiSuccessResponse, get, getS3File, del } from 'orient-ui-library/library/helpers/api'
 import { CompanyDocument } from 'orient-ui-library/library/models/proxy'
+import * as schema from 'orient-ui-library/library/api/schema'
+
+type FileLocation = schema.components['schemas']['FileLocation']
 
 export interface CompanyDocumentsListParams {
   companyId: bigint | number
@@ -31,5 +33,10 @@ export async function deleteCompanyDocument(params: CompanyDocumentItemParams) {
 
 export async function downloadCompanyDocument(params: CompanyDocumentItemParams) {
   const { companyId, documentId, fileName } = params
-  return await getFile(`/common/download/company/${companyId}/${documentId}`, fileName)
+  const response = await get<FileLocation>(`/common/download/company/${companyId}/${documentId}`)
+  const location = (response as ApiSuccessResponse<FileLocation>)?.data?.location ?? null
+  if (!location || !response.success) {
+    throw new Error('Document downloading error')
+  }
+  return getS3File(location, fileName)
 }

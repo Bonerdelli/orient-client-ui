@@ -199,6 +199,9 @@ export interface paths {
     get: operations['founders']
     post: operations['saveFounder']
   }
+  '/client/company/{companyId}/factAddresses': {
+    post: operations['patchFactAddresses']
+  }
   '/client/company/{companyId}/document/{typeId}': {
     post: operations['uploadCompanyDocument']
   }
@@ -321,6 +324,9 @@ export interface paths {
   }
   '/client/file/{fileId}': {
     get: operations['get']
+  }
+  '/client/customer/{id}': {
+    get: operations['getCustomers_2']
   }
   '/client/company': {
     get: operations['all_1']
@@ -518,8 +524,6 @@ export interface components {
       averageEmployeesCountId: number
       /** Format: int32 */
       taxationSystemId: number
-      /** Format: int32 */
-      paymentFormId: number
       belongsToHoldings: boolean
       holdingName?: string
       headCompanyName?: string
@@ -535,6 +539,16 @@ export interface components {
       easyFinanceIndividuals?: components['schemas']['CompanyQuestionnaireEfIndividual'][]
       hasEasyFinansLegals: boolean
       easyFinanceLegals?: components['schemas']['CompanyQuestionnaireEfLegal'][]
+      /** Format: int32 */
+      buyersTotalCount: number
+      /** Format: int32 */
+      buyersPayDelayCount: number
+      /** Format: int32 */
+      payDelayMin: number
+      /** Format: int32 */
+      payDelayAvg: number
+      /** Format: int32 */
+      payDelayMax: number
     }
     CompanyQuestionnaireBuyer: {
       name: string
@@ -598,6 +612,8 @@ export interface components {
       clientSigned?: boolean
       bankSigned?: boolean
       customerSigned?: boolean
+      /** Format: int64 */
+      bankId?: number
     }
     ServerResponseJOrderDocument: {
       success: boolean
@@ -699,6 +715,7 @@ export interface components {
       passportValidDate?: string
       nationality?: string
       address: string
+      phoneNumber: string
     }
     JCompanyFounder: {
       /** Format: int64 */
@@ -733,10 +750,16 @@ export interface components {
       passportValidDate?: string
       nationality?: string
       address?: string
+      phoneNumber?: string
     }
     ServerResponseJCompanyFounder: {
       success: boolean
       data?: components['schemas']['JCompanyFounder']
+    }
+    PatchAddressesDto: {
+      addressFact?: string
+      soatoFact?: string
+      isAddressesSame: boolean
     }
     JCompanyDocument: {
       /** Format: int64 */
@@ -857,6 +880,13 @@ export interface components {
       success: boolean
       data?: components['schemas']['CompanyQuestionnaire']
     }
+    FileLocation: {
+      location: string
+    }
+    ServerResponseFileLocation: {
+      success: boolean
+      data?: components['schemas']['FileLocation']
+    }
     ServerResponseString: {
       success: boolean
       data?: string
@@ -886,14 +916,17 @@ export interface components {
       soogu?: string
       soato?: string
       state?: string
-    }
-    ServerResponseListJCompany: {
-      success: boolean
-      data?: components['schemas']['JCompany'][]
+      addressFact?: string
+      soatoFact?: string
+      isAddressesSame?: boolean
     }
     ServerResponseJCompany: {
       success: boolean
       data?: components['schemas']['JCompany']
+    }
+    ServerResponseListJCompany: {
+      success: boolean
+      data?: components['schemas']['JCompany'][]
     }
     ServerResponseListJCompanyRequisites: {
       success: boolean
@@ -916,6 +949,8 @@ export interface components {
       /** Format: int64 */
       typeId: number
       typeName: string
+      isGenerated: boolean
+      isRequired: boolean
       info?: components['schemas']['Info']
     }
     ServerResponseListOrderDocumentsResponse: {
@@ -1639,7 +1674,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': {
+        'multipart/form-data': {
           /** Format: binary */
           file: string
         }
@@ -1754,7 +1789,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': {
+        'multipart/form-data': {
           /** Format: binary */
           file: string
         }
@@ -1889,7 +1924,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': {
+        'multipart/form-data': {
           /** Format: binary */
           file: string
         }
@@ -2052,7 +2087,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': {
+        'multipart/form-data': {
           /** Format: binary */
           file: string
         }
@@ -2207,6 +2242,26 @@ export interface operations {
       }
     }
   }
+  patchFactAddresses: {
+    parameters: {
+      path: {
+        companyId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PatchAddressesDto']
+      }
+    }
+  }
   uploadCompanyDocument: {
     parameters: {
       path: {
@@ -2224,7 +2279,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': {
+        'multipart/form-data': {
           /** Format: binary */
           file: string
         }
@@ -2872,7 +2927,7 @@ export interface operations {
       /** OK */
       200: {
         content: {
-          '*/*': { [key: string]: unknown }
+          '*/*': components['schemas']['ServerResponseFileLocation']
         }
       }
     }
@@ -2888,7 +2943,7 @@ export interface operations {
       /** OK */
       200: {
         content: {
-          '*/*': { [key: string]: unknown }
+          '*/*': components['schemas']['ServerResponseFileLocation']
         }
       }
     }
@@ -2914,6 +2969,21 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['ServerResponseString']
+        }
+      }
+    }
+  }
+  getCustomers_2: {
+    parameters: {
+      path: {
+        id: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseJCompany']
         }
       }
     }

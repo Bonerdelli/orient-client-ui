@@ -1,6 +1,6 @@
 /* TODO: move to ui-lib after debugging */
 
-import * as schema from 'orient-ui-library/library/api/schema'
+import * as schema from '../api/schema'
 
 export type Company = schema.components['schemas']['JCompany']
 export type CompanyContacts = schema.components['schemas']['JCompanyContacts']

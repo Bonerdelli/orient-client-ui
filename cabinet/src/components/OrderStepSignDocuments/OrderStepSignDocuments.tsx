@@ -1,16 +1,12 @@
-/**
- * NOTE: almost blank wizard step
- * TODO: add commponent template for this?
- */
-
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Row, Col, Button, Result, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
-
-import { FrameWizardType, sendFrameWizardStep3 } from 'library/api'
 import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+
+import { sendFrameWizardStep3 } from 'library/api'
 
 import './OrderStepSignDocuments.style.less'
 

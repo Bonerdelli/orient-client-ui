@@ -5,7 +5,6 @@ import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { OrderWizardType } from 'orient-ui-library/library/models'
 
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
@@ -75,7 +74,6 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     }
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
-      oprderType: OrderWizardType.Frame,
       currentStep: currentStep,
       setCurrentStep: setSelectedStep,
     }

@@ -5,8 +5,8 @@ import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { OrderWizardType } from 'orient-ui-library/library/models/order'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+
 import {
   getFrameWizardStep,
   sendFrameWizardStep1, // NOTE: replace ep with correct one!
@@ -18,7 +18,6 @@ const { Title } = Typography
 
 export interface OrderStepDocumentsProps {
   orderId?: number
-  orderType?: OrderWizardType
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -26,7 +25,6 @@ export interface OrderStepDocumentsProps {
 
 const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
   orderId,
-  // orderType,
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
@@ -36,7 +34,7 @@ const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
   const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to make typings
+  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -58,7 +56,7 @@ const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to make typings
+      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -109,7 +107,7 @@ const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
       disabled={!isNextStepAllowed || submitting}
       loading={submitting}
     >
-      {t('orders.actions.next.title')}
+      {t('common.actions.next.title')}
     </Button>
   )
 
@@ -121,7 +119,7 @@ const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
       disabled={submitting}
       loading={submitting}
     >
-      {t('orders.actions.next.title')}
+      {t('common.actions.back.title')}
     </Button>
   )
 

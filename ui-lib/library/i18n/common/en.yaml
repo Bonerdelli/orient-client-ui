@@ -49,6 +49,10 @@ actions:
     title: Back
   forward:
     title: Forward
+  next:
+    title: Next
+  reject:
+    title: Reject
 
 documents:
   fields:

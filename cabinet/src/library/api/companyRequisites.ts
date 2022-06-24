@@ -1,5 +1,5 @@
-import { get, post, del } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
-import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
+import { get, post, del } from 'orient-ui-library/library/helpers/api'
+import * as schema from 'orient-ui-library/library/api/schema'
 
 import { CompanyRequisites } from 'orient-ui-library/library/models/proxy'
 

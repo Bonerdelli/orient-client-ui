@@ -33,6 +33,10 @@ frameOrdersPage:
     updatedAt: Дата и время статуса
     statusName: Статус
 
+orderStatusTitles:
+  waitForVerify: Ожидает проверки
+  verifying: Проверка
+
 frameWizard:
   title: Заявка на заключение рамочного договора
   firstStep:

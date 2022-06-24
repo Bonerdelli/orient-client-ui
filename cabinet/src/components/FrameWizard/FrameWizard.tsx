@@ -5,6 +5,7 @@ import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import OrderStepSelectInn from 'components/OrderStepSelectInn'
 import OrderStepDocuments from 'components/OrderStepDocuments'
@@ -14,7 +15,7 @@ import OrderStepBankOffers from 'components/OrderStepBankOffers'
 import { Customer } from 'library/models'
 import { useStoreState } from 'library/store'
 
-import { FrameWizardType, getCurrentFrameWizardStep } from 'library/api'
+import { getCurrentFrameWizardStep } from 'library/api'
 
 import './FrameWizard.style.less'
 
@@ -93,8 +94,8 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           orderId={Number(itemId) || orderId}
           setOrderId={setOrderId}
           currentStep={currentStep}
-          currentStepData={currentStepData}
           setCurrentStep={setSelectedStep}
+          sequenceStepNumber={1}
           selectedCustomer={selectedCustomer}
           setSelectedCustomer={setSelectedCustomer}
         />
@@ -102,6 +103,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
         return <OrderStepDocuments
           companyId={companyId}
           currentStep={currentStep}
+          sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
@@ -110,6 +112,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
         return <OrderStepSignDocuments
           companyId={companyId}
           currentStep={currentStep}
+          sequenceStepNumber={3}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
@@ -118,6 +121,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
         return <OrderStepBankOffers
           companyId={company?.id as number}
           currentStep={currentStep}
+          sequenceStepNumber={4}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}

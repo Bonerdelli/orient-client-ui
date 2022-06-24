@@ -10,7 +10,7 @@ import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { OrderDocument, CompanyDocument } from 'orient-ui-library/library/models/proxy'
+import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 
 import {
   getOrderDocumentUploadUrl,
@@ -22,13 +22,11 @@ import './OrderDocumentsList.style.less'
 
 const { Text } = Typography
 
-type OrderDocumentType = OrderDocument & CompanyDocument
-
 export interface OrderDocumentsListProps {
   companyId: number
   orderId: number
   types: number[]
-  current?: OrderDocument[] | CompanyDocument[]
+  current?: OrderDocument[]
   onChange?: () => {}
 }
 
@@ -49,7 +47,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     setItems(updatedItems)
   }, [types, current])
 
-  const composeDocument = (typeId: number, document?: OrderDocumentType): Document => {
+  const composeDocument = (typeId: number, document?: OrderDocument): Document => {
     if (!document?.info) {
       return {
         type: typeId,
@@ -58,7 +56,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     }
     return {
       type: typeId,
-      name: document.type, // NOTE: this is cyrillic doc name, eg. Устав компании
+      name: document.typeName, // NOTE: this is cyrillic doc name, eg. Устав компании
       id: document.info.documentId,
       status: DocumentStatus.Uploaded,
     }
