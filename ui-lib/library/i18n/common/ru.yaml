@@ -51,6 +51,8 @@ actions:
     title: Вперёд
   next:
     title: Далее
+  approve:
+    title: Одобрить
   reject:
     title: Отказать
 

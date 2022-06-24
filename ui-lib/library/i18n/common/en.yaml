@@ -51,6 +51,8 @@ actions:
     title: Forward
   next:
     title: Next
+  approve:
+    title: Approve
   reject:
     title: Reject
 

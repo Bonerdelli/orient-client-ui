@@ -944,6 +944,8 @@ export interface components {
       clientSigned: boolean
       bankSigned: boolean
       customerSigned: boolean
+      /** Format: int64 */
+      bankId?: number
     }
     OrderDocumentsResponse: {
       /** Format: int64 */
