@@ -56,7 +56,6 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
     }
   }
 
-
   const renderStatus = (statusCode: FrameOrderStatus) => {
     switch (statusCode) {
       case FrameOrderStatus.FRAME_DRAFT:

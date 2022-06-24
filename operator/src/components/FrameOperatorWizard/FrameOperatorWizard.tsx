@@ -13,8 +13,6 @@ import OrderStepStopFactors from 'components/OrderStepStopFactors'
 import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
 
-import { useStoreState } from 'library/store'
-
 import { getFrameOrderWizard } from 'library/api/frameOrder'
 
 import './FrameOperatorWizard.style.less'

@@ -1,6 +1,8 @@
 import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
 
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+
 import {
   CompanyRequisites,
   CompanyHead,
@@ -9,19 +11,6 @@ import {
 } from 'orient-ui-library/library/models/proxy'
 
 export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
-
-
-// TODO: share with other types
-export enum FrameWizardType {
-  Simple,
-  Full,
-}
-
-// TODO: share with other types
-export interface WizardStepResponse<T = Record<string, unknown>> {
-  step: number
-  data: T
-}
 
 interface FrameWizardCommonParameters {
   type: FrameWizardType

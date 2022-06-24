@@ -1,30 +1,60 @@
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Descriptions, Row, Col, Button } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
+import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderWizardType } from 'orient-ui-library/library/models'
 
 import './OrderStepParameters.style.less'
 
-const { Title } = Typography
 
 export interface OrderStepParametersProps {
   orderId?: number
-  oprderType?: OrderWizardType
+  orderType?: OrderWizardType
   currentStep: number
   currentStepData: any
+  sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
 
 const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   orderId,
-  // oprderType,
+  // orderType,
   currentStep,
   setCurrentStep,
   currentStepData,
+  sequenceStepNumber,
 }) => {
   const { t } = useTranslation()
+
+  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
+  const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
+
+  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to make typings
+  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
+  const [ submitting, setSubmitting ] = useState<boolean>()
+
+  useEffect(() => {
+    loadCurrentStepData()
+  }, [])
+
+  const loadCurrentStepData = async () => {
+    const result = await getFrameWizardStep({
+      step: currentStep,
+      orderId,
+    })
+    if (result.success) {
+      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to make typings
+      setDataLoaded(true)
+    } else {
+      setDataLoaded(false)
+    }
+    setStepDataLoading(false)
+    setIsNextStepAllowed(true) // NOTE: only for debugging
+  }
 
   const renderActions = () => (
     <Row className="FrameWizard__step__actions">
@@ -32,6 +62,22 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
       <Col>{renderNextButton()}</Col>
     </Row>
   )
+
+  const sendNextStep = async () => {
+    setSubmitting(true)
+  }
+
+  const handlePrevStep = () => {
+    if (isPrevStepAllowed) {
+      setCurrentStep(sequenceStepNumber - 1)
+    }
+  }
+
+  const handleNextStep = () => {
+    if (isNextStepAllowed) {
+      sendNextStep()
+    }
+  }
 
   const renderNextButton = () => {
     return (
@@ -116,7 +162,6 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     </Descriptions>
   )
 
-
   const renderStepContent = () => (
     <Div className="OrderStepParameters">
       <Row gutter={12}>
@@ -125,6 +170,19 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
       </Row>
     </Div>
   )
+
+  if (!stepData && stepDataLoading) {
+    return (
+      <Skeleton active={true} />
+    )
+  }
+
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="warning" />
+    )
+  }
+
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
