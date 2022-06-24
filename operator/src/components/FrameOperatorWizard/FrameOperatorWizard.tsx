@@ -30,8 +30,6 @@ export interface FrameOperatorWizardPathParams {
   itemId?: string,
 }
 
-export const FRAME_WIZARD_LAST_STEP_INDEX = 4
-
 const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
@@ -83,15 +81,15 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters currentStepData={currentStepData} {...stepBaseProps}/>
+        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
       case 2:
-        return <OrderStepDocuments {...stepBaseProps}/>
+        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
-        return <OrderStepStopFactors {...stepBaseProps}/>
+        return <OrderStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
       case 4:
-        return <OrderStepOptionalParameters {...stepBaseProps}/>
+        return <OrderStepOptionalParameters {...stepBaseProps} sequenceStepNumber={4}/>
       case 5:
-        return <OrderStepScoringResults {...stepBaseProps}/>
+        return <OrderStepScoringResults {...stepBaseProps} sequenceStepNumber={5}/>
       default:
         return <></>
     }

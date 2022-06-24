@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderWizardType } from 'orient-ui-library/library/models/order'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import {
+  getFrameWizardStep,
+  sendFrameWizardStep1, // NOTE: replace ep with correct one!
+} from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
 
@@ -41,9 +45,16 @@ const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
     loadCurrentStepData()
   }, [])
 
+  useEffect(() => {
+    if (currentStep > sequenceStepNumber) {
+      // NOTE: only for debugging
+      setIsNextStepAllowed(true)
+    }
+  }, [currentStep, sequenceStepNumber])
+
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
-      step: currentStep,
+      step: sequenceStepNumber,
       orderId,
     })
     if (result.success) {
@@ -56,15 +67,19 @@ const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
     setIsNextStepAllowed(true) // NOTE: only for debugging
   }
 
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{renderNextButton()}</Col>
-    </Row>
-  )
-
   const sendNextStep = async () => {
+    if (!orderId) return
     setSubmitting(true)
+    const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
+      orderId,
+    }, {})
+    if (!result.success) {
+      message.error(t('common.errors.requestError.title'))
+      setIsNextStepAllowed(false)
+    } else {
+      setCurrentStep(sequenceStepNumber + 1)
+    }
+    setSubmitting(false)
   }
 
   const handlePrevStep = () => {
@@ -78,6 +93,13 @@ const OrderStepDocuments: React.FC<OrderStepDocumentsProps> = ({
       sendNextStep()
     }
   }
+
+  const renderActions = () => (
+    <Row className="FrameWizard__step__actions">
+      <Col flex={1}>{renderPrevButton()}</Col>
+      <Col>{renderNextButton()}</Col>
+    </Row>
+  )
 
   const renderNextButton = () => (
     <Button

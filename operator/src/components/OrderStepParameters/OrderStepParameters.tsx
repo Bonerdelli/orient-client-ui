@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Descriptions, Row, Col, Button } from 'antd'
+import { Descriptions, Row, Col, Button, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { OrderWizardType } from 'orient-ui-library/library/models'
+import { OrderWizardType } from 'orient-ui-library/library/models/order'
+import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { getFrameWizardStep, sendFrameWizardStep1 } from 'library/api/frameWizard'
 
 import './OrderStepParameters.style.less'
 
@@ -14,7 +16,6 @@ export interface OrderStepParametersProps {
   orderId?: number
   orderType?: OrderWizardType
   currentStep: number
-  currentStepData: any
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
@@ -22,9 +23,7 @@ export interface OrderStepParametersProps {
 const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   orderId,
   // orderType,
-  currentStep,
   setCurrentStep,
-  currentStepData,
   sequenceStepNumber,
 }) => {
   const { t } = useTranslation()
@@ -43,7 +42,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
-      step: currentStep,
+      step: sequenceStepNumber,
       orderId,
     })
     if (result.success) {
@@ -56,21 +55,19 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     setIsNextStepAllowed(true) // NOTE: only for debugging
   }
 
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
-      <Col flex={1}></Col>
-      <Col>{renderNextButton()}</Col>
-    </Row>
-  )
-
   const sendNextStep = async () => {
+    if (!orderId) return
     setSubmitting(true)
-  }
-
-  const handlePrevStep = () => {
-    if (isPrevStepAllowed) {
-      setCurrentStep(sequenceStepNumber - 1)
+    const result = await sendFrameWizardStep1({
+      orderId,
+    }, {})
+    if (!result.success) {
+      message.error(t('common.errors.requestError.title'))
+      setIsNextStepAllowed(false)
+    } else {
+      setCurrentStep(sequenceStepNumber + 1)
     }
+    setSubmitting(false)
   }
 
   const handleNextStep = () => {
@@ -79,12 +76,20 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     }
   }
 
+  const renderActions = () => (
+    <Row className="FrameWizard__step__actions">
+      <Col flex={1}></Col>
+      <Col>{renderNextButton()}</Col>
+    </Row>
+  )
+
   const renderNextButton = () => {
     return (
       <Button
         size="large"
         type="primary"
-        onClick={() => { setCurrentStep(currentStep + 1) }}
+        disabled={submitting}
+        onClick={handleNextStep}
       >
         Взять на проверку
       </Button>
