@@ -40,6 +40,7 @@ company:
       title: INN
     isMsp:
       title: Small business company
+      titleShort: Small business
     capital:
       title: Authorized fund
     currency:

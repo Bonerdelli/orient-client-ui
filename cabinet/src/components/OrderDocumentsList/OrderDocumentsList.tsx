@@ -6,7 +6,7 @@ import { isUndefined } from 'lodash'
 
 import { getEndpointUrl } from 'orient-ui-library/library'
 
-import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
+import Div from 'orient-ui-library/components/Div'
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'

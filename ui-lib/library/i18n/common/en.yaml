@@ -83,6 +83,8 @@ documents:
     unsigned: Unsigned
     checked: Checked
     notChecked: Not Checked
+    approved: Approved
+    notApproved: Not Approved
   statusMessages:
     uploaded: File "{{name}}" uploaded successfully
     uploadingError: Error loading file "{{name}}"

@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Button, message } from 'antd'
 import { DownloadOutlined, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 
+import Div from 'orient-ui-library/components/Div'
+
 import { Document, DocumentStatus } from 'library/models'
 
 import './DocumentActions.style.less'
@@ -25,7 +27,8 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   loading,
 }) => {
   const { t } = useTranslation()
-  const [ operationInProccess, setOperationInProccess ] = useState<boolean>()
+  const [ approveInProccess, setApproveInProccess ] = useState<boolean>()
+  const [ rejectInProccess, setRejectInProccess ] = useState<boolean>()
 
   const handleDownload = async () => {
     const result = await downloadHandler(document)
@@ -37,7 +40,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   }
 
   const handleApprove = async () => {
-    setOperationInProccess(true)
+    setApproveInProccess(true)
     const result = await approveHandler(document)
     if (!result) {
       message.error(
@@ -46,11 +49,11 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
     } else {
       onChange && onChange()
     }
-    setOperationInProccess(false)
+    setApproveInProccess(false)
   }
 
   const handleReject = async () => {
-    setOperationInProccess(true)
+    setRejectInProccess(true)
     const result = await rejectHandler(document)
     if (!result) {
       message.error(
@@ -59,7 +62,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
     } else {
       onChange && onChange()
     }
-    setOperationInProccess(false)
+    setRejectInProccess(false)
   }
 
   const renderDownloadButton = () => (
@@ -79,10 +82,10 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       key="approve"
       type="link"
       shape="circle"
-      loading={operationInProccess}
+      loading={approveInProccess}
       title={t('common.actions.approve.title')}
       onClick={handleApprove}
-      disabled={loading === true}
+      disabled={loading === true || rejectInProccess}
       icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
     />
   )
@@ -93,20 +96,20 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       key="reject"
       type="link"
       shape="circle"
-      loading={operationInProccess}
+      loading={rejectInProccess}
       title={t('common.actions.reject.title')}
       onClick={handleReject}
-      disabled={loading === true}
+      disabled={loading === true || approveInProccess}
       icon={<CloseCircleTwoTone twoToneColor="#e83030" />}
     />
   )
 
   return (
-    <>
+    <Div className="DocumentActions">
       {document.status !== DocumentStatus.NotUploaded && renderDownloadButton()}
       {document.status !== DocumentStatus.NotUploaded && renderApproveButton()}
       {document.status !== DocumentStatus.NotUploaded && renderRejectButton()}
-    </>
+    </Div>
   )
 }
 

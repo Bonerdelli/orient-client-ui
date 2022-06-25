@@ -17,18 +17,18 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ orderId, customerCompany }) => {
   }
   return (
     <Descriptions
-      title={t('common.models.order.title')}
+      title={t('models.order.title')}
       className="OrderInfo"
       bordered
       column={1}
     >
-      <DescItem label={t('order.fields.id.title')}>
+      <DescItem label={t('models.order.fields.id.title')}>
         {orderId}
       </DescItem>
-      <DescItem label={t('customer.fields.inn.title')}>
+      <DescItem label={t('models.customer.fields.inn.title')}>
         {customerCompany.inn}
       </DescItem>
-      <DescItem label={t('customer.fields.shortName.title')}>
+      <DescItem label={t('models.customer.fields.name.title')}>
         {customerCompany.shortName}
       </DescItem>
     </Descriptions>

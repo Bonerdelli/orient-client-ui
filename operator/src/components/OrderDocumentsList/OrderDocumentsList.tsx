@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Table, Space } from 'antd'
+import { Table, Space, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { isUndefined } from 'lodash'
 
-import { OrderDocument } from 'orient-ui-library/library/models/proxy'
-import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
+import { OrderDocument } from 'orient-ui-library/library/models/document'
+import Div from 'orient-ui-library/components/Div'
 
 import DocumentActions from 'components/DocumentActions'
 import { Document, DocumentStatus } from 'library/models'
@@ -13,14 +13,12 @@ import { downloadOrderDocument } from 'library/api/orderDocument'
 
 import './OrderDocumentsList.style.less'
 
-const { Text } = Typography
-
 export interface OrderDocumentsListProps {
   orderId: number
   types: number[]
   current?: OrderDocument[]
   setStatusHandler: (
-    documentId: number,
+    documentId: number | bigint,
     status: DocumentStatus,
   ) => Promise<boolean>
   onChange?: () => {}
@@ -55,7 +53,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       type: typeId,
       title: document.typeName, // NOTE: this is cyrillic doc name, eg. Устав компании
       id: document.info.documentId,
-      status: DocumentStatus.Uploaded,
+      status: document.info.documentStatus as DocumentStatus || DocumentStatus.Uploaded,
     }
   }
 
@@ -84,12 +82,13 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   const renderDocumentStatus = (status: DocumentStatus) => {
     switch (status) {
       case DocumentStatus.NotUploaded:
-        return <Text>{t('common.documents.statuses.notUploaded')}</Text>
+        return <Tag>{t('common.documents.statuses.notUploaded')}</Tag>
       case DocumentStatus.Uploaded:
-        return <Text>{t('common.documents.statuses.notChecked')}</Text>
+        return <Tag>{t('common.documents.statuses.notChecked')}</Tag>
       case DocumentStatus.Approved:
+        return <Tag color="green">{t('common.documents.statuses.approved')}</Tag>
       case DocumentStatus.NotApproved:
-        return <Text>{t('common.documents.statuses.checked')}</Text>
+      return <Tag color="red">{t('common.documents.statuses.notApproved')}</Tag>
       default:
         return <></>
     }

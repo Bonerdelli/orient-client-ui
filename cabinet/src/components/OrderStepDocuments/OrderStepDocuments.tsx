@@ -59,8 +59,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
   const [ documentTypes, setDocumentTypes ] = useState<number[]>([])
-  const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[]>([])
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
+  const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[] | null>(null)
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   useEffect(() => {
     let isAllDocumentsReady = true
     const currentDocuments = stepData?.documents ?? []
-    if (currentDocuments) {
+    if (stepData && currentDocuments) {
       isAllDocumentsReady = updateCurrentDocuments(currentDocuments)
     }
 
@@ -115,7 +115,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const loadCurrentStepData = async () => {
-    setDocumentsLoading(true)
+    if (documentTypes === null) {
+      // NOTE: do not show loader every time updates
+      setDocumentsLoading(true)
+    }
     const result = await getFrameWizardStep({
       type: wizardType,
       companyId: companyId as number,
@@ -261,12 +264,19 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Spin>
   )
 
-  const renderOprionalDocuments = () => (
+  const renderOptionalDocumentsSection = () => (
+    <Div className="OrderStepDocuments__section">
+      <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
+      {renderOptionalDocuments()}
+    </Div>
+  )
+
+  const renderOptionalDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         companyId={companyId as number}
         orderId={orderId as number}
-        types={documentTypesOptional}
+        types={documentTypesOptional || []}
         current={documentsOptional}
         onChange={loadCurrentStepData}
       />
@@ -282,10 +292,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
-      <Div className="OrderStepDocuments__section">
-        <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
-        {renderOprionalDocuments()}
-      </Div>
+      {documentTypesOptional !== null && renderOptionalDocumentsSection}
       <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
         {renderReadyStatuses()}

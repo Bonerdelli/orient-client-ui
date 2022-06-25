@@ -4,18 +4,17 @@ import { useTranslation } from 'react-i18next'
 import { Typography, Skeleton, Spin, Row, Col, Button, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
-import OrderDocumentsList from 'components/OrderDocumentsList'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { OrderDocument } from 'orient-ui-library/library/models/proxy'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
+import OrderDocumentsList from 'components/OrderDocumentsList'
 import { DocumentStatus } from 'library/models'
 
 import {
-  // WizardStep2Data,
   getFrameWizardStep,
-  sendFrameWizardStep2,
   frameWizardSetDocStatus,
+  sendFrameWizardStep2,
 } from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
@@ -46,16 +45,18 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
-  const [ documentTypes, setDocumentTypes ] = useState<number[]>([])
-  const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[]>([])
+  const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
+  const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[]>()
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
-  const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
+  const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[] | null>()
 
   useEffect(() => {
-    loadCurrentStepData()
-  }, [])
+    loadStepData()
+  }, [currentStep])
 
   useEffect(() => {
+    if (!stepData) return
+
     const currentDocuments = stepData?.documents ?? []
     const updatedDocuments: OrderDocument[] = []
     const updatedDocumentsOptional: OrderDocument[] = []
@@ -63,7 +64,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const updatedDocumentTypesOptional: number[] = []
 
     currentDocuments
-      .filter((doc: OrderDocument) => doc.isGenerated && doc.info)
+      .filter((doc: OrderDocument) => !(doc.isGenerated && !doc.info))
       .forEach((doc: OrderDocument) => {
         if (doc.isRequired) {
           updatedDocumentTypes.push(doc.typeId)
@@ -75,16 +76,19 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       })
 
     setDocuments(updatedDocuments)
-    setDocumentsOptional(updatedDocumentsOptional)
     setDocumentTypes(updatedDocumentTypes)
     setDocumentTypesOptional(updatedDocumentTypesOptional)
+    setDocumentsOptional(updatedDocumentsOptional.length ? updatedDocumentsOptional : null)
     setDocumentsLoading(false)
   }, [stepData])
 
-  const loadCurrentStepData = async () => {
-    setDocumentsLoading(true)
+  const loadStepData = async () => {
+    if (documentTypes === null) {
+      // NOTE: do not show loader every time updates
+      setDocumentsLoading(true)
+    }
     const result = await getFrameWizardStep({
-      step: currentStep,
+      step: sequenceStepNumber,
       orderId,
     })
     if (result.success) {
@@ -101,16 +105,16 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       return
     }
     setSubmitting(true)
-    // NOTE: disabled as statuses swithes
-    // const documentStatuses = [
-    //   ...documentsOptional,
-    //   ...documents,
-    // ]
-    //   .filter(document => document.info)
-    //   .map(document => ({
-    //     documentId: document.info?.documentId,
-    //     documentStatus: document.info?.documentStatus ?? DocumentStatus.NotApproved,
-    //   }))
+    // NOTE: disabled because statuses switches immediately
+    const documentStatuses = [
+      ...documentsOptional || [],
+      ...documents,
+    ]
+      .filter(document => document.info)
+      .map(document => ({
+        documentId: document.info?.documentId,
+        documentStatus: document.info?.documentStatus ?? DocumentStatus.NotApproved,
+      }))
     const result = await sendFrameWizardStep2({
       orderId,
     }, {
@@ -133,7 +137,11 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      sendNextStep()
+      if (currentStep === sequenceStepNumber) {
+        sendNextStep()
+      } else {
+        setCurrentStep(sequenceStepNumber + 1)
+      }
     }
   }
 
@@ -159,7 +167,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         disabled={!isNextStepAllowed || submitting}
         loading={submitting}
       >
-        {t('orderActions.saveAndContinue.title')}
+        {t('orderActions.next.title')}
       </Button>
     )
   }
@@ -186,21 +194,28 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
-        types={documentTypes}
+        types={documentTypes || []}
         current={documents}
-        onChange={loadCurrentStepData}
+        onChange={loadStepData}
         setStatusHandler={changeDocStatus}
       />
     </Spin>
   )
 
-  const renderOprionalDocuments = () => (
+  const renderOptionalDocumentsSection = () => (
+    <Div className="OrderStepDocuments__section">
+      <Title level={5}>{t('orderStepDocuments.sectionTitles.additionalDocs')}</Title>
+      {renderOptionalDocuments()}
+    </Div>
+  )
+
+  const renderOptionalDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
-        types={documentTypesOptional}
-        current={documentsOptional}
-        onChange={loadCurrentStepData}
+        types={documentTypesOptional as number[]}
+        current={documentsOptional as OrderDocument[]}
+        onChange={loadStepData}
         setStatusHandler={changeDocStatus}
       />
     </Spin>
@@ -215,10 +230,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
-      <Div className="OrderStepDocuments__section">
-        <Title level={5}>{t('orderStepDocuments.sectionTitles.additionalDocs')}</Title>
-        {renderOprionalDocuments()}
-      </Div>
+      {documentsOptional !== null && renderOptionalDocumentsSection()}
     </Div>
   )
 
@@ -237,7 +249,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {currentStep <= sequenceStepNumber && renderActions()}
+      {renderActions()}
     </Div>
   )
 }

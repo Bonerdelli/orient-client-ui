@@ -18,46 +18,46 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead }) => {
   }
   return (
     <Descriptions
-      title={t('common.models.client.title')}
+      title={t('models.client.title')}
       className="ClientInfo"
       bordered
       column={1}
     >
-      <DescItem label={t('common.models.company.fullName')}>
+      <DescItem label={t('models.company.fields.fullName.title')}>
         {company.fullName}
       </DescItem>
-      <DescItem label={t('common.models.company.inn')}>
+      <DescItem label={t('models.company.fields.inn.title')}>
         {company.inn}
       </DescItem>
-      <DescItem label={t('common.models.company.opf')}>
+      <DescItem label={t('models.company.fields.opf.title')}>
         {company.opf}
       </DescItem>
-      <DescItem label={t('common.models.company.isMs')}>
+      <DescItem label={t('models.company.fields.isMsp.titleShort')}>
         {company.isMsp
           ? t('dataEntity.terms.yes')
           : t('dataEntity.terms.no')}
       </DescItem>
-      <DescItem label={t('common.models.company.capita')}>
+      <DescItem label={t('models.company.fields.capital.title')}>
         {company.capital
           ? formatCurrency(company.capital)
           : '–'}
       </DescItem>
-      <DescItem label={t('common.models.company.oked')}>
+      <DescItem label={t('models.company.fields.oked.title')}>
         {company.oked}
       </DescItem>
-      <DescItem label={t('common.models.company.soogu')}>
+      <DescItem label={t('models.company.fields.soogu.title')}>
         {company.soogu}
       </DescItem>
-      <DescItem label={t('common.models.company.state')}>
+      <DescItem label={t('models.company.fields.state.title')}>
         {company.state}
       </DescItem>
-      <DescItem label={t('common.models.company.soato')}>
+      <DescItem label={t('models.company.fields.soato.title')}>
         {company.soato}
       </DescItem>
-      <DescItem label={t('common.models.company.address')}>
+      <DescItem label={t('models.company.fields.address.title')}>
         {company.address}
       </DescItem>
-      <DescItem label={t('common.models.company.chief')}>
+      <DescItem label={t('models.company.fields.chief.title')}>
         {companyHead.lastName}{' '}
         {companyHead.firstName}{' '}
         {companyHead.middleName}{' '}

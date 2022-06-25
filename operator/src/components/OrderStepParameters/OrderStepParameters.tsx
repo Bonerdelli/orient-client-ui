@@ -28,7 +28,6 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   const { t } = useTranslation()
 
   const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<FrameWizardStep1Response>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()

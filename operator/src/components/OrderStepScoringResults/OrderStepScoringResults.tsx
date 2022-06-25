@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, Space, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -167,6 +167,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
+      <Space size="middle" />
       {renderActions()}
     </Div>
   )

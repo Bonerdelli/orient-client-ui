@@ -4,6 +4,8 @@ import { Button, Upload, message } from 'antd'
 import type { UploadProps } from 'antd'
 import { UploadOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/icons'
 
+import Div from 'orient-ui-library/components/Div'
+
 import { Document, DocumentStatus } from 'library/models'
 import { useStoreState } from 'library/store'
 
@@ -68,7 +70,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       'common.documents.statusMessages.uploaded',
       { name: fileName },
     ))
-    setOperationInProccess(false)
+    // setOperationInProccess(false)
     onUploadSuccess && onUploadSuccess()
     onChange && onChange()
   }
@@ -145,11 +147,11 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   )
 
   return (
-    <>
+    <Div className="DocumentActions">
       {canUpload() && renderAddButton()}
       {canDownload() && renderDownloadButton()}
       {canDelete() && renderDeleteButton()}
-    </>
+    </Div>
   )
 }
 
