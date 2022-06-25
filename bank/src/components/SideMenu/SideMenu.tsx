@@ -18,7 +18,7 @@ const SideMenu = () => {
     <Menu
       mode="inline"
       selectedKeys={[location.pathname]}
-      defaultOpenKeys={['orders', 'reports']}
+      defaultOpenKeys={['orders']}
     >
       <SubMenu key="orders" title={t('sections.orders.title')} icon={<UnorderedListOutlined />}>
         <MenuItem key="/frame-orders">

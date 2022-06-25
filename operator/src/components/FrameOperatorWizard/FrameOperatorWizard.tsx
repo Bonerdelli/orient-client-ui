@@ -85,7 +85,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
       // case 4: // NOTE: disabled for Demo
       //   return <OrderStepOptionalParameters {...stepBaseProps} sequenceStepNumber={4}/>
       case 4:
-        return <OrderStepScoringResults {...stepBaseProps} sequenceStepNumber={5}/>
+        return <OrderStepScoringResults {...stepBaseProps} sequenceStepNumber={4}/>
       default:
         return <></>
     }
