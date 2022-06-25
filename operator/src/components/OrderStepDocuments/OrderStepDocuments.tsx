@@ -103,10 +103,12 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const documentStatuses = [
       ...documentsOptional,
       ...documents,
-    ].map(document => ({
-      documentId: document.info?.documentId,
-      status: document.info?.documentStatus,
-    }))
+    ]
+      .filter(document => document.info)
+      .map(document => ({
+        documentId: document.info?.documentId,
+        documentStatus: document.info?.documentStatus ?? DocumentStatus.NotApproved,
+      }))
     const result = await sendFrameWizardStep2({
       orderId,
     }, {
@@ -155,7 +157,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         disabled={!isNextStepAllowed || submitting}
         loading={submitting}
       >
-        {t('common.actions.next.title')}
+        {t('orderActions.saveAndContinue.title')}
       </Button>
     )
   }

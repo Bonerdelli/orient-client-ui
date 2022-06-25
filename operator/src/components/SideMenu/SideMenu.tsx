@@ -30,7 +30,7 @@ const SideMenu = () => {
         icon={<UnorderedListOutlined />}
       >
         <MenuItem key="/frame-orders">
-          <NavLink to="frame-orders">
+          <NavLink to="/frame-orders">
             <>{t('sections.frameOrders.title')}</>
           </NavLink>
         </MenuItem>

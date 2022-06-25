@@ -22,7 +22,7 @@ const SideMenu = () => {
     >
       <SubMenu key="orders" title={t('sections.orders.title')} icon={<UnorderedListOutlined />}>
         <MenuItem key="/frame-orders">
-          <NavLink to="frame-orders">
+          <NavLink to="/frame-orders">
             <>{t('sections.frameOrders.title')}</>
           </NavLink>
         </MenuItem>

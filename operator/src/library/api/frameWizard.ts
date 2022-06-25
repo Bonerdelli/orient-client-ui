@@ -96,6 +96,6 @@ export async function frameWizardSetDocStatus(
   params: FrameWizardCommonParameters,
   request: FrameWizardDocumentStatusRequest,
 ) {
-  const { orderId, step } = params
-  return await post(`/operator/wizard/frame/${orderId}/${step}`, request)
+  const { orderId } = params
+  return await post(`/operator/wizard/frame/${orderId}/docStatus`, request)
 }

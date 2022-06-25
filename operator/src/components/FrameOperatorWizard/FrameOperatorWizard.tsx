@@ -124,7 +124,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
           <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
           <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
           <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fourthStep.title')} />
+          <Step disabled={true} title={t('frameWizard.fourthStep.title')} />
           <Step disabled={!isFifthStepActive()} title={t('frameWizard.fifthStep.title')} />
         </Steps>
       </Card>
