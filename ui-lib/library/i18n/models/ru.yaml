@@ -112,7 +112,7 @@ companyFounder:
       title: Дата рождения
     birthplace:
       title: Место рождения
-    isMaleGender:                                                # TODO: почему?
+    isMaleGender: # TODO: почему?
       title: Пол
     passportValidDate:
       title: Дата окончания срока действия
@@ -120,6 +120,8 @@ companyFounder:
       title: Национальность
     address:
       title: Адрес регистрации
+    phone:
+      title: Телефон
 
 companyRequisites:
   title: Реквизиты компании
