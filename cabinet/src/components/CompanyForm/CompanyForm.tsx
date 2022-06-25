@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Grid, Row, Col, Spin, message } from 'antd'
+import { Card, Checkbox, Col, Form, Grid, message, Row, Spin } from 'antd'
 
 import { Company } from 'library/models/proxy' // TODO: to ui-lib
 import { setCompanyShortName } from 'library/api'
 import { twoColumnFormConfig } from 'library/helpers/form'
 
-import companyFormFields, { renderTextInputs } from './CompanyForm.form'
+import companyFormFields, { CompanyFormInputConfig, renderTextInput, renderTextInputs } from './CompanyForm.form'
 import './CompanyForm.style.less'
 
 const { useBreakpoint } = Grid
@@ -18,7 +18,9 @@ export interface CompanyFormProps {
 const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const { t } = useTranslation()
   const breakPoint = useBreakpoint()
+  const [ form ] = Form.useForm<Company>();
 
+  const [ isAddressesSame, setIsAddressesSame ] = useState<boolean>(form.getFieldValue('isAddressesSame'));
   const [ submitting, setSubmitting ] = useState<boolean>(false)
 
   const updateCompanyName = async (value: string) => {
@@ -39,14 +41,43 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
       className="CompanyForm__mainInfo"
       title={t('companyPage.formSections.main.title')}
     >
-      <Spin spinning={submitting}>
-        {renderTextInputs(companyFormFields.main)}
-      </Spin>
+      {renderTextInputs(companyFormFields.main)}
     </Card>
   )
+
+  const factFields = [ 'soatoFact', 'addressFact' ];
+  const getFieldConfigForFactField = (config: CompanyFormInputConfig): CompanyFormInputConfig => {
+    const cfg = [ ...config ] as CompanyFormInputConfig;
+    cfg[3] = !isAddressesSame;
+    return cfg;
+  }
+  const handleAddressesSameChange = () => {
+    const newSameAddressState = !isAddressesSame;
+
+    if (newSameAddressState) {
+      const soato = form.getFieldValue('soato');
+      const address = form.getFieldValue('address');
+      form.setFieldsValue({ addressFact: address, soatoFact: soato });
+    }
+
+    setIsAddressesSame(newSameAddressState);
+  }
+
   const renderContacts = () => (
     <Card title={t('companyPage.formSections.contacts.title')}>
-      {renderTextInputs(companyFormFields.contacts)}
+      {companyFormFields.contacts.map((fieldConfig: CompanyFormInputConfig, index: number) => (
+        <React.Fragment key={index}>
+          {factFields.includes(fieldConfig[1])
+            ? renderTextInput(...getFieldConfigForFactField(fieldConfig))
+            : renderTextInput(...fieldConfig)}
+        </React.Fragment>)
+      )}
+      <Form.Item name="isAddressesSame"
+                 valuePropName="checked">
+        <Checkbox onChange={handleAddressesSameChange}>
+          Фактический адрес совпадает с адресом регистрации
+        </Checkbox>
+      </Form.Item>
     </Card>
   )
   const renderRegAuthority = () => (
@@ -67,6 +98,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
 
   const renderContent = () => (
     <Form
+      form={form}
       initialValues={company}
       onFinish={handleFormSubmit}
       className="CompanyForm"
@@ -75,15 +107,23 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
     >
       <Row gutter={12}>
         <Col xs={24} xl={12} xxl={10} key="first">
-          {renderMainSection()}
+          <Row gutter={12}>
+            <Col span={24}>
+              {renderMainSection()}
+            </Col>
+            <Col span={24}>
+              {renderFounder()}
+            </Col>
+          </Row>
         </Col>
         <Col xs={24} xl={12} xxl={10} key="second">
-          <Row gutter={[12, 12]}>
+          <Row gutter={[ 12, 12 ]}>
             <Col span={24}>
               {renderContacts()}
             </Col>
-            <Col span={24}>{renderRegAuthority()}</Col>
-            <Col span={24}>{renderFounder()}</Col>
+            <Col span={24}>
+              {renderRegAuthority()}
+            </Col>
           </Row>
         </Col>
       </Row>
@@ -91,7 +131,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   )
 
   return (
-    <Spin spinning={false}>
+    <Spin spinning={submitting}>
       {renderContent()}
     </Spin>
   )

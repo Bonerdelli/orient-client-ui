@@ -1,6 +1,6 @@
 import { isUndefined } from 'lodash'
 
-import { Input, Select, DatePicker, Switch, Checkbox, Radio } from 'antd'
+import { Checkbox, Input, Radio, Select, Switch } from 'antd'
 import { Rule as ValidationRule } from 'antd/es/form'
 
 import { FormProps } from 'antd/es/form/'
@@ -44,19 +44,19 @@ export type FormInputShortConfig<T = unknown> = [
 const renderFormInputField = (type: FormInputType, isEditable: boolean) => {
   switch (type) {
     case FormInputType.TextArea: {
-      return <Input disabled={!isEditable} />
+      return <Input disabled={!isEditable}/>
     }
     case FormInputType.Select: {
-      return <Select disabled={!isEditable} />
+      return <Select disabled={!isEditable}/>
     }
     case FormInputType.CheckBox: {
-      return <Checkbox disabled={!isEditable} />
+      return <Checkbox disabled={!isEditable}/>
     }
     case FormInputType.Radio: {
-      return <Radio disabled={!isEditable} />
+      return <Radio disabled={!isEditable}/>
     }
     case FormInputType.Switcher: {
-      return <Switch disabled={!isEditable} />
+      return <Switch disabled={!isEditable}/>
     }
     case FormInputType.Date: {
       return <></> // <DatePicker disabled={!isEditable} />
@@ -65,19 +65,19 @@ const renderFormInputField = (type: FormInputType, isEditable: boolean) => {
       return <></> // <DatePicker disabled={!isEditable} />
     }
     case FormInputType.Numeric: {
-      return <Input disabled={!isEditable} />
+      return <Input disabled={!isEditable}/>
     }
     case FormInputType.Integer: {
-      return <Input disabled={!isEditable} type="number" />
+      return <Input disabled={!isEditable} type="number"/>
     }
     case FormInputType.Percent: {
-      return <Input disabled={!isEditable} suffix='%' />
+      return <Input disabled={!isEditable} suffix='%'/>
     }
     case FormInputType.AccountNumber: {
-      return <Input disabled={!isEditable} maxLength={ACCOUNT_NUMBER_LENGTH} />
+      return <Input disabled={!isEditable} maxLength={ACCOUNT_NUMBER_LENGTH}/>
     }
     case FormInputType.INN: {
-      return <Input disabled={!isEditable} maxLength={INN_NUMBER_LENGTH} />
+      return <Input disabled={!isEditable} maxLength={INN_NUMBER_LENGTH}/>
     }
     default: {
       throw new Error('Unknown form item type')
@@ -88,7 +88,7 @@ const renderFormInputField = (type: FormInputType, isEditable: boolean) => {
 /**
  * Render Form Inputs
  */
-export function renderFormInputs<T = unknown> (
+export function renderFormInputs<T = unknown>(
   inputsConfig: FormInputShortConfig<T>[],
 ) {
   return inputsConfig.map(inputConfig => renderFormInput<T>(inputConfig))
@@ -97,7 +97,7 @@ export function renderFormInputs<T = unknown> (
 /**
  * Render Form Input
  */
-export function renderFormInput<T = unknown> (
+export function renderFormInput<T = unknown>(
   inputConfig: FormInputShortConfig<T>,
 ) {
   const [ model, name, type, isRequired, disabled ] = inputConfig
@@ -119,7 +119,7 @@ export function renderFormInput<T = unknown> (
   }
 
   if (type === FormInputType.Percent ||
-      type === FormInputType.Numeric) {
+    type === FormInputType.Numeric) {
     // NOTE: doesn't work because of
     //   https://stackoverflow.com/questions/65292936/why-number-validate-rule-doesnt-work-in-antd
     // TODO: fixme or use NumericInput
@@ -129,7 +129,7 @@ export function renderFormInput<T = unknown> (
   }
 
   if (type === FormInputType.AccountNumber ||
-      type === FormInputType.Integer) {
+    type === FormInputType.Integer) {
     // NOTE: doesn't work because of
     //   https://stackoverflow.com/questions/65292936/why-number-validate-rule-doesnt-work-in-antd
     // TODO: fixme or use NumericInput
@@ -173,7 +173,7 @@ export const baseFormConfig = (bp: ScreenMap): FormProps => ({
     lg: { span: 14 },
   },
   labelAlign: bp.xs || bp.sm ? 'left' : 'right',
-  requiredMark: false,
+  // requiredMark: false,
   colon: false,
   labelWrap: true,
 })
@@ -187,6 +187,5 @@ export const twoColumnFormConfig = (bp: ScreenMap): FormProps => ({
     xs: { span: 24 },
     lg: { span: 10 },
   },
-  wrapperCol: {
-  },
+  wrapperCol: {},
 })
