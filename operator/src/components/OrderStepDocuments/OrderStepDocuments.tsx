@@ -63,6 +63,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const updatedDocumentTypesOptional: number[] = []
 
     currentDocuments
+      .filter((doc: OrderDocument) => doc.isGenerated && doc.info)
       .forEach((doc: OrderDocument) => {
         if (doc.isRequired) {
           updatedDocumentTypes.push(doc.typeId)
@@ -100,15 +101,16 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       return
     }
     setSubmitting(true)
-    const documentStatuses = [
-      ...documentsOptional,
-      ...documents,
-    ]
-      .filter(document => document.info)
-      .map(document => ({
-        documentId: document.info?.documentId,
-        documentStatus: document.info?.documentStatus ?? DocumentStatus.NotApproved,
-      }))
+    // NOTE: disabled as statuses swithes
+    // const documentStatuses = [
+    //   ...documentsOptional,
+    //   ...documents,
+    // ]
+    //   .filter(document => document.info)
+    //   .map(document => ({
+    //     documentId: document.info?.documentId,
+    //     documentStatus: document.info?.documentStatus ?? DocumentStatus.NotApproved,
+    //   }))
     const result = await sendFrameWizardStep2({
       orderId,
     }, {

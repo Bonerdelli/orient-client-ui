@@ -24,6 +24,12 @@ forms:
         required: Password is required
       placeholder: Please type password
 
+dataEntity:
+  terms:
+    unknown: Unknown
+    yes: Yes
+    no: No
+
 actions:
   add:
     title: Add
@@ -39,6 +45,8 @@ actions:
     title: Reload
   save:
     title: Save
+  saveAndContinue:
+    title: Save and Continue
   apply:
     title: Apply
   cancel:

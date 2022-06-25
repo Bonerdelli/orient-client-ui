@@ -9,7 +9,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepStopFactors from 'components/OrderStepStopFactors'
-import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
+// import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
 
 import { getFrameOrderWizard } from 'library/api/frameOrder'
@@ -37,7 +37,6 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
-  const [ currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
 
@@ -51,7 +50,6 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
       orderId: Number(itemId) || orderId as number,
     })
     if (result.success) {
-      setCurrentStepData((result.data as any).data)
       const step = Number((result.data as any).step)
       setCurrentStep(step)
       setSelectedStep(step)
@@ -65,7 +63,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const isFirstStepActive = (): boolean => true
   const isSecondStepActive = (): boolean => true
   const isThirdStepActive = (): boolean => true
-  const isFourthStepActive = (): boolean => true
+  // const isFourthStepActive = (): boolean => true // NOTE: disabled for Demo
   const isFifthStepActive = (): boolean => true
 
   const renderCurrentStep = () => {
@@ -84,9 +82,9 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
         return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
         return <OrderStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
+      // case 4: // NOTE: disabled for Demo
+      //   return <OrderStepOptionalParameters {...stepBaseProps} sequenceStepNumber={4}/>
       case 4:
-        return <OrderStepOptionalParameters {...stepBaseProps} sequenceStepNumber={4}/>
-      case 5:
         return <OrderStepScoringResults {...stepBaseProps} sequenceStepNumber={5}/>
       default:
         return <></>

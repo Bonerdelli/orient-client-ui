@@ -14,7 +14,9 @@ customer:
   title: Customer
   fields:
     inn:
-      title: INN
+      title: Customer INN
+    name:
+      title: Customer Name
     shortName:
       title: Legal Entity Name
     chief:
@@ -23,6 +25,9 @@ customer:
       title: SOATO Code
     address:
       title: Address
+
+client:
+  title: Client
 
 company:
   title: Company
@@ -62,6 +67,8 @@ company:
       title: SOATO Code
     state:
       title: State
+    chief:
+      title: Head of Company
 
 companyContact:
   title: Company Contact

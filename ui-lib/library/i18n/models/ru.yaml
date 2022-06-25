@@ -14,7 +14,9 @@ customer:
   title: Заказчик
   fields:
     inn:
-      title: Инн
+      title: Инн Заказчика
+    name:
+      title: Наименование Заказчика
     shortName:
       title: Наименование юр. лица
     chief:
@@ -23,6 +25,9 @@ customer:
       title: СОАТО
     address:
       title: Адрес
+
+client:
+  title: Клиент
 
 company:
   title: Компания
@@ -61,7 +66,9 @@ company:
     soato:
       title: Код СОАТО
     state:
-      title: Состояние                                          # TODO: Что это?
+      title: Состояние активности
+    chief:
+      title: Руководитель
 
 companyContact:
   title: Контакт компании

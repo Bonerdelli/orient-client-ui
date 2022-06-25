@@ -1,7 +1,11 @@
+/**
+ * NOTE: not used in Demo
+ */
+
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Row, Col, Table, Button, Skeleton, message } from 'antd'
-import { CheckOutlined, CloseOutlined, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
+import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'

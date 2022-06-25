@@ -24,6 +24,12 @@ forms:
         required: Пароль обязателен для заполнения
       placeholder: Введите пароль
 
+dataEntity:
+  terms:
+    unknown: Неизвестно
+    yes: Да
+    no: Нет
+
 actions:
   add:
     title: Добавить
@@ -39,6 +45,8 @@ actions:
     title: Перезагрузить
   save:
     title: Сохранить
+  saveAndContinue:
+    title: Сохранить и продолжить
   apply:
     title: Применить
   cancel:

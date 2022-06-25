@@ -1,6 +1,8 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
 import * as schema from 'orient-ui-library/library/api/schema'
 
+import { Company, CompanyHead } from 'orient-ui-library/library/models/proxy'
+
 // export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
 export type FrameWizardRejectOrderRequest = schema.components['schemas']['RejectOrderDto']
 export type FrameWizardDocumentStatusRequest = schema.components['schemas']['OrderDocumentStatusRequest']
@@ -12,6 +14,13 @@ export interface FrameWizardCommonParameters {
 
 export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
   orderId: number
+}
+
+// TODO: ask be to generate typings for this
+export interface FrameWizardStep1Response {
+  clientCompany: Company
+  customerCompany: Company
+  clientCompanyFounder: CompanyHead
 }
 
 /**

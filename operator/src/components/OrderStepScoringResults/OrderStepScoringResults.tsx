@@ -90,6 +90,12 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     }
   }
 
+  const handleStepSubmit = () => {
+    if (isNextStepAllowed) {
+      sendNextStep()
+    }
+  }
+
   const handleNextStep = () => {
     if (isNextStepAllowed) {
       sendNextStep()
@@ -99,8 +105,22 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const renderActions = () => (
     <Row className="FrameWizard__step__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{renderNextButton()}</Col>
+      <Col>{currentStep > sequenceStepNumber
+        ? renderNextButton()
+        : renderSubmitButton()}</Col>
     </Row>
+  )
+
+  const renderSubmitButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      onClick={handleStepSubmit}
+      disabled={!isNextStepAllowed || submitting}
+      loading={submitting}
+    >
+      {t('common.actions.saveAndContinue.title')}
+    </Button>
   )
 
   const renderNextButton = () => (
@@ -109,7 +129,6 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       type="primary"
       onClick={handleNextStep}
       disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
     >
       {t('orderActions.saveAndContinue.title')}
     </Button>
@@ -139,12 +158,11 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     )
   }
 
-  // NOTE: disabled for debugging
-  // if (dataLoaded === false) {
-  //   return (
-  //     <ErrorResultView centered status="warning" />
-  //   )
-  // }
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="warning" />
+    )
+  }
 
   return (
     <Div className="FrameWizard__step__content">
