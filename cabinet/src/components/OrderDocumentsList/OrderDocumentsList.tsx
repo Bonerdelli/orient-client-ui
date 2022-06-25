@@ -117,7 +117,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     </Space>
   )
 
-  const columns: ColumnsType<unknown> = [
+  const columns: ColumnsType<Document> = [
     {
       key: 'type',
       dataIndex: 'type',
@@ -150,6 +150,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
         dataSource={items}
         pagination={false}
         showHeader={false}
+        rowKey="type"
       />
     </Div>
   )

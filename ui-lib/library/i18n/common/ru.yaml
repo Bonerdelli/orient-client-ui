@@ -73,6 +73,8 @@ documents:
     uploadingError: Ошибка загрузки
     signed: Подписан
     unsigned: Не подписан
+    checked: Проверен
+    notChecked: Не проверен
   statusMessages:
     uploaded: Файл «{{name}}» успешно загружен
     uploadingError: Ошибка загрузки файла «{{name}}»

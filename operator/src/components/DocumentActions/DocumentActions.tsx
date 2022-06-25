@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, message } from 'antd'
-import { DownloadOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons'
+import { DownloadOutlined, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 
-import { Document } from 'library/models'
+import { Document, DocumentStatus } from 'library/models'
 
 import './DocumentActions.style.less'
 
 export interface DocumentActionsProps {
   document: Document
-  uploadUrl: string
   downloadHandler: (doc: Document) => Promise<boolean>
   approveHandler: (doc: Document) => Promise<boolean>
   rejectHandler: (doc: Document) => Promise<boolean>
@@ -84,7 +83,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       title={t('common.actions.approve.title')}
       onClick={handleApprove}
       disabled={loading === true}
-      icon={<CheckCircleOutlined />}
+      icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
     />
   )
 
@@ -98,15 +97,15 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       title={t('common.actions.reject.title')}
       onClick={handleReject}
       disabled={loading === true}
-      icon={<CloseCircleOutlined />}
+      icon={<CloseCircleTwoTone twoToneColor="#e83030" />}
     />
   )
 
   return (
     <>
-      {renderDownloadButton()}
-      {renderApproveButton()}
-      {renderRejectButton()}
+      {document.status !== DocumentStatus.NotUploaded && renderDownloadButton()}
+      {document.status !== DocumentStatus.NotUploaded && renderApproveButton()}
+      {document.status !== DocumentStatus.NotUploaded && renderRejectButton()}
     </>
   )
 }

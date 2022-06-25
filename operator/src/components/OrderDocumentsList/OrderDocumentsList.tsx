@@ -1,10 +1,9 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Table, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { isUndefined } from 'lodash'
 
-import { getEndpointUrl } from 'orient-ui-library/library'
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
 
@@ -48,12 +47,13 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     if (!document?.info) {
       return {
         type: typeId,
+        title: document?.typeName, // NOTE: this is cyrillic doc name, eg. Устав компании
         status: DocumentStatus.NotUploaded,
       }
     }
     return {
       type: typeId,
-      name: document.typeName, // NOTE: this is cyrillic doc name, eg. Устав компании
+      title: document.typeName, // NOTE: this is cyrillic doc name, eg. Устав компании
       id: document.info.documentId,
       status: DocumentStatus.Uploaded,
     }
@@ -76,23 +76,22 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     const result = await downloadOrderDocument({
       orderId,
       documentId,
-      fileName: item.name,
+      fileName: item.title,
     })
     return result
   }
 
   const renderDocumentStatus = (status: DocumentStatus) => {
     switch (status) {
-      case DocumentStatus.Uploaded:
-        return <Text>{t('common.documents.statuses.uploaded')}</Text>
       case DocumentStatus.NotUploaded:
         return <Text>{t('common.documents.statuses.notUploaded')}</Text>
-      case DocumentStatus.UploadingError:
-        return <Text>{t('common.documents.statuses.uploadingError')}</Text>
-      case DocumentStatus.Signed:
-        return <Text>{t('common.documents.statuses.signed')}</Text>
-      case DocumentStatus.Unsigned:
-        return <Text>{t('common.documents.statuses.unsigned')}</Text>
+      case DocumentStatus.Uploaded:
+        return <Text>{t('common.documents.statuses.notChecked')}</Text>
+      case DocumentStatus.Approved:
+      case DocumentStatus.NotApproved:
+        return <Text>{t('common.documents.statuses.checked')}</Text>
+      default:
+        return <></>
     }
   }
 
@@ -101,7 +100,6 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     <Space className="DataTable__actions DataTable__ghostActions--">
       <DocumentActions
         document={item}
-        uploadUrl={getUploadUrl(item.type)}
         approveHandler={handleItemApprove}
         rejectHandler={handleItemReject}
         downloadHandler={handleItemDownload}
@@ -110,13 +108,12 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     </Space>
   )
 
-  const columns: ColumnsType<unknown> = [
+  const columns: ColumnsType<Document> = [
     {
-      key: 'type',
-      dataIndex: 'type',
+      key: 'title',
+      dataIndex: 'title',
       width: 'auto',
       title: t('common.documents.fields.type.title'),
-      render: (value) => DOCUMENT_TYPE[value],
     },
     {
       key: 'status',
@@ -143,6 +140,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
         dataSource={items}
         pagination={false}
         showHeader={false}
+        rowKey="type"
       />
     </Div>
   )

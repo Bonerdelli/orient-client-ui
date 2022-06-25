@@ -7,7 +7,7 @@ import Div from 'orient-ui-library/components/Div'
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
-import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import { DocumentStatus } from 'library/models'
 
@@ -16,15 +16,13 @@ import {
   getFrameWizardStep,
   sendFrameWizardStep2,
   frameWizardSetDocStatus,
-} from 'library/api'
+} from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
 
 const { Title } = Typography
 
 export interface OrderDocumentsProps {
-  wizardType?: FrameWizardType
-  companyId?: number
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
@@ -32,8 +30,6 @@ export interface OrderDocumentsProps {
 }
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
-  wizardType = FrameWizardType.Full,
-  companyId,
   orderId,
   currentStep,
   sequenceStepNumber,
@@ -87,8 +83,6 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const loadCurrentStepData = async () => {
     setDocumentsLoading(true)
     const result = await getFrameWizardStep({
-      type: wizardType,
-      companyId: companyId as number,
       step: currentStep,
       orderId,
     })
@@ -102,7 +96,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const sendNextStep = async () => {
-    if (!orderId || !companyId) {
+    if (!orderId) {
       return
     }
     setSubmitting(true)
@@ -114,8 +108,6 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       status: document.info?.documentStatus,
     }))
     const result = await sendFrameWizardStep2({
-      type: wizardType,
-      companyId,
       orderId,
     }, {
       documentStatuses,
@@ -163,7 +155,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         disabled={!isNextStepAllowed || submitting}
         loading={submitting}
       >
-        {t('orders.actions.next.title')}
+        {t('common.actions.next.title')}
       </Button>
     )
   }
@@ -213,14 +205,14 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const renderStepContent = () => (
     <Div className="OrderStepDocuments">
       <Div className="OrderStepDocuments__title">
-        <Title level={4}>{t('frameSteps.documents.title')}</Title>
+        <Title level={4}>{t('orderStepDocuments.title')}</Title>
       </Div>
       <Div className="OrderStepDocuments__section">
-        <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
+        <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
       <Div className="OrderStepDocuments__section">
-        <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
+        <Title level={5}>{t('orderStepDocuments.sectionTitles.additionalDocs')}</Title>
         {renderOprionalDocuments()}
       </Div>
     </Div>

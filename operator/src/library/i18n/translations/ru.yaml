@@ -56,7 +56,7 @@ orderStepParameters:
   title: Параметры заявки и клиента
 
 orderStepDocuments:
-  title: Документы / БО
+  title: Список документов, приложенных к заявке
   sectionTitles:
     mainDocs: Обязательные документы
     additionalDocs: Дополнительные документы

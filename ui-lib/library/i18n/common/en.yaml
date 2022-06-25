@@ -73,6 +73,8 @@ documents:
     uploadingError: Uploading Error
     signed: Signed
     unsigned: Unsigned
+    checked: Checked
+    notChecked: Not Checked
   statusMessages:
     uploaded: File "{{name}}" uploaded successfully
     uploadingError: Error loading file "{{name}}"

@@ -5,13 +5,7 @@ import {
   get,
 } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 
-export interface OrderDocumentListParams {
-  companyId: number | bigint
-  orderId: number | bigint
-}
-
 export interface OrderDocumentItemParams {
-  companyId: number | bigint
   orderId: number | bigint
   documentId: bigint | number
   fileName?: string
