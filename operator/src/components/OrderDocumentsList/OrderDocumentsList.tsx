@@ -94,7 +94,6 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     }
   }
 
-
   const renderActions = (_val: unknown, item: Document) => (
     <Space className="DataTable__actions DataTable__ghostActions--">
       <DocumentActions

@@ -44,7 +44,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
     const result = await approveHandler(document)
     if (!result) {
       message.error(
-        t('common.documents.statusMessages.deletingError')
+        t('common.errors.requestError.title')
       )
     } else {
       onChange && onChange()
@@ -57,7 +57,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
     const result = await rejectHandler(document)
     if (!result) {
       message.error(
-        t('common.documents.statusMessages.deletingError')
+        t('common.errors.requestError.title')
       )
     } else {
       onChange && onChange()

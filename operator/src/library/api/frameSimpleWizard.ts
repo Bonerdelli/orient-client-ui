@@ -67,7 +67,7 @@ export async function frameSimpleWizardReject(
 }
 
 /**
- * Set document status (reject or approeve)
+ * Set document status (reject or approve)
  */
 export async function frameSimpleWizardSetDocStatus(
   params: FrameSimpleWizardCommonParameters,

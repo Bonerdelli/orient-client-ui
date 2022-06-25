@@ -6,6 +6,7 @@ import { Company, CompanyHead } from 'orient-ui-library/library/models/proxy'
 // export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
 export type FrameWizardRejectOrderRequest = schema.components['schemas']['RejectOrderDto']
 export type FrameWizardDocumentStatusRequest = schema.components['schemas']['OrderDocumentStatusRequest']
+export type FrameWizardStopFactorRequest = schema.components['schemas']['OrderStopFactorRequest']
 
 export interface FrameWizardCommonParameters {
   orderId?: number
@@ -99,7 +100,7 @@ export async function frameWizardReject(
 }
 
 /**
- * Set document status (reject or approeve)
+ * Set document status (reject or approve)
  */
 export async function frameWizardSetDocStatus(
   params: FrameWizardCommonParameters,
@@ -107,4 +108,15 @@ export async function frameWizardSetDocStatus(
 ) {
   const { orderId } = params
   return await post(`/operator/wizard/frame/${orderId}/docStatus`, request)
+}
+
+/**
+ * Set stop factor status (reject or approve)
+ */
+export async function frameWizardSetStopFactor(
+  params: FrameWizardCommonParameters,
+  request: FrameWizardStopFactorRequest,
+) {
+  const { orderId } = params
+  return await post(`/operator/wizard/frame/${orderId}/stopFactor`, request)
 }

@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Table, Button, Skeleton, message } from 'antd'
-import { CheckOutlined, CloseOutlined, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
+import { Typography, Row, Col, Table, Button, Skeleton, Tag, message } from 'antd'
+import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { formatDate } from 'orient-ui-library/library/helpers/date'
 
 import { StopFactor } from 'library/models/stopFactor'
 
 import {
   getFrameWizardStep,
-  sendFrameWizardStep3, // NOTE: replace ep with correct one!
+  sendFrameWizardStep3,
+  frameWizardSetStopFactor,
 } from 'library/api/frameWizard'
 
 import './OrderStepStopFactors.style.less'
@@ -33,6 +35,8 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
   sequenceStepNumber,
 }) => {
   const { t } = useTranslation()
+  const [ approveInProccess, setApproveInProccess ] = useState<Record<StopFactor['stopFactorId'], boolean>>({})
+  const [ rejectInProccess, setRejectInProccess ] = useState<Record<StopFactor['stopFactorId'], boolean>>({})
 
   const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
@@ -75,24 +79,23 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setIsNextStepAllowed(true) // NOTE: only for debugging
+    setIsNextStepAllowed(true)
   }
 
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const request = stopFactors?.map(datum => ({
-      stopFactorId: datum.stopFactorId,
-      isOk: true, // NOTE: always true for demo
-    }))
     const result = await sendFrameWizardStep3({
       orderId,
-    }, request)
+    }, {
+      // NOTE: shouldn't be sent cause statuses switches immediately
+      stopFactors,
+    })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setIsNextStepAllowed(false)
     } else {
-      setCurrentStep(sequenceStepNumber + 2)
+      setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
   }
@@ -107,6 +110,56 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
     if (isNextStepAllowed) {
       sendNextStep()
     }
+  }
+
+  const handleApprove = async (item: StopFactor) => {
+    const { stopFactorId } = item
+    setApproveInProccess({
+      ...approveInProccess,
+      [stopFactorId]: true,
+    })
+    const result = await frameWizardSetStopFactor({
+      orderId,
+    }, {
+      stopFactorId,
+      isOk: true
+    })
+    if (!result) {
+      message.error(
+        t('common.errors.requestError.title')
+      )
+    } else {
+      loadCurrentStepData()
+    }
+    setApproveInProccess({
+      ...approveInProccess,
+      [stopFactorId]: false,
+    })
+  }
+
+  const handleReject = async (item: StopFactor) => {
+    const { stopFactorId } = item
+    setRejectInProccess({
+      ...rejectInProccess,
+      [stopFactorId]: true,
+    })
+    const result = await frameWizardSetStopFactor({
+      orderId,
+    }, {
+      stopFactorId,
+      isOk: false
+    })
+    if (!result) {
+      message.error(
+        t('common.errors.requestError.title')
+      )
+    } else {
+      loadCurrentStepData()
+    }
+    setRejectInProccess({
+      ...rejectInProccess,
+      [stopFactorId]: false,
+    })
   }
 
   const renderActions = () => (
@@ -140,33 +193,38 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
     </Button>
   )
 
+  const renderStatus = (status: boolean | null) => {
+    if (status === null) {
+      return <Tag>{t('common.documents.statuses.notChecked')}</Tag>
+    }
+    if (status) {
+      return <Tag color="green">{t('common.documents.statuses.approved')}</Tag>
+    }
+    return <Tag color="red">{t('common.documents.statuses.notApproved')}</Tag>
+  }
+
   const stopFactorColumns: ColumnsType<StopFactor> = [
     {
       key: 'stopFactorName',
       dataIndex: 'stopFactorName',
-      title: '',
       width: 'auto',
     },
     {
       key: 'updatedDate',
       dataIndex: 'updatedDate',
-      title: '',
-      render: () => '', // NOTE: have no update time
+      render: (val) => val ? formatDate(val) : '',
       align: 'center',
     },
     {
       key: 'isOk',
       dataIndex: 'isOk',
-      title: '',
-      // TODO: move colors to constants
-      // render: (value) => value ? <CheckOutlined color="#52c41a" /> : <CloseOutlined color="#e83030" />,
-      render: () => 'Неизвестно',
+      render: renderStatus,
       align: 'center',
     },
     {
       key: 'actions',
       width: 120,
-      render: () => renderStopFactorActions(),
+      render: (item) => renderStopFactorActions(item),
       align: 'right',
     },
   ]
@@ -183,32 +241,38 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
     />
   )
 
-  const renderStopFactorApproveButton = () => (
+  const renderStopFactorApproveButton = (item: StopFactor) => (
     <Button
       key="approve"
       type="link"
       shape="circle"
       title={t('common.actions.approve.title')}
+      onClick={() => handleApprove(item)}
+      loading={approveInProccess[item.stopFactorId]}
+      disabled={stepDataLoading || rejectInProccess[item.stopFactorId]}
       icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
     />
   )
 
-  const renderStopFactorRejectButton = () => (
+  const renderStopFactorRejectButton = (item: StopFactor) => (
     <Button
       danger
       key="reject"
       type="link"
       shape="circle"
       title={t('common.actions.reject.title')}
+      onClick={() => handleReject(item)}
+      loading={rejectInProccess[item.stopFactorId]}
+      disabled={stepDataLoading || approveInProccess[item.stopFactorId]}
       icon={<CloseCircleTwoTone twoToneColor="#e83030" />}
     />
   )
 
-  const renderStopFactorActions = () => (
-    <>
-      {renderStopFactorApproveButton()}
-      {renderStopFactorRejectButton()}
-    </>
+  const renderStopFactorActions = (item: StopFactor) => (
+    <Div className="OrderStepStopFactors__actions">
+      {renderStopFactorApproveButton(item)}
+      {renderStopFactorRejectButton(item)}
+    </Div>
   )
 
   const renderStepContent = () => (

@@ -105,7 +105,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       return
     }
     setSubmitting(true)
-    // NOTE: disabled because statuses switches immediately
+    // NOTE: shouldn't be sent cause statuses switches immediately
     const documentStatuses = [
       ...documentsOptional || [],
       ...documents,
