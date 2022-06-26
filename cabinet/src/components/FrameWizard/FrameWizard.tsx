@@ -6,6 +6,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStepSelectInn from 'components/OrderStepSelectInn'
 import OrderStepDocuments from 'components/OrderStepDocuments'
@@ -73,7 +74,12 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
-      const step = Number((result.data as any).step)
+      let step = Number((result.data as any).step)
+      if (step === 2 &&
+          (result.data as any).orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY
+      ) {
+        step = 3
+      }
       setCurrentStep(step)
       setSelectedStep(step)
       setDataLoaded(true)

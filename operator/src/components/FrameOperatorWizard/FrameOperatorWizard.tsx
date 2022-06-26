@@ -45,6 +45,12 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     loadCurrentStepData()
   }, [])
 
+  useEffect(() => {
+    if (selectedStep !== currentStep) {
+      setSelectedStep(currentStep)
+    }
+  }, [currentStep])
+
   const loadCurrentStepData = async () => {
     const result = await getFrameOrderWizard({
       orderId: Number(itemId) || orderId as number,
@@ -61,10 +67,10 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   }
 
   const isFirstStepActive = (): boolean => true
-  const isSecondStepActive = (): boolean => true
-  const isThirdStepActive = (): boolean => true
-  // const isFourthStepActive = (): boolean => true // NOTE: disabled for Demo
-  const isFifthStepActive = (): boolean => true
+  const isSecondStepActive = (): boolean => currentStep > 1
+  const isThirdStepActive = (): boolean => currentStep > 2
+  // const isFourthStepActive = (): boolean => currentStep > 1 // NOTE: disabled for Demo
+  const isFifthStepActive = (): boolean => currentStep > 3
 
   const renderCurrentStep = () => {
     if (stepDataLoading) {
@@ -73,7 +79,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
       currentStep: currentStep,
-      setCurrentStep: setSelectedStep,
+      setCurrentStep: setCurrentStep,
     }
     switch (selectedStep) {
       case 1:

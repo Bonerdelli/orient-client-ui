@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, Space, message } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -35,8 +35,8 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
 }) => {
   const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
+  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -50,7 +50,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
       // NOTE: only for debugging
-      setIsNextStepAllowed(true)
+      setNextStepAllowed(true)
     }
   }, [currentStep, sequenceStepNumber])
 
@@ -66,7 +66,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setIsNextStepAllowed(true) // NOTE: only for debugging
+    setNextStepAllowed(true) // NOTE: only for debugging
   }
 
   const sendNextStep = async () => {
@@ -77,7 +77,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     }, {})
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
-      setIsNextStepAllowed(false)
+      setNextStepAllowed(false)
     } else {
       setCurrentStep(sequenceStepNumber + 1)
     }
@@ -148,7 +148,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
 
   const renderStepContent = () => (
     <Div className="OrderStepScoringResults">
-      <Title level={5}>{t('orderStepScoringResults.title')}</Title>
+      <Title level={5}>{t('orderStepScoringResult.title')}</Title>
     </Div>
   )
 
@@ -167,7 +167,6 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      <Space size="middle" />
       {renderActions()}
     </Div>
   )

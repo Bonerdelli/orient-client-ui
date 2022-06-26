@@ -27,7 +27,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
 }) => {
   const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
 
   const [ stepData, setStepData ] = useState<FrameWizardStep1Response>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -50,7 +50,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setIsNextStepAllowed(true) // NOTE: only for debugging
+    setNextStepAllowed(true) // NOTE: only for debugging
   }
 
   const sendNextStep = async () => {
@@ -61,7 +61,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     }, {})
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
-      setIsNextStepAllowed(false)
+      setNextStepAllowed(false)
     } else {
       setCurrentStep(sequenceStepNumber + 1)
     }

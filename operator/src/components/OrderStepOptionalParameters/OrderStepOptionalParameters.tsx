@@ -38,8 +38,8 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
 }) => {
   const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
+  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -55,7 +55,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
       // NOTE: only for debugging
-      setIsNextStepAllowed(true)
+      setNextStepAllowed(true)
     }
   }, [currentStep, sequenceStepNumber])
 
@@ -79,7 +79,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setIsNextStepAllowed(true) // NOTE: only for debugging
+    setNextStepAllowed(true) // NOTE: only for debugging
   }
 
   const sendNextStep = async () => {
@@ -90,7 +90,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
     }, {})
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
-      setIsNextStepAllowed(false)
+      setNextStepAllowed(false)
     } else {
       setCurrentStep(sequenceStepNumber + 1)
     }

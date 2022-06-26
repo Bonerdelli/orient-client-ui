@@ -36,8 +36,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 }) => {
   const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(true)
-  const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(true)
+  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate models
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -122,7 +122,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
-      setIsNextStepAllowed(false)
+      setNextStepAllowed(false)
     } else {
       setCurrentStep(sequenceStepNumber + 1)
     }

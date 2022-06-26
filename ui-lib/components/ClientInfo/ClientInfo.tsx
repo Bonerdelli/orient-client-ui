@@ -34,8 +34,8 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead }) => {
       </DescItem>
       <DescItem label={t('models.company.fields.isMsp.titleShort')}>
         {company.isMsp
-          ? t('dataEntity.terms.yes')
-          : t('dataEntity.terms.no')}
+          ? t('common.dataEntity.terms.yes')
+          : t('common.dataEntity.terms.no')}
       </DescItem>
       <DescItem label={t('models.company.fields.capital.title')}>
         {company.capital

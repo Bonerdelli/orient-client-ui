@@ -48,8 +48,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 }) => {
   const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
+  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<WizardStep2Data>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -81,7 +81,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     }
 
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
-    setIsNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
+    setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
     setСompanyDataStatus(updatedCompanyStatus)
 
   }, [stepData])
@@ -122,7 +122,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const result = await getFrameWizardStep({
       type: wizardType,
       companyId: companyId as number,
-      step: currentStep,
+      step: sequenceStepNumber,
       orderId,
     })
     if (result.success) {
@@ -155,7 +155,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
-      setIsNextStepAllowed(false)
+      setNextStepAllowed(false)
     } else {
       setCurrentStep(sequenceStepNumber + 1)
     }

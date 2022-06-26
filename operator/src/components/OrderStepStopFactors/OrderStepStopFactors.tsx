@@ -38,8 +38,8 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
   const [ approveInProccess, setApproveInProccess ] = useState<Record<StopFactor['stopFactorId'], boolean>>({})
   const [ rejectInProccess, setRejectInProccess ] = useState<Record<StopFactor['stopFactorId'], boolean>>({})
 
-  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
+  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -53,19 +53,23 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
   }, [])
 
   useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      // NOTE: only for debugging
-      setIsNextStepAllowed(true)
-    }
-  }, [currentStep, sequenceStepNumber])
-
-
-  useEffect(() => {
     // TODO: ask be to generate models
     if ((stepData as any)?.stopFactors) {
       setStopFactors((stepData as any).stopFactors)
     }
   }, [stepData])
+
+  useEffect(() => {
+    if (!stopFactors) return
+    let allChecked = true
+    for (let i = 0; i < stopFactors.length; i++) {
+      if (stopFactors[i].isOk === null) {
+        allChecked = false
+        break
+      }
+    }
+    setNextStepAllowed(allChecked)
+  }, [stopFactors])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -79,7 +83,6 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setIsNextStepAllowed(true)
   }
 
   const sendNextStep = async () => {
@@ -93,7 +96,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
-      setIsNextStepAllowed(false)
+      setNextStepAllowed(false)
     } else {
       setCurrentStep(sequenceStepNumber + 1)
     }

@@ -32,8 +32,8 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 }) => {
   const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setIsNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setIsPrevStepAllowed ] = useState<boolean>(true)
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
+  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   const sendNextStep = async () => {
@@ -48,7 +48,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
-      setIsNextStepAllowed(false)
+      setNextStepAllowed(false)
     } else {
       setCurrentStep(currentStep + 1)
     }
