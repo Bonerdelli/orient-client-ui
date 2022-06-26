@@ -1,5 +1,5 @@
-import {Action, action} from 'easy-peasy';
-import {Dictionaries} from 'library/models/dictionaries';
+import { Action, action } from 'easy-peasy'
+import { Dictionaries } from 'library/models/dictionaries'
 
 export interface DictionaryStoreModel {
   list?: Dictionaries;
@@ -9,6 +9,6 @@ export interface DictionaryStoreModel {
 export const dictionaryStoreModel: DictionaryStoreModel = {
   list: undefined,
   setDictionaries: action((state, payload) => {
-    state.list = payload;
+    state.list = payload
   }),
-};
+}

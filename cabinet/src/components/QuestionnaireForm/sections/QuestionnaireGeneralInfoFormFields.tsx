@@ -1,23 +1,23 @@
-import {useTranslation} from 'react-i18next';
-import {Form, Select, Typography} from 'antd';
+import { useTranslation } from 'react-i18next'
+import { Form, Select, Typography } from 'antd'
 import {
   convertDictionaryToSelectOptions,
-} from 'components/QuestionnaireForm/converters/dictionary-to-select-options.converter';
-import {Dictionaries} from 'library/models/dictionaries';
+} from 'components/QuestionnaireForm/converters/dictionary-to-select-options.converter'
+import { Dictionaries } from 'library/models/dictionaries'
 
 interface QuestionnaireGeneralFormFieldsProps {
   dictionaries: Dictionaries;
 }
 
 const QuestionnaireGeneralFormFields: React.FC<QuestionnaireGeneralFormFieldsProps> = ({
-  dictionaries,
-}) => {
-  const {t} = useTranslation();
-  const {Title} = Typography;
+                                                                                         dictionaries,
+                                                                                       }) => {
+  const { t } = useTranslation()
+  const { Title } = Typography
   const formItemLayout = {
     required: true,
     labelAlign: 'left' as any,
-  };
+  }
 
   return (
     <>
@@ -37,7 +37,7 @@ const QuestionnaireGeneralFormFields: React.FC<QuestionnaireGeneralFormFieldsPro
         <Select options={convertDictionaryToSelectOptions(dictionaries.taxationSystem)}/>
       </Form.Item>
     </>
-  );
-};
+  )
+}
 
-export default QuestionnaireGeneralFormFields;
+export default QuestionnaireGeneralFormFields

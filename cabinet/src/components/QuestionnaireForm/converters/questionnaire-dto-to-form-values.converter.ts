@@ -1,13 +1,13 @@
-import {QuestionnaireFormData} from '../models/questionnaire-form.interface';
-import {defaultQuestionnaireFormState} from '../constants/default-questionnaire-form-state.const';
-import {QuestionnaireDto} from 'library/models/proxy';
+import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
+import { defaultQuestionnaireFormState } from '../constants/default-questionnaire-form-state.const'
+import { QuestionnaireDto } from 'library/models/proxy'
 
 export const convertQuestionnaireDtoToFormValues = (dto: QuestionnaireDto | null): QuestionnaireFormData => {
   if (!dto) {
-    return defaultQuestionnaireFormState;
+    return defaultQuestionnaireFormState
   }
 
-  const {id, companyId, ...dataWithoutIds} = dto;
+  const { id, companyId, ...dataWithoutIds } = dto
 
   return {
     ...dataWithoutIds,
@@ -19,5 +19,5 @@ export const convertQuestionnaireDtoToFormValues = (dto: QuestionnaireDto | null
     trials: dto.trials ?? defaultQuestionnaireFormState.trials,
     easyFinanceIndividuals: dto.easyFinanceIndividuals ?? defaultQuestionnaireFormState.easyFinanceIndividuals,
     easyFinanceLegals: dto.easyFinanceLegals ?? defaultQuestionnaireFormState.easyFinanceLegals,
-  };
-};
+  }
+}

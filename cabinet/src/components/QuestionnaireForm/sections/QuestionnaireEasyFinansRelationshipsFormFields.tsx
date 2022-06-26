@@ -1,46 +1,45 @@
-import {useTranslation} from 'react-i18next';
-import {Button, Col, Divider, Form, Input, Radio, Row, Typography} from 'antd';
-import React, {useState} from 'react';
-import {EditOutlined, MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
-import {QuestionnaireFormData} from 'components/QuestionnaireForm/models/questionnaire-form.interface';
-
+import { useTranslation } from 'react-i18next'
+import { Button, Col, Divider, Form, Input, Radio, Row, Typography } from 'antd'
+import React, { useState } from 'react'
+import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+import { QuestionnaireFormData } from 'components/QuestionnaireForm/models/questionnaire-form.interface'
 
 const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
-  const {t} = useTranslation();
-  const {Title} = Typography;
-  const form = Form.useFormInstance<QuestionnaireFormData>();
-  const [isIndividualRowsVisible, setIndividualRowsVisible] = useState<boolean>(
+  const { t } = useTranslation()
+  const { Title } = Typography
+  const form = Form.useFormInstance<QuestionnaireFormData>()
+  const [ isIndividualRowsVisible, setIndividualRowsVisible ] = useState<boolean>(
     form.getFieldValue('hasEasyFinansIndividuals'),
-  );
-  const [isLegalRowsVisible, setLegalRowsVisible] = useState<boolean>(
+  )
+  const [ isLegalRowsVisible, setLegalRowsVisible ] = useState<boolean>(
     form.getFieldValue('hasEasyFinansLegals'),
-  );
+  )
 
   const formItemLayout = {
     required: true,
     labelAlign: 'left' as any,
-    labelCol: {span: 6},
-    wrapperCol: {span: 'auto'},
-  };
+    labelCol: { span: 6 },
+    wrapperCol: { span: 'auto' },
+  }
   const radioLayout = {
     labelAlign: 'left' as any,
-    labelCol: {span: 20},
-    wrapperCol: {span: 'auto'},
-  };
+    labelCol: { span: 20 },
+    wrapperCol: { span: 'auto' },
+  }
   const inputLayout = {
     suffix: <EditOutlined/>,
-  };
+  }
   const yesNoOptions = [
-    {label: t('questionnaire.common.yes'), value: true},
-    {label: t('questionnaire.common.no'), value: false},
-  ];
+    { label: t('questionnaire.common.yes'), value: true },
+    { label: t('questionnaire.common.no'), value: false },
+  ]
 
-  const onHasIndividualsChange = () => setIndividualRowsVisible(!isIndividualRowsVisible);
-  const onHasLegalsChange = () => setLegalRowsVisible(!isLegalRowsVisible);
+  const onHasIndividualsChange = () => setIndividualRowsVisible(!isIndividualRowsVisible)
+  const onHasLegalsChange = () => setLegalRowsVisible(!isLegalRowsVisible)
 
   const renderRows = (name: 'easyFinanceIndividuals' | 'easyFinanceLegals') => (
     <Form.List name={name}>
-      {(fields, {add, remove}) => (<>
+      {(fields, { add, remove }) => (<>
         {fields.map((field, index) => (
           <React.Fragment key={field.key}>
             <Row key={field.key}
@@ -51,7 +50,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                 <Form.Item
                   {...formItemLayout}
                   label={t('questionnaire.easyFinansRelationships.memberName')}
-                  name={[field.name, 'bankName']}
+                  name={[ field.name, 'bankName' ]}
                 >
                   <Input placeholder={t('')}
                          {...inputLayout} />
@@ -63,7 +62,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                   <Form.Item
                     {...formItemLayout}
                     label={t('questionnaire.easyFinansRelationships.relativeName')}
-                    name={[field.name, 'bankName']}
+                    name={[ field.name, 'bankName' ]}
                   >
                     <Input placeholder={t('')}
                            {...inputLayout} />
@@ -74,7 +73,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                   <Form.Item
                     {...formItemLayout}
                     label={t('questionnaire.easyFinansRelationships.relation')}
-                    name={[field.name, 'bankName']}
+                    name={[ field.name, 'bankName' ]}
                   >
                     <Input placeholder={t('')}
                            {...inputLayout} />
@@ -102,7 +101,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
         </Form.Item>
       </>)}
     </Form.List>
-  );
+  )
 
   return (
     <>
@@ -126,7 +125,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
       </Form.Item>
       {isLegalRowsVisible && renderRows('easyFinanceLegals')}
     </>
-  );
-};
+  )
+}
 
-export default QuestionnaireEasyFinansRelationshipsFormFields;
+export default QuestionnaireEasyFinansRelationshipsFormFields

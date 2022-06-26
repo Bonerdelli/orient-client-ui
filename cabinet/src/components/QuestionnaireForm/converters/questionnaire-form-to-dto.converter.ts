@@ -1,5 +1,5 @@
-import {QuestionnaireFormData} from '../models/questionnaire-form.interface';
-import {QuestionnaireDto} from 'library/models/proxy';
+import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
+import { QuestionnaireDto } from 'library/models/proxy'
 
 export const convertQuestionnaireFormToDto = (data: QuestionnaireFormData): QuestionnaireDto => {
   return {
@@ -14,5 +14,5 @@ export const convertQuestionnaireFormToDto = (data: QuestionnaireFormData): Ques
     buyers: data.buyers.length > 0 ? data.buyers : undefined,
     easyFinanceIndividuals: data.hasEasyFinansIndividuals ? data.easyFinanceIndividuals : undefined,
     easyFinanceLegals: data.hasEasyFinansLegals ? data.easyFinanceLegals : undefined,
-  };
-};
+  }
+}

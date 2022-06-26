@@ -1,12 +1,12 @@
-import {get} from 'orient-ui-library/library';
-import {Dictionaries} from 'library/models/dictionaries';
+import { ApiResponse, get } from 'orient-ui-library/library'
+import { Dictionaries } from 'library/models/dictionaries'
 
-// todo: add typings
 export async function getDictionaries() {
-  return await get<Dictionaries>('/dictionary/all');
+  return await get<Dictionaries>('/dictionary/all')
 }
 
-// replace string param with dict name type or enum
-export async function getDictionary(name: keyof Dictionaries) {
-  return await get(`/dictionary/${name}`);
+export async function getDictionary<K extends keyof Dictionaries>(
+  name: keyof Dictionaries,
+): Promise<ApiResponse<Dictionaries[K]>> {
+  return await get<Dictionaries[K]>(`/dictionary/${name}`)
 }

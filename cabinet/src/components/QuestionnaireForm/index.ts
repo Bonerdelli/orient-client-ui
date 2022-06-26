@@ -1,1 +1,1 @@
-export { default } from './QuestionnaireForm';
+export { default } from './QuestionnaireForm'
