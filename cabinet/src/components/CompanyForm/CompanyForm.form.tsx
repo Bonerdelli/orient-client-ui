@@ -15,7 +15,7 @@ const formFields: Record<string, CompanyFormInputConfig[]> = {
     [ 'company', 'shortName', false, true, true ],
     [ 'company', 'inn', false ],
     [ 'company', 'opf', false ],
-    // TODO: make a two-cols layout
+    // TODO: make a two-columns layout
     [ 'company', 'isMsp', false ],
     [ 'company', 'capital', false ],
     [ 'company', 'currencyCode', false ],
