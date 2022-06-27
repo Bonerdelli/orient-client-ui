@@ -58,6 +58,7 @@ orderStatusTitles:
   draft: Draft
   verifying: Verifying
   needsForRework: Needs for Rework
+  clientSign: Requires a signature
 
 ##
 # TODO: sync l10ns below and translate

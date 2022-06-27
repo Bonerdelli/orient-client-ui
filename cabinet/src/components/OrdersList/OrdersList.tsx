@@ -66,6 +66,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
       case FrameOrderStatus.FRAME_CLIENT_REWORK:
         return <Tag color="green">{t('orderStatusTitles.needsForRework')}</Tag>
       case FrameOrderStatus.FRAME_CLIENT_SIGN:
+        return <Tag color="green">{t('orderStatusTitles.clientSign')}</Tag>
       case FrameOrderStatus.FRAME_BANK_VERIFY:
       case FrameOrderStatus.FRAME_HAS_OFFER:
       case FrameOrderStatus.FRAME_CUSTOMER_SIGN:

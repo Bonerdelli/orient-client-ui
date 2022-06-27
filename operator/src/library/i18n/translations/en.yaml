@@ -40,6 +40,7 @@ frameOrdersPage:
 orderStatusTitles:
   waitForVerify: Wait for Verify
   verifying: Verifying
+  clientSign: Requires Client's signature
 
 frameWizard:
   title: Заявка на заключение рамочного договора

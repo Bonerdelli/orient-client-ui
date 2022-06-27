@@ -39,7 +39,7 @@ const PrivateRoute: React.FC<PrivateRouteOptions> = ({
         hasAccess(roles, accessRoles) ? (
           <Component {...props} />
         ) : (
-          <Redirect to={{ pathname: '/' }}/>
+          <Redirect to={{ pathname: '/' }} />
         )
       }
     />
@@ -52,7 +52,7 @@ export const PublicRoutes = () => (
       <LoginPage/>
     </Route>
     <Route path="*">
-      <Redirect to={{ pathname: LOGIN_PATH }}/>
+      <Redirect to={{ pathname: LOGIN_PATH }} />
     </Route>
   </Switch>
 )
@@ -103,11 +103,10 @@ export const ProtectedRoutes = () => (
     />
 
     <Route exact path="/">
-      {/*<Redirect to={{pathname: HOME_PATH}}/>*/}
-      <Redirect to={{ pathname: QUESTIONNAIRE_PATH }}/>
+      <Redirect to={{pathname: HOME_PATH}} />
     </Route>
     <Route exact path="/login">
-      <Redirect to={{ pathname: HOME_PATH }}/>
+      <Redirect to={{ pathname: HOME_PATH }} />
     </Route>
     <Route path="*">
       <PageNotFound/>

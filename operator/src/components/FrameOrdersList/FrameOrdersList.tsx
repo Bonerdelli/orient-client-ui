@@ -51,8 +51,9 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
         return <Tag color="green">{t('orderStatusTitles.waitForVerify')}</Tag>
       case FrameOrderStatus.FRAME_OPERATOR_VERIFY:
         return <Tag color="green">{t('orderStatusTitles.verifying')}</Tag>
-      case FrameOrderStatus.FRAME_CLIENT_REWORK:
       case FrameOrderStatus.FRAME_CLIENT_SIGN:
+        return <Tag color="blue">{t('orderStatusTitles.clientSign')}</Tag>
+      case FrameOrderStatus.FRAME_CLIENT_REWORK:
       case FrameOrderStatus.FRAME_BANK_VERIFY:
       case FrameOrderStatus.FRAME_HAS_OFFER:
       case FrameOrderStatus.FRAME_CUSTOMER_SIGN:

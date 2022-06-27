@@ -13,9 +13,9 @@ import './DocumentActions.style.less'
 
 export interface DocumentActionsProps {
   document: Document
-  uploadUrl: string
-  deleteHandler: (doc: Document) => Promise<boolean>
-  downloadHandler: (doc: Document) => Promise<boolean>
+  uploadUrl?: string
+  deleteHandler?: (doc: Document) => Promise<boolean>
+  downloadHandler?: (doc: Document) => Promise<boolean>
   onUploadSuccess?: () => {}
   onUploadError?: () => {}
   onChange?: () => {}
@@ -36,9 +36,9 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   const user = useStoreState(state => state.user)
   const [ operationInProccess, setOperationInProccess ] = useState<boolean>()
 
-  const canUpload = () => document.status === DocumentStatus.NotUploaded
+  const canUpload = () => document.status === DocumentStatus.NotUploaded && uploadUrl
   const canDownload = () => document.status === DocumentStatus.Uploaded
-  const canDelete = () => document.status === DocumentStatus.Uploaded
+  const canDelete = () => document.status === DocumentStatus.Uploaded && deleteHandler
 
   const getUploadProps = (_typeId: number): UploadProps => ({
     name: 'file',
