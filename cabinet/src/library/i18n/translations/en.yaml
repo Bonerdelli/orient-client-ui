@@ -57,8 +57,15 @@ bankRequisitesPage:
 orderStatusTitles:
   draft: Draft
   verifying: Verifying
+  # TODO: check l10ns below
   needsForRework: Needs for Rework
   clientSign: Requires a signature
+  bankVerify: Bank Verify
+  hasOffer: Has Offer
+  customerSign: Customer Sign
+  completed: Completed
+  cancel: Cancel
+  operatorReject: Operator Reject
 
 ##
 # TODO: sync l10ns below and translate

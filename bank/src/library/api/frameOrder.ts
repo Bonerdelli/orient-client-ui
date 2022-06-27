@@ -3,11 +3,17 @@ import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move 
 import { PaginatedRequest, defaultPaginatedRequest } from 'library/helpers/api'
 import { Order, GridResponse } from 'library/models'
 
+
+export interface FrameItemParams {
+  bankId: number
+}
+
 export async function getFrameOrdersList(
-  _params: unknown,
+  params: FrameItemParams,
   request: PaginatedRequest = defaultPaginatedRequest
 ) {
-  return await post<GridResponse<Order[]>>('/operator/order/frame/list', request)
+  const { bankId } = params
+  return await post<GridResponse<Order[]>>(`/bank/${bankId}/order/frame/list`, request)
 }
 
 export interface FrameOrderItemParams {
