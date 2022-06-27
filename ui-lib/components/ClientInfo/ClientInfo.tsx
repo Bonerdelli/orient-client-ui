@@ -13,7 +13,7 @@ export interface ClientInfoProps {
 
 const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead }) => {
   const { t } = useTranslation()
-  if (!company || !companyHead) {
+  if (!company) {
     return <Skeleton />
   }
   return (
@@ -58,9 +58,9 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead }) => {
         {company.address}
       </DescItem>
       <DescItem label={t('models.company.fields.chief.title')}>
-        {companyHead.lastName}{' '}
-        {companyHead.firstName}{' '}
-        {companyHead.middleName}{' '}
+        {companyHead?.lastName}{' '}
+        {companyHead?.firstName}{' '}
+        {companyHead?.middleName}{' '}
       </DescItem>
     </Descriptions>
   )

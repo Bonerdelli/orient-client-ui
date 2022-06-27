@@ -11,20 +11,18 @@ import {
   sendFrameWizardStep1, // NOTE: replace ep with correct one!
 } from 'library/api/frameWizard'
 
-import './OrderStepArchive.style.less'
+import './BlankWizardStep.style.less'
 
 const { Title } = Typography
 
-export interface OrderStepArchiveProps {
-  bankId?: number | bigint
+export interface BlankWizardStepProps {
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
 
-const OrderStepArchive: React.FC<OrderStepArchiveProps> = ({
-  bankId,
+const BlankWizardStep: React.FC<BlankWizardStepProps> = ({
   orderId,
   currentStep,
   setCurrentStep,
@@ -54,7 +52,6 @@ const OrderStepArchive: React.FC<OrderStepArchiveProps> = ({
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
       step: sequenceStepNumber,
-      bankId,
       orderId,
     })
     if (result.success) {
@@ -71,7 +68,6 @@ const OrderStepArchive: React.FC<OrderStepArchiveProps> = ({
     if (!orderId) return
     setSubmitting(true)
     const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
-      bankId,
       orderId,
     }, {})
     if (!result.success) {
@@ -102,7 +98,7 @@ const OrderStepArchive: React.FC<OrderStepArchiveProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="WizardStep__actions">
+    <Row>
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
@@ -146,8 +142,8 @@ const OrderStepArchive: React.FC<OrderStepArchiveProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="OrderStepArchive">
-      <Title level={5}>{t('OrderStepArchive.title')}</Title>
+    <Div className="BlankWizardStep">
+      <Title level={5}>{t('BlankWizardStep.title')}</Title>
     </Div>
   )
 
@@ -164,10 +160,11 @@ const OrderStepArchive: React.FC<OrderStepArchiveProps> = ({
   }
 
   return (
-    <Div className="WizardStep__content">
+    <Div className="FrameWizard__step__content">
       {renderStepContent()}
       {renderActions()}
     </Div>
   )
 }
- export default OrderStepArchive
+
+export default BlankWizardStep

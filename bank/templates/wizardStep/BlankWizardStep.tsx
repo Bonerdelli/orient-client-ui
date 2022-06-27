@@ -1,8 +1,3 @@
-/**
- * NOTE: almost blank wizard step
- * TODO: add commponent template for this?
- */
-
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
@@ -16,18 +11,20 @@ import {
   sendFrameWizardStep1, // NOTE: replace ep with correct one!
 } from 'library/api/frameWizard'
 
-import './OrderStepScoringResults.style.less'
+import './BlankWizardStep.style.less'
 
 const { Title } = Typography
 
-export interface OrderStepScoringResultsProps {
+export interface BlankWizardStepProps {
+  bankId?: number | bigint
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
 
-const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
+const BlankWizardStep: React.FC<BlankWizardStepProps> = ({
+  bankId,
   orderId,
   currentStep,
   setCurrentStep,
@@ -57,6 +54,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
       step: sequenceStepNumber,
+      bankId,
       orderId,
     })
     if (result.success) {
@@ -73,6 +71,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     if (!orderId) return
     setSubmitting(true)
     const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
+      bankId,
       orderId,
     }, {})
     if (!result.success) {
@@ -103,7 +102,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
@@ -147,8 +146,8 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="OrderStepScoringResults">
-      <Title level={5}>{t('orderStepScoringResult.title')}</Title>
+    <Div className="BlankWizardStep">
+      <Title level={5}>{t('BlankWizardStep.title')}</Title>
     </Div>
   )
 
@@ -165,11 +164,11 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {renderActions()}
     </Div>
   )
 }
 
-export default OrderStepScoringResults
+export default BlankWizardStep

@@ -14,7 +14,6 @@ import OrderStepOfferAcceptance from 'components/OrderStepOfferAcceptance'
 import OrderStepArchive from 'components/OrderStepArchive'
 
 import { OrderWizardType } from 'library/models'
-import { useStoreState } from 'library/store'
 
 import { getFrameOrderWizard } from 'library/api/frameOrder'
 import { MOCK_BANK_ID } from 'library/mock/bank'
@@ -41,27 +40,25 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FrameBankWizardPathParams>()
-  const company = useStoreState(state => state.company.current)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ companyId, setCompanyId ] = useState<number>()
+  const [ bankId, setBankId ] = useState<number>()
 
   useEffect(() => {
-    if (companyId) {
+    if (bankId) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [companyId])
+  }, [bankId])
 
   useEffect(() => {
-    if (company) {
-      setCompanyId(company.id)
-    }
-  }, [company])
+    // TODO: load bank from be (when ready)
+    setBankId(MOCK_BANK_ID)
+  }, [])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameOrderWizard({
@@ -88,7 +85,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const isSixthStepActive = (): boolean => true
 
   const renderCurrentStep = () => {
-    if (!companyId || stepDataLoading) {
+    if (!bankId || stepDataLoading) {
       return <Skeleton active={true} />
     }
     const stepBaseProps = {
@@ -100,17 +97,17 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps}/>
+        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1} />
       case 2:
-        return <OrderStepDocuments {...stepBaseProps}/>
+        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
       case 3:
-        return <OrderStepContractParams {...stepBaseProps}/>
+        return <OrderStepContractParams {...stepBaseProps} sequenceStepNumber={3} />
       case 4:
-        return <OrderStepContractDocuments {...stepBaseProps}/>
+        return <OrderStepContractDocuments {...stepBaseProps} sequenceStepNumber={4} />
       case 5:
-        return <OrderStepOfferAcceptance {...stepBaseProps}/>
+        return <OrderStepOfferAcceptance {...stepBaseProps} sequenceStepNumber={5} />
       case 6:
-        return <OrderStepArchive {...stepBaseProps}/>
+        return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={6} />
       default:
         return <></>
     }
