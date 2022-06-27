@@ -7,6 +7,7 @@ import type { ColumnsType } from 'antd/lib/table'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
 import { Bank } from 'orient-ui-library/library/models/bank'
 
 import { StopFactor } from 'library/models/stopFactor'
@@ -47,6 +48,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
+  const [ isWizardCompleted, setWizardCompleted ] = useState<boolean>(false)
 
   const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -54,9 +56,10 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   const [ scorings, setScorings ] = useState<BankWithStopFactors[] | null>(null)
+  const [ defaultExpandedRowKeys, setDefaultExpandedRowKeys ] = useState<Bank['bankId'][]>([])
   const [ selectedBankIds, setSelectedBankIds ] = useState<Bank['bankId'][]>([])
   const [ selectedRowKeys, setSelectedRowKeys ] = useState<React.Key[]>([])
-  const [ tableData, setTableData ] = useState<BankStopFactor[]>()
+  const [ tableData, setTableData ] = useState<BankStopFactor[] | null>(null)
 
   useEffect(() => {
     loadCurrentStepData()
@@ -71,10 +74,12 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
 
   useEffect(() => {
     setNextStepAllowed(selectedRowKeys.length > 0)
+    setSelectedBankIds(selectedRowKeys as number[])
   }, [selectedRowKeys])
 
   useEffect(() => {
     if (!scorings) return
+    let bankIds: Bank['bankId'][] = []
     let updatedTableData: BankStopFactor[] = []
     scorings.forEach(bankScoring => {
       const { bankId, bankName } = bankScoring
@@ -88,7 +93,9 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
         ...updatedTableData,
         ...bankStopFactors,
       ]
+      bankIds.push(bankId)
     })
+    setDefaultExpandedRowKeys(bankIds)
     setTableData(updatedTableData)
     // NOTE: have no idea how to check this
     // setNextStepAllowed(true)
@@ -101,6 +108,9 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      if ((result as any).data.orderStatus === FrameOrderStatus.FRAME_CLIENT_SIGN) {
+        setWizardCompleted(true)
+      }
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -120,7 +130,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setCurrentStep(sequenceStepNumber + 1)
+      setWizardCompleted(true)
     }
     setSubmitting(false)
   }
@@ -140,7 +150,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const renderActions = () => (
     <Row className="FrameWizard__step__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{renderNextButton()}</Col>
+      <Col>{!isWizardCompleted && renderNextButton()}</Col>
     </Row>
   )
 
@@ -149,10 +159,10 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       size="large"
       type="primary"
       onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
+      disabled={!isNextStepAllowed || submitting || isWizardCompleted}
       loading={submitting}
     >
-      {t('common.actions.next.title')}
+      {t('orderActions.sendToBanks.title')}
     </Button>
   )
 
@@ -178,11 +188,28 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     return <Tag color="red">{t('orderStepScoringResult.nonCompliant.title')}</Tag>
   }
 
-  const scoringColumns: ColumnsType<BankStopFactor> = [
+  const bankColumns: ColumnsType<BankWithStopFactors> = [
     {
       key: 'bankName',
       dataIndex: 'bankName',
     },
+    {
+      key: 'stopFactorName',
+      dataIndex: 'stopFactorName',
+    },
+    {
+      key: 'isOk',
+      dataIndex: 'isOk',
+      render: renderStatus,
+      align: 'right',
+    },
+    {
+      key: 'actions',
+      width: 120,
+    },
+  ]
+
+  const scoringColumns: ColumnsType<StopFactor> = [
     {
       key: 'stopFactorName',
       dataIndex: 'stopFactorName',
@@ -204,24 +231,39 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const rowSelection = {
     selectedRowKeys,
     onChange: setSelectedRowKeys,
+    getCheckboxProps: () => ({
+      disabled: isWizardCompleted,
+    }),
   }
+
+  const expandedRowRender = (rowData: BankWithStopFactors) => (
+    <Table
+      size={'middle'}
+      columns={scoringColumns}
+      dataSource={rowData.stopFactors || []}
+      pagination={false}
+      showHeader={false}
+      rowKey="stopFactorId"
+    />
+  )
 
   const renderStopFactors = () => (
     <Table
       size={'middle'}
       loading={!tableData}
-      columns={scoringColumns}
+      columns={bankColumns}
       rowSelection={rowSelection}
-      dataSource={tableData || []}
+      expandable={{ expandedRowRender, defaultExpandedRowKeys }}
+      dataSource={scorings || []}
       pagination={false}
       showHeader={false}
-      rowKey="bankStopFactorId"
+      rowKey="bankId"
     />
   )
 
   const renderStopFactorViewButton = (_item: StopFactor) => (
     <Button
-      key="approve"
+      key="view"
       type="link"
       shape="circle"
       onClick={() => {}}
@@ -233,7 +275,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
 
   const renderStopFactorDownloadButton = (_item: StopFactor) => (
     <Button
-      key="approve"
+      key="download"
       type="link"
       shape="circle"
       onClick={() => {}}
@@ -263,7 +305,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   //   <Title level={5}>{t('orderStepScoringResults.sectionTitles.banksWhereTrigerred')}</Title>
   // </Div>
 
-  if (!stepData && stepDataLoading) {
+  if ((!stepData && stepDataLoading) || tableData === null) {
     return (
       <Skeleton active={true} />
     )
