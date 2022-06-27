@@ -6,7 +6,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
-import { FrameOrderStatus, OrderStatus } from 'orient-ui-library/library/models/order'
+import { OrderStatus } from 'orient-ui-library/library/models'
 
 import OrderStepSelectInn from 'components/OrderStepSelectInn'
 import OrderStepDocuments from 'components/OrderStepDocuments'
@@ -69,8 +69,8 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
 
   useEffect(() => {
     if (currentStep === 2 && (
-        orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFYING ||
-        orderStatus === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+        orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
+        orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
     )) {
       // NOTE: show waiting for verify message
       setSelectedStep(3)
