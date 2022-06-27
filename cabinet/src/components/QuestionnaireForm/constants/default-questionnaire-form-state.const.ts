@@ -3,7 +3,6 @@ import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
 export const defaultQuestionnaireFormState: QuestionnaireFormData = {
   averageEmployeesCountId: 1, // TODO: Replace with enum from dict
   taxationSystemId: 1, // TODO: Replace with enum from dict
-  paymentFormId: 1, // TODO: Replace with enum
   belongsToHoldings: false,
   holdingName: '',
   headCompanyName: '',
@@ -19,10 +18,10 @@ export const defaultQuestionnaireFormState: QuestionnaireFormData = {
     },
   ],
   creditExpirations: [
-    { expirationId: 0, isExpired: false, reason: '' }, // TODO: Replace with enum
     { expirationId: 1, isExpired: false, reason: '' }, // TODO: Replace with enum
     { expirationId: 2, isExpired: false, reason: '' }, // TODO: Replace with enum
     { expirationId: 3, isExpired: false, reason: '' }, // TODO: Replace with enum
+    { expirationId: 4, isExpired: false, reason: '' }, // TODO: Replace with enum
   ],
   hasTrials: false,
   trials: [ {
