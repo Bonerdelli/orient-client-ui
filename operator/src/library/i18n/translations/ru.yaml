@@ -36,6 +36,8 @@ frameOrdersPage:
 orderStatusTitles:
   waitForVerify: Ожидает проверки
   verifying: Проверка
+  clientSign: Требует подписи Клиента
+  bankVerify: В Банке
 
 frameWizard:
   title: Заявка на заключение рамочного договора

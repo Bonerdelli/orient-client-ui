@@ -7,9 +7,9 @@ import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
-import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { Order, FrameOrderStatus } from 'orient-ui-library/library/models/order'
 
-import { Order, GridResponse } from 'library/models'
+import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
 import { getCompanyOrdersList } from 'library/api'
@@ -56,7 +56,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
     }
   }
 
-  const renderStatus = (statusCode: FrameOrderStatus) => {
+  const renderStatus = (statusCode: FrameOrderStatus, item: Order) => {
     switch (statusCode) {
       case FrameOrderStatus.FRAME_DRAFT:
         return <Tag>{t('orderStatusTitles.draft')}</Tag>
@@ -66,14 +66,21 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
       case FrameOrderStatus.FRAME_CLIENT_REWORK:
         return <Tag color="green">{t('orderStatusTitles.needsForRework')}</Tag>
       case FrameOrderStatus.FRAME_CLIENT_SIGN:
+        return <Tag color="green">{t('orderStatusTitles.clientSign')}</Tag>
       case FrameOrderStatus.FRAME_BANK_VERIFY:
+        return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
       case FrameOrderStatus.FRAME_HAS_OFFER:
+        return <Tag color="green">{t('orderStatusTitles.hasOffer')}</Tag>
       case FrameOrderStatus.FRAME_CUSTOMER_SIGN:
+        return <Tag color="blue">{t('orderStatusTitles.customerSign')}</Tag>
       case FrameOrderStatus.FRAME_COMPLETED:
+        return <Tag color="blue">{t('orderStatusTitles.completed')}</Tag>
       case FrameOrderStatus.FRAME_CANCEL:
+        return <Tag>{t('orderStatusTitles.cancel')}</Tag>
       case FrameOrderStatus.FRAME_OPERATOR_REJECT:
+        return <Tag color="red">{t('orderStatusTitles.operatorReject')}</Tag>
       default:
-        return <></>
+        return <Tag>{item.statusName}</Tag>
     }
   }
 

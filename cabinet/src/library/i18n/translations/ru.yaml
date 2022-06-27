@@ -90,6 +90,13 @@ orderStatusTitles:
   draft: Черновик
   verifying: На проверке
   needsForRework: Требует доработки
+  clientSign: Требует подписи
+  bankVerify: В Банке
+  hasOffer: Есть предложение
+  customerSign: Требует подписи Заказчика
+  completed: Договор заключен
+  cancel: Отмена заявки
+  operatorReject: Отказ от предложения
 
 frameOrder: ## TODO: rename to frameWizard
   title: Заявка на заключение рамочного договора
@@ -248,4 +255,3 @@ questionnaire:
     memberName: ФИО участника «Easy Finans»
     relativeName: ФИО руководителя/учредителя
     relation: Степень родства
-

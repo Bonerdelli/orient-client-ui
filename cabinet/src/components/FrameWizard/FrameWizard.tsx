@@ -49,6 +49,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
   const [ orderId, setOrderId ] = useState<number>()
+  const [ orderStatus, setOrderStatus ] = useState<FrameOrderStatus>()
 
   // TODO: BE doesn't sent customer, fix after DE fixes
   const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
@@ -66,6 +67,15 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
     }
   }, [company])
 
+  useEffect(() => {
+    if (currentStep === 2 &&
+        orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY
+    ) {
+      // NOTE: show waiting for verify message
+      setCurrentStep(3)
+    }
+  }, [currentStep, orderStatus])
+
   const loadCurrentStepData = async () => {
     const result = await getCurrentFrameWizardStep({
       type: FrameWizardType.Full,
@@ -75,11 +85,8 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
     if (result.success) {
       setCurrentStepData((result.data as any).data)
       let step = Number((result.data as any).step)
-      if (step === 2 &&
-          (result.data as any).orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY
-      ) {
-        step = 3
-      }
+      let orderStatus = (result.data as any).orderStatus
+      setOrderStatus(orderStatus)
       setCurrentStep(step)
       setSelectedStep(step)
       setDataLoaded(true)
@@ -112,7 +119,6 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
-          customerId={selectedCustomer?.id}
         />
       case 3:
         return <OrderStepSignDocuments
@@ -128,6 +134,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           companyId={company?.id as number}
           currentStep={currentStep}
           sequenceStepNumber={4}
+          orderStatus={orderStatus}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}

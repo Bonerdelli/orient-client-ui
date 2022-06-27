@@ -6,9 +6,9 @@ import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { Order, FrameOrderStatus } from 'orient-ui-library/library/models/order'
 
-import { Order, GridResponse } from 'library/models'
+import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 
@@ -45,14 +45,18 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     </Space>
   )
 
-  const renderStatus = (statusCode: FrameOrderStatus) => {
+  const renderStatus = (statusCode: FrameOrderStatus, item: Order) => {
     switch (statusCode) {
       case FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
         return <Tag color="green">{t('orderStatusTitles.waitForVerify')}</Tag>
       case FrameOrderStatus.FRAME_OPERATOR_VERIFY:
         return <Tag color="green">{t('orderStatusTitles.verifying')}</Tag>
-      case FrameOrderStatus.FRAME_CLIENT_REWORK:
       case FrameOrderStatus.FRAME_CLIENT_SIGN:
+        return <Tag color="blue">{t('orderStatusTitles.clientSign')}</Tag>
+      case FrameOrderStatus.FRAME_BANK_VERIFY:
+        return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
+
+      case FrameOrderStatus.FRAME_CLIENT_REWORK:
       case FrameOrderStatus.FRAME_BANK_VERIFY:
       case FrameOrderStatus.FRAME_HAS_OFFER:
       case FrameOrderStatus.FRAME_CUSTOMER_SIGN:
@@ -60,7 +64,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
       case FrameOrderStatus.FRAME_CANCEL:
       case FrameOrderStatus.FRAME_OPERATOR_REJECT:
       default:
-        return <></>
+        return <Tag>{item.statusName}</Tag>
     }
   }
 

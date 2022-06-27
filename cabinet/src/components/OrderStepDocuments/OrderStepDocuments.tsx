@@ -7,10 +7,11 @@ import { CheckCircleFilled, ExclamationCircleOutlined, ClockCircleOutlined, Form
 import { every } from 'lodash'
 
 import Div from 'orient-ui-library/components/Div'
-import OrderDocumentsList from 'components/OrderDocumentsList'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+
+import OrderDocumentsList from 'components/OrderDocumentsList'
 
 import {
   WizardStep2Data,
