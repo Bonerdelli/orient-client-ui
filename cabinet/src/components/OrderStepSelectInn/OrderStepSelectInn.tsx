@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
-import { Typography, Descriptions, Space, Row, Col, Card, Skeleton, Select, Button, message } from 'antd'
+import { Button, Card, Col, Descriptions, message, Row, Select, Skeleton, Space, Typography } from 'antd'
 import { BaseOptionType } from 'antd/es/select'
 
 import Div from 'orient-ui-library/components/Div'
@@ -10,7 +10,7 @@ import EmptyResult from 'orient-ui-library/components/EmptyResult' // TODO: from
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { Customer } from 'library/models' // TODO: check API schema, why not from proxy?
-import { searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
+import { getFrameWizardStep, searchCustomers, startFrameWizard } from 'library/api'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import './OrderStepSelectInn.style.less'
@@ -60,7 +60,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     if (currentStep >= sequenceStepNumber) {
       setNextStepAllowed(true)
     }
-  }, [currentStep])
+  }, [ currentStep ])
 
   useEffect(() => {
     if (foundItems) {
@@ -70,14 +70,14 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       setSelectedCustomer(undefined)
     }
     handleSearch()
-  }, [search])
+  }, [ search ])
 
   useEffect(() => {
     if (companyId && orderId) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [companyId, orderId])
+  }, [ companyId, orderId ])
 
   useEffect(() => {
     // TODO: ask be generate models for this and remove any
@@ -85,7 +85,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       setSelectedId((stepData as any)?.customerCompany.id)
       setSearch('')
     }
-  }, [stepData])
+  }, [ stepData ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -112,12 +112,12 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       </Space>),
     }))
     setOptions(updatedResult)
-  }, [foundItems])
+  }, [ foundItems ])
 
   useEffect(() => {
     const item = foundItems.find(datum => datum.id === selectedId)
     setSelectedCustomer(item)
-  }, [foundItems, selectedId])
+  }, [ foundItems, selectedId ])
 
   useEffect(() => {
     if (selectedCustomer) {
@@ -126,7 +126,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     if (!selectedId) {
       setSelectedId(selectedCustomer?.id)
     }
-  }, [selectedCustomer])
+  }, [ selectedCustomer ])
 
   const sendNextStep = async () => {
     if (!selectedCustomer) {
@@ -165,7 +165,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   const renderCustomerInfo = () => {
     if (selectedId && !selectedCustomer || stepDataLoading === true) {
       return (
-        <Skeleton active={true} />
+        <Skeleton active={true}/>
       )
     }
     if (!selectedCustomer) {
@@ -181,6 +181,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
             <DescItem label={t('models.customer.fields.chief.title')}>{customer.chief}</DescItem>
             <DescItem label={t('models.customer.fields.soato.title')}>{customer.soato}</DescItem>
             <DescItem label={t('models.customer.fields.address.title')}>{customer.address}</DescItem>
+            <DescItem label={t('models.customer.fields.inn.title')}>{customer.inn}</DescItem>
           </Descriptions>
         </Card>
       </Div>
@@ -228,7 +229,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
         className="OrderStepSelectInn__select"
         onSearch={setSearch}
         loading={searching}
-        notFoundContent={search && <EmptyResult />}
+        notFoundContent={search && <EmptyResult/>}
         onSelect={setSelectedId}
         options={options}
       >
@@ -247,7 +248,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
 
   if (orderId && dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
