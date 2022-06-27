@@ -19,7 +19,7 @@ const SideMenu = () => {
     <Menu
       mode="inline"
       selectedKeys={[location.pathname]}
-      defaultOpenKeys={['orders', 'config']}
+      defaultOpenKeys={['orders']}
     >
       <MenuItem key="banks" icon={<BankOutlined />}>
         <>{t('sections.banks.title')}</>
@@ -30,7 +30,7 @@ const SideMenu = () => {
         icon={<UnorderedListOutlined />}
       >
         <MenuItem key="/frame-orders">
-          <NavLink to="frame-orders">
+          <NavLink to="/frame-orders">
             <>{t('sections.frameOrders.title')}</>
           </NavLink>
         </MenuItem>

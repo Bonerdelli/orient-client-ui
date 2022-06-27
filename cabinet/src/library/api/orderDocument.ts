@@ -1,6 +1,12 @@
-import { get, del } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
+import {
+  ApiSuccessResponse,
+  FileLocation,
+  get,
+  getS3File,
+  del,
+} from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 
-import { OrderDocument } from 'library/models/proxy'
+import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 
 export interface OrderDocumentListParams {
   companyId: number | bigint
@@ -11,6 +17,7 @@ export interface OrderDocumentItemParams {
   companyId: number | bigint
   orderId: number | bigint
   documentId: bigint | number
+  fileName?: string
 }
 
 export const getOrderDocumentUploadUrl = (
@@ -32,6 +39,11 @@ export async function deleteOrderDocument(params: OrderDocumentItemParams) {
 }
 
 export async function downloadOrderDocument(params: OrderDocumentItemParams) {
-  const { orderId, documentId } = params
-  return await get<File>(`common/download/order/${orderId}/${documentId}`)
+  const { orderId, documentId, fileName } = params
+  const response = await get<FileLocation>(`/common/download/order/${orderId}/${documentId}`)
+  const location = (response as ApiSuccessResponse<FileLocation>)?.data?.location ?? null
+  if (!location || !response.success) {
+    throw new Error('Document downloading error')
+  }
+  return getS3File(location, fileName)
 }

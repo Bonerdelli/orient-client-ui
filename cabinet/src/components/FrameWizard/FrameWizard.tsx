@@ -5,6 +5,8 @@ import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStepSelectInn from 'components/OrderStepSelectInn'
 import OrderStepDocuments from 'components/OrderStepDocuments'
@@ -14,7 +16,7 @@ import OrderStepBankOffers from 'components/OrderStepBankOffers'
 import { Customer } from 'library/models'
 import { useStoreState } from 'library/store'
 
-import { FrameWizardType, getCurrentFrameWizardStep } from 'library/api'
+import { getCurrentFrameWizardStep } from 'library/api'
 
 import './FrameWizard.style.less'
 
@@ -72,7 +74,12 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
-      const step = Number((result.data as any).step)
+      let step = Number((result.data as any).step)
+      if (step === 2 &&
+          (result.data as any).orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY
+      ) {
+        step = 3
+      }
       setCurrentStep(step)
       setSelectedStep(step)
       setDataLoaded(true)
@@ -93,8 +100,8 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           orderId={Number(itemId) || orderId}
           setOrderId={setOrderId}
           currentStep={currentStep}
-          currentStepData={currentStepData}
           setCurrentStep={setSelectedStep}
+          sequenceStepNumber={1}
           selectedCustomer={selectedCustomer}
           setSelectedCustomer={setSelectedCustomer}
         />
@@ -102,6 +109,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
         return <OrderStepDocuments
           companyId={companyId}
           currentStep={currentStep}
+          sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
@@ -110,6 +118,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
         return <OrderStepSignDocuments
           companyId={companyId}
           currentStep={currentStep}
+          sequenceStepNumber={3}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
@@ -118,6 +127,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
         return <OrderStepBankOffers
           companyId={company?.id as number}
           currentStep={currentStep}
+          sequenceStepNumber={4}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
@@ -157,7 +167,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
         >
           <Step title={t('frameOrder.firstStep.title')} />
           <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
-          <Step disabled title={t('frameOrder.thirdStep.title')} />
+          <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')} />
           <Step disabled title={t('frameOrder.fourthStep.title')} />
         </Steps>
       </Card>

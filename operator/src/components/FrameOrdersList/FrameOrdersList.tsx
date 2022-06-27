@@ -6,6 +6,7 @@ import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
 
 import { Order, GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
@@ -44,6 +45,25 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     </Space>
   )
 
+  const renderStatus = (statusCode: FrameOrderStatus) => {
+    switch (statusCode) {
+      case FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
+        return <Tag color="green">{t('orderStatusTitles.waitForVerify')}</Tag>
+      case FrameOrderStatus.FRAME_OPERATOR_VERIFY:
+        return <Tag color="green">{t('orderStatusTitles.verifying')}</Tag>
+      case FrameOrderStatus.FRAME_CLIENT_REWORK:
+      case FrameOrderStatus.FRAME_CLIENT_SIGN:
+      case FrameOrderStatus.FRAME_BANK_VERIFY:
+      case FrameOrderStatus.FRAME_HAS_OFFER:
+      case FrameOrderStatus.FRAME_CUSTOMER_SIGN:
+      case FrameOrderStatus.FRAME_COMPLETED:
+      case FrameOrderStatus.FRAME_CANCEL:
+      case FrameOrderStatus.FRAME_OPERATOR_REJECT:
+      default:
+        return <></>
+    }
+  }
+
   const columns: ColumnsType<Order> = [
     {
       key: 'number',
@@ -71,10 +91,10 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
       align: 'center',
     },
     {
-      key: 'statusName',
-      dataIndex: 'statusName',
+      key: 'statusCode',
+      dataIndex: 'statusCode',
       title: t('frameOrdersPage.tableColumnTitles.statusName'),
-      render: (val) => <Tag>{val}</Tag>,
+      render: renderStatus,
       align: 'center',
     },
 

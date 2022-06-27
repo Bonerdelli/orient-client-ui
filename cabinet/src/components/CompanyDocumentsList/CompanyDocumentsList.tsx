@@ -5,11 +5,11 @@ import type { ColumnsType } from 'antd/lib/table'
 
 import { getEndpointUrl } from 'orient-ui-library/library'
 
-import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
+import Div from 'orient-ui-library/components/Div'
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { CompanyDocument } from 'library/models/proxy'
+import { CompanyDocument } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api'
 
 import {
@@ -24,19 +24,20 @@ import './CompanyDocumentsList.style.less'
 const { Text } = Typography
 
 export interface CompanyDocumentsListProps {
+  compact?: boolean
   companyId: number
   types: number[]
 }
 
 const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
-  const { companyId, types } = props
+  const { compact, companyId, types } = props
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
 
   const [
     companyDocuments,
-    documentsLoading,
+    documentsLoaded,
     companyDocumentsReload,
   ] = useApi<CompanyDocument[]>(getCompanyDocuments, { companyId })
 
@@ -49,7 +50,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
       return composeDocument(typeId, existsDoc)
     })
     setItems(updatedItems)
-  }, [types, documentsLoading, companyDocuments])
+  }, [types, documentsLoaded, companyDocuments])
 
   const composeDocument = (typeId: number, document?: CompanyDocument): Document => {
     if (!document?.info) {
@@ -60,6 +61,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     }
     return {
       type: typeId,
+      name: document.type, // NOTE: this is cyrillic doc name, eg. Устав компании
       id: document.info.documentId,
       status: DocumentStatus.Uploaded,
     }
@@ -76,8 +78,12 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   }
 
   const handleItemDownload = async (item: Document) => {
-    const result = await downloadCompanyDocument({ companyId, documentId: item.id as number })
-    return result.success
+    const result = await downloadCompanyDocument({
+      companyId,
+      documentId: item.id as number,
+      fileName: item.name,
+    })
+    return result
   }
 
   const renderDocumentStatus = (status: DocumentStatus) => {
@@ -99,6 +105,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     <Space className="DataTable__actions DataTable__ghostActions--">
       <DocumentActions
         document={item}
+        loading={!documentsLoaded}
         uploadUrl={getUploadUrl(item.type)}
         deleteHandler={handleItemDelete}
         downloadHandler={handleItemDownload}
@@ -133,12 +140,14 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   return (
     <Div className="CompanyDocumentsList" data-testid="CompanyDocumentsList">
       <Table
-        size={'large'}
-        loading={documentsLoading === null}
+        size={compact ? 'middle' : 'large'}
+        showHeader={!compact}
+        loading={documentsLoaded === null}
         className="CompanyDocumentsList__table"
         columns={columns}
         dataSource={items}
         pagination={false}
+        rowKey="typeId"
       />
     </Div>
   )

@@ -14,7 +14,9 @@ customer:
   title: Заказчик
   fields:
     inn:
-      title: Инн
+      title: Инн Заказчика
+    name:
+      title: Наименование Заказчика
     shortName:
       title: Наименование юр. лица
     chief:
@@ -23,6 +25,9 @@ customer:
       title: СОАТО
     address:
       title: Адрес
+
+client:
+  title: Клиент
 
 company:
   title: Компания
@@ -35,6 +40,7 @@ company:
       title: ИНН
     isMsp:
       title: Принадлежность к субъектам малого предпринимательства
+      titleShort: Принадлежность к МСП
     capital:
       title: Уставный фонд
     currencyCode:
@@ -60,6 +66,8 @@ company:
       title: Код СООГУ
     state:
       title: Состояние активности
+    chief:
+      title: Руководитель
 
 companyContact:
   title: Контакт компании

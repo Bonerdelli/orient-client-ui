@@ -24,6 +24,12 @@ forms:
         required: Пароль обязателен для заполнения
       placeholder: Введите пароль
 
+dataEntity:
+  terms:
+    unknown: Неизвестно
+    yes: Да
+    no: Нет
+
 actions:
   add:
     title: Добавить
@@ -39,6 +45,8 @@ actions:
     title: Перезагрузить
   save:
     title: Сохранить
+  saveAndContinue:
+    title: Сохранить и продолжить
   apply:
     title: Применить
   cancel:
@@ -49,6 +57,12 @@ actions:
     title: Назад
   forward:
     title: Вперёд
+  next:
+    title: Далее
+  approve:
+    title: Одобрить
+  reject:
+    title: Отказать
 
 documents:
   fields:
@@ -67,6 +81,10 @@ documents:
     uploadingError: Ошибка загрузки
     signed: Подписан
     unsigned: Не подписан
+    checked: Проверен
+    notChecked: Не проверен
+    approved: Подтвержден
+    notApproved: Не подтвержден
   statusMessages:
     uploaded: Файл «{{name}}» успешно загружен
     uploadingError: Ошибка загрузки файла «{{name}}»

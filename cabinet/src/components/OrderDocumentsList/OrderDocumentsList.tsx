@@ -6,11 +6,11 @@ import { isUndefined } from 'lodash'
 
 import { getEndpointUrl } from 'orient-ui-library/library'
 
-import Div from 'orient-ui-library/components/Div' // TODO: ui-lib
+import Div from 'orient-ui-library/components/Div'
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { OrderDocument } from 'library/models/proxy'
+import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 
 import {
   getOrderDocumentUploadUrl,
@@ -18,7 +18,7 @@ import {
   downloadOrderDocument,
 } from 'library/api'
 
-import './OrderStepDocumentsList.style.less'
+import './OrderDocumentsList.style.less'
 
 const { Text } = Typography
 
@@ -27,10 +27,10 @@ export interface OrderDocumentsListProps {
   orderId: number
   types: number[]
   current?: OrderDocument[]
-  onChange: () => {}
+  onChange?: () => {}
 }
 
-const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
+const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   const { companyId, orderId, types, current, onChange } = props
   const { t } = useTranslation()
 
@@ -56,6 +56,7 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     }
     return {
       type: typeId,
+      name: document.typeName, // NOTE: this is cyrillic doc name, eg. Устав компании
       id: document.info.documentId,
       status: DocumentStatus.Uploaded,
     }
@@ -73,6 +74,7 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       orderId,
       documentId,
     })
+    item.status = DocumentStatus.NotUploaded
     return result
   }
 
@@ -82,8 +84,9 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       companyId,
       orderId,
       documentId,
+      fileName: item.name,
     })
-    return result as any // TODO: check this
+    return result
   }
 
   const renderDocumentStatus = (status: DocumentStatus) => {
@@ -102,7 +105,6 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   }
 
 
-
   const renderActions = (_val: unknown, item: Document) => (
     <Space className="DataTable__actions DataTable__ghostActions--">
       <DocumentActions
@@ -115,7 +117,7 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     </Space>
   )
 
-  const columns: ColumnsType<unknown> = [
+  const columns: ColumnsType<Document> = [
     {
       key: 'type',
       dataIndex: 'type',
@@ -139,7 +141,7 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   ]
 
   return (
-    <Div className="OrderStepDocumentsList" data-testid="OrderStepDocumentsList">
+    <Div className="OrderDocumentsList" data-testid="OrderDocumentsList">
       <Table
         size={'middle'}
         loading={isUndefined(current)}
@@ -148,9 +150,10 @@ const OrderStepDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
         dataSource={items}
         pagination={false}
         showHeader={false}
+        rowKey="type"
       />
     </Div>
   )
 }
 
-export default OrderStepDocumentsList
+export default OrderDocumentsList

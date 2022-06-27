@@ -1,6 +1,6 @@
 import { FormInputShortConfig, FormInputType } from 'library/helpers/form'
 
-import { CompanyRequisites } from 'library/models/proxy' // TODO: to ui-lib
+import { CompanyRequisites } from 'orient-ui-library/library/models/proxy'
 
 const formFields: FormInputShortConfig<CompanyRequisites>[] = [
   [ 'companyRequisites', 'bankName',      FormInputType.Text,          true ],

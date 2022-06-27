@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useHistory } from 'react-router-dom'
+
 import { Typography, Descriptions, Space, Row, Col, Card, Skeleton, Select, Button, message } from 'antd'
 import { BaseOptionType } from 'antd/es/select'
 
@@ -8,7 +10,8 @@ import EmptyResult from 'orient-ui-library/components/EmptyResult' // TODO: from
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { Customer } from 'library/models' // TODO: check API schema, why not from proxy?
-import { FrameWizardType, searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
+import { searchCustomers, startFrameWizard, getFrameWizardStep } from 'library/api'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import './OrderStepSelectInn.style.less'
 
@@ -21,12 +24,11 @@ export interface OrderSelectInnProps {
   orderId?: number
   setOrderId: (orderId: number) => void
   currentStep: number
+  sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   selectedCustomer: Customer | undefined
   setSelectedCustomer: (customer: Customer | undefined) => void
 }
-
-const WIZARD_STEP_NUMBER = 1
 
 const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   wizardType = FrameWizardType.Full,
@@ -34,11 +36,13 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   orderId,
   setOrderId,
   currentStep,
+  sequenceStepNumber,
   setCurrentStep,
   selectedCustomer,
   setSelectedCustomer,
 }) => {
   const { t } = useTranslation()
+  const history = useHistory()
 
   const [ search, setSearch ] = useState<string>()
   const [ searching, setSearching ] = useState<boolean>(false)
@@ -53,7 +57,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   useEffect(() => {
-    if (currentStep >= WIZARD_STEP_NUMBER) {
+    if (currentStep >= sequenceStepNumber) {
       setNextStepAllowed(true)
     }
   }, [currentStep])
@@ -76,7 +80,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   }, [companyId, orderId])
 
   useEffect(() => {
-    // TODO: ask be generate models for this
+    // TODO: ask be generate models for this and remove any
     if ((stepData as any)?.customerCompany?.id) {
       setSelectedId((stepData as any)?.customerCompany.id)
       setSearch('')
@@ -87,7 +91,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     const result = await getFrameWizardStep({
       type: wizardType,
       companyId: companyId as number,
-      step: WIZARD_STEP_NUMBER,
+      step: sequenceStepNumber,
       orderId,
     })
     if (result.success) {
@@ -139,8 +143,9 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderId((result as any)?.data?.orderId as number)
-      setCurrentStep(WIZARD_STEP_NUMBER + 1)
+      const orderId = (result as any)?.data?.orderId as number
+      history.push(`/requests/${orderId}`)
+      setOrderId(orderId)
     }
     setSubmitting(false)
   }
@@ -168,7 +173,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     }
     const customer = selectedCustomer
     return (
-      <Div className="OrderSelectInn__customerInfo">
+      <Div className="OrderStepSelectInn__customerInfo">
         <Title level={5}>{t('frameSteps.selectInn.customerInfo.title')}</Title>
         <Card>
           <Descriptions title={customer.shortName}>
@@ -184,7 +189,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
 
   const handleNextStep = () => {
     if (orderId && isNextStepAllowed) {
-      setCurrentStep(WIZARD_STEP_NUMBER + 1)
+      setCurrentStep(sequenceStepNumber + 1)
     } else if (isNextStepAllowed) {
       sendNextStep()
     }
@@ -220,7 +225,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     <Col lg={12} xl={10}>
       <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Select
-        className="OrderSelectInn__select"
+        className="OrderStepSelectInn__select"
         onSearch={setSearch}
         loading={searching}
         notFoundContent={search && <EmptyResult />}
@@ -249,7 +254,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {renderActions()}
+      {currentStep <= sequenceStepNumber && renderActions()}
     </Div>
   )
 }

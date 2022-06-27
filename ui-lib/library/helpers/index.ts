@@ -1,5 +1,6 @@
 export * from './api'
 export * from './filters'
+export * from './file'
 export * from './hooks'
 export * from './numerics'
 export * from './react'

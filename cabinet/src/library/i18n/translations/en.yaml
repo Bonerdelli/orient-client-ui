@@ -54,8 +54,13 @@ bankRequisitesPage:
     main:
       title: Bank details
 
+orderStatusTitles:
+  draft: Draft
+  verifying: Verifying
+  needsForRework: Needs for Rework
+
 ##
-# TODO: sync l10ns below
+# TODO: sync l10ns below and translate
 ##
 orders:
   actionButton:
@@ -123,6 +128,8 @@ frameSteps:
 
   documents:
     desc: Приложите пакет документов для оформления заявки
+    fillDataButton:
+      title: Заполнить
     sectionTitles:
       mainDocs: Обязательные документы
       additionalDocs: Дополнительные документы

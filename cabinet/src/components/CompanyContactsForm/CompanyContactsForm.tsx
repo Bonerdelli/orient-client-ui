@@ -6,7 +6,7 @@ import { isUndefined } from 'lodash'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { CompanyContacts } from 'library/models/proxy' // TODO: to ui-lib
+import { CompanyContacts } from 'orient-ui-library/library/models/proxy'
 import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
 import { getCompanyContacts, updateCompanyContacts } from 'library/api' // TODO: to ui-lib

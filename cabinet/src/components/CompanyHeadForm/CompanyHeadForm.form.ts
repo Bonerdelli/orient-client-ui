@@ -1,6 +1,6 @@
 import { FormInputShortConfig, FormInputType } from 'library/helpers/form'
 
-import { CompanyHead } from 'library/models/proxy' // TODO: to ui-lib
+import { CompanyHead } from 'orient-ui-library/library/models/proxy'
 
 const formFields: FormInputShortConfig<CompanyHead>[] = [
   [ 'lastName' ],

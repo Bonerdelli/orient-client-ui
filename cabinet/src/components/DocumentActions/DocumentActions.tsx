@@ -4,6 +4,8 @@ import { Button, Upload, message } from 'antd'
 import type { UploadProps } from 'antd'
 import { UploadOutlined, DownloadOutlined, DeleteOutlined } from '@ant-design/icons'
 
+import Div from 'orient-ui-library/components/Div'
+
 import { Document, DocumentStatus } from 'library/models'
 import { useStoreState } from 'library/store'
 
@@ -13,10 +15,11 @@ export interface DocumentActionsProps {
   document: Document
   uploadUrl: string
   deleteHandler: (doc: Document) => Promise<boolean>
-  downloadHandler: (doc: Document) => Promise<File>
-  onChange: () => {}
+  downloadHandler: (doc: Document) => Promise<boolean>
   onUploadSuccess?: () => {}
   onUploadError?: () => {}
+  onChange?: () => {}
+  loading?: boolean | null
 }
 
 const DocumentActions: React.FC<DocumentActionsProps> = ({
@@ -27,6 +30,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   onChange,
   onUploadSuccess,
   onUploadError,
+  loading,
 }) => {
   const { t } = useTranslation()
   const user = useStoreState(state => state.user)
@@ -66,7 +70,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       'common.documents.statusMessages.uploaded',
       { name: fileName },
     ))
-    setOperationInProccess(false)
+    // setOperationInProccess(false)
     onUploadSuccess && onUploadSuccess()
     onChange && onChange()
   }
@@ -110,6 +114,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
         shape="circle"
         loading={operationInProccess}
         title={t('common.documents.actions.upload.title')}
+        disabled={loading === true}
         icon={<UploadOutlined />}
       />
     </Upload>
@@ -122,6 +127,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       shape="circle"
       title={t('common.documents.actions.download.title')}
       onClick={handleDownload}
+      disabled={loading === true}
       icon={<DownloadOutlined />}
     />
   )
@@ -135,16 +141,17 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       loading={operationInProccess}
       title={t('common.actions.delete.title')}
       onClick={handleDelete}
+      disabled={loading === true}
       icon={<DeleteOutlined />}
     />
   )
 
   return (
-    <>
+    <Div className="DocumentActions">
       {canUpload() && renderAddButton()}
       {canDownload() && renderDownloadButton()}
       {canDelete() && renderDeleteButton()}
-    </>
+    </Div>
   )
 }
 

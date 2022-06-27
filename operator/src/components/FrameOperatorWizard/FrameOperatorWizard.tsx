@@ -5,15 +5,12 @@ import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { OrderWizardType } from 'orient-ui-library/library/models'
 
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepStopFactors from 'components/OrderStepStopFactors'
-import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
+// import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
-
-import { useStoreState } from 'library/store'
 
 import { getFrameOrderWizard } from 'library/api/frameOrder'
 
@@ -32,41 +29,33 @@ export interface FrameOperatorWizardPathParams {
   itemId?: string,
 }
 
-export const FRAME_WIZARD_LAST_STEP_INDEX = 4
-
 const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FrameOperatorWizardPathParams>()
-  const company = useStoreState(state => state.company.current)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
-  const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ companyId, setCompanyId ] = useState<number>()
 
   useEffect(() => {
-    if (companyId) {
-      setStepDataLoading(true)
-      loadCurrentStepData()
-    }
-  }, [companyId])
+    setStepDataLoading(true)
+    loadCurrentStepData()
+  }, [])
 
   useEffect(() => {
-    if (company) {
-      setCompanyId(company.id)
+    if (selectedStep !== currentStep) {
+      setSelectedStep(currentStep)
     }
-  }, [company])
+  }, [currentStep])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameOrderWizard({
       orderId: Number(itemId) || orderId as number,
     })
     if (result.success) {
-      setCurrentStepData((result.data as any).data)
       const step = Number((result.data as any).step)
       setCurrentStep(step)
       setSelectedStep(step)
@@ -78,32 +67,31 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   }
 
   const isFirstStepActive = (): boolean => true
-  const isSecondStepActive = (): boolean => true
-  const isThirdStepActive = (): boolean => true
-  const isFourthStepActive = (): boolean => true
-  const isFifthStepActive = (): boolean => true
+  const isSecondStepActive = (): boolean => currentStep > 1
+  const isThirdStepActive = (): boolean => currentStep > 2
+  // const isFourthStepActive = (): boolean => currentStep > 1 // NOTE: disabled for Demo
+  const isFifthStepActive = (): boolean => currentStep > 3
 
   const renderCurrentStep = () => {
-    if (!companyId || stepDataLoading) {
+    if (stepDataLoading) {
       return <Skeleton active={true} />
     }
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
-      oprderType: OrderWizardType.Frame,
       currentStep: currentStep,
-      setCurrentStep: setSelectedStep,
+      setCurrentStep: setCurrentStep,
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps}/>
+        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
       case 2:
-        return <OrderStepDocuments {...stepBaseProps}/>
+        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
-        return <OrderStepStopFactors {...stepBaseProps}/>
+        return <OrderStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
+      // case 4: // NOTE: disabled for Demo
+      //   return <OrderStepOptionalParameters {...stepBaseProps} sequenceStepNumber={4}/>
       case 4:
-        return <OrderStepOptionalParameters {...stepBaseProps}/>
-      case 5:
-        return <OrderStepScoringResults {...stepBaseProps}/>
+        return <OrderStepScoringResults {...stepBaseProps} sequenceStepNumber={4}/>
       default:
         return <></>
     }
@@ -122,11 +110,11 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     )
   }
 
-  // if (dataLoaded === false) {
+  if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
     )
-  // }
+  }
 
   return (
     <>
@@ -140,7 +128,6 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
           <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
           <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
           <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fourthStep.title')} />
           <Step disabled={!isFifthStepActive()} title={t('frameWizard.fifthStep.title')} />
         </Steps>
       </Card>

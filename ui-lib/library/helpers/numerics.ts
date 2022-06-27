@@ -1,3 +1,5 @@
+import { isNumber } from 'lodash'
+
 /**
  * Helpers to handle numeric values
  *
@@ -38,11 +40,11 @@ export const formatNumber = (
  * TODO: add i18n support (take locale from user prefserences)
  */
 export const formatCurrency = (
-  value: string,
+  value: string | number,
   fractionDigits = 2,
   padFractionPart = false,
 ) =>
-  new Intl.NumberFormat('ru-RU', {
+  new Intl.NumberFormat('ru-RU', { // TODO: add locale support
     minimumFractionDigits: padFractionPart ? fractionDigits : 0,
     maximumFractionDigits: fractionDigits,
-  }).format(parseFloat(value))
+  }).format(isNumber(value) ? value : parseFloat(value))

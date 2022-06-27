@@ -24,6 +24,12 @@ forms:
         required: Password is required
       placeholder: Please type password
 
+dataEntity:
+  terms:
+    unknown: Unknown
+    yes: Yes
+    no: No
+
 actions:
   add:
     title: Add
@@ -39,6 +45,8 @@ actions:
     title: Reload
   save:
     title: Save
+  saveAndContinue:
+    title: Save and Continue
   apply:
     title: Apply
   cancel:
@@ -49,6 +57,12 @@ actions:
     title: Back
   forward:
     title: Forward
+  next:
+    title: Next
+  approve:
+    title: Approve
+  reject:
+    title: Reject
 
 documents:
   fields:
@@ -67,6 +81,10 @@ documents:
     uploadingError: Uploading Error
     signed: Signed
     unsigned: Unsigned
+    checked: Checked
+    notChecked: Not Checked
+    approved: Approved
+    notApproved: Not Approved
   statusMessages:
     uploaded: File "{{name}}" uploaded successfully
     uploadingError: Error loading file "{{name}}"

@@ -13,7 +13,10 @@
     "start": "nx run-many --target=start --projects=orient-cabinet-ui,orient-operator-ui,orient-bank-ui",
     "start:cabinet": "nx run orient-cabinet-ui:start",
     "start:operator": "nx run orient-operator-ui:start",
-    "start:bank": "cd bank && nx run orient-bank-ui:start",
+    "start:bank": "nx run orient-bank-ui:start",
+    "generate:cabinet": "nx run orient-cabinet-ui:generate",
+    "generate:operator": "nx run orient-operator-ui:generate",
+    "generate:bank": "nx run orient-bank-ui:generate",
     "nx:graph": "nx graph"
   },
   "alias": {},

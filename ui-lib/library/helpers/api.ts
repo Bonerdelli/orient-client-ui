@@ -8,6 +8,8 @@
 import axios, { AxiosError } from 'axios'
 import { Middleware } from 'redux'
 
+import { downloadBinaryFile } from 'library/helpers/file'
+
 export const API_URL = process.env.API_PROXIED_PATH
   ? `${process.env.API_PROXIED_PATH}/${process.env.API_VERSION}`
   : `${process.env.API_URL}/${process.env.API_VERSION}`
@@ -72,6 +74,57 @@ export async function get<T>(
   } catch (err: any) {
     return handleApiError(err, onError)
   }
+}
+
+/**
+ * Download binary file from backend
+ */
+export async function getFile(
+  path: string,
+  fileName: string,
+  onError?: (error?: ApiErrorResponse) => void,
+  isPathAbsolute?: boolean
+): Promise<boolean> {
+  try {
+    const url = isPathAbsolute ? path : getEndpointUrl(path)
+    const response = await axios.get(url, {
+      responseType: 'blob',
+    })
+    if (!response.data) {
+      throw new Error('Empty response')
+    }
+    downloadBinaryFile(response.data, fileName)
+  } catch (err: any) {
+    handleApiError(err, onError)
+    return false
+  }
+  return true
+}
+
+/**
+ * Download binary file from Minio
+ */
+export async function getS3File(
+  url: string,
+  fileName: string,
+  onError?: (error?: ApiErrorResponse) => void,
+): Promise<boolean> {
+  try {
+    const response = await axios.get(url, {
+      responseType: 'blob',
+      headers: {
+        Authorization: '',
+      }
+    })
+    if (!response.data) {
+      throw new Error('Empty response')
+    }
+    downloadBinaryFile(response.data, fileName)
+  } catch (err: any) {
+    handleApiError(err, onError)
+    return false
+  }
+  return true
 }
 
 /**

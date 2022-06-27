@@ -4,6 +4,9 @@
  */
 
 export interface paths {
+  '/operator/wizard/frameSimple/{orderId}/stopFactor': {
+    post: operations['changeStopFactor']
+  }
   '/operator/wizard/frameSimple/{orderId}/reject': {
     post: operations['reject']
   }
@@ -18,6 +21,9 @@ export interface paths {
   }
   '/operator/wizard/frameSimple/{orderId}/1': {
     post: operations['postStep1']
+  }
+  '/operator/wizard/frame/{orderId}/stopFactor': {
+    post: operations['changeStopFactor_1']
   }
   '/operator/wizard/frame/{orderId}/reject': {
     post: operations['reject_1']
@@ -36,6 +42,9 @@ export interface paths {
   }
   '/operator/wizard/frame/{orderId}/1': {
     post: operations['postStep1_1']
+  }
+  '/operator/wizard/factor/{orderId}/stopFactor': {
+    post: operations['changeStopFactor_2']
   }
   '/operator/wizard/factor/{orderId}/reject': {
     post: operations['reject_2']
@@ -391,16 +400,21 @@ export interface paths {
 
 export interface components {
   schemas: {
-    RejectOrderDto: {
+    OrderStopFactorRequest: {
       /** Format: int64 */
-      rejectReasonId: number
-      rejectComment?: string
+      stopFactorId: number
+      isOk: boolean
     }
     ServerResponseUnit: {
       success: boolean
       data?: components['schemas']['Unit']
     }
     Unit: { [key: string]: unknown }
+    RejectOrderDto: {
+      /** Format: int64 */
+      rejectReasonId: number
+      rejectComment?: string
+    }
     OrderDocumentStatusRequest: {
       /** Format: int64 */
       documentId: number
@@ -431,11 +445,6 @@ export interface components {
     }
     OperatorFrameStep3To4Request: {
       stopFactors: components['schemas']['OrderStopFactorRequest'][]
-    }
-    OrderStopFactorRequest: {
-      /** Format: int64 */
-      stopFactorId: number
-      isOk: boolean
     }
     OperatorFrameStep2To3Request: {
       documentStatuses: components['schemas']['OrderDocumentStatusRequest'][]
@@ -524,8 +533,6 @@ export interface components {
       averageEmployeesCountId: number
       /** Format: int32 */
       taxationSystemId: number
-      /** Format: int32 */
-      paymentFormId: number
       belongsToHoldings: boolean
       holdingName?: string
       headCompanyName?: string
@@ -856,6 +863,7 @@ export interface components {
     WizardGetResponseWrapper: {
       /** Format: int32 */
       step: number
+      orderStatus: string
       data: components['schemas']['WizardGetResponse']
     }
     OrderStatusGraphAxis: {
@@ -946,6 +954,8 @@ export interface components {
       clientSigned: boolean
       bankSigned: boolean
       customerSigned: boolean
+      /** Format: int64 */
+      bankId?: number
     }
     OrderDocumentsResponse: {
       /** Format: int64 */
@@ -982,6 +992,26 @@ export interface components {
 }
 
 export interface operations {
+  changeStopFactor: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OrderStopFactorRequest']
+      }
+    }
+  }
   reject: {
     parameters: {
       path: {
@@ -1069,6 +1099,26 @@ export interface operations {
         content: {
           '*/*': components['schemas']['ServerResponseWizardPostResponse']
         }
+      }
+    }
+  }
+  changeStopFactor_1: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OrderStopFactorRequest']
       }
     }
   }
@@ -1184,6 +1234,26 @@ export interface operations {
         content: {
           '*/*': components['schemas']['ServerResponseWizardPostResponse']
         }
+      }
+    }
+  }
+  changeStopFactor_2: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OrderStopFactorRequest']
       }
     }
   }
