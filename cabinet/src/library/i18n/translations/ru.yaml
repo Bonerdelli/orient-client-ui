@@ -131,7 +131,8 @@ frameSteps:
   documents:
     title: Приложите пакет документов для оформления заявки
     fillDataButton:
-      title: Заполнить
+      fill: Заполнить
+      check: Проверить
     sectionTitles:
       mainDocs: Обязательные документы
       additionalDocs: Дополнительные документы
@@ -183,6 +184,7 @@ frameSteps:
 
 questionnaire:
   heading: Анкета
+  back: Назад
   save: Сохранить
   common:
     yes: Да

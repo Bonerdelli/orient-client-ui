@@ -17,6 +17,9 @@ import {
 import { QuestionnaireDto } from 'library/models/proxy'
 import { useStoreState } from 'library/store'
 import { Div } from 'orient-ui-library/components'
+import { Link, useLocation } from 'react-router-dom'
+import { RETURN_URL_PARAM } from 'library/constants'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 interface QuestionnaireFormProps {
   companyId: string
@@ -28,6 +31,8 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId }) => {
   const [ form ] = Form.useForm<QuestionnaireFormData>()
   const [ data, isDataLoaded ] = useApi<QuestionnaireDto>(getQuestionnaire, companyId)
   const dictionaries = useStoreState(state => state.dictionary.list)
+  const { search } = useLocation()
+  const returnUrl = new URLSearchParams(search).get(RETURN_URL_PARAM)
 
   if (!isDataLoaded || !dictionaries) {
     return (
@@ -70,7 +75,15 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId }) => {
       <QuestionnaireCreditExpirationsFormFields/>
       <QuestionnaireSuppliersAndBuyersFormFields dictionaries={dictionaries}/>
       <QuestionnaireEasyFinansRelationshipsFormFields/>
-      <Row justify="end">
+      <Row justify={returnUrl ? 'space-between' : 'end'}>
+        {returnUrl &&
+          <Link to={returnUrl}>
+            <Button icon={<ArrowLeftOutlined/>} type="link">
+              {t('questionnaire.back')}
+            </Button>
+          </Link>
+        }
+
         <Button type="primary"
                 htmlType="submit"
         >

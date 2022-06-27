@@ -1,25 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
-import { Typography, Timeline, Skeleton, Spin, Row, Col, Button, message } from 'antd'
-import { CheckCircleFilled, ExclamationCircleOutlined, ClockCircleOutlined, FormOutlined } from '@ant-design/icons'
+import { Button, Col, message, Row, Skeleton, Spin, Timeline, Typography } from 'antd'
+import { CheckCircleFilled, ClockCircleOutlined, ExclamationCircleOutlined, FormOutlined } from '@ant-design/icons'
 import { every } from 'lodash'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
-import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
-import {
-  WizardStep2Data,
-  getFrameWizardStep,
-  sendFrameWizardStep2,
-} from 'library/api'
+import { getFrameWizardStep, sendFrameWizardStep2, WizardStep2Data } from 'library/api'
 
 import './OrderStepDocuments.style.less'
+import { RETURN_URL_PARAM } from 'library/constants'
 
 const { Title } = Typography
 const { Item: TimelineItem } = Timeline
@@ -48,6 +45,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   setCurrentStep,
 }) => {
   const { t } = useTranslation()
+  const location = useLocation()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
@@ -85,7 +83,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
     setСompanyDataStatus(updatedCompanyStatus)
 
-  }, [stepData])
+  }, [ stepData ])
 
   const updateCurrentDocuments = (documents: OrderDocument[]): boolean => {
     let isAllDocumentsReady = true
@@ -212,8 +210,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const dotParams = (ready: boolean | null) => ({
     dot: ready === true
-      ? <CheckCircleFilled className="OrderStepDocuments__companyDataStatus__okIcon" />
-      : (ready === null ? <ClockCircleOutlined /> : <ExclamationCircleOutlined />),
+      ? <CheckCircleFilled className="OrderStepDocuments__companyDataStatus__okIcon"/>
+      : (ready === null ? <ClockCircleOutlined/> : <ExclamationCircleOutlined/>),
     color: ready === true ? 'green'
       : (ready === null ? 'grey' : 'red'),
   })
@@ -224,7 +222,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         {t('frameSteps.documents.сompanyData.сompanyHead')}
         {!сompanyDataStatus?.сompanyHead && (
           <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined />}>
+            <Button size="small" type="link" icon={<FormOutlined/>}>
               {t('frameSteps.documents.fillDataButton.title')}
             </Button>
           </NavLink>
@@ -234,7 +232,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         {t('frameSteps.documents.сompanyData.bankRequisites')}
         {!сompanyDataStatus?.bankRequisites && (
           <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined />}>
+            <Button size="small" type="link" icon={<FormOutlined/>}>
               {t('frameSteps.documents.fillDataButton.title')}
             </Button>
           </NavLink>
@@ -242,18 +240,17 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       </TimelineItem>
       <TimelineItem {...dotParams(сompanyDataStatus?.questionnaire ?? null)}>
         {t('frameSteps.documents.сompanyData.questionnaire')}
-        {!сompanyDataStatus?.questionnaire && (
-          <NavLink to="/questionnaire" className="OrderStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined />}>
-              {t('frameSteps.documents.fillDataButton.title')}
-            </Button>
-          </NavLink>
-        )}
+        <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
+                 className="OrderStepDocuments__companyDataStatus__link">
+          <Button size="small" type="link" icon={<FormOutlined/>}>
+            {t(`frameSteps.documents.fillDataButton.${сompanyDataStatus?.questionnaire ? 'check' : 'fill'}`)}
+          </Button>
+        </NavLink>
       </TimelineItem>
     </Timeline>
   )
 
-  const renderDocuments = () =>  (
+  const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         companyId={companyId as number}
@@ -303,13 +300,13 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
