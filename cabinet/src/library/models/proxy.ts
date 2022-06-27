@@ -10,6 +10,8 @@ export type CompanyHead = schema.components['schemas']['JCompanyFounder'] // NOT
 export type OrderDocument = schema.components['schemas']['OrderDocumentsResponse']
 export type CompanyDocument = schema.components['schemas']['CompanyDocumentsResponse']
 
+export type QuestionnaireDto = schema.components['schemas']['CompanyQuestionnaire']
+
 // TODO: why it's duplicated?
 // export type CompanyDocument = schema.components['schemas']['JCompanyDocument']
 // export type Document = schema.components['schemas']['JOrderDocument']
