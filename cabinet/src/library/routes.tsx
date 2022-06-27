@@ -1,7 +1,7 @@
-import { Switch, Route, Redirect, RouteProps } from 'react-router-dom'
+import { Redirect, Route, RouteProps, Switch } from 'react-router-dom'
 import portalConfig from 'config/portal.yaml'
 
-import { UserRoles, hasAccess } from 'orient-ui-library'
+import { hasAccess, UserRoles } from 'orient-ui-library'
 
 import LoginPage from 'pages/LoginPage'
 import PageNotFound from 'pages/PageNotFound'
@@ -13,26 +13,25 @@ import OrdersPage from 'pages/OrdersPage'
 
 import FrameWizardPage from 'pages/FrameWizardPage'
 import FrameSimpleWizardPage from 'pages/FrameSimpleWizardPage'
-
-import FrameOrdersPage__bank from 'pages/__bank/FrameOrdersPage'
-import FrameOrdersPage__operator from 'pages/__operator/FrameOrdersPage'
+import QuestionnairePage from 'pages/QuestionnairePage'
 
 interface PrivateRouteOptions extends RouteProps {
-  component: React.FC<RouteProps>
-  roles: UserRoles
+  component: React.FC<RouteProps>;
+  roles: UserRoles;
 }
 
 export const HOME_PATH = portalConfig.sections.company
 export const LOGIN_PATH = '/login'
 export const FRAME_ORDER_PATH = '/frame-order'
 export const SIMPLE_FRAME_ORDER_PATH = '/simple-frame-order'
+export const QUESTIONNAIRE_PATH = '/questionnaire'
 
 const PrivateRoute: React.FC<PrivateRouteOptions> = ({
   component: Component,
   roles: accessRoles,
   ...rest
 }) => {
-  const roles: any = ['admin'] // TODO: use user.roles from API
+  const roles: any = [ 'admin' ] // TODO: use user.roles from API
   return (
     <Route
       {...rest}
@@ -40,7 +39,7 @@ const PrivateRoute: React.FC<PrivateRouteOptions> = ({
         hasAccess(roles, accessRoles) ? (
           <Component {...props} />
         ) : (
-          <Redirect to={{ pathname: '/' }} />
+          <Redirect to={{ pathname: '/' }}/>
         )
       }
     />
@@ -50,10 +49,10 @@ const PrivateRoute: React.FC<PrivateRouteOptions> = ({
 export const PublicRoutes = () => (
   <Switch>
     <Route exact path="/login">
-      <LoginPage />
+      <LoginPage/>
     </Route>
     <Route path="*">
-      <Redirect to={{ pathname: LOGIN_PATH }} />
+      <Redirect to={{ pathname: LOGIN_PATH }}/>
     </Route>
   </Switch>
 )
@@ -82,6 +81,11 @@ export const ProtectedRoutes = () => (
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
+      path={portalConfig.sections.questionnaire}
+      component={QuestionnairePage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
       path={portalConfig.sections.requests}
       component={OrdersPage}
       roles={portalConfig.roles.pages.all}
@@ -99,13 +103,14 @@ export const ProtectedRoutes = () => (
     />
 
     <Route exact path="/">
-      <Redirect to={{ pathname: HOME_PATH }} />
+      {/*<Redirect to={{pathname: HOME_PATH}}/>*/}
+      <Redirect to={{ pathname: QUESTIONNAIRE_PATH }}/>
     </Route>
     <Route exact path="/login">
-      <Redirect to={{ pathname: HOME_PATH }} />
+      <Redirect to={{ pathname: HOME_PATH }}/>
     </Route>
     <Route path="*">
-      <PageNotFound />
+      <PageNotFound/>
     </Route>
   </Switch>
 )

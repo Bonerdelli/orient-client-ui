@@ -43,7 +43,7 @@ company:
       titleShort: Принадлежность к МСП
     capital:
       title: Уставный фонд
-    currency:
+    currencyCode:
       title: Валюта
     regAuthority:
       title: Регистрирующий орган
@@ -64,8 +64,6 @@ company:
       description: Вид(ы) осуществляемой деятельности
     soogu:
       title: Код СООГУ
-    soato:
-      title: Код СОАТО
     state:
       title: Состояние активности
     chief:
@@ -74,16 +72,18 @@ company:
 companyContact:
   title: Контакт компании
   fields:
-    primaryEmail:
-      title: Основной адрес электронной почты
-    additionalEmail:
-      title: Дополнительный адрес электронной почты
-    primaryPhone:
-      title: Рабочий телефон
-    additionalPhone:
-      title: Дополнительный телефон
-    site:
-      title: Web-сайт
+    email:
+      title: Адрес электронной почты
+    phones:
+      title: Контактные телефоны
+    address:
+      title: Юридический адрес
+    addressFact:
+      title: Фактический адрес
+    soato:
+      title: Код СОАТО (юридический)
+    soatoFact:
+      title: Код СОАТО (фактический)
 
 companyFounder:
   title: Основатель компании
@@ -120,7 +120,7 @@ companyFounder:
       title: Дата рождения
     birthplace:
       title: Место рождения
-    isMaleGender:                                                # TODO: почему?
+    isMaleGender: # TODO: почему?
       title: Пол
     passportValidDate:
       title: Дата окончания срока действия
@@ -128,6 +128,8 @@ companyFounder:
       title: Национальность
     address:
       title: Адрес регистрации
+    phone:
+      title: Телефон
 
 companyRequisites:
   title: Реквизиты компании

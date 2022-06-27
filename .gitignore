@@ -5,3 +5,9 @@
 
 # bundler
 .parcel-cache
+
+# editors
+/.idea
+
+# misc
+.DS_STORE

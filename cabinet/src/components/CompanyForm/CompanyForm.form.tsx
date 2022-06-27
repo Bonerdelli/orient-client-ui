@@ -2,11 +2,11 @@ import FormTextItem from 'orient-ui-library/components/FormTextItem'
 import FormTextItemEditable from 'orient-ui-library/components/FormTextItemEditable'
 
 export type CompanyFormInputConfig = [
-  string,   // Model
-  string,   // Name
-  boolean,  // Is Required
-  boolean?, // Is Editable
-  boolean?, // Editable inline
+  model: string,
+  name: string,
+  isRequired: boolean,
+  isEditable?: boolean,
+  editableInline?: boolean,
 ]
 
 const formFields: Record<string, CompanyFormInputConfig[]> = {
@@ -18,16 +18,18 @@ const formFields: Record<string, CompanyFormInputConfig[]> = {
     // TODO: make a two-cols layout
     [ 'company', 'isMsp', false ],
     [ 'company', 'capital', false ],
-    [ 'company', 'currency', false ],
+    [ 'company', 'currencyCode', false ],
     [ 'company', 'oked', false ],
     [ 'company', 'soogu', false ],
     [ 'company', 'state', false ],
   ],
   contacts: [
-    [ 'companyContact', 'primaryEmail',    false ],
-    [ 'companyContact', 'additionalEmail', false ],
-    [ 'companyContact', 'primaryPhone',    false ],
-    [ 'companyContact', 'additionalPhone', false ],
+    [ 'companyContact', 'email', false, true, true ],
+    [ 'companyContact', 'phones', false, true, true ],
+    [ 'companyContact', 'soato', true, true, true ],
+    [ 'companyContact', 'address', true, true, true ],
+    [ 'companyContact', 'soatoFact', true, true, true ],
+    [ 'companyContact', 'addressFact', true, true, true ],
   ],
   regAuthority: [
     [ 'company', 'regAuthority', false ],
