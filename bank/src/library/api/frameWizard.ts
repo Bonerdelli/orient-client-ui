@@ -33,7 +33,7 @@ export async function sendFrameWizardStep1(
   request: unknown
 ) {
   const { bankId, orderId } = params
-  return await post(`/bank/${bankId}/wizard/frame/${orderId}/1`, request)
+  return await post(`/bank/${bankId}/wizard/frame/${orderId}/1`, request, true)
 }
 
 /**
@@ -44,7 +44,7 @@ export async function sendFrameWizardStep2(
   request: unknown
 ) {
   const { bankId, orderId } = params
-  return await post(`/bank/${bankId}/wizard/frame/${orderId}/2`, request)
+  return await post(`/bank/${bankId}/wizard/frame/${orderId}/2`, request, true)
 }
 
 /**
@@ -55,7 +55,7 @@ export async function sendFrameWizardStep3(
   request: unknown
 ) {
   const { bankId, orderId } = params
-  return await post(`/bank/${bankId}/wizard/frame/${orderId}/3`, request)
+  return await post(`/bank/${bankId}/wizard/frame/${orderId}/3`, request, true)
 }
 
 /**
@@ -66,7 +66,7 @@ export async function sendFrameWizardStep4(
   request: unknown
 ) {
   const { bankId, orderId } = params
-  return await post(`/bank/${bankId}/wizard/frame/${orderId}/4`, request)
+  return await post(`/bank/${bankId}/wizard/frame/${orderId}/4`, request, true)
 }
 
 /**

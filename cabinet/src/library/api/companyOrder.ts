@@ -30,14 +30,14 @@ export async function updateCompanyOrder(
   params: GetCompanyOrdersBaseParams,
   request: CompanyOrdersSaveRequest,
 ) {
-  return await post<Order>(`/client/company/${params.companyId}/order`, request)
+  return await post<Order>(`/client/company/${params.companyId}/order`, request, true)
 }
 
 export async function addCompanyOrder(
   params: GetCompanyOrdersBaseParams,
   request: CompanyOrdersSaveRequest,
 ) {
-  return await post<Order>(`/client/company/${params.companyId}/order`, request)
+  return await post<Order>(`/client/company/${params.companyId}/order`, request, true)
 }
 
 export async function deleteCompanyOrder(params: CompanyOrdersItemParams) {
