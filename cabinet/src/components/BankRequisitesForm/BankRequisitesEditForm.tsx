@@ -53,11 +53,12 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
 
   const handleItemUpdate = async (data: CompanyRequisites) => {
     const updatedData = await callApi<CompanyRequisites | null>(
-      updateCompanyRequisites, {
+      updateCompanyRequisites,
+      { companyId },
+      {
+        ...data,
         id: itemId ?? props.itemId,
-        companyId,
-      },
-      data,
+      }
     )
     if (updatedData) {
       setFormData(updatedData)
