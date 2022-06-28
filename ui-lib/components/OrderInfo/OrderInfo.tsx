@@ -17,6 +17,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ orderId, customerCompany }) => {
   }
   return (
     <Descriptions
+      size="middle"
       title={t('models.order.title')}
       className="OrderInfo"
       bordered
