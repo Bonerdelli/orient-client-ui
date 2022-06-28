@@ -17,5 +17,5 @@ export async function updateCompanyContacts(
   params: CompanyContactsRequestParams,
   request: CompanyContactsSaveRequest,
 ) {
-  return await post<CompanyContacts>(`/client/company/${params.companyId}/contacts`, request)
+  return await post<CompanyContacts>(`/client/company/${params.companyId}/contacts`, request, true)
 }

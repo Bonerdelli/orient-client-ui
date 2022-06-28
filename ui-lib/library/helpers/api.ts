@@ -135,8 +135,8 @@ export async function getS3File(
 export async function post<T, P = any>(
   path: string,
   payload: P,
+  showFeedback = false,
   onError?: (error?: ApiErrorResponse) => void,
-  showFeedback = true
 ): Promise<ApiResponse<T>> {
   try {
     const url = getEndpointUrl(path)
