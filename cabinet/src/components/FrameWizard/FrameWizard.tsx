@@ -6,7 +6,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
-import { OrderStatus } from 'orient-ui-library/library/models/order'
+import { FrameOrderStatus, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStepSelectInn from 'components/OrderStepSelectInn'
 import OrderStepDocuments from 'components/OrderStepDocuments'
