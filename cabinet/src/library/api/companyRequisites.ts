@@ -30,12 +30,12 @@ export async function updateCompanyRequisites(
   params: GetCompanyRequisitesBaseParams,
   request: CompanyRequisitesSaveRequest,
 ) {
-  return await post<CompanyRequisites>(`/client/company/${params.companyId}/requisites`, request)
+  return await post<CompanyRequisites>(`/client/company/${params.companyId}/requisites`, request, true)
 }
 
 export async function addCompanyRequisites(
   params: GetCompanyRequisitesBaseParams,
   request: CompanyRequisitesSaveRequest,
 ) {
-  return await post<CompanyRequisites>(`/client/company/${params.companyId}/requisites`, request)
+  return await post<CompanyRequisites>(`/client/company/${params.companyId}/requisites`, request, true)
 }

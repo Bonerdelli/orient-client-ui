@@ -44,7 +44,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
-  const [ currentStepData, setCurrentStepData ] = useState<unknown>()
+  const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
@@ -68,10 +68,12 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
   }, [company])
 
   useEffect(() => {
-    if (currentStep === 2 &&
-        orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY
-    ) {
+    if (currentStep === 2 && (
+        orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY ||
+        orderStatus === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+    )) {
       // NOTE: show waiting for verify message
+      setSelectedStep(3)
       setCurrentStep(3)
     }
   }, [currentStep, orderStatus])
@@ -118,6 +120,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           currentStep={currentStep}
           sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
+          setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
         />
       case 3:
@@ -126,6 +129,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           currentStep={currentStep}
           sequenceStepNumber={3}
           setCurrentStep={setSelectedStep}
+          orderStatus={orderStatus}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
         />
@@ -175,7 +179,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           <Step title={t('frameOrder.firstStep.title')} />
           <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
           <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')} />
-          <Step disabled title={t('frameOrder.fourthStep.title')} />
+          <Step disabled={currentStep < 4} title={t('frameOrder.fourthStep.title')} />
         </Steps>
       </Card>
       <Card className="FrameWizard__step">

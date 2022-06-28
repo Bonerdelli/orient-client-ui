@@ -25,6 +25,11 @@ forms:
       placeholder: Введите пароль
 
 dataEntity:
+  feedback:
+    updateError:
+      title: Ошибка обновления данных
+    successfullyUpdated:
+      title: Данные успешно обновлены
   terms:
     unknown: Неизвестно
     yes: Да

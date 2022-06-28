@@ -18,6 +18,7 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead }) => {
   }
   return (
     <Descriptions
+      size="middle"
       title={t('models.client.title')}
       className="ClientInfo"
       bordered

@@ -5,8 +5,10 @@
  * @package orient-ui
  */
 
+import i18n from 'i18next'
 import axios, { AxiosError } from 'axios'
 import { Middleware } from 'redux'
+import { message } from 'antd'
 
 import { downloadBinaryFile } from 'library/helpers/file'
 
@@ -133,14 +135,18 @@ export async function getS3File(
 export async function post<T, P = any>(
   path: string,
   payload: P,
+  showFeedback = false,
   onError?: (error?: ApiErrorResponse) => void,
 ): Promise<ApiResponse<T>> {
   try {
     const url = getEndpointUrl(path)
     const response = await axios.post(url, payload)
+    if (showFeedback) {
+      showResultMessage(response.data)
+    }
     return response.data
   } catch (err: any) {
-    return handleApiError(err, onError)
+    return handleApiError(err, onError, showFeedback)
   }
 }
 
@@ -164,13 +170,29 @@ export async function del(
 /**
  * Helper function to check if request was successful
  */
-export function isSuccessful<T = void>(
-  result: ApiSuccessResponse<T>,
+export function isApiCallSuccessful<T = void>(
+  response: ApiSuccessResponse<T>,
 ): boolean {
-  if (typeof result === 'undefined') {
+  console.log('Call isApiCallSuccessful', response)
+  if (typeof response === 'undefined') {
     return false
   }
-  return (result as ApiSuccessResponse)?.success ?? false
+  return (response as ApiSuccessResponse)?.success ?? false
+}
+
+/**
+ * Helper function to show simple feedback message after request completes
+ */
+export function showResultMessage<T = void>(
+  response: ApiSuccessResponse<T>,
+  successMessageL10n = 'common.dataEntity.feedback.successfullyUpdated.title',
+  failedMessageL10n = 'common.dataEntity.feedback.updateError.title',
+): void {
+  if (isApiCallSuccessful(response)) {
+    message.success(i18n.t(successMessageL10n))
+  } else {
+    message.error(i18n.t(failedMessageL10n))
+  }
 }
 
 /**
@@ -187,12 +209,16 @@ export function getEndpointUrl(path: string): string {
 function handleApiError(
   error?: AxiosError<ApiErrorResponse>,
   onError?: (error?: ApiErrorResponse) => void,
+  showFeedback = false
 ): ApiErrorResponse {
   const errorResponse = error?.response?.data
   if (onError) {
     onError(errorResponse)
   } else {
     console.error('API Error', error?.message) // eslint-disable-line no-console
+  }
+  if (showFeedback) {
+    message.error(i18n.t('common.errors.requestError.title'))
   }
   if (errorResponse) {
     return { ...errorResponse }

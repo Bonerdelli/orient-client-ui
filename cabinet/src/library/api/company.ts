@@ -25,5 +25,5 @@ export async function setCompanyShortName(
   params: SetCompanyShortNameParams,
   request: CompanyPatchShortNameRequest,
 ) {
-  return await post<Company>(`/client/company/${params.companyId}/shortName`, request)
+  return await post<Company>(`/client/company/${params.companyId}/shortName`, request, true)
 }
