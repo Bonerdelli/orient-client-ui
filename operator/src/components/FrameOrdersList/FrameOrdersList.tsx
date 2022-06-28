@@ -101,7 +101,6 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
       render: renderStatus,
       align: 'center',
     },
-
     {
       key: 'actions',
       render: renderActions,
@@ -109,6 +108,12 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
       width: 50,
     },
   ]
+
+  const rowClassName = (record: Order) => (
+    record.statusCode === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+      ? 'FrameOrdersList__row--new'
+      : ''
+  )
 
   if (dataLoaded === false) {
     return (
@@ -123,6 +128,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
         columns={columns}
         loading={dataLoaded === null}
         dataSource={data?.data as unknown as Order[] || []}
+        rowClassName={rowClassName}
         pagination={false}
       />
     </div>

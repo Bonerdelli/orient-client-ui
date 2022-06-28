@@ -25,6 +25,11 @@ forms:
       placeholder: Please type password
 
 dataEntity:
+  feedback:
+    updateError:
+      title: Error updating data
+    successfullyUpdated:
+      title: Data updated successfully
   terms:
     unknown: Unknown
     yes: Yes

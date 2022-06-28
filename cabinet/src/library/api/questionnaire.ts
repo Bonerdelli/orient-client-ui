@@ -6,5 +6,5 @@ export async function getQuestionnaire(companyId: string) {
 }
 
 export async function sendQuestionnaire(companyId: string, dto: QuestionnaireDto) {
-  return await post(`/customer/company/${companyId}/questionnaire`, dto)
+  return await post(`/customer/company/${companyId}/questionnaire`, dto, true)
 }

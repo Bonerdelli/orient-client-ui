@@ -30,5 +30,5 @@ export async function updateCompanyHead(
   params: CompanyHeadsParams,
   request: CompanyHeadSaveRequest,
 ) {
-  return await post<CompanyHead>(`/client/company/${params.companyId}/founder`, request)
+  return await post<CompanyHead>(`/client/company/${params.companyId}/founder`, request, true)
 }
