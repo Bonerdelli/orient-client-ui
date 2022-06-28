@@ -185,6 +185,7 @@ frameSteps:
 questionnaire:
   heading: Анкета
   back: Назад
+  backToOrder: Назад к заявке
   save: Сохранить
   common:
     yes: Да
@@ -235,14 +236,20 @@ questionnaire:
   suppliersAndBuyers:
     suppliers:
       title: Крупнейшие деловые партнеры компании (поставщики)
-      subtitle: Укажите не более 5 основных Поставщиков
+      subtitle: Укажите не более {{count}} основных Поставщиков
     buyers:
       title: Крупнейшие деловые партнеры компании (покупатели)
-      subtitle: Укажите не более 5 основных Покупателей
+      subtitle: Укажите не более {{count}} основных Покупателей
     fields:
-      name: Наименование компании
-      term: Срок сотрудничества
-      paymentFormId: Форма расчета
+      name:
+        title: Наименование компании
+        placeholder: Введите наименование компании
+      term:
+        title: Срок сотрудничества
+        placeholder: Укажите срок сотрудничества
+      paymentFormId:
+        title: Форма расчета
+        placeholder: Выберите форму расчета
     buyersTotalCount: Общее количество действующих покупателей, шт.
     buyersPayDelayCount: Общее количество действующих покупателей которые получают отсрочку платежа, шт.
     payDelay:

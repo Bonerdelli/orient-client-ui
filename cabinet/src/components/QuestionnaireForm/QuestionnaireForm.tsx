@@ -17,22 +17,22 @@ import {
 import { QuestionnaireDto } from 'library/models/proxy'
 import { useStoreState } from 'library/store'
 import { Div } from 'orient-ui-library/components'
-import { Link, useLocation } from 'react-router-dom'
-import { RETURN_URL_PARAM } from 'library/constants'
+import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useState } from 'react'
 
 interface QuestionnaireFormProps {
-  companyId: string
+  companyId: string,
+  returnUrl: string | null,
 }
 
 // TODO: Добавить плейсхолдеры, добить переводы где нету, допилить маппинги
-const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId }) => {
+const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, returnUrl }) => {
   const { t } = useTranslation()
   const [ form ] = Form.useForm<QuestionnaireFormData>()
   const [ data, isDataLoaded ] = useApi<QuestionnaireDto>(getQuestionnaire, companyId)
   const dictionaries = useStoreState(state => state.dictionary.list)
-  const { search } = useLocation()
-  const returnUrl = new URLSearchParams(search).get(RETURN_URL_PARAM)
+  const [ saveInProcess, setSaveInProcess ] = useState<boolean>(false)
 
   if (!isDataLoaded || !dictionaries) {
     return (
@@ -54,7 +54,9 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId }) => {
 
   const saveQuestionnaire = async (formValue: QuestionnaireFormData) => {
     const dto: QuestionnaireDto = convertQuestionnaireFormToDto(formValue)
+    setSaveInProcess(true)
     const res = await sendQuestionnaire(companyId, dto)
+    setSaveInProcess(false)
     // я думаю это временная обработка ошибки
     if (!res.success) {
       const field = (res as any).data[0]?.field
@@ -62,6 +64,8 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId }) => {
       message.error(field && defaultMessage
         ? `${field} ${defaultMessage}`
         : 'Ошибка при сохранении анкеты')
+    } else {
+      message.success('Анкета успешно сохранена')
     }
   }
 
@@ -73,7 +77,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId }) => {
       <QuestionnaireHoldingFormFields/>
       <QuestionnaireCreditFormFields/>
       <QuestionnaireCreditExpirationsFormFields/>
-      <QuestionnaireSuppliersAndBuyersFormFields dictionaries={dictionaries}/>
+      <QuestionnaireSuppliersAndBuyersFormFields dictionaries={dictionaries} formInstance={form}/>
       <QuestionnaireEasyFinansRelationshipsFormFields/>
       <Row justify={returnUrl ? 'space-between' : 'end'}>
         {returnUrl &&
@@ -86,6 +90,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId }) => {
 
         <Button type="primary"
                 htmlType="submit"
+                disabled={saveInProcess}
         >
           {t('questionnaire.save')}
         </Button>
