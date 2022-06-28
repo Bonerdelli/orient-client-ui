@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Col, Form, FormInstance, Input, Row, Select, Typography } from 'antd'
+import { Button, Col, Form, Input, Row, Select, Typography } from 'antd'
 import React from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { Dictionaries } from 'library/models/dictionaries'
@@ -9,11 +9,9 @@ import {
 import {
   defaultQuestionnaireFormState,
 } from 'components/QuestionnaireForm/constants/default-questionnaire-form-state.const'
-import { QuestionnaireFormData } from 'components/QuestionnaireForm/models/questionnaire-form.interface'
 
 interface QuestionnaireSuppliersAndBuyersFormFieldsProps {
   dictionaries: Dictionaries,
-  formInstance: FormInstance<QuestionnaireFormData>,
 }
 
 const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliersAndBuyersFormFieldsProps> = ({ dictionaries }) => {

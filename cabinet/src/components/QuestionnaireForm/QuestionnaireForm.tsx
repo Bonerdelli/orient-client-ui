@@ -33,8 +33,9 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
   const [ data, isDataLoaded ] = useApi<QuestionnaireDto>(getQuestionnaire, companyId)
   const dictionaries = useStoreState(state => state.dictionary.list)
   const [ saveInProcess, setSaveInProcess ] = useState<boolean>(false)
+  const initialValues = convertQuestionnaireDtoToFormValues(data)
 
-  if (!isDataLoaded || !dictionaries) {
+  if (!isDataLoaded || !dictionaries || !initialValues) {
     return (
       <Spin spinning>
         <Div style={{ width: '100%', height: '500px' }}/>
@@ -42,7 +43,6 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
     )
   }
 
-  const initialValues = convertQuestionnaireDtoToFormValues(data)
   const formSettings = {
     form,
     labelCol: { span: 6 },
@@ -77,7 +77,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
       <QuestionnaireHoldingFormFields/>
       <QuestionnaireCreditFormFields/>
       <QuestionnaireCreditExpirationsFormFields/>
-      <QuestionnaireSuppliersAndBuyersFormFields dictionaries={dictionaries} formInstance={form}/>
+      <QuestionnaireSuppliersAndBuyersFormFields dictionaries={dictionaries}/>
       <QuestionnaireEasyFinansRelationshipsFormFields/>
       <Row justify={returnUrl ? 'space-between' : 'end'}>
         {returnUrl &&

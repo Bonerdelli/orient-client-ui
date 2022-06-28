@@ -64,6 +64,8 @@ company:
       description: Вид(ы) осуществляемой деятельности
     soogu:
       title: Код СООГУ
+    soato:
+      title: Код СОАТО
     state:
       title: Состояние активности
     chief:
