@@ -14,11 +14,11 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, item }) => 
   const { t } = useTranslation()
   switch (statusCode) {
     case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
-    case OrderStatus.FRAME_OPERATOR_VERIFY:
+    case OrderStatus.FRAME_OPERATOR_VERIFYING:
     case OrderStatus.FRAME_CLIENT_SIGN:
-    case OrderStatus.FRAME_BANK_VERIFY:
+    case OrderStatus.FRAME_OPERATOR_VERIFYING:
     case OrderStatus.FRAME_CLIENT_REWORK:
-    case OrderStatus.FRAME_BANK_VERIFY:
+    case OrderStatus.FRAME_OPERATOR_VERIFYING:
     case OrderStatus.FRAME_HAS_OFFER:
     case OrderStatus.FRAME_CUSTOMER_SIGN:
     case OrderStatus.FRAME_COMPLETED:

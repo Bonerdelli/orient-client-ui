@@ -61,13 +61,13 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
       case OrderStatus.FRAME_DRAFT:
         return <Tag>{t('orderStatusTitles.draft')}</Tag>
       case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
-      case OrderStatus.FRAME_OPERATOR_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
         return <Tag color="blue">{t('orderStatusTitles.verifying')}</Tag>
       case OrderStatus.FRAME_CLIENT_REWORK:
         return <Tag color="green">{t('orderStatusTitles.needsForRework')}</Tag>
       case OrderStatus.FRAME_CLIENT_SIGN:
         return <Tag color="green">{t('orderStatusTitles.clientSign')}</Tag>
-      case OrderStatus.FRAME_BANK_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
         return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
       case OrderStatus.FRAME_HAS_OFFER:
         return <Tag color="green">{t('orderStatusTitles.hasOffer')}</Tag>

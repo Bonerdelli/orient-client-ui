@@ -69,7 +69,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
 
   useEffect(() => {
     if (currentStep === 2 && (
-        orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY ||
+        orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFYING ||
         orderStatus === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
     )) {
       // NOTE: show waiting for verify message

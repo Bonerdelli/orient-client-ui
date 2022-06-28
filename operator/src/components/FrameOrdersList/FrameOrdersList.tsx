@@ -49,15 +49,15 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     switch (statusCode) {
       case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
         return <Tag color="green">{t('orderStatusTitles.waitForVerify')}</Tag>
-      case OrderStatus.FRAME_OPERATOR_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
         return <Tag color="green">{t('orderStatusTitles.verifying')}</Tag>
       case OrderStatus.FRAME_CLIENT_SIGN:
         return <Tag color="blue">{t('orderStatusTitles.clientSign')}</Tag>
-      case OrderStatus.FRAME_BANK_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
         return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
 
       case OrderStatus.FRAME_CLIENT_REWORK:
-      case OrderStatus.FRAME_BANK_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
       case OrderStatus.FRAME_HAS_OFFER:
       case OrderStatus.FRAME_CUSTOMER_SIGN:
       case OrderStatus.FRAME_COMPLETED:
@@ -110,7 +110,8 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
   ]
 
   const rowClassName = (record: Order) => (
-    record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+    (record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY) ||
+    (record.statusCode === OrderStatus.FRAME_OPERATOR_VERIFYING)
       ? 'FrameOrdersList__row--new'
       : ''
   )

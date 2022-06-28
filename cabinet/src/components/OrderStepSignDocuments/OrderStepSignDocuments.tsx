@@ -59,7 +59,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   useEffect(() => {
     setIsVerifying((
       (orderStatus === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY) ||
-      (orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY)
+      (orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFYING)
     ))
   }, [orderStatus])
 
