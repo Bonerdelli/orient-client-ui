@@ -56,7 +56,6 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   const [ scorings, setScorings ] = useState<BankWithStopFactors[] | null>(null)
-  const [ defaultExpandedRowKeys, setDefaultExpandedRowKeys ] = useState<Bank['bankId'][]>([])
   const [ selectedBankIds, setSelectedBankIds ] = useState<Bank['bankId'][]>([])
   const [ selectedRowKeys, setSelectedRowKeys ] = useState<React.Key[]>([])
   const [ tableData, setTableData ] = useState<BankStopFactor[] | null>(null)
@@ -95,7 +94,6 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       ]
       bankIds.push(bankId)
     })
-    setDefaultExpandedRowKeys(bankIds)
     setTableData(updatedTableData)
     // NOTE: have no idea how to check this
     // setNextStepAllowed(true)
@@ -253,7 +251,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       loading={!tableData}
       columns={bankColumns}
       rowSelection={rowSelection}
-      expandable={{ expandedRowRender, defaultExpandedRowKeys }}
+      expandable={{ expandedRowRender }}
       dataSource={scorings || []}
       pagination={false}
       showHeader={false}
