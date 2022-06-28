@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Skeleton, Descriptions } from 'antd'
+import { Descriptions, Skeleton } from 'antd'
 
 import { Company, CompanyHead } from 'library/models/proxy'
 import { formatCurrency } from 'library/helpers'
@@ -14,13 +14,14 @@ export interface ClientInfoProps {
 const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead }) => {
   const { t } = useTranslation()
   if (!company || !companyHead) {
-    return <Skeleton />
+    return <Skeleton/>
   }
   return (
     <Descriptions
       title={t('models.client.title')}
       className="ClientInfo"
       bordered
+      size="small"
       column={1}
     >
       <DescItem label={t('models.company.fields.fullName.title')}>
