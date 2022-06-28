@@ -46,7 +46,6 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
-      // NOTE: only for debugging
       setNextStepAllowed(true)
     }
   }, [currentStep, sequenceStepNumber])
