@@ -110,7 +110,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
   ]
 
   const rowClassName = (record: Order) => (
-    record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+    record.statusCode === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
       ? 'FrameOrdersList__row--new'
       : ''
   )
