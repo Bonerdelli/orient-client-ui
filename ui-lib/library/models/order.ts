@@ -17,7 +17,7 @@ export enum OrderWizardType {
   Factoring = 'factor',
 }
 
-export enum FrameOrderStatus {
+export enum OrderStatus {
   FRAME_DRAFT = 'frame_draft',
   FRAME_OPERATOR_WAIT_FOR_VERIFY = 'frame_operator_wait_for_verify',
   FRAME_OPERATOR_VERIFY = 'frame_operator_verify',

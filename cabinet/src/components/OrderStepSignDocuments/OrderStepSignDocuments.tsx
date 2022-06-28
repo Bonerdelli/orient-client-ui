@@ -5,7 +5,7 @@ import { Typography, Row, Col, Button, Result, Skeleton, Spin, message } from 'a
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 
@@ -20,7 +20,7 @@ const { Title } = Typography
 export interface OrderSignDocumentsProps {
   wizardType?: FrameWizardType
   orderId?: number
-  orderStatus?: FrameOrderStatus
+  orderStatus?: OrderStatus
   companyId?: number
   customerId?: number
   currentStep: number
@@ -56,7 +56,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
 
   useEffect(() => {
-    setIsVerifying(orderStatus === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY)
+    setIsVerifying(orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY)
   }, [orderStatus])
 
   useEffect(() => {
