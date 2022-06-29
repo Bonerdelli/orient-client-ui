@@ -167,9 +167,11 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     )
   }
 
+  // NOTE: doesn't work yet
   const renderRejectButton = () => (
     <Button
       danger
+      disabled
       size="large"
       type="default"
     >

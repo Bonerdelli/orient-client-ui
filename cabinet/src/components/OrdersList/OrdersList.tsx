@@ -10,11 +10,11 @@ import { formatDate } from 'orient-ui-library/library/helpers/date'
 import { Order, OrderStatus, OrderWizardType } from 'orient-ui-library/library/models/order'
 import { isCustomer } from 'orient-ui-library/library/helpers/roles'
 
-import { GridResponse } from 'library/models'
 import { CabinetMode } from 'library/models/cabinet'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompanyOrdersList } from 'library/api'
 import { useStoreState } from 'library/store'
+import { GridResponse } from 'library/models' // TODO: to ui-lib
 
 import './OrdersList.style.less'
 
@@ -27,13 +27,14 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
   const { url } = useRouteMatch()
 
   const user = useStoreState(state => state.user.current)
+  const mode = isCustomer(user) ? CabinetMode.Customer : CabinetMode.Client
 
   const [
     data,
     dataLoaded,
-  ] = useApi<Order[]>(
+  ] = useApi<GridResponse<Order[]>>(
     getCompanyOrdersList, {
-      mode: isCustomer(user) ? CabinetMode.Customer : CabinetMode.Client,
+      mode,
       companyId,
     },
   )

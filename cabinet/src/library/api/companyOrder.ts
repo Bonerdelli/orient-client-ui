@@ -4,6 +4,7 @@ import { Order } from 'orient-ui-library/library/models/order'
 
 import { PaginatedRequest, defaultPaginatedRequest } from 'library/helpers/api'
 import { CabinetMode } from 'library/models/cabinet'
+import { GridResponse } from 'library/models' // TODO: to ui-lib
 
 export type CompanyOrdersSaveRequest = schema.components['schemas']['CompanyFounderSaveRequest']
 
@@ -24,7 +25,7 @@ export async function getCompanyOrdersList(
 ) {
   const { mode, companyId } = params
   const basePath = getBasePath(companyId, mode)
-  return await post<Order[]>(`${basePath}/order/list`, request)
+  return await post<GridResponse<Order[]>>(`${basePath}/order/list`, request)
 }
 
 export interface CompanyOrdersItemParams {

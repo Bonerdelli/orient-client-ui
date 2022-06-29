@@ -55,7 +55,7 @@ export async function startFrameWizard(
 ) {
   const { mode, companyId, type } = params
   const basePath = getBasePath(companyId, type, mode)
-  return await post(basePath, request, true)
+  return await post(basePath, request)
 }
 
 /**
@@ -67,7 +67,7 @@ export async function sendFrameWizardStep2(
 ) {
   const { mode, companyId, orderId, type } = params
   const basePath = getBasePath(companyId, type, mode)
-  return await post(`${basePath}/${orderId}/2`, request, true)
+  return await post(`${basePath}/${orderId}/2`, request)
 }
 
 /**
@@ -79,7 +79,7 @@ export async function sendFrameWizardStep3(
 ) {
   const { mode, companyId, orderId, type } = params
   const basePath = getBasePath(companyId, type, mode)
-  return await post(`${basePath}/${orderId}/3`, request, true)
+  return await post(`${basePath}/${orderId}/3`, request)
 }
 
 /**
@@ -92,7 +92,7 @@ export async function sendFrameWizardStep(
 ) {
   const { mode, companyId, orderId, step, type } = params
   const basePath = getBasePath(companyId, type, mode)
-  return await post(`${basePath}/${orderId}/${step}`, request, true)
+  return await post(`${basePath}/${orderId}/${step}`, request)
 }
 
 /**

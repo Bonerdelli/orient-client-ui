@@ -12,8 +12,8 @@ import FactoringStepDocuments from 'components/FactoringStepDocuments'
 import FactoringStepSignDocuments from 'components/FactoringStepSignDocuments'
 import FactoringStepBankOffers from 'components/FactoringStepBankOffers'
 
+import { CabinetMode } from 'library/models/cabinet'
 import { useStoreState } from 'library/store'
-
 import { getCurrentFactoringWizardStep } from 'library/api'
 
 import './FactoringCustomerWizard.style.less'
@@ -37,6 +37,7 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ backU
 
   const { itemId } = useParams<FactoringCustomerWizardPathParams>()
   const company = useStoreState(state => state.company.current)
+  const mode = CabinetMode.Customer
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
@@ -73,6 +74,7 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ backU
 
   const loadCurrentStepData = async () => {
     const result = await getCurrentFactoringWizardStep({
+      mode: CabinetMode.Customer,
       companyId: companyId as number,
       orderId: Number(itemId) || orderId,
     })

@@ -13,9 +13,9 @@ import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
 import OrderStepBankOffers from 'components/OrderStepBankOffers'
 
+import { CabinetMode } from 'library/models/cabinet'
 import { Customer } from 'library/models'
 import { useStoreState } from 'library/store'
-
 import { getCurrentFrameWizardStep } from 'library/api'
 
 import './FrameCustomerWizard.style.less'
@@ -42,6 +42,7 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
 
   const { itemId } = useParams<FrameCustomerWizardPathParams>()
   const company = useStoreState(state => state.company.current)
+  const mode = CabinetMode.Customer
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
@@ -74,6 +75,7 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
 
   const loadCurrentStepData = async () => {
     const result = await getCurrentFrameWizardStep({
+      mode: CabinetMode.Customer,
       type: FrameWizardType.Full,
       companyId: companyId as number,
       orderId: Number(itemId) || orderId,

@@ -12,8 +12,8 @@ import OrderStepSelectInn from 'components/OrderStepSelectInn'
 import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
 
+import { CabinetMode } from 'library/models/cabinet'
 import { Customer } from 'library/models'
-
 import { getCurrentFrameWizardStep } from 'library/api'
 
 import './FrameSimpleCustomerWizard.style.less'
@@ -69,6 +69,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
 
   const loadCurrentStepData = async () => {
     const result = await getCurrentFrameWizardStep({
+      mode: CabinetMode.Customer,
       type: FrameWizardType.Simple,
       companyId: companyId as number,
       orderId: Number(itemId) || orderId,
