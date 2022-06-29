@@ -13,15 +13,16 @@ import OrderStatusTag from 'components/OrderStatusTag'
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
-import { getFrameOrdersList } from 'library/api/frameOrder'
+import { getFrameSimpleOrdersList } from 'library/api/frameSimpleOrder'
+import { MOCK_BANK_ID } from 'library/mock/bank'
 
-import './FrameOrdersList.style.less'
+import './FrameSimpleOrdersList.style.less'
 
-export interface FrameOrdersListProps {
-  bankId: number | bigint
+export interface FrameSimpleOrdersListProps {
+
 }
 
-const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
+const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({}) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
@@ -29,8 +30,8 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
     data,
     dataLoaded,
   ] = useApi<GridResponse<Order[]>>(
-    getFrameOrdersList, {
-      bankId,
+    getFrameSimpleOrdersList, {
+      bankId: MOCK_BANK_ID,
     },
   )
 
@@ -72,7 +73,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
       align: 'left',
     },
     {
-      key: 'updatedAt', // TODO: is it status updated time?
+      key: 'updatedAt',
       dataIndex: 'updatedAt',
       title: t('frameOrdersPage.tableColumnTitles.updatedAt'),
       render: (val) => formatDate(val, { includeTime: true }),
@@ -101,7 +102,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
   }
 
   return (
-    <div className="FrameOrdersList" data-testid="FrameOrdersList">
+    <div className="FrameSimpleOrdersList" data-testid="FrameSimpleOrdersList">
       <Table
         size="middle"
         columns={columns}
@@ -113,4 +114,4 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
   )
 }
 
-export default FrameOrdersList
+export default FrameSimpleOrdersList

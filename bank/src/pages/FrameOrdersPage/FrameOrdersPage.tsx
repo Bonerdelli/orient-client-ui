@@ -4,6 +4,7 @@ import { Space, Layout } from 'antd'
 
 import FrameOrdersList from 'components/FrameOrdersList'
 import FrameBankWizard from 'components/FrameBankWizard'
+import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FrameOrdersPage.style.less'
 
@@ -13,7 +14,7 @@ const FrameOrdersPage = () => {
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <FrameOrdersList />
+      <FrameOrdersList bankId={MOCK_BANK_ID} />
     </Space>
   )
 

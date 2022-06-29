@@ -6,7 +6,7 @@ import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { Order, FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
@@ -45,24 +45,24 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     </Space>
   )
 
-  const renderStatus = (statusCode: FrameOrderStatus, item: Order) => {
+  const renderStatus = (statusCode: OrderStatus, item: Order) => {
     switch (statusCode) {
-      case FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
         return <Tag color="green">{t('orderStatusTitles.waitForVerify')}</Tag>
-      case FrameOrderStatus.FRAME_OPERATOR_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
         return <Tag color="green">{t('orderStatusTitles.verifying')}</Tag>
-      case FrameOrderStatus.FRAME_CLIENT_SIGN:
+      case OrderStatus.FRAME_CLIENT_SIGN:
         return <Tag color="blue">{t('orderStatusTitles.clientSign')}</Tag>
-      case FrameOrderStatus.FRAME_BANK_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
         return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
 
-      case FrameOrderStatus.FRAME_CLIENT_REWORK:
-      case FrameOrderStatus.FRAME_BANK_VERIFY:
-      case FrameOrderStatus.FRAME_HAS_OFFER:
-      case FrameOrderStatus.FRAME_CUSTOMER_SIGN:
-      case FrameOrderStatus.FRAME_COMPLETED:
-      case FrameOrderStatus.FRAME_CANCEL:
-      case FrameOrderStatus.FRAME_OPERATOR_REJECT:
+      case OrderStatus.FRAME_CLIENT_REWORK:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
+      case OrderStatus.FRAME_HAS_OFFER:
+      case OrderStatus.FRAME_CUSTOMER_SIGN:
+      case OrderStatus.FRAME_COMPLETED:
+      case OrderStatus.FRAME_CANCEL:
+      case OrderStatus.FRAME_OPERATOR_REJECT:
       default:
         return <Tag>{item.statusName}</Tag>
     }
@@ -110,7 +110,8 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
   ]
 
   const rowClassName = (record: Order) => (
-    record.statusCode === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+    (record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY) ||
+    (record.statusCode === OrderStatus.FRAME_OPERATOR_VERIFYING)
       ? 'FrameOrdersList__row--new'
       : ''
   )

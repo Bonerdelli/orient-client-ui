@@ -7,7 +7,7 @@ import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
-import { Order, FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
@@ -56,28 +56,28 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
     }
   }
 
-  const renderStatus = (statusCode: FrameOrderStatus, item: Order) => {
+  const renderStatus = (statusCode: OrderStatus, item: Order) => {
     switch (statusCode) {
-      case FrameOrderStatus.FRAME_DRAFT:
+      case OrderStatus.FRAME_DRAFT:
         return <Tag>{t('orderStatusTitles.draft')}</Tag>
-      case FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
-      case FrameOrderStatus.FRAME_OPERATOR_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
         return <Tag color="blue">{t('orderStatusTitles.verifying')}</Tag>
-      case FrameOrderStatus.FRAME_CLIENT_REWORK:
+      case OrderStatus.FRAME_CLIENT_REWORK:
         return <Tag color="green">{t('orderStatusTitles.needsForRework')}</Tag>
-      case FrameOrderStatus.FRAME_CLIENT_SIGN:
+      case OrderStatus.FRAME_CLIENT_SIGN:
         return <Tag color="green">{t('orderStatusTitles.clientSign')}</Tag>
-      case FrameOrderStatus.FRAME_BANK_VERIFY:
+      case OrderStatus.FRAME_OPERATOR_VERIFYING:
         return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
-      case FrameOrderStatus.FRAME_HAS_OFFER:
+      case OrderStatus.FRAME_HAS_OFFER:
         return <Tag color="green">{t('orderStatusTitles.hasOffer')}</Tag>
-      case FrameOrderStatus.FRAME_CUSTOMER_SIGN:
+      case OrderStatus.FRAME_CUSTOMER_SIGN:
         return <Tag color="blue">{t('orderStatusTitles.customerSign')}</Tag>
-      case FrameOrderStatus.FRAME_COMPLETED:
+      case OrderStatus.FRAME_COMPLETED:
         return <Tag color="blue">{t('orderStatusTitles.completed')}</Tag>
-      case FrameOrderStatus.FRAME_CANCEL:
+      case OrderStatus.FRAME_CANCEL:
         return <Tag>{t('orderStatusTitles.cancel')}</Tag>
-      case FrameOrderStatus.FRAME_OPERATOR_REJECT:
+      case OrderStatus.FRAME_OPERATOR_REJECT:
         return <Tag color="red">{t('orderStatusTitles.operatorReject')}</Tag>
       default:
         return <Tag>{item.statusName}</Tag>

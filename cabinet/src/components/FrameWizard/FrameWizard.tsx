@@ -6,7 +6,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
-import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { FrameOrderStatus, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStepSelectInn from 'components/OrderStepSelectInn'
 import OrderStepDocuments from 'components/OrderStepDocuments'
@@ -49,7 +49,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
   const [ orderId, setOrderId ] = useState<number>()
-  const [ orderStatus, setOrderStatus ] = useState<FrameOrderStatus>()
+  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
   // TODO: BE doesn't sent customer, fix after DE fixes
   const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
@@ -69,7 +69,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
 
   useEffect(() => {
     if (currentStep === 2 && (
-        orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFY ||
+        orderStatus === FrameOrderStatus.FRAME_OPERATOR_VERIFYING ||
         orderStatus === FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
     )) {
       // NOTE: show waiting for verify message

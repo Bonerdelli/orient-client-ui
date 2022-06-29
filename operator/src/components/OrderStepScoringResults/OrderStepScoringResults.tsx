@@ -7,7 +7,7 @@ import type { ColumnsType } from 'antd/lib/table'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { Bank } from 'orient-ui-library/library/models/bank'
 
 import { StopFactor } from 'library/models/stopFactor'
@@ -106,7 +106,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      if ((result as any).data.orderStatus === FrameOrderStatus.FRAME_CLIENT_SIGN) {
+      if ((result as any).data.orderStatus === OrderStatus.FRAME_CLIENT_SIGN) {
         setWizardCompleted(true)
       }
       setDataLoaded(true)
