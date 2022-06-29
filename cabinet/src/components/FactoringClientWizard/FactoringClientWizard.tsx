@@ -60,17 +60,6 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
     }
   }, [company])
 
-  useEffect(() => {
-    if (currentStep === 2 && (
-        orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
-        orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
-    )) {
-      // NOTE: show waiting for verify message
-      setSelectedStep(3)
-      setCurrentStep(3)
-    }
-  }, [currentStep, orderStatus])
-
   const loadCurrentStepData = async () => {
     const result = await getCurrentFactoringWizardStep({
       companyId: companyId as number,
