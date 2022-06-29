@@ -5,41 +5,38 @@ import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models'
 
-import OrderStepSelectInn from 'components/OrderStepSelectInn'
-import OrderStepDocuments from 'components/OrderStepDocuments'
-import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
-import OrderStepBankOffers from 'components/OrderStepBankOffers'
+import FactoringStepParameters from 'components/FactoringStepParameters'
+import FactoringStepDocuments from 'components/FactoringStepDocuments'
+import FactoringStepSignDocuments from 'components/FactoringStepSignDocuments'
+import FactoringStepBankOffers from 'components/FactoringStepBankOffers'
 
 import { Customer } from 'library/models'
 import { useStoreState } from 'library/store'
 
-import { getCurrentFrameWizardStep } from 'library/api'
+import { getCurrentFactoringWizardStep } from 'library/api'
 
-import './FrameClientWizard.style.less'
+import './FactoringClientWizard.style.less'
 
 const { Step } = Steps
 const { Title } = Typography
 const { useBreakpoint } = Grid
 
-export interface FrameClientWizardProps {
+export interface FactoringClientWizardProps {
   // orderId?: number
   backUrl?: string
 }
 
-export interface FrameClientWizardPathParams {
+export interface FactoringClientWizardPathParams {
   itemId?: string,
 }
 
-export const FRAME_WIZARD_LAST_STEP_INDEX = 3
-
-const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
+const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
-  const { itemId } = useParams<FrameClientWizardPathParams>()
+  const { itemId } = useParams<FactoringClientWizardPathParams>()
   const company = useStoreState(state => state.company.current)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
@@ -79,8 +76,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
   }, [currentStep, orderStatus])
 
   const loadCurrentStepData = async () => {
-    const result = await getCurrentFrameWizardStep({
-      type: FrameWizardType.Full,
+    const result = await getCurrentFactoringWizardStep({
       companyId: companyId as number,
       orderId: Number(itemId) || orderId,
     })
@@ -104,18 +100,15 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepSelectInn
+        return <FactoringStepParameters
           companyId={companyId}
           orderId={Number(itemId) || orderId}
-          setOrderId={setOrderId}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
           sequenceStepNumber={1}
-          selectedCustomer={selectedCustomer}
-          setSelectedCustomer={setSelectedCustomer}
         />
       case 2:
-        return <OrderStepDocuments
+        return <FactoringStepDocuments
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
@@ -124,7 +117,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
           orderId={Number(itemId) || orderId}
         />
       case 3:
-        return <OrderStepSignDocuments
+        return <FactoringStepSignDocuments
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={3}
@@ -134,7 +127,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
           customerId={selectedCustomer?.id}
         />
       case 4:
-        return <OrderStepBankOffers
+        return <FactoringStepBankOffers
           companyId={company?.id as number}
           currentStep={currentStep}
           sequenceStepNumber={4}
@@ -147,7 +140,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
   }
 
   const renderTitle = () => {
-    const title = t('frameOrder.title')
+    const title = t('factoring.title')
     if (!backUrl) return title
     return (
       <>
@@ -167,17 +160,17 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
 
   return (
     <>
-      <Card className="Wizard FrameClientWizard">
+      <Card className="Wizard FactoringClientWizard">
         <Title level={3}>{renderTitle()}</Title>
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step title={t('frameOrder.firstStep.title')} />
-          <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
-          <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')} />
-          <Step disabled={currentStep < 4} title={t('frameOrder.fourthStep.title')} />
+          <Step title={t('factoring.firstStep.title')} />
+          <Step disabled={!selectedCustomer && !currentStep} title={t('factoring.secondStep.title')} />
+          <Step disabled={currentStep < 3} title={t('factoring.thirdStep.title')} />
+          <Step disabled={currentStep < 4} title={t('factoring.fourthStep.title')} />
         </Steps>
       </Card>
       <Card className="Wizard__step">
@@ -187,4 +180,4 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
   )
 }
 
-export default FrameClientWizard
+export default FactoringClientWizard

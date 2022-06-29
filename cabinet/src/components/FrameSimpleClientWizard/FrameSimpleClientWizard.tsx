@@ -32,8 +32,6 @@ export interface FrameSimpleWizardPathParams {
   itemId?: string,
 }
 
-export const FRAME_WIZARD_LAST_STEP_INDEX = 3
-
 const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
@@ -141,7 +139,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ backUrl }) => {
   }
 
   const renderTitle = () => {
-    const title = t('frameOrder.title')
+    const title = t('frameSimpleOrder.title')
     if (!backUrl) return title
     return (
       <>
@@ -168,10 +166,10 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ backUrl }) => {
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step title={t('frameOrder.firstStep.title')} />
-          <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
-          <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')} />
-          <Step disabled={currentStep < 4} title={t('frameOrder.fourthStep.title')} />
+          <Step title={t('frameSimpleOrder.firstStep.title')} />
+          <Step disabled={!selectedCustomer && !currentStep} title={t('frameSimpleOrder.secondStep.title')} />
+          <Step disabled={currentStep < 3} title={t('frameSimpleOrder.thirdStep.title')} />
+          <Step disabled={currentStep < 4} title={t('frameSimpleOrder.fourthStep.title')} />
         </Steps>
       </Card>
       <Card className="Wizard__step">

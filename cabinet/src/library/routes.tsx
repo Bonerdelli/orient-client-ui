@@ -1,7 +1,8 @@
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom'
 import portalConfig from 'config/portal.yaml'
 
-import { hasAccess, UserRoles } from 'orient-ui-library'
+import { UserRoles } from 'orient-ui-library/library/models/user'
+import { hasAccess } from 'orient-ui-library/library/helpers/roles'
 
 import LoginPage from 'pages/LoginPage'
 import PageNotFound from 'pages/PageNotFound'
@@ -11,8 +12,9 @@ import BankRequisitesPage from 'pages/BankRequisitesPage'
 import DocumentsPage from 'pages/DocumentsPage'
 import OrdersPage from 'pages/OrdersPage'
 
-import FrameWizardPage from 'pages/FrameWizardPage'
-import FrameSimpleWizardPage from 'pages/FrameSimpleWizardPage'
+import FrameClientWizardPage from 'pages/FrameClientWizardPage'
+import FrameSimpleClientWizardPage from 'pages/FrameSimpleClientWizardPage'
+import FactoringClientWizardPage from 'pages/FactoringClientWizardPage'
 import QuestionnairePage from 'pages/QuestionnairePage'
 
 interface PrivateRouteOptions extends RouteProps {
@@ -24,6 +26,7 @@ export const HOME_PATH = portalConfig.sections.company
 export const LOGIN_PATH = '/login'
 export const FRAME_ORDER_PATH = '/frame-order'
 export const SIMPLE_FRAME_ORDER_PATH = '/simple-frame-order'
+export const FACTORING_PATH = '/factoring_path'
 export const QUESTIONNAIRE_PATH = '/questionnaire'
 
 const PrivateRoute: React.FC<PrivateRouteOptions> = ({
@@ -93,12 +96,17 @@ export const ProtectedRoutes = () => (
 
     <PrivateRoute
       path={FRAME_ORDER_PATH}
-      component={FrameWizardPage}
+      component={FrameClientWizardPage}
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
       path={SIMPLE_FRAME_ORDER_PATH}
-      component={FrameSimpleWizardPage}
+      component={FrameSimpleClientWizardPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path={FACTORING_PATH}
+      component={FactoringClientWizardPage}
       roles={portalConfig.roles.pages.all}
     />
 

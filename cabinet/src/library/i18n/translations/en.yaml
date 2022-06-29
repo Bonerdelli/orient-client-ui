@@ -73,6 +73,9 @@ orderStatusTitles:
 orders:
   actionButton:
     title: Get the product
+    frameOrder: Frame Order
+    frameSimpleOrder: Frame Simple Order
+    factoring: Factoring
   # TODO: translate me
   actions:
     cancel:
@@ -124,6 +127,17 @@ frameSimpleOrder:
     title: Signing of documents
   fourthStep:
     title: In the bank
+
+factoring:
+  title: Factoring Application
+  firstStep:
+    title: Order Parameters
+  secondStep:
+    title: The Documents
+  thirdStep:
+    title: Signing of Documents
+  fourthStep:
+    title: Bank Offer
 
 frameSteps:
   # TODO: translate me

@@ -58,6 +58,9 @@ bankRequisitesPage:
 orders:
   actionButton:
     title: Получить продукт
+    frameOrder: Рамочный договор
+    frameSimpleOrder: Упрощённый рамочный договор
+    factoring: Факторинг
   actions:
     cancel:
       title: Отменить заявку
@@ -119,6 +122,17 @@ frameSimpleOrder:
     title: Подписание документов
   fourthStep:
     title: В Банке
+
+factoring:
+  title: Заявка на факторинг
+  firstStep:
+    title: Параметры заявки
+  secondStep:
+    title: Документы
+  thirdStep:
+    title: Подписание документов
+  fourthStep:
+    title: Предложение Банка
 
 frameSteps:
   selectInn:
