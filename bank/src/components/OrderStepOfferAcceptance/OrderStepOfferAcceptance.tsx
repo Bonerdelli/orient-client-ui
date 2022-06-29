@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, Result, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { OrderStatus } from 'orient-ui-library/library/models'
 
 import {
   getFrameWizardStep,
@@ -19,6 +20,7 @@ export interface BlankWizardStepProps {
   bankId?: number | bigint
   orderId?: number
   currentStep: number
+  orderStatus: OrderStatus
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
@@ -27,6 +29,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   bankId,
   orderId,
   currentStep,
+  orderStatus,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
@@ -39,10 +42,19 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
+  const [ isWaiting, setWaiting ] = useState<boolean>()
 
   useEffect(() => {
-    loadCurrentStepData()
-  }, [])
+    if (isWaiting === false) {
+      loadCurrentStepData()
+    }
+  }, [isWaiting])
+
+  useEffect(() => {
+    if (orderStatus) {
+      setWaiting(orderStatus === OrderStatus.FRAME_CUSTOMER_SIGN)
+    }
+  }, [orderStatus])
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
@@ -146,9 +158,18 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
 
   const renderStepContent = () => (
     <Div className="OrderStepOfferAcceptance">
-      <Title level={5}>{t('OrderStepOfferAcceptance.title')}</Title>
+      <Title level={5}>{t('orderStepOfferAcceptance.title')}</Title>
     </Div>
   )
+
+  if (isWaiting) {
+    return (
+      <Result
+        title={t('orderStepOfferAcceptance.waitForAccept.title')}
+        subTitle={t('orderStepOfferAcceptance.waitForAccept.desc')}
+      />
+    )
+  }
 
   if (!stepData && stepDataLoading) {
     return (

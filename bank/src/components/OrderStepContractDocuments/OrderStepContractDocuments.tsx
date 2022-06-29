@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, Spin, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import OrderCondition from 'orient-ui-library/components/OrderCondition'
+import { OrderConditions } from 'orient-ui-library/library/models/orderCondition'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+
+import OrderDocumentsList from 'components/OrderDocumentsList'
 
 import {
   getFrameWizardStep,
-  sendFrameWizardStep1, // NOTE: replace ep with correct one!
+  sendFrameWizardStep,
 } from 'library/api/frameWizard'
 
 import './OrderStepContractDocuments.style.less'
@@ -35,14 +40,43 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
+  const [ orderConditions, setOrderConditions ] = useState<OrderConditions>()
+  const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
+  const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
+  const [ documents, setDocuments ] = useState<OrderDocument[]>([])
+
   useEffect(() => {
     loadCurrentStepData()
   }, [])
+
+  useEffect(() => {
+    if (stepData?.conditions) {
+      setOrderConditions(stepData.conditions)
+    }
+  }, [stepData])
+
+  useEffect(() => {
+    if (!stepData) return
+    const currentDocuments = stepData?.documents ?? []
+    const updatedDocuments: OrderDocument[] = []
+    const updatedDocumentTypes: number[] = []
+
+    currentDocuments.forEach((doc: OrderDocument) => {
+      if (doc.isGenerated) {
+        updatedDocumentTypes.push(doc.typeId)
+        updatedDocuments.push(doc)
+      }
+    })
+
+    setDocuments(updatedDocuments)
+    setDocumentTypes(updatedDocumentTypes)
+    setDocumentsLoading(false)
+  }, [stepData])
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
@@ -70,7 +104,8 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
+    const result = await sendFrameWizardStep({
+      step: sequenceStepNumber,
       bankId,
       orderId,
     }, {})
@@ -145,9 +180,25 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     </Button>
   )
 
+  const renderDocuments = () =>  (
+    <Spin spinning={documentsLoading}>
+      <OrderDocumentsList
+        orderId={orderId as number}
+        types={documentTypes || []}
+        current={documents}
+      />
+    </Spin>
+  )
+
   const renderStepContent = () => (
     <Div className="OrderStepContractDocuments">
-      <Title level={5}>{t('OrderStepContractDocuments.title')}</Title>
+      <Div className="WizardStep__section">
+        <OrderCondition condition={orderConditions} />
+      </Div>
+      <Div className="WizardStep__section">
+        <Title level={5}>{t('orderStepContractDocuments.title')}</Title>
+        {renderDocuments()}
+      </Div>
     </Div>
   )
 

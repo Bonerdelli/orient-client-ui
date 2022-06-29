@@ -1,13 +1,13 @@
-// NOTE: no suck interface in API schema
-export interface OrderTerms {
-  conditionCode: OrderTermCondition
+// NOTE: no such interface in API schema
+export interface OrderConditions {
+  conditionCode: OrderConditionType
   percentYear: number
   percentOverall: number
   percentDiscount: number
   startDate: Date
 }
 
-export enum OrderTermCondition {
+export enum OrderConditionType {
   Comission = 'comission',
   Discount = 'discount',
 }

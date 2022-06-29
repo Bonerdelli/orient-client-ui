@@ -70,6 +70,17 @@ export async function sendFrameWizardStep4(
 }
 
 /**
+ * Send wizard step
+ */
+export async function sendFrameWizardStep(
+  params: FrameWizardStepParameters,
+  request: unknown
+) {
+  const { bankId, orderId, step } = params
+  return await post(`/bank/${bankId}/wizard/frame/${orderId}/${step}`, request)
+}
+
+/**
  * Get current step
  */
 export async function getCurrentFrameWizardStep(

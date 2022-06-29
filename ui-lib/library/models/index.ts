@@ -1,5 +1,5 @@
 export * from './jwt'
 export * from './user'
 export * from './order'
-export * from './orderTerms'
+export * from './orderCondition'
 export * from './wizard'
