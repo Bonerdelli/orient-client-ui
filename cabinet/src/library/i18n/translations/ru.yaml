@@ -113,7 +113,7 @@ frameOrder: ## TODO: rename to frameWizard
     title: Предложения Банков
 
 frameSimpleOrder:
-  title: Заявка на заключение рамочного договора
+  title: Заявка на упрощенный рамочный договор
   firstStep:
     title: Параметры заявки
   secondStep:
@@ -141,6 +141,8 @@ frameSteps:
     placeholder: Начните вводить ИНН для поиска
     customerInfo:
       title: Информация о выбранном Заказчике
+
+  # TODO: change l10ns structure as in the operator cabinet
 
   documents:
     title: Приложите пакет документов для оформления заявки

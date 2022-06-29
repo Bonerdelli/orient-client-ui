@@ -144,10 +144,13 @@ order:
   types:
     frameOrder:
       title: Application for a Framework Contract
+      titleShort: Framework Contract
     frameSimpleOrder:
       title: Application for a Simplified Framework Contract
+      titleShort: Simplified Framework Contract
     factoring:
       title: Factoring Application
+      titleShort: Factoring
   fields:
     id:
       title: Application Num

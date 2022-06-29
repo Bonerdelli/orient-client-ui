@@ -7,7 +7,7 @@ import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
-import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
+import { Order, OrderStatus, OrderWizardType } from 'orient-ui-library/library/models/order'
 
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
@@ -32,25 +32,44 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
     { companyId },
   )
 
-  const renderActions = (_val: unknown, item: Order) => (
-    <Space size="small">
-      <Link to={`${url}/${item.id}`}>
-        <Button
-          key="view"
-          type="link"
-          shape="circle"
-          title={t('common.actions.view.title')}
-          icon={<EyeOutlined />}
-        />
-      </Link>
-    </Space>
-  )
+  const renderActions = (_val: unknown, item: Order) => {
+    let path
+    switch (item.typeCode) {
+      case OrderWizardType.Frame:
+        path = 'frame'
+        break;
+      case OrderWizardType.FrameSimple:
+        path = 'frame-simple'
+        break;
+      case OrderWizardType.Factoring:
+        path = 'factoring'
+        break;
+      default:
+        break;
+    }
+    return (
+      <Space size="small">
+        <Link to={`${url}/${path}/${item.id}`}>
+          <Button
+            key="view"
+            type="link"
+            shape="circle"
+            title={t('common.actions.view.title')}
+            icon={<EyeOutlined />}
+          />
+        </Link>
+      </Space>
+    )
+  }
 
-  const renderOrderType = (code: string) => {
+  const renderOrderType = (code: OrderWizardType) => {
     switch (code) {
-      // TODO: fill me with other params
-      case 'frame':
-        return 'На рамочный договор' // TODO: ask be for enum and add l10ns
+      case OrderWizardType.Frame:
+        return t('models.order.types.frameOrder.titleShort')
+      case OrderWizardType.FrameSimple:
+        return t('models.order.types.frameSimpleOrder.titleShort')
+      case OrderWizardType.Factoring:
+        return t('models.order.types.factoring.titleShort')
       default:
         return <></>
     }

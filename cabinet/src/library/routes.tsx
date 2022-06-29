@@ -25,8 +25,8 @@ interface PrivateRouteOptions extends RouteProps {
 export const HOME_PATH = portalConfig.sections.company
 export const LOGIN_PATH = '/login'
 export const FRAME_ORDER_PATH = '/frame-order'
-export const SIMPLE_FRAME_ORDER_PATH = '/simple-frame-order'
-export const FACTORING_PATH = '/factoring_path'
+export const SIMPLE_FRAME_ORDER_PATH = '/frame-simple-order'
+export const FACTORING_PATH = '/factoring'
 export const QUESTIONNAIRE_PATH = '/questionnaire'
 
 const PrivateRoute: React.FC<PrivateRouteOptions> = ({

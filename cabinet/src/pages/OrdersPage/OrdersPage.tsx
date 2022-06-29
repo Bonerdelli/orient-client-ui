@@ -8,6 +8,8 @@ import Div from 'orient-ui-library/components/Div'
 
 import OrdersList from 'components/OrdersList'
 import FrameClientWizard from 'components/FrameClientWizard'
+import FrameSimpleClientWizard from 'components/FrameSimpleClientWizard'
+import FactoringClientWizard from 'components/FactoringClientWizard'
 
 import './OrdersPage.style.less'
 
@@ -36,8 +38,14 @@ const OrdersPage = () => {
         <Route exact path={path}>
           {renderList()}
         </Route>
-        <Route path={`${path}/:itemId`}>
+        <Route path={`${path}/frame/:itemId`}>
           <FrameClientWizard backUrl={url} companyId={company.id as number} />
+        </Route>
+        <Route path={`${path}/frame-simple/:itemId`}>
+          <FrameSimpleClientWizard backUrl={url} companyId={company.id as number} />
+        </Route>
+        <Route path={`${path}/factoring/:itemId`}>
+          <FactoringClientWizard backUrl={url} />
         </Route>
       </Switch>
     </Layout>
