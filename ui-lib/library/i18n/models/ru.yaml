@@ -188,3 +188,26 @@ order:
       title: Названик валюты
     typeCode:
       title: Вид заявки
+
+orderCondition:
+  title: Условия договора
+  fields:
+    conditionCode:
+      title: Условие договора
+      placeholder: Выберите условие договора...
+      options:
+        comission: Комиссия от суммы финансирования
+        discount: Дисконт от суммы финансирования
+    payer:
+      title: Плательщик
+      placeholder: Выберите плательщика...
+      options:
+        provider: Поставщик
+    percentOverall:
+      title: Cтавка (единовременная)
+    percentYear:
+      title: Cтавка (% годовых)
+    percentDiscount:
+      title: Размер дисконта
+    startDate:
+      title: Дата начала действия

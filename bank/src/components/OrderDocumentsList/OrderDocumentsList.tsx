@@ -70,6 +70,8 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
         return <Tag color="green">{t('common.documents.statuses.signed')}</Tag>
       case DocumentStatus.Unsigned:
         return <Tag color="red">{t('common.documents.statuses.unsigned')}</Tag>
+      case DocumentStatus.NotUploaded:
+        return <Tag>{t('common.documents.statuses.notUploaded')}</Tag>
       default:
         return <></>
     }
@@ -77,14 +79,16 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
 
   const renderActions = (_val: unknown, item: Document) => (
     <Space className="DataTable__actions DataTable__ghostActions--">
-      <Button
-        key="download"
-        type="link"
-        shape="circle"
-        title={t('common.documents.actions.download.title')}
-        onClick={() => handleItemDownload(item)}
-        icon={<DownloadOutlined />}
-      />
+      {item.status !== DocumentStatus.NotUploaded && (
+        <Button
+          key="download"
+          type="link"
+          shape="circle"
+          title={t('common.documents.actions.download.title')}
+          onClick={() => handleItemDownload(item)}
+          icon={<DownloadOutlined />}
+        />
+      )}
     </Space>
   )
 

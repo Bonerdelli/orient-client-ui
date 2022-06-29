@@ -1,4 +1,5 @@
 export enum DocumentStatus {
+  NotUploaded = 'notUploaded',
   Signed = 'signed',
   Unsigned = 'unsigned',
 }

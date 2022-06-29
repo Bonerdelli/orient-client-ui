@@ -61,6 +61,9 @@ orderStepContractDocuments:
 
 orderStepOfferAcceptance:
   title: Принятие предложения
+  waitForAccept:
+    title: Ожидайте принятия предложения
+    desc: Ожидайте принятия предложения от Поставщика и подписание договора со стороны Дебитора
 
 orderStepArchive:
   title: Параметры заявки и клиента
