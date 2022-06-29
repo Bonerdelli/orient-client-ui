@@ -144,7 +144,11 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       setNextStepAllowed(false)
     } else {
       const orderId = (result as any)?.data?.orderId as number
-      history.push(`/requests/${orderId}`)
+      if (wizardType === FrameWizardType.Full) {
+        history.push(`/requests/frame/${orderId}`)
+      } else {
+        history.push(`/requests/frame-simple/${orderId}`)
+      }
       setOrderId(orderId)
     }
     setSubmitting(false)

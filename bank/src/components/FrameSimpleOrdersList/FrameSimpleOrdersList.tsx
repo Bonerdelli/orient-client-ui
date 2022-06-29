@@ -14,15 +14,14 @@ import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
 import { getFrameSimpleOrdersList } from 'library/api/frameSimpleOrder'
-import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FrameSimpleOrdersList.style.less'
 
 export interface FrameSimpleOrdersListProps {
-
+  bankId: number | bigint
 }
 
-const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({}) => {
+const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId }) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
@@ -31,7 +30,7 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({}) => {
     dataLoaded,
   ] = useApi<GridResponse<Order[]>>(
     getFrameSimpleOrdersList, {
-      bankId: MOCK_BANK_ID,
+      bankId,
     },
   )
 

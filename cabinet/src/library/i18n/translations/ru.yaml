@@ -59,6 +59,9 @@ bankRequisitesPage:
 orders:
   actionButton:
     title: Получить продукт
+    frameOrder: Рамочный договор
+    frameSimpleOrder: Упрощённый рамочный договор
+    factoring: Факторинг
   actions:
     cancel:
       title: Отменить заявку
@@ -111,7 +114,7 @@ frameOrder: ## TODO: rename to frameWizard
     title: Предложения Банков
 
 frameSimpleOrder:
-  title: Заявка на заключение рамочного договора
+  title: Заявка на упрощенный рамочный договор
   firstStep:
     title: Параметры заявки
   secondStep:
@@ -121,6 +124,17 @@ frameSimpleOrder:
   fourthStep:
     title: В Банке
 
+factoring:
+  title: Заявка на факторинг
+  firstStep:
+    title: Параметры заявки
+  secondStep:
+    title: Документы
+  thirdStep:
+    title: Подписание документов
+  fourthStep:
+    title: Предложение Банка
+
 frameSteps:
   selectInn:
     title: Выберите ИНН Заказчика
@@ -128,6 +142,8 @@ frameSteps:
     placeholder: Начните вводить ИНН для поиска
     customerInfo:
       title: Информация о выбранном Заказчике
+
+  # TODO: change l10ns structure as in the operator cabinet
 
   documents:
     title: Приложите пакет документов для оформления заявки

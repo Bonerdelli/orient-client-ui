@@ -1,7 +1,8 @@
 import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 
 import { PaginatedRequest, defaultPaginatedRequest } from 'library/helpers/api'
-import { Order, GridResponse } from 'library/models'
+import { Order } from 'orient-ui-library/library/models/order'
+import { GridResponse } from 'library/models'
 
 export async function getFrameOrdersList(
   _params: unknown,

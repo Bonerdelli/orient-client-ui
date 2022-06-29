@@ -21,7 +21,7 @@ export async function sendFrameSimpleWizardStep1(
   request: unknown // NOTE: ask be to generate models
 ) {
   const { orderId } = params
-  return await post(`/operator/wizard/frameSimple/${orderId}/1`, request, true)
+  return await post(`/operator/wizard/frameSimple/${orderId}/1`, request)
 }
 
 /**
@@ -32,7 +32,7 @@ export async function sendFrameSimpleWizardStep2(
   request: unknown // NOTE: ask be to generate models
 ) {
   const { orderId } = params
-  return await post(`/operator/wizard/frameSimple/${orderId}/2`, request, true)
+  return await post(`/operator/wizard/frameSimple/${orderId}/2`, request)
 }
 
 /**
@@ -63,7 +63,7 @@ export async function frameSimpleWizardReject(
   request: FrameSimpleWizardRejectOrderRequest,
 ) {
   const { orderId, step } = params
-  return await post(`/operator/wizard/frameSimple/${orderId}/${step}`, request, true)
+  return await post(`/operator/wizard/frameSimple/${orderId}/${step}`, request)
 }
 
 /**
@@ -74,5 +74,5 @@ export async function frameSimpleWizardSetDocStatus(
   request: FrameSimpleWizardDocumentStatusRequest,
 ) {
   const { orderId, step } = params
-  return await post(`/operator/wizard/frameSimple/${orderId}/${step}`, request, true)
+  return await post(`/operator/wizard/frameSimple/${orderId}/${step}`, request)
 }

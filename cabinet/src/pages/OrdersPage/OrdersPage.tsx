@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 // import SlideRoutes from 'react-slide-routes' // TODO: make slide animation works
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout, Spin } from 'antd'
@@ -8,12 +7,13 @@ import { useStoreState } from 'library/store'
 import Div from 'orient-ui-library/components/Div'
 
 import OrdersList from 'components/OrdersList'
-import FrameWizard from 'components/FrameWizard'
+import FrameClientWizard from 'components/FrameClientWizard'
+import FrameSimpleClientWizard from 'components/FrameSimpleClientWizard'
+import FactoringClientWizard from 'components/FactoringClientWizard'
 
 import './OrdersPage.style.less'
 
 const OrdersPage = () => {
-  const { t } = useTranslation()
   const { path, url } = useRouteMatch()
 
   const company = useStoreState(state => state.company.current)
@@ -38,8 +38,14 @@ const OrdersPage = () => {
         <Route exact path={path}>
           {renderList()}
         </Route>
-        <Route path={`${path}/:itemId`}>
-          <FrameWizard backUrl={url} companyId={company.id as number} />
+        <Route path={`${path}/frame/:itemId`}>
+          <FrameClientWizard backUrl={url} companyId={company.id as number} />
+        </Route>
+        <Route path={`${path}/frame-simple/:itemId`}>
+          <FrameSimpleClientWizard backUrl={url} companyId={company.id as number} />
+        </Route>
+        <Route path={`${path}/factoring/:itemId`}>
+          <FactoringClientWizard backUrl={url} />
         </Route>
       </Switch>
     </Layout>

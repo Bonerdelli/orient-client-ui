@@ -148,10 +148,13 @@ order:
   types:
     frameOrder:
       title: Заявка на рамочный договор
+      titleShort: На рамочный договор
     frameSimpleOrder:
       title: Заявка на упрощенный рамочный договор
+      titleShort: На упрощенный рамочный договор
     factoring:
       title: Заявка на факторинг
+      titleShort: Факторинг
   fields:
     id:
       title: Номер заявки

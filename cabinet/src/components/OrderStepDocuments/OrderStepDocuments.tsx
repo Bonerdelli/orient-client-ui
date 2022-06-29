@@ -11,7 +11,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
 import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { FrameOrderStatus } from 'orient-ui-library/library/models/order'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
@@ -30,7 +30,7 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
-  setOrderStatus: (status: FrameOrderStatus) => void
+  setOrderStatus: (status: OrderStatus) => void
 }
 
 const сompanyDataInitialStatus: Record<string, boolean | null> = {
@@ -160,7 +160,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderStatus(FrameOrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY)
+      setOrderStatus(OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)

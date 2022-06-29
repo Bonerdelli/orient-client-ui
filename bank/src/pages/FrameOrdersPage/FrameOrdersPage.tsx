@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
 import FrameOrdersList from 'components/FrameOrdersList'
-import FrameBankWizard from 'components/FrameBankWizard'
+import FrameBankWizard from 'components/FrameBankWizard' // TODO: add wizard
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FrameOrdersPage.style.less'

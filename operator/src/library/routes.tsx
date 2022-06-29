@@ -1,11 +1,14 @@
 import { Switch, Route, Redirect, RouteProps } from 'react-router-dom'
 import portalConfig from 'config/portal.yaml'
 
-import { UserRoles, hasAccess } from 'orient-ui-library'
+import { UserRoles } from 'orient-ui-library/library/models/user'
+import { hasAccess } from 'orient-ui-library/library/helpers/roles'
 
 import LoginPage from 'pages/LoginPage'
 import PageNotFound from 'pages/PageNotFound'
 import FrameOrdersPage from 'pages/FrameOrdersPage'
+import FrameSimpleOrdersPage from 'pages/FrameSimpleOrdersPage'
+import FactoringOrdersPage from 'pages/FactoringOrdersPage'
 
 interface PrivateRouteOptions extends RouteProps {
   component: React.FC<RouteProps>
@@ -53,6 +56,16 @@ export const ProtectedRoutes = () => (
     <PrivateRoute
       path="/frame-orders"
       component={FrameOrdersPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path="/frame-simple-orders"
+      component={FrameSimpleOrdersPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path="/factoring-orders"
+      component={FactoringOrdersPage}
       roles={portalConfig.roles.pages.all}
     />
 

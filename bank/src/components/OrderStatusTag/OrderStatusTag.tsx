@@ -13,6 +13,7 @@ export interface OrderStatusTagProps {
 const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, item }) => {
   const { t } = useTranslation()
   switch (statusCode) {
+    // TODO: make status as per specs
     case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
     case OrderStatus.FRAME_OPERATOR_VERIFYING:
     case OrderStatus.FRAME_CLIENT_SIGN:

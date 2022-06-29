@@ -1,13 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Tag } from 'antd'
+import { Table, Button, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
+import OrderStatusTag from 'components/OrderStatusTag'
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { formatDate } from 'orient-ui-library/library/helpers/date'
@@ -45,28 +46,9 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     </Space>
   )
 
-  const renderStatus = (statusCode: OrderStatus, item: Order) => {
-    switch (statusCode) {
-      case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
-        return <Tag color="green">{t('orderStatusTitles.waitForVerify')}</Tag>
-      case OrderStatus.FRAME_OPERATOR_VERIFYING:
-        return <Tag color="green">{t('orderStatusTitles.verifying')}</Tag>
-      case OrderStatus.FRAME_CLIENT_SIGN:
-        return <Tag color="blue">{t('orderStatusTitles.clientSign')}</Tag>
-      case OrderStatus.FRAME_OPERATOR_VERIFYING:
-        return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
-
-      case OrderStatus.FRAME_CLIENT_REWORK:
-      case OrderStatus.FRAME_OPERATOR_VERIFYING:
-      case OrderStatus.FRAME_HAS_OFFER:
-      case OrderStatus.FRAME_CUSTOMER_SIGN:
-      case OrderStatus.FRAME_COMPLETED:
-      case OrderStatus.FRAME_CANCEL:
-      case OrderStatus.FRAME_OPERATOR_REJECT:
-      default:
-        return <Tag>{item.statusName}</Tag>
-    }
-  }
+  const renderStatus = (statusCode: OrderStatus, item: Order) => (
+    <OrderStatusTag statusCode={statusCode} item={item} />
+  )
 
   const columns: ColumnsType<Order> = [
     {
@@ -110,8 +92,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
   ]
 
   const rowClassName = (record: Order) => (
-    (record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY) ||
-    (record.statusCode === OrderStatus.FRAME_OPERATOR_VERIFYING)
+    record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
       ? 'FrameOrdersList__row--new'
       : ''
   )
