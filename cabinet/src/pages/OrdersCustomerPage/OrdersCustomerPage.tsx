@@ -11,9 +11,9 @@ import FrameCustomerWizard from 'components/FrameCustomerWizard'
 import FrameSimpleCustomerWizard from 'components/FrameSimpleCustomerWizard'
 import FactoringCustomerWizard from 'components/FactoringCustomerWizard'
 
-import './OrdersPage.style.less'
+import './OrdersCustomerPage.style.less'
 
-const OrdersPage = () => {
+const OrdersCustomerPage = () => {
   const { path, url } = useRouteMatch()
 
   const company = useStoreState(state => state.company.current)
@@ -33,7 +33,7 @@ const OrdersPage = () => {
   )
 
   return (
-    <Layout className="OrdersPage" data-testid="OrdersPage">
+    <Layout className="OrdersCustomerPage" data-testid="OrdersCustomerPage">
       <Switch>
         <Route exact path={path}>
           {renderList()}
@@ -52,4 +52,4 @@ const OrdersPage = () => {
   )
 }
 
-export default OrdersPage
+export default OrdersCustomerPage

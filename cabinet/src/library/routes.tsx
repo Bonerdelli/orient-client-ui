@@ -67,39 +67,37 @@ export const PublicRoutes = () => (
   </Switch>
 )
 
-const commonRoutes = (
-  <>
-    <PrivateRoute
-      path={portalConfig.sections.company}
-      component={MyCompanyPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={portalConfig.sections.heads}
-      component={CompanyHeadsPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={portalConfig.sections.bankDetails}
-      component={BankRequisitesPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={portalConfig.sections.documents}
-      component={DocumentsPage}
-      roles={portalConfig.roles.pages.all}
-    />
-    <PrivateRoute
-      path={portalConfig.sections.questionnaire}
-      component={QuestionnairePage}
-      roles={portalConfig.roles.pages.all}
-    />
-  </>
-)
+const commonRoutes = [
+  <PrivateRoute
+    path={portalConfig.sections.company}
+    component={MyCompanyPage}
+    roles={portalConfig.roles.pages.all}
+  />,
+  <PrivateRoute
+    path={portalConfig.sections.heads}
+    component={CompanyHeadsPage}
+    roles={portalConfig.roles.pages.all}
+  />,
+  <PrivateRoute
+    path={portalConfig.sections.bankDetails}
+    component={BankRequisitesPage}
+    roles={portalConfig.roles.pages.all}
+  />,
+  <PrivateRoute
+    path={portalConfig.sections.documents}
+    component={DocumentsPage}
+    roles={portalConfig.roles.pages.all}
+  />,
+  <PrivateRoute
+    path={portalConfig.sections.questionnaire}
+    component={QuestionnairePage}
+    roles={portalConfig.roles.pages.all}
+  />,
+]
 
 export const ClientRoutes = () => (
   <Switch>
-    {commonRoutes}
+    {...commonRoutes}
     <PrivateRoute
       path={portalConfig.sections.requests}
       component={OrdersClientPage}

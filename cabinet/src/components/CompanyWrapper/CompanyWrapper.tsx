@@ -26,7 +26,7 @@ const CompanyWrapper: React.FC<CompanyWrapperProps> = ({ children }) => {
   }, [ companies ])
 
 
-  if (companyLoaded === false) {
+  if (companyLoaded === false || companies?.length === 0) {
     return (
       <ErrorResultView centered status="error"/>
     )

@@ -3,6 +3,8 @@ import * as schema from 'orient-ui-library/library/api/schema'
 
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
+import { CabinetMode } from 'library/models/cabinet'
+
 import {
   CompanyFounderDto,
   CompanyQuestionnaireDto,
@@ -15,6 +17,7 @@ export type WizardStep1To2Request = schema.components['schemas']['ClientFrameSte
 interface FrameWizardCommonParameters {
   type: FrameWizardType
   companyId: number
+  mode?: CabinetMode,
   orderId?: number
   step?: number
 }
@@ -31,10 +34,16 @@ export interface WizardStep2Data {
   questionnaire: CompanyQuestionnaireDto | null
 }
 
-// NOTE: ep's compined with simple wizard
-const getBasePath = (companyId: number, type: FrameWizardType) => {
+// NOTE: API wrappers for Frame and Simple Frame are combined
+// NOTE: some API wrappers for Client and Customer are combined
+const getBasePath = (
+  companyId: number | bigint,
+  type: FrameWizardType,
+  mode: CabinetMode = CabinetMode.Client,
+) => {
+  const modePath = mode === CabinetMode.Customer ? 'customer' : 'client'
   const typePath = type === FrameWizardType.Full ? 'frame' : 'frameSimple'
-  return `/client/company/${companyId}/wizard/${typePath}`
+  return `/${modePath}/company/${companyId}/wizard/${typePath}`
 }
 
 /**
@@ -44,8 +53,8 @@ export async function startFrameWizard(
   params: FrameWizardCommonParameters,
   request: WizardStep1To2Request,
 ) {
-  const { companyId, type } = params
-  const basePath = getBasePath(companyId, type)
+  const { mode, companyId, type } = params
+  const basePath = getBasePath(companyId, type, mode)
   return await post(basePath, request, true)
 }
 
@@ -56,8 +65,8 @@ export async function sendFrameWizardStep2(
   params: FrameWizardStepParameters,
   request: unknown,
 ) {
-  const { companyId, orderId, type } = params
-  const basePath = getBasePath(companyId, type)
+  const { mode, companyId, orderId, type } = params
+  const basePath = getBasePath(companyId, type, mode)
   return await post(`${basePath}/${orderId}/2`, request, true)
 }
 
@@ -68,8 +77,8 @@ export async function sendFrameWizardStep3(
   params: FrameWizardStepParameters,
   request: unknown,
 ) {
-  const { companyId, orderId, type } = params
-  const basePath = getBasePath(companyId, type)
+  const { mode, companyId, orderId, type } = params
+  const basePath = getBasePath(companyId, type, mode)
   return await post(`${basePath}/${orderId}/3`, request, true)
 }
 
@@ -81,8 +90,8 @@ export async function sendFrameWizardStep(
   params: FrameWizardStepParameters,
   request: unknown,
 ) {
-  const { companyId, orderId, step, type } = params
-  const basePath = getBasePath(companyId, type)
+  const { mode, companyId, orderId, step, type } = params
+  const basePath = getBasePath(companyId, type, mode)
   return await post(`${basePath}/${orderId}/${step}`, request, true)
 }
 
@@ -92,8 +101,8 @@ export async function sendFrameWizardStep(
 export async function getCurrentFrameWizardStep(
   params: FrameWizardCommonParameters,
 ) {
-  const { companyId, orderId, type } = params
-  const basePath = getBasePath(companyId, type)
+  const { mode, companyId, orderId, type } = params
+  const basePath = getBasePath(companyId, type, mode)
   return await get(`${basePath}/${orderId}`)
 }
 
@@ -103,7 +112,7 @@ export async function getCurrentFrameWizardStep(
 export async function getFrameWizardStep(
   params: FrameWizardCommonParameters,
 ) {
-  const { companyId, orderId, type, step } = params
-  const basePath = getBasePath(companyId, type)
+  const { mode, companyId, orderId, type, step } = params
+  const basePath = getBasePath(companyId, type, mode)
   return await get(`${basePath}/${orderId}/${step}`)
 }

@@ -8,11 +8,13 @@ import { EyeOutlined } from '@ant-design/icons'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 import { Order, OrderStatus, OrderWizardType } from 'orient-ui-library/library/models/order'
+import { isCustomer } from 'orient-ui-library/library/helpers/roles'
 
 import { GridResponse } from 'library/models'
+import { CabinetMode } from 'library/models/cabinet'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-
 import { getCompanyOrdersList } from 'library/api'
+import { useStoreState } from 'library/store'
 
 import './OrdersList.style.less'
 
@@ -24,12 +26,16 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
+  const user = useStoreState(state => state.user.current)
+
   const [
     data,
     dataLoaded,
-  ] = useApi<GridResponse<Order[]>>(
-    getCompanyOrdersList,  // TODO: fixme
-    { companyId },
+  ] = useApi<Order[]>(
+    getCompanyOrdersList, {
+      mode: isCustomer(user) ? CabinetMode.Customer : CabinetMode.Client,
+      companyId,
+    },
   )
 
   const renderActions = (_val: unknown, item: Order) => {
