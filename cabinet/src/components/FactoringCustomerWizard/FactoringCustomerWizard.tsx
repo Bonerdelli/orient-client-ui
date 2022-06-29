@@ -5,16 +5,14 @@ import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models'
 
-import FactoringStepParameters from 'components/FactoringStepParameters'
-import FactoringStepDocuments from 'components/FactoringStepDocuments'
-import FactoringStepSignDocuments from 'components/FactoringStepSignDocuments'
-import FactoringStepBankOffers from 'components/FactoringStepBankOffers'
+import CustomerFactoringStepInfo from 'components/CustomerFactoringStepInfo'
+import CustomerFactoringSignDocuments from 'components/CustomerFactoringSignDocuments'
 
 import { CabinetMode } from 'library/models/cabinet'
-import { useStoreState } from 'library/store'
-import { getCurrentFactoringWizardStep } from 'library/api'
+import { getCurrentFrameWizardStep } from 'library/api'
 
 import './FactoringCustomerWizard.style.less'
 
@@ -23,7 +21,7 @@ const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FactoringCustomerWizardProps {
-  // orderId?: number
+  companyId: number
   backUrl?: string
 }
 
@@ -31,52 +29,32 @@ export interface FactoringCustomerWizardPathParams {
   itemId?: string,
 }
 
-const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ backUrl }) => {
+const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ companyId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FactoringCustomerWizardPathParams>()
-  const company = useStoreState(state => state.company.current)
-  const mode = CabinetMode.Customer
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ companyId, setCompanyId ] = useState<number>()
-  const [ orderId, _setOrderId ] = useState<number>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ _orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
   useEffect(() => {
-    if (companyId && (Number(itemId) || orderId)) {
+    if (companyId && Number(itemId)) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
   }, [companyId])
 
-  useEffect(() => {
-    if (company) {
-      setCompanyId(company.id)
-    }
-  }, [company])
-
-  useEffect(() => {
-    if (currentStep === 2 && (
-        orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
-        orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
-    )) {
-      // NOTE: show waiting for verify message
-      setSelectedStep(3)
-      setCurrentStep(3)
-    }
-  }, [currentStep, orderStatus])
-
   const loadCurrentStepData = async () => {
-    const result = await getCurrentFactoringWizardStep({
+    const result = await getCurrentFrameWizardStep({
       mode: CabinetMode.Customer,
+      type: FrameWizardType.Full,
       companyId: companyId as number,
-      orderId: Number(itemId) || orderId,
+      orderId: Number(itemId),
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
@@ -98,38 +76,20 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ backU
     }
     switch (selectedStep) {
       case 1:
-        return <FactoringStepParameters
+        return <CustomerFactoringStepInfo
           companyId={companyId}
-          orderId={Number(itemId) || orderId}
+          orderId={Number(itemId)}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
           sequenceStepNumber={1}
         />
       case 2:
-        return <FactoringStepDocuments
+        return <CustomerFactoringSignDocuments
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
-          setOrderStatus={setOrderStatus}
-          orderId={Number(itemId) || orderId}
-        />
-      case 3:
-        return <FactoringStepSignDocuments
-          companyId={companyId}
-          currentStep={currentStep}
-          sequenceStepNumber={3}
-          setCurrentStep={setSelectedStep}
-          orderStatus={orderStatus}
-          orderId={Number(itemId) || orderId}
-        />
-      case 4:
-        return <FactoringStepBankOffers
-          companyId={company?.id as number}
-          currentStep={currentStep}
-          sequenceStepNumber={4}
-          setCurrentStep={setSelectedStep}
-          orderId={Number(itemId) || orderId}
+          orderId={Number(itemId)}
         />
       default:
         return <></>
@@ -137,7 +97,7 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ backU
   }
 
   const renderTitle = () => {
-    const title = t('factoring.title')
+    const title = t('customerFrameOrder.title')
     if (!backUrl) return title
     return (
       <>
@@ -164,10 +124,8 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ backU
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step title={t('factoring.firstStep.title')} />
-          <Step disabled={!currentStep} title={t('factoring.secondStep.title')} />
-          <Step disabled={currentStep < 3} title={t('factoring.thirdStep.title')} />
-          <Step disabled={currentStep < 4} title={t('factoring.fourthStep.title')} />
+          <Step title={t('customerFrameOrder.firstStep.title')} />
+          <Step disabled={currentStep < 2} title={t('customerFrameOrder.secondStep.title')} />
         </Steps>
       </Card>
       <Card className="Wizard__step">

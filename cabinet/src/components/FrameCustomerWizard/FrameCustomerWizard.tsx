@@ -8,14 +8,10 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models'
 
-import OrderStepSelectInn from 'components/OrderStepSelectInn'
-import OrderStepDocuments from 'components/OrderStepDocuments'
-import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
-import OrderStepBankOffers from 'components/OrderStepBankOffers'
+import CustomerOrderStepInfo from 'components/CustomerOrderStepInfo'
+import CustomerOrderSignDocuments from 'components/CustomerOrderSignDocuments'
 
 import { CabinetMode } from 'library/models/cabinet'
-import { Customer } from 'library/models'
-import { useStoreState } from 'library/store'
 import { getCurrentFrameWizardStep } from 'library/api'
 
 import './FrameCustomerWizard.style.less'
@@ -25,7 +21,6 @@ const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FrameCustomerWizardProps {
-  // orderId?: number
   companyId: number
   backUrl?: string
 }
@@ -34,51 +29,32 @@ export interface FrameCustomerWizardPathParams {
   itemId?: string,
 }
 
-export const FRAME_WIZARD_LAST_STEP_INDEX = 3
-
 const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FrameCustomerWizardPathParams>()
-  const company = useStoreState(state => state.company.current)
-  const mode = CabinetMode.Customer
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ orderId, setOrderId ] = useState<number>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
-
-  // TODO: BE doesn't sent customer, fix after DE fixes
-  const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
+  const [ _orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
   useEffect(() => {
-    if (companyId && (Number(itemId) || orderId)) {
+    if (companyId && Number(itemId)) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
   }, [companyId])
-
-  useEffect(() => {
-    if (currentStep === 2 && (
-        orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
-        orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
-    )) {
-      // NOTE: show waiting for verify message
-      setSelectedStep(3)
-      setCurrentStep(3)
-    }
-  }, [currentStep, orderStatus])
 
   const loadCurrentStepData = async () => {
     const result = await getCurrentFrameWizardStep({
       mode: CabinetMode.Customer,
       type: FrameWizardType.Full,
       companyId: companyId as number,
-      orderId: Number(itemId) || orderId,
+      orderId: Number(itemId),
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
@@ -100,42 +76,20 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepSelectInn
+        return <CustomerOrderStepInfo
           companyId={companyId}
-          orderId={Number(itemId) || orderId}
-          setOrderId={setOrderId}
+          orderId={Number(itemId)}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
           sequenceStepNumber={1}
-          selectedCustomer={selectedCustomer}
-          setSelectedCustomer={setSelectedCustomer}
         />
       case 2:
-        return <OrderStepDocuments
+        return <CustomerOrderSignDocuments
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
-          setOrderStatus={setOrderStatus}
-          orderId={Number(itemId) || orderId}
-        />
-      case 3:
-        return <OrderStepSignDocuments
-          companyId={companyId}
-          currentStep={currentStep}
-          sequenceStepNumber={3}
-          setCurrentStep={setSelectedStep}
-          orderStatus={orderStatus}
-          orderId={Number(itemId) || orderId}
-          customerId={selectedCustomer?.id}
-        />
-      case 4:
-        return <OrderStepBankOffers
-          companyId={company?.id as number}
-          currentStep={currentStep}
-          sequenceStepNumber={4}
-          setCurrentStep={setSelectedStep}
-          orderId={Number(itemId) || orderId}
+          orderId={Number(itemId)}
         />
       default:
         return <></>
@@ -143,7 +97,7 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
   }
 
   const renderTitle = () => {
-    const title = t('frameOrder.title')
+    const title = t('customerFrameOrder.title')
     if (!backUrl) return title
     return (
       <>
@@ -170,10 +124,8 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step title={t('frameOrder.firstStep.title')} />
-          <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
-          <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')} />
-          <Step disabled={currentStep < 4} title={t('frameOrder.fourthStep.title')} />
+          <Step title={t('customerFrameOrder.firstStep.title')} />
+          <Step disabled={currentStep < 2} title={t('customerFrameOrder.secondStep.title')} />
         </Steps>
       </Card>
       <Card className="Wizard__step">

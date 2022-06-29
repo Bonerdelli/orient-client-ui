@@ -10,12 +10,13 @@ import {
   getFrameWizardStep,
   sendFrameWizardStep,
 } from 'library/api/frameWizard'
+import { CabinetMode } from 'library/models/cabinet'
 
-import './ClientWizardStep.style.less'
+import './CustomerOrderStepInfo.style.less'
 
 const { Title } = Typography
 
-export interface ClientWizardStepProps {
+export interface CustomerOrderStepInfoProps {
   wizardType?: FrameWizardType
   companyId: number
   orderId?: number
@@ -24,7 +25,7 @@ export interface ClientWizardStepProps {
   setCurrentStep: (step: number) => void
 }
 
-const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
+const CustomerOrderStepInfo: React.FC<CustomerOrderStepInfoProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
@@ -55,6 +56,7 @@ const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
+      mode: CabinetMode.Customer,
       type: wizardType,
       step: sequenceStepNumber,
       companyId,
@@ -73,7 +75,8 @@ const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep({ // NOTE: replace ep with correct!
+    const result = await sendFrameWizardStep({
+      mode: CabinetMode.Customer,
       step: sequenceStepNumber,
       type: wizardType,
       companyId,
@@ -151,8 +154,8 @@ const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="ClientWizardStep">
-      <Title level={5}>{t('ClientWizardStep.title')}</Title>
+    <Div className="CustomerOrderStepInfo">
+      <Title level={5}>{t('customerOrderStepInfo.title')}</Title>
     </Div>
   )
 
@@ -176,4 +179,4 @@ const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
   )
 }
 
-export default ClientWizardStep
+export default CustomerOrderStepInfo

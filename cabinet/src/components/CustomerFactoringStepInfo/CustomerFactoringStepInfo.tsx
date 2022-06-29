@@ -4,19 +4,18 @@ import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import {
   getFrameWizardStep,
   sendFrameWizardStep,
-} from 'library/api/frameWizard'
+} from 'library/api/factoringWizard'
 
-import './ClientWizardStep.style.less'
+import './CustomerFactoringStepInfo.style.less'
 
 const { Title } = Typography
 
-export interface ClientWizardStepProps {
-  wizardType?: FrameWizardType
+export interface CustomerFactoringStepInfoProps {
   companyId: number
   orderId?: number
   currentStep: number
@@ -24,8 +23,7 @@ export interface ClientWizardStepProps {
   setCurrentStep: (step: number) => void
 }
 
-const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
-  wizardType = FrameWizardType.Full,
+const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   companyId,
   orderId,
   currentStep,
@@ -55,6 +53,7 @@ const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
+
       type: wizardType,
       step: sequenceStepNumber,
       companyId,
@@ -73,7 +72,8 @@ const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep({ // NOTE: replace ep with correct!
+    const result = await sendFrameWizardStep({
+
       step: sequenceStepNumber,
       type: wizardType,
       companyId,
@@ -151,8 +151,8 @@ const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="ClientWizardStep">
-      <Title level={5}>{t('ClientWizardStep.title')}</Title>
+    <Div className="CustomerFactoringStepInfo">
+      <Title level={5}>{t('customerFactoringStepInfo.title')}</Title>
     </Div>
   )
 
@@ -176,4 +176,4 @@ const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
   )
 }
 
-export default ClientWizardStep
+export default CustomerFactoringStepInfo

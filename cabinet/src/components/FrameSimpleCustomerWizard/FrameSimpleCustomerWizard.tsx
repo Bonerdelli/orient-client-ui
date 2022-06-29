@@ -8,12 +8,10 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models'
 
-import OrderStepSelectInn from 'components/OrderStepSelectInn'
-import OrderStepDocuments from 'components/OrderStepDocuments'
-import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
+import CustomerOrderStepInfo from 'components/CustomerOrderStepInfo'
+import CustomerOrderSignDocuments from 'components/CustomerOrderSignDocuments'
 
 import { CabinetMode } from 'library/models/cabinet'
-import { Customer } from 'library/models'
 import { getCurrentFrameWizardStep } from 'library/api'
 
 import './FrameSimpleCustomerWizard.style.less'
@@ -22,57 +20,41 @@ const { Step } = Steps
 const { Title } = Typography
 const { useBreakpoint } = Grid
 
-export interface FrameSimpleWizardProps {
-  // orderId?: number
+export interface FrameSimpleCustomerWizardProps {
   companyId: number
   backUrl?: string
 }
 
-export interface FrameSimpleWizardPathParams {
+export interface FrameSimpleCustomerWizardPathParams {
   itemId?: string,
 }
 
-const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUrl }) => {
+const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ companyId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
-  const { itemId } = useParams<FrameSimpleWizardPathParams>()
+  const { itemId } = useParams<FrameSimpleCustomerWizardPathParams>()
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ orderId, setOrderId ] = useState<number>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
-
-  // TODO: BE doesn't sent customer, fix after DE fixes
-  const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
+  const [ _orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
   useEffect(() => {
-    if (companyId && (Number(itemId) || orderId)) {
+    if (companyId && Number(itemId)) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
   }, [companyId])
 
-  useEffect(() => {
-    if (currentStep === 2 && (
-        orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
-        orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
-    )) {
-      // NOTE: show waiting for verify message
-      setSelectedStep(3)
-      setCurrentStep(3)
-    }
-  }, [currentStep, orderStatus])
-
   const loadCurrentStepData = async () => {
     const result = await getCurrentFrameWizardStep({
       mode: CabinetMode.Customer,
-      type: FrameWizardType.Simple,
+      type: FrameWizardType.Full,
       companyId: companyId as number,
-      orderId: Number(itemId) || orderId,
+      orderId: Number(itemId),
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
@@ -94,37 +76,22 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepSelectInn
+        return <CustomerOrderStepInfo
           wizardType={FrameWizardType.Simple}
           companyId={companyId}
-          orderId={Number(itemId) || orderId}
-          setOrderId={setOrderId}
+          orderId={Number(itemId)}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
           sequenceStepNumber={1}
-          selectedCustomer={selectedCustomer}
-          setSelectedCustomer={setSelectedCustomer}
         />
       case 2:
-        return <OrderStepDocuments
+        return <CustomerOrderSignDocuments
           wizardType={FrameWizardType.Simple}
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
-          setOrderStatus={setOrderStatus}
-          orderId={Number(itemId) || orderId}
-        />
-      case 3:
-        return <OrderStepSignDocuments
-          wizardType={FrameWizardType.Simple}
-          companyId={companyId}
-          currentStep={currentStep}
-          sequenceStepNumber={3}
-          setCurrentStep={setSelectedStep}
-          orderStatus={orderStatus}
-          orderId={Number(itemId) || orderId}
-          customerId={selectedCustomer?.id}
+          orderId={Number(itemId)}
         />
       default:
         return <></>
@@ -132,7 +99,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
   }
 
   const renderTitle = () => {
-    const title = t('frameSimpleOrder.title')
+    const title = t('customerFrameOrder.title')
     if (!backUrl) return title
     return (
       <>
@@ -152,17 +119,15 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
 
   return (
     <>
-      <Card className="Wizard FrameSimpleWizard">
+      <Card className="Wizard FrameSimpleCustomerWizard">
         <Title level={3}>{renderTitle()}</Title>
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step title={t('frameSimpleOrder.firstStep.title')} />
-          <Step disabled={!selectedCustomer && !currentStep} title={t('frameSimpleOrder.secondStep.title')} />
-          <Step disabled={currentStep < 3} title={t('frameSimpleOrder.thirdStep.title')} />
-          <Step disabled={currentStep < 4} title={t('frameSimpleOrder.fourthStep.title')} />
+          <Step title={t('customerFrameOrder.firstStep.title')} />
+          <Step disabled={currentStep < 2} title={t('customerFrameOrder.secondStep.title')} />
         </Steps>
       </Card>
       <Card className="Wizard__step">
@@ -172,4 +137,4 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
   )
 }
 
-export default FrameSimpleWizard
+export default FrameSimpleCustomerWizard

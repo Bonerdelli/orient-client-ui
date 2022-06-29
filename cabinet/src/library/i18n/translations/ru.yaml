@@ -135,6 +135,27 @@ factoring:
   fourthStep:
     title: Предложение Банка
 
+customerFrameOrder:
+  title: Заявка на заключение рамочного договора
+  firstStep:
+    title: Информация о Поставщике
+  secondStep:
+    title: Подписание документов
+
+customerFrameSimpleOrder:
+  title: Заявка на упрощенный рамочный договор
+  firstStep:
+    title: Информация о Поставщике
+  secondStep:
+    title: Подписание документов
+
+customerFactoring:
+  title: Заявка на факторинг
+  firstStep:
+    title: Параметры Поставщика и Заявки
+  secondStep:
+    title: Подписание документов
+
 frameSteps:
   selectInn:
     title: Выберите ИНН Заказчика
