@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, Col, Descriptions, Form, message, Modal, Row, Skeleton, Spin, Tabs, Typography } from 'antd'
+import { Button, Col, Form, message, Modal, Row, Skeleton, Spin, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -9,15 +9,15 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
-import { CompanyHead, DocumentStatus } from 'library/models'
+import { DocumentStatus } from 'library/models'
 
 import { frameWizardSetDocStatus, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
+import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
+import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 
 const { Title } = Typography
-const { TabPane } = Tabs
-const { Item: DescItem } = Descriptions
 
 export interface OrderDocumentsProps {
   orderId?: number
@@ -48,7 +48,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[] | null>()
 
-  const [ clientCompanyFounder, setClientCompanyFounder ] = useState<CompanyHead | null>(null)
+  const [ clientCompanyFounder, setClientCompanyFounder ] = useState<CompanyFounderDto | null>(null)
   const [ companyFounderModalVisible, setCompanyFounderModalVisible ] = useState<boolean>(false)
 
   useEffect(() => {
@@ -76,6 +76,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         }
       })
 
+    setClientCompanyFounder(stepData?.clientCompanyFounder)
     setDocuments(updatedDocuments)
     setDocumentTypes(updatedDocumentTypes)
     setDocumentTypesOptional(updatedDocumentTypesOptional)
@@ -254,36 +255,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
             </Button>
           }
         >
-          {renderCompanyFounderInfo()}
+          <CompanyFounderInfo companyFounder={clientCompanyFounder}/>
         </Modal>
       </Form.Item>
     </Div>
-  )
-  const descriptionsLayout = {
-    bordered: true,
-    column: 1,
-    size: 'small' as any,
-  }
-  const renderCompanyFounderInfo = () => (
-    <Tabs>
-      <TabPane tab="Общие сведения" key="general-info">
-        <Descriptions {...descriptionsLayout}>
-          {/*<DescItem label={t('models.bankRequisites.bankName')}>*/}
-          <DescItem label="Фамилия">
-
-          </DescItem>
-          {/*<DescItem label={t('models.bankRequisites.mfo')}>*/}
-          <DescItem label="Имя">
-          </DescItem>
-          {/*<DescItem label={t('models.bankRequisites.accountNumber')}>*/}
-          <DescItem label="Отчество">
-          </DescItem>
-        </Descriptions>
-      </TabPane>
-      <TabPane tab="Паспортные данные" key="passport-info">
-        Content of Tab Pane 2
-      </TabPane>
-    </Tabs>
   )
 
   const renderStepContent = () => (
