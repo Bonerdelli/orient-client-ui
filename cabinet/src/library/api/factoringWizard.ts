@@ -1,10 +1,10 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
 
 import {
-  CompanyRequisites,
-  CompanyHead,
+  CompanyFounderDto,
+  CompanyQuestionnaireDto,
+  CompanyRequisitesDto,
   OrderDocument,
-  CompanyQuestionnaire,
 } from 'orient-ui-library/library/models/proxy'
 
 interface FactoringWizardCommonParameters {
@@ -20,9 +20,9 @@ export interface FactoringWizardStepParameters extends FactoringWizardCommonPara
 // TODO: ask be generate models for this
 export interface WizardStep2Data {
   documents: OrderDocument[] | null
-  founder: CompanyHead | null
-  requisites: CompanyRequisites | null
-  questionnaire: CompanyQuestionnaire | null
+  founder: CompanyFounderDto | null
+  requisites: CompanyRequisitesDto | null
+  questionnaire: CompanyQuestionnaireDto | null
 }
 
 const getBasePath = (companyId: number) => {
@@ -35,7 +35,7 @@ const getBasePath = (companyId: number) => {
  */
 export async function sendFactoringWizardStep(
   params: FactoringWizardStepParameters,
-  request: unknown
+  request: unknown,
 ) {
   const { companyId, orderId, step } = params
   const basePath = getBasePath(companyId)

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Checkbox, Col, Form, Grid, message, Row, Spin } from 'antd'
 
-import { Company } from 'orient-ui-library/library/models/proxy'
+import { CompanyDto } from 'orient-ui-library/library/models/proxy'
 import { setCompanyFactAddresses, setCompanyShortName } from 'library/api'
 import { twoColumnFormConfig } from 'library/helpers/form'
 
@@ -17,13 +17,13 @@ import './CompanyForm.style.less'
 const { useBreakpoint } = Grid
 
 export interface CompanyFormProps {
-  company: Company,
+  company: CompanyDto,
 }
 
 const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const { t } = useTranslation()
   const breakPoint = useBreakpoint()
-  const [ form ] = Form.useForm<Company>()
+  const [ form ] = Form.useForm<CompanyDto>()
 
   const [ isAddressesSame, setIsAddressesSame ] = useState<boolean>(form.getFieldValue('isAddressesSame'))
   const [ submitting, setSubmitting ] = useState<boolean>(false)

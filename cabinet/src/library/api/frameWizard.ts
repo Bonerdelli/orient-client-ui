@@ -4,10 +4,10 @@ import * as schema from 'orient-ui-library/library/api/schema'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import {
-  CompanyRequisites,
-  CompanyHead,
+  CompanyFounderDto,
+  CompanyQuestionnaireDto,
+  CompanyRequisitesDto,
   OrderDocument,
-  CompanyQuestionnaire,
 } from 'orient-ui-library/library/models/proxy'
 
 export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
@@ -26,9 +26,9 @@ export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
 // TODO: ask be generate models for this
 export interface WizardStep2Data {
   documents: OrderDocument[] | null
-  founder: CompanyHead | null
-  requisites: CompanyRequisites | null
-  questionnaire: CompanyQuestionnaire | null
+  founder: CompanyFounderDto | null
+  requisites: CompanyRequisitesDto | null
+  questionnaire: CompanyQuestionnaireDto | null
 }
 
 // NOTE: ep's compined with simple wizard
@@ -42,7 +42,7 @@ const getBasePath = (companyId: number, type: FrameWizardType) => {
  */
 export async function startFrameWizard(
   params: FrameWizardCommonParameters,
-  request: WizardStep1To2Request
+  request: WizardStep1To2Request,
 ) {
   const { companyId, type } = params
   const basePath = getBasePath(companyId, type)
@@ -54,7 +54,7 @@ export async function startFrameWizard(
  */
 export async function sendFrameWizardStep2(
   params: FrameWizardStepParameters,
-  request: unknown
+  request: unknown,
 ) {
   const { companyId, orderId, type } = params
   const basePath = getBasePath(companyId, type)
@@ -66,7 +66,7 @@ export async function sendFrameWizardStep2(
  */
 export async function sendFrameWizardStep3(
   params: FrameWizardStepParameters,
-  request: unknown
+  request: unknown,
 ) {
   const { companyId, orderId, type } = params
   const basePath = getBasePath(companyId, type)
@@ -79,7 +79,7 @@ export async function sendFrameWizardStep3(
  */
 export async function sendFrameWizardStep(
   params: FrameWizardStepParameters,
-  request: unknown
+  request: unknown,
 ) {
   const { companyId, orderId, step, type } = params
   const basePath = getBasePath(companyId, type)
