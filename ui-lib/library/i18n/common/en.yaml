@@ -114,6 +114,9 @@ errors:
   authError:
     title: Authentication error
     desc: Check are login and password entered correctly
+  accessDenied:
+    title: Access Denied
+    desc: You have no sufficient privileges to access the requested resource
   pageNotFound:
     title: 404
     desc: Page not found
