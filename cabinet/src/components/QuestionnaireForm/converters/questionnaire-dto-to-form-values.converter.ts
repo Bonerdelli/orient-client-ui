@@ -2,13 +2,12 @@ import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
 import { defaultQuestionnaireFormState } from '../constants/default-questionnaire-form-state.const'
 import { QuestionnaireDto } from 'library/models/proxy'
 
-export const convertQuestionnaireDtoToFormValues = (dto: QuestionnaireDto | null): QuestionnaireFormData => {
+export const convertQuestionnaireDtoToFormValues = (dto: QuestionnaireDto | null): QuestionnaireFormData | null => {
   if (!dto) {
-    return defaultQuestionnaireFormState
+    return null
   }
 
   const { id, companyId, ...dataWithoutIds } = dto
-
   return {
     ...dataWithoutIds,
     // setting up empty data for correct form view

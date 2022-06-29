@@ -13,7 +13,7 @@ export interface OrderInfoProps {
 const OrderInfo: React.FC<OrderInfoProps> = ({ orderId, customerCompany }) => {
   const { t } = useTranslation()
   if (!orderId || !customerCompany) {
-    return <Skeleton />
+    return <Skeleton/>
   }
   return (
     <Descriptions
@@ -21,6 +21,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({ orderId, customerCompany }) => {
       title={t('models.order.title')}
       className="OrderInfo"
       bordered
+      size="small"
       column={1}
     >
       <DescItem label={t('models.order.fields.id.title')}>

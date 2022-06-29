@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Form, Input, Tooltip, Button } from 'antd'
+import { Button, Form, Input, Tooltip } from 'antd'
 import { CheckOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons'
 
 import './FormTextItemEditable.style.less'
@@ -13,6 +13,7 @@ export interface FormTextItemEditableProps {
   isRequired: boolean
   isEditable?: boolean
   groupFields?: boolean
+  onSave?: () => void
 }
 
 const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
@@ -21,6 +22,7 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
   isRequired,
   isEditable = false,
   groupFields = false,
+  onSave = null,
 }) => {
   const { t } = useTranslation()
   const form = useFormInstance()
@@ -38,7 +40,8 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
     }
   }
   const handleSave = () => {
-    form?.submit() // TODO: separate form submitting
+    form?.submit() // Остается только для того чтоб не писать в каждом onSave setSubmitting(true). Можно под флаг загнать или совсем убрать, посмотрим дальше
+    onSave?.()
     setEditing(false)
   }
   const handleCancel = () => {
@@ -53,15 +56,15 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
           type="link"
           size="small"
           onClick={handleSave}
-          icon={<CheckOutlined />}
+          icon={<CheckOutlined/>}
         />
       </Tooltip>
       <Tooltip key="cancel" title={t('common.actions.cancel.title')}>
         <Button danger
-          type="link"
-          size="small"
-          onClick={handleCancel}
-          icon={<CloseOutlined />}
+                type="link"
+                size="small"
+                onClick={handleCancel}
+                icon={<CloseOutlined/>}
         />
       </Tooltip>
     </>
@@ -73,7 +76,7 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
         type="link"
         size="small"
         onClick={() => setEditing(true)}
-        icon={<EditOutlined />}
+        icon={<EditOutlined/>}
       />
     </Tooltip>
   )
@@ -83,7 +86,7 @@ const FormTextItemEditable: React.FC<FormTextItemEditableProps> = ({
       key={name}
       name={name}
       label={t(`models.${model}.fields.${field}.title`)}
-      rules={isRequired ? [requiredRule] : []}
+      rules={isRequired ? [ requiredRule ] : []}
     >
       <Input
         disabled={!isEditable}
