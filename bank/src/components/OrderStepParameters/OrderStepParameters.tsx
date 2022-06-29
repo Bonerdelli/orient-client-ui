@@ -116,6 +116,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
           <ClientInfo
             company={stepData?.clientCompany}
             companyHead={stepData?.clientCompanyFounder}
+            companyRequisites={stepData?.}
           />
         </Col>
         <Col span={12}>

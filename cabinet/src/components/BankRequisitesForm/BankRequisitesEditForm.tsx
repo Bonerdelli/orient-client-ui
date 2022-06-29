@@ -8,7 +8,7 @@ import { isUndefined, isNull } from 'lodash'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import Div from 'orient-ui-library/components/Div'
 
-import { CompanyRequisites } from 'orient-ui-library/library/models/proxy'
+import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
 import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
 import { getCompanyRequisites, updateCompanyRequisites } from 'library/api'
@@ -38,9 +38,9 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
   const breakPoint = useBreakpoint()
   const [ form ] = useForm()
 
-  const [ formData, setFormData ] = useState<Partial<CompanyRequisites> | null>()
+  const [ formData, setFormData ] = useState<Partial<CompanyRequisitesDto> | null>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
-  const [ initialData, dataLoaded ] = useApi<CompanyRequisites | null>(
+  const [ initialData, dataLoaded ] = useApi<CompanyRequisitesDto | null>(
     getCompanyRequisites, {
       id: itemId ?? props.itemId,
       companyId,
@@ -49,23 +49,23 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
 
   useEffect(() => {
     setFormData(initialData)
-  }, [initialData])
+  }, [ initialData ])
 
-  const handleItemUpdate = async (data: CompanyRequisites) => {
-    const updatedData = await callApi<CompanyRequisites | null>(
+  const handleItemUpdate = async (data: CompanyRequisitesDto) => {
+    const updatedData = await callApi<CompanyRequisitesDto | null>(
       updateCompanyRequisites,
       { companyId },
       {
         ...data,
         id: itemId ?? props.itemId,
-      }
+      },
     )
     if (updatedData) {
       setFormData(updatedData)
     }
   }
 
-  const handleFormSubmit = async (data: CompanyRequisites) => {
+  const handleFormSubmit = async (data: CompanyRequisitesDto) => {
     setSubmitting(true)
     await handleItemUpdate(data)
     setSubmitting(false)
@@ -89,7 +89,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
           type="primary"
           size="large"
           htmlType="submit"
-          icon={<SaveOutlined />}
+          icon={<SaveOutlined/>}
           disabled={submitting}
         >
           {t('common.actions.save.title')}
@@ -98,7 +98,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
           type="default"
           size="large"
           onClick={handleCancel}
-          icon={<StopOutlined />}
+          icon={<StopOutlined/>}
         >
           {t('common.actions.cancel.title')}
         </Button>
@@ -112,7 +112,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
     return (
       <>
         <Link className="BankRequisitesForm__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
+          <Button icon={<ArrowLeftOutlined/>} type="link" size="large"></Button>
         </Link>
         {title}
       </>
@@ -127,13 +127,13 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
 
   const renderForm = () => {
     if (dataLoaded === false) {
-      return <ErrorResultView centered compact status="error" />
+      return <ErrorResultView centered compact status="error"/>
     }
     if (dataLoaded && isNull(initialData)) {
-      return <ErrorResultView centered compact status="warning" />
+      return <ErrorResultView centered compact status="warning"/>
     }
     if (isUndefined(formData) || isNull(formData)) {
-      return <Skeleton active={dataLoaded === null} />
+      return <Skeleton active={dataLoaded === null}/>
     }
     return renderFormContent()
   }
@@ -142,7 +142,7 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
     <Form
       form={form}
       initialValues={formData ?? {}}
-      onFinish={(data: CompanyRequisites) => handleFormSubmit(data)}
+      onFinish={(data: CompanyRequisitesDto) => handleFormSubmit(data)}
       className="BankRequisitesForm"
       data-testid="BankRequisitesForm"
       {...baseFormConfig(breakPoint)}

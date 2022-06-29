@@ -1,7 +1,7 @@
 import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
-import { QuestionnaireDto } from 'library/models/proxy'
+import { CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
 
-export const convertQuestionnaireFormToDto = (data: QuestionnaireFormData): QuestionnaireDto => {
+export const convertQuestionnaireFormToDto = (data: QuestionnaireFormData): CompanyQuestionnaireDto => {
   return {
     ...data,
     credits: data.hasCredits ? data.credits : undefined,

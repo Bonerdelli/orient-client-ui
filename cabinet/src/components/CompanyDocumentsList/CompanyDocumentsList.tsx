@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Table, Space } from 'antd'
+import { Space, Table, Typography } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 
 import { getEndpointUrl } from 'orient-ui-library/library'
@@ -8,15 +8,15 @@ import { getEndpointUrl } from 'orient-ui-library/library'
 import Div from 'orient-ui-library/components/Div'
 import DocumentActions from 'components/DocumentActions'
 
-import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { CompanyDocument } from 'orient-ui-library/library/models/proxy'
+import { Document, DOCUMENT_TYPE, DocumentStatus } from 'library/models'
+import { CompanyDocumentDto } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api'
 
 import {
-  getCompanyDocuments,
-  getCompanyDocumentUploadUrl,
   deleteCompanyDocument,
   downloadCompanyDocument,
+  getCompanyDocuments,
+  getCompanyDocumentUploadUrl,
 } from 'library/api'
 
 import './CompanyDocumentsList.style.less'
@@ -39,7 +39,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     companyDocuments,
     documentsLoaded,
     companyDocumentsReload,
-  ] = useApi<CompanyDocument[]>(getCompanyDocuments, { companyId })
+  ] = useApi<CompanyDocumentDto[]>(getCompanyDocuments, { companyId })
 
   useEffect(() => {
     if (companyDocuments === null) {
@@ -50,9 +50,9 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
       return composeDocument(typeId, existsDoc)
     })
     setItems(updatedItems)
-  }, [types, documentsLoaded, companyDocuments])
+  }, [ types, documentsLoaded, companyDocuments ])
 
-  const composeDocument = (typeId: number, document?: CompanyDocument): Document => {
+  const composeDocument = (typeId: number, document?: CompanyDocumentDto): Document => {
     if (!document?.info) {
       return {
         type: typeId,
@@ -70,7 +70,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   const getUploadUrl = useCallback((typeId: number) => {
     const apiPath = getCompanyDocumentUploadUrl(companyId, typeId)
     return getEndpointUrl(apiPath)
-  }, [companyId])
+  }, [ companyId ])
 
   const handleItemDelete = async (item: Document) => {
     const result = await deleteCompanyDocument({ companyId, documentId: item.id as number })

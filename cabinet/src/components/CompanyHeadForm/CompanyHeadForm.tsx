@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams, useHistory } from 'react-router-dom'
-import { Card, Form, Grid, Row, Col, Spin, Skeleton, Button } from 'antd'
-import { SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons'
+import { Link, useHistory, useParams } from 'react-router-dom'
+import { Button, Card, Col, Form, Grid, Row, Skeleton, Spin } from 'antd'
+import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons'
 import { isUndefined } from 'lodash'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { CompanyHead } from 'orient-ui-library/library/models/proxy'
-import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
-import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
+import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
+import { callApi, useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { baseFormConfig, renderFormInputs } from 'library/helpers/form'
 import { getCompanyHead, updateCompanyHead } from 'library/api' // TODO: to ui-lib
-
 import formFields from './CompanyHeadForm.form'
 import './CompanyHeadForm.style.less'
 
@@ -34,9 +33,9 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
   const breakPoint = useBreakpoint()
   const history = useHistory()
 
-  const [ formData, setFormData ] = useState<Partial<CompanyHead>>()
+  const [ formData, setFormData ] = useState<Partial<CompanyFounderDto>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
-  const [ initialData, dataLoaded ] = useApi<CompanyHead | null>(
+  const [ initialData, dataLoaded ] = useApi<CompanyFounderDto | null>(
     getCompanyHead, {
       companyId,
       id: id ?? itemId,
@@ -49,9 +48,9 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
     }
   }, [ initialData ])
 
-  const handleFormSubmit = async (data: CompanyHead) => {
+  const handleFormSubmit = async (data: CompanyFounderDto) => {
     setSubmitting(true)
-    const updatedData = await callApi<CompanyHead | null>(
+    const updatedData = await callApi<CompanyFounderDto | null>(
       updateCompanyHead, {
         companyId,
         id: id ?? itemId,
@@ -73,7 +72,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
         type="primary"
         size="large"
         htmlType="submit"
-        icon={<SaveOutlined />}
+        icon={<SaveOutlined/>}
         disabled={submitting}
       >
         {t('common.actions.save.title')}
@@ -87,7 +86,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
     return (
       <>
         <Link className="CompanyHeadForm__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
+          <Button icon={<ArrowLeftOutlined/>} type="link" size="large"></Button>
         </Link>
         {title}
       </>
@@ -102,11 +101,11 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
 
   const renderForm = () => {
     if (isUndefined(formData)) {
-      return <Skeleton active={dataLoaded === null} />
+      return <Skeleton active={dataLoaded === null}/>
     }
     if (dataLoaded === false) {
       return (
-        <ErrorResultView centered status="error" />
+        <ErrorResultView centered status="error"/>
       )
     }
     return renderFormContent()
@@ -115,7 +114,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
   const renderFormContent = () => (
     <Form
       initialValues={formData}
-      onFinish={(data: CompanyHead) => handleFormSubmit(data)}
+      onFinish={(data: CompanyFounderDto) => handleFormSubmit(data)}
       className="CompanyHeadForm"
       data-testid="CompanyHeadForm"
       {...baseFormConfig(breakPoint)}

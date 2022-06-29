@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { Company } from 'orient-ui-library/library/models/proxy'
+import { CompanyDto } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompany } from 'library/api'
 
@@ -15,7 +15,7 @@ export interface CompanyWrapperProps {
 const CompanyWrapper: React.FC<CompanyWrapperProps> = ({ children }) => {
 
   const { setCompany } = useStoreActions(actions => actions.company)
-  const [ companies, companyLoaded ] = useApi<Company[]>(getCompany)
+  const [ companies, companyLoaded ] = useApi<CompanyDto[]>(getCompany)
 
   useEffect(() => {
     if (companies?.length) {
@@ -23,12 +23,12 @@ const CompanyWrapper: React.FC<CompanyWrapperProps> = ({ children }) => {
       // TODO: ask be to make endpoint with default company
       setCompany(companies[0])
     }
-  }, [companies])
+  }, [ companies ])
 
 
   if (companyLoaded === false) {
     return (
-      <ErrorResultView centered status="error" />
+      <ErrorResultView centered status="error"/>
     )
   }
 
