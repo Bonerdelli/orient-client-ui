@@ -13,11 +13,10 @@ import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
 
 import { Customer } from 'library/models'
-import { useStoreState } from 'library/store'
 
 import { getCurrentFrameWizardStep } from 'library/api'
 
-import './FrameSimpleWizard.style.less'
+import './FrameSimpleClientWizard.style.less'
 
 const { Step } = Steps
 const { Title } = Typography
@@ -25,6 +24,7 @@ const { useBreakpoint } = Grid
 
 export interface FrameSimpleWizardProps {
   // orderId?: number
+  companyId: number
   backUrl?: string
 }
 
@@ -32,19 +32,17 @@ export interface FrameSimpleWizardPathParams {
   itemId?: string,
 }
 
-const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ backUrl }) => {
+const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FrameSimpleWizardPathParams>()
-  const company = useStoreState(state => state.company.current)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ companyId, setCompanyId ] = useState<number>()
   const [ orderId, setOrderId ] = useState<number>()
   const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
@@ -57,12 +55,6 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ backUrl }) => {
       loadCurrentStepData()
     }
   }, [companyId])
-
-  useEffect(() => {
-    if (company) {
-      setCompanyId(company.id)
-    }
-  }, [company])
 
   useEffect(() => {
     if (currentStep === 2 && (

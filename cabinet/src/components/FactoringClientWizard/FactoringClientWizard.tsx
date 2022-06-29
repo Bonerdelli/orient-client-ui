@@ -12,7 +12,6 @@ import FactoringStepDocuments from 'components/FactoringStepDocuments'
 import FactoringStepSignDocuments from 'components/FactoringStepSignDocuments'
 import FactoringStepBankOffers from 'components/FactoringStepBankOffers'
 
-import { Customer } from 'library/models'
 import { useStoreState } from 'library/store'
 
 import { getCurrentFactoringWizardStep } from 'library/api'
@@ -45,11 +44,8 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
-  const [ orderId, setOrderId ] = useState<number>()
+  const [ orderId, _setOrderId ] = useState<number>()
   const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
-
-  // TODO: BE doesn't sent customer, fix after DE fixes
-  const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
 
   useEffect(() => {
     if (companyId && (Number(itemId) || orderId)) {
@@ -124,7 +120,6 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           setCurrentStep={setSelectedStep}
           orderStatus={orderStatus}
           orderId={Number(itemId) || orderId}
-          customerId={selectedCustomer?.id}
         />
       case 4:
         return <FactoringStepBankOffers
@@ -168,7 +163,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           onChange={(step) => setSelectedStep(step + 1)}
         >
           <Step title={t('factoring.firstStep.title')} />
-          <Step disabled={!selectedCustomer && !currentStep} title={t('factoring.secondStep.title')} />
+          <Step disabled={!currentStep} title={t('factoring.secondStep.title')} />
           <Step disabled={currentStep < 3} title={t('factoring.thirdStep.title')} />
           <Step disabled={currentStep < 4} title={t('factoring.fourthStep.title')} />
         </Steps>

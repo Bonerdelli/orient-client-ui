@@ -26,6 +26,7 @@ const { useBreakpoint } = Grid
 
 export interface FrameClientWizardProps {
   // orderId?: number
+  companyId: number
   backUrl?: string
 }
 
@@ -35,7 +36,7 @@ export interface FrameClientWizardPathParams {
 
 export const FRAME_WIZARD_LAST_STEP_INDEX = 3
 
-const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
+const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
@@ -47,7 +48,6 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ companyId, setCompanyId ] = useState<number>()
   const [ orderId, setOrderId ] = useState<number>()
   const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
@@ -60,12 +60,6 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
       loadCurrentStepData()
     }
   }, [companyId])
-
-  useEffect(() => {
-    if (company) {
-      setCompanyId(company.id)
-    }
-  }, [company])
 
   useEffect(() => {
     if (currentStep === 2 && (
