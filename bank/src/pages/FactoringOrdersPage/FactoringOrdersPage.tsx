@@ -6,9 +6,9 @@ import FactoringOrdersList from 'components/FactoringOrdersList'
 import FrameBankWizard from 'components/FrameBankWizard' // TODO: add wizard
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
-import './FrameOrdersPage.style.less'
+import './FactoringOrdersPage.style.less'
 
-const FrameOrdersPage = () => {
+const FactoringOrdersPage = () => {
 
   const { path, url } = useRouteMatch()
 
@@ -19,7 +19,7 @@ const FrameOrdersPage = () => {
   )
 
   return (
-    <Layout className="FrameOrdersPage" data-testid="FrameOrdersPage">
+    <Layout className="FactoringOrdersPage" data-testid="FactoringOrdersPage">
       <Switch>
         <Route exact path={path}>
           {renderList()}
@@ -32,4 +32,4 @@ const FrameOrdersPage = () => {
   )
 }
 
-export default FrameOrdersPage
+export default FactoringOrdersPage

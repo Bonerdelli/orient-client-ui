@@ -8,7 +8,7 @@ export async function getFactoringOrdersList(
   _params: unknown,
   request: PaginatedRequest = defaultPaginatedRequest
 ) {
-  return await post<GridResponse<Order[]>>('/operator/order/frame/list', request)
+  return await post<GridResponse<Order[]>>('/operator/order/factor/list', request)
 }
 
 export interface FactoringItemParams {
@@ -17,7 +17,7 @@ export interface FactoringItemParams {
 
 export async function getFactoringOrderWizard(params: FactoringItemParams) {
   const { orderId } = params
-  return await get<Order>(`/operator/wizard/frame/${orderId}`)
+  return await get<Order>(`/operator/wizard/factor/${orderId}`)
 }
 
 export interface FactoringStepParams {
@@ -27,5 +27,5 @@ export interface FactoringStepParams {
 
 export async function getFactoringOrderWizardStep(params: FactoringStepParams) {
   const { orderId, step } = params
-  return await get<Order>(`/operator/wizard/frame/${orderId}/${step}`)
+  return await get<Order>(`/operator/wizard/factor/${orderId}/${step}`)
 }

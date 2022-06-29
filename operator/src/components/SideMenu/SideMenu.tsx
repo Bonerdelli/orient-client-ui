@@ -34,12 +34,12 @@ const SideMenu = () => {
             <>{t('sections.frameOrders.title')}</>
           </NavLink>
         </MenuItem>
-        <MenuItem key="simpleFrameOrders">
+        <MenuItem to="/frame-simple-orders">
           <NavLink to="/frame-simple-orders">
             <>{t('sections.simpleFrameOrders.title')}</>
           </NavLink>
         </MenuItem>
-        <MenuItem key="factoringOrders">
+        <MenuItem to="/factoring-orders">
           <NavLink to="/factoring-orders">
             <>{t('sections.factoringOrders.title')}</>
           </NavLink>

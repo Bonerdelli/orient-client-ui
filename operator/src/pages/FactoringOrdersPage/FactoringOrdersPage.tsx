@@ -7,7 +7,7 @@ import FrameOperatorWizard from 'components/FrameOperatorWizard' // TODO: Factor
 
 import './FactoringOrdersPage.style.less'
 
-const FactoringOrdersList = () => {
+const FactoringOrdersPage = () => {
 
   const { path, url } = useRouteMatch()
 
