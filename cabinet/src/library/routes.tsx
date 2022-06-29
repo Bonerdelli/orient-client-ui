@@ -10,12 +10,19 @@ import MyCompanyPage from 'pages/MyCompanyPage'
 import CompanyHeadsPage from 'pages/CompanyHeadsPage'
 import BankRequisitesPage from 'pages/BankRequisitesPage'
 import DocumentsPage from 'pages/DocumentsPage'
-import OrdersPage from 'pages/OrdersPage'
+import QuestionnairePage from 'pages/QuestionnairePage'
 
+// Client Pages
+import OrdersClientPage from 'pages/OrdersClientPage'
 import FrameClientWizardPage from 'pages/FrameClientWizardPage'
 import FrameSimpleClientWizardPage from 'pages/FrameSimpleClientWizardPage'
 import FactoringClientWizardPage from 'pages/FactoringClientWizardPage'
-import QuestionnairePage from 'pages/QuestionnairePage'
+
+// Customer Pages
+import OrdersCustomerPage from 'pages/OrdersCustomerPage'
+import FrameCustomerWizardPage from 'pages/FrameCustomerWizardPage'
+import FrameSimpleCustomerWizardPage from 'pages/FrameSimpleCustomerWizardPage'
+import FactoringCustomerWizardPage from 'pages/FactoringCustomerWizardPage'
 
 interface PrivateRouteOptions extends RouteProps {
   component: React.FC<RouteProps>;
@@ -60,9 +67,8 @@ export const PublicRoutes = () => (
   </Switch>
 )
 
-// TODO: make lazy loading works?
-export const ProtectedRoutes = () => (
-  <Switch>
+const commonRoutes = (
+  <>
     <PrivateRoute
       path={portalConfig.sections.company}
       component={MyCompanyPage}
@@ -88,12 +94,17 @@ export const ProtectedRoutes = () => (
       component={QuestionnairePage}
       roles={portalConfig.roles.pages.all}
     />
+  </>
+)
+
+export const ClientRoutes = () => (
+  <Switch>
+    {commonRoutes}
     <PrivateRoute
       path={portalConfig.sections.requests}
-      component={OrdersPage}
+      component={OrdersClientPage}
       roles={portalConfig.roles.pages.all}
     />
-
     <PrivateRoute
       path={FRAME_ORDER_PATH}
       component={FrameClientWizardPage}
@@ -107,6 +118,42 @@ export const ProtectedRoutes = () => (
     <PrivateRoute
       path={FACTORING_PATH}
       component={FactoringClientWizardPage}
+      roles={portalConfig.roles.pages.all}
+    />
+
+    <Route exact path="/">
+      <Redirect to={{pathname: HOME_PATH}} />
+    </Route>
+    <Route exact path="/login">
+      <Redirect to={{ pathname: HOME_PATH }} />
+    </Route>
+    <Route path="*">
+      <PageNotFound/>
+    </Route>
+  </Switch>
+)
+
+export const CustomerRoutes = () => (
+  <Switch>
+    {commonRoutes}
+    <PrivateRoute
+      path={portalConfig.sections.requests}
+      component={OrdersCustomerPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path={FRAME_ORDER_PATH}
+      component={FrameCustomerWizardPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path={SIMPLE_FRAME_ORDER_PATH}
+      component={FrameSimpleCustomerWizardPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path={FACTORING_PATH}
+      component={FactoringCustomerWizardPage}
       roles={portalConfig.roles.pages.all}
     />
 
