@@ -90,7 +90,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
 
         <Button type="primary"
                 htmlType="submit"
-                disabled={saveInProcess}
+                loading={saveInProcess}
         >
           {t('questionnaire.save')}
         </Button>

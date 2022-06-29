@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Button, Skeleton, message } from 'antd'
+import { Button, Col, message, Row, Skeleton } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -112,6 +112,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
           <ClientInfo
             company={stepData?.clientCompany}
             companyHead={stepData?.clientCompanyFounder}
+            companyRequisites={stepData?.clientCompanyRequisites}
           />
         </Col>
         <Col span={12}>
@@ -126,13 +127,13 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

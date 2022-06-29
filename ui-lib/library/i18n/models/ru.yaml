@@ -70,6 +70,16 @@ company:
       title: Состояние активности
     chief:
       title: Руководитель
+    bankRequisites:
+      title: Банковские реквизиты
+      show: Посмотреть
+
+bankRequisites:
+  modalTitle: Банковские реквизиты компании
+  bankName: Название Банка
+  mfo: МФО
+  accountNumber: Расчетный счет
+  close: Закрыть
 
 companyContact:
   title: Контакт компании

@@ -1,7 +1,7 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
 import * as schema from 'orient-ui-library/library/api/schema'
 
-import { Company, CompanyHead } from 'orient-ui-library/library/models/proxy'
+import { Company, CompanyHead, CompanyRequisites } from 'orient-ui-library/library/models/proxy'
 
 // export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
 export type FrameWizardRejectOrderRequest = schema.components['schemas']['RejectOrderDto']
@@ -22,6 +22,7 @@ export interface FrameWizardStep1Response {
   clientCompany: Company
   customerCompany: Company
   clientCompanyFounder: CompanyHead
+  clientCompanyRequisites: CompanyRequisites
 }
 
 /**
@@ -29,7 +30,7 @@ export interface FrameWizardStep1Response {
  */
 export async function sendFrameWizardStep1(
   params: FrameWizardStepParameters,
-  request: unknown
+  request: unknown,
 ) {
   const { orderId } = params
   return await post(`/operator/wizard/frame/${orderId}/1`, request)
@@ -40,7 +41,7 @@ export async function sendFrameWizardStep1(
  */
 export async function sendFrameWizardStep2(
   params: FrameWizardStepParameters,
-  request: unknown
+  request: unknown,
 ) {
   const { orderId } = params
   return await post(`/operator/wizard/frame/${orderId}/2`, request)
@@ -51,7 +52,7 @@ export async function sendFrameWizardStep2(
  */
 export async function sendFrameWizardStep3(
   params: FrameWizardStepParameters,
-  request: unknown
+  request: unknown,
 ) {
   const { orderId } = params
   return await post(`/operator/wizard/frame/${orderId}/3`, request)
@@ -62,7 +63,7 @@ export async function sendFrameWizardStep3(
  */
 export async function sendFrameWizardStep4(
   params: FrameWizardStepParameters,
-  request: unknown
+  request: unknown,
 ) {
   const { orderId } = params
   return await post(`/operator/wizard/frame/${orderId}/4`, request)

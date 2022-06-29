@@ -1,29 +1,58 @@
 import { useTranslation } from 'react-i18next'
-import { Descriptions, Skeleton } from 'antd'
+import { Button, Descriptions, Modal, Skeleton } from 'antd'
 
-import { Company, CompanyHead } from 'library/models/proxy'
+import { Company, CompanyHead, CompanyRequisites } from 'library/models/proxy'
 import { formatCurrency } from 'library/helpers'
+import { SelectOutlined } from '@ant-design/icons'
+import { useState } from 'react'
 
 const { Item: DescItem } = Descriptions
 
 export interface ClientInfoProps {
   company?: Company
   companyHead?: CompanyHead
+  companyRequisites?: CompanyRequisites,
 }
 
-const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead }) => {
+const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead, companyRequisites }) => {
   const { t } = useTranslation()
+  const [ bankRequisitesVisible, setBankRequisitesVisible ] = useState<boolean>(false)
+
   if (!company) {
     return <Skeleton/>
   }
+
+  const descriptionsLayout = {
+    bordered: true,
+    column: 1,
+    size: 'small' as any,
+  }
+  const showBankRequisites = () => {
+    setBankRequisitesVisible(true)
+  }
+  const closeBankRequisites = () => {
+    setBankRequisitesVisible(false)
+  }
+
+  const renderBankRequisites = () => (
+    <Descriptions {...descriptionsLayout}>
+      <DescItem label={t('models.bankRequisites.bankName')}>
+        {companyRequisites.bankName}
+      </DescItem>
+      <DescItem label={t('models.bankRequisites.mfo')}>
+        {companyRequisites.mfo}
+      </DescItem>
+      <DescItem label={t('models.bankRequisites.accountNumber')}>
+        {companyRequisites.accountNumber}
+      </DescItem>
+    </Descriptions>
+  )
+
   return (
     <Descriptions
-      size="middle"
       title={t('models.client.title')}
       className="ClientInfo"
-      bordered
-      size="small"
-      column={1}
+      {...descriptionsLayout}
     >
       <DescItem label={t('models.company.fields.fullName.title')}>
         {company.fullName}
@@ -62,8 +91,31 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead }) => {
       <DescItem label={t('models.company.fields.chief.title')}>
         {companyHead?.lastName}{' '}
         {companyHead?.firstName}{' '}
-        {companyHead?.middleName}{' '}
+        {companyHead?.middleName}
       </DescItem>
+      {companyRequisites && <DescItem label={t('models.company.fields.bankRequisites.title')}>
+        <Button size="small"
+                type="link"
+                icon={<SelectOutlined/>}
+                onClick={showBankRequisites}
+        >
+          {t('models.company.fields.bankRequisites.show')}
+        </Button>
+        <Modal
+          visible={bankRequisitesVisible}
+          title={t('models.bankRequisites.modalTitle')}
+          onCancel={closeBankRequisites}
+          footer={
+            <Button key="submit"
+                    type="primary"
+                    onClick={closeBankRequisites}>
+              {t('models.bankRequisites.close')}
+            </Button>
+          }
+        >
+          {renderBankRequisites()}
+        </Modal>
+      </DescItem>}
     </Descriptions>
   )
 }
