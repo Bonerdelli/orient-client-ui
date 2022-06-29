@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Button, Descriptions, Modal, Skeleton } from 'antd'
 
-import { Company, CompanyHead, CompanyRequisites } from 'library/models/proxy'
+import { CompanyDto, CompanyFounderDto, CompanyRequisitesDto } from 'library/models/proxy'
 import { formatCurrency } from 'library/helpers'
 import { SelectOutlined } from '@ant-design/icons'
 import { useState } from 'react'
@@ -9,9 +9,9 @@ import { useState } from 'react'
 const { Item: DescItem } = Descriptions
 
 export interface ClientInfoProps {
-  company?: Company
-  companyHead?: CompanyHead
-  companyRequisites?: CompanyRequisites,
+  company?: CompanyDto
+  companyHead?: CompanyFounderDto
+  companyRequisites?: CompanyRequisitesDto,
 }
 
 const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead, companyRequisites }) => {

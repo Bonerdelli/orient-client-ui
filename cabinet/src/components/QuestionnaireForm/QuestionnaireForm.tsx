@@ -14,12 +14,12 @@ import { useTranslation } from 'react-i18next'
 import {
   convertQuestionnaireFormToDto,
 } from 'components/QuestionnaireForm/converters/questionnaire-form-to-dto.converter'
-import { QuestionnaireDto } from 'library/models/proxy'
 import { useStoreState } from 'library/store'
 import { Div } from 'orient-ui-library/components'
 import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useState } from 'react'
+import { CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
 
 interface QuestionnaireFormProps {
   companyId: string,
@@ -30,7 +30,7 @@ interface QuestionnaireFormProps {
 const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, returnUrl }) => {
   const { t } = useTranslation()
   const [ form ] = Form.useForm<QuestionnaireFormData>()
-  const [ data, isDataLoaded ] = useApi<QuestionnaireDto>(getQuestionnaire, companyId)
+  const [ data, isDataLoaded ] = useApi<CompanyQuestionnaireDto>(getQuestionnaire, companyId)
   const dictionaries = useStoreState(state => state.dictionary.list)
   const [ saveInProcess, setSaveInProcess ] = useState<boolean>(false)
   const initialValues = convertQuestionnaireDtoToFormValues(data)
@@ -53,7 +53,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
   }
 
   const saveQuestionnaire = async (formValue: QuestionnaireFormData) => {
-    const dto: QuestionnaireDto = convertQuestionnaireFormToDto(formValue)
+    const dto: CompanyQuestionnaireDto = convertQuestionnaireFormToDto(formValue)
     setSaveInProcess(true)
     const res = await sendQuestionnaire(companyId, dto)
     setSaveInProcess(false)

@@ -6,7 +6,7 @@ import { PlusOutlined, ArrowLeftOutlined, StopOutlined } from '@ant-design/icons
 
 import Div from 'orient-ui-library/components/Div'
 
-import { CompanyRequisites } from 'orient-ui-library/library/models/proxy'
+import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
 import { callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
 import { addCompanyRequisites } from 'library/api'
@@ -30,12 +30,12 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
   const breakpoint = useBreakpoint()
   const [ form ] = useForm()
 
-  const [ formData, setFormData ] = useState<Partial<CompanyRequisites>>()
+  const [ formData, setFormData ] = useState<Partial<CompanyRequisitesDto>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
   const [ submitResult, setSubmitResult ] = useState<boolean>()
 
-  const handleItemCreate = async (data: CompanyRequisites): Promise<boolean> => {
-    const insertedData = await callApi<CompanyRequisites | null>(
+  const handleItemCreate = async (data: CompanyRequisitesDto): Promise<boolean> => {
+    const insertedData = await callApi<CompanyRequisitesDto | null>(
       addCompanyRequisites, {
         companyId,
       },
@@ -47,7 +47,7 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
     return Boolean(insertedData)
   }
 
-  const handleFormSubmit = async (data: CompanyRequisites) => {
+  const handleFormSubmit = async (data: CompanyRequisitesDto) => {
     setSubmitting(true)
     const result = await handleItemCreate(data)
     setSubmitResult(result)
@@ -75,7 +75,7 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
           type="primary"
           size="large"
           htmlType="submit"
-          icon={<PlusOutlined />}
+          icon={<PlusOutlined/>}
           danger={submitResult === false}
           disabled={submitting}
         >
@@ -85,7 +85,7 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
           type="default"
           size="large"
           onClick={handleCancel}
-          icon={<StopOutlined />}
+          icon={<StopOutlined/>}
         >
           {t('common.actions.cancel.title')}
         </Button>
@@ -99,7 +99,7 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
     return (
       <>
         <Link className="BankRequisitesForm__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
+          <Button icon={<ArrowLeftOutlined/>} type="link" size="large"></Button>
         </Link>
         {title}
       </>
@@ -116,7 +116,7 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
     <Form
       form={form}
       initialValues={formData}
-      onFinish={(data: CompanyRequisites) => handleFormSubmit(data)}
+      onFinish={(data: CompanyRequisitesDto) => handleFormSubmit(data)}
       className="BankRequisitesForm"
       data-testid="BankRequisitesForm"
       {...baseFormConfig(breakpoint)}

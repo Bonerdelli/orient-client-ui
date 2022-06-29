@@ -1,14 +1,14 @@
 import { Action, action } from 'easy-peasy'
 
-import { Company } from 'orient-ui-library/library/models/proxy'
+import { CompanyDto } from 'orient-ui-library/library/models/proxy'
 
 /**
  * Company application state (example)
  */
 
 export interface CompanyStoreModel {
-  current?: Company | undefined
-  setCompany: Action<CompanyStoreModel, Company>
+  current?: CompanyDto | undefined
+  setCompany: Action<CompanyStoreModel, CompanyDto>
 }
 
 export const companyStoreModel: CompanyStoreModel = {

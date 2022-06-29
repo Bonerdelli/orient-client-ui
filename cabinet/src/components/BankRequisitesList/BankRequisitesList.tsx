@@ -7,7 +7,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { CompanyRequisites } from 'orient-ui-library/library/models/proxy'
+import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
 import { getCompanyRequisitesList, deleteCompanyRequisites } from 'library/api'
@@ -22,16 +22,17 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
-  const [ data, dataLoaded, dataReloadCallback ] = useApi<CompanyRequisites[]>(getCompanyRequisitesList, { companyId })
+  const [ data, dataLoaded, dataReloadCallback ] = useApi<CompanyRequisitesDto[]>(getCompanyRequisitesList,
+    { companyId })
 
-  const handleDelete = async (item: CompanyRequisites) => {
+  const handleDelete = async (item: CompanyRequisitesDto) => {
     if (data) {
       await deleteCompanyRequisites({ companyId, id: item.id as number })
       dataReloadCallback()
     }
   }
 
-  const renderActions = (_val: unknown, item: CompanyRequisites) => (
+  const renderActions = (_val: unknown, item: CompanyRequisitesDto) => (
     <Space size="small" className="DataTable__ghostActions">
       <Link to={`${url}/${item.id}`}>
         <Button
@@ -39,7 +40,7 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
           type="link"
           shape="circle"
           title={t('common.actions.edit.title')}
-          icon={<EditOutlined />}
+          icon={<EditOutlined/>}
         />
       </Link>
       <Popconfirm
@@ -55,13 +56,13 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
           type="link" danger
           shape="circle"
           title={t('common.actions.delete.title')}
-          icon={<DeleteOutlined />}
+          icon={<DeleteOutlined/>}
         />
       </Popconfirm>
     </Space>
   )
 
-  const columns: ColumnsType<CompanyRequisites> = [
+  const columns: ColumnsType<CompanyRequisitesDto> = [
     {
       key: 'bankName',
       dataIndex: 'bankName',
@@ -87,7 +88,7 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="error" />
+      <ErrorResultView centered status="error"/>
     )
   }
 

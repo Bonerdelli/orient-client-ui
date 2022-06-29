@@ -6,7 +6,7 @@ import { isUndefined } from 'lodash'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { CompanyContacts } from 'orient-ui-library/library/models/proxy'
+import { CompanyContactsDto } from 'orient-ui-library/library/models/proxy'
 import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
 import { getCompanyContacts, updateCompanyContacts } from 'library/api' // TODO: to ui-lib
@@ -25,9 +25,9 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
   const { t } = useTranslation()
   const breakPoint = useBreakpoint()
 
-  const [ formData, setFormData ] = useState<Partial<CompanyContacts>>()
+  const [ formData, setFormData ] = useState<Partial<CompanyContactsDto>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
-  const [ initialData, dataLoaded ] = useApi<CompanyContacts | null>(
+  const [ initialData, dataLoaded ] = useApi<CompanyContactsDto | null>(
     getCompanyContacts,
     { companyId },
   )
@@ -38,9 +38,9 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
     }
   }, [ initialData ])
 
-  const handleFormSubmit = async (data: CompanyContacts) => {
+  const handleFormSubmit = async (data: CompanyContactsDto) => {
     setSubmitting(true)
-    const updatedData = await callApi<CompanyContacts | null>(
+    const updatedData = await callApi<CompanyContactsDto | null>(
       updateCompanyContacts,
       { companyId },
       data,
@@ -57,7 +57,7 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
         type="primary"
         size="large"
         htmlType="submit"
-        icon={<SaveOutlined />}
+        icon={<SaveOutlined/>}
         disabled={submitting}
       >
         {t('common.actions.save.title')}
@@ -71,18 +71,18 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
         title={t('companyPage.formSections.additionalContacts.title')}
         description={t('companyPage.formSections.additionalContacts.description')}
       />
-      <Divider />
+      <Divider/>
       {renderForm()}
     </Card>
   )
 
   const renderForm = () => {
     if (isUndefined(formData)) {
-      return <Skeleton active={dataLoaded === null} />
+      return <Skeleton active={dataLoaded === null}/>
     }
     if (dataLoaded === false) {
       return (
-        <ErrorResultView centered status="error" />
+        <ErrorResultView centered status="error"/>
       )
     }
     return renderFormContent()
@@ -91,7 +91,7 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
   const renderFormContent = () => (
     <Form
       initialValues={formData}
-      onFinish={(data: CompanyContacts) => handleFormSubmit(data)}
+      onFinish={(data: CompanyContactsDto) => handleFormSubmit(data)}
       className="CompanyContactsForm"
       data-testid="CompanyContactsForm"
       {...baseFormConfig(breakPoint)}

@@ -1,8 +1,8 @@
 import { FormInputShortConfig, FormInputType } from 'library/helpers/form'
 
-import { CompanyHead } from 'orient-ui-library/library/models/proxy'
+import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 
-const formFields: FormInputShortConfig<CompanyHead>[] = [
+const formFields: FormInputShortConfig<CompanyFounderDto>[] = [
   [ 'lastName' ],
   [ 'firstName' ],
   [ 'secondName' ],
@@ -23,10 +23,10 @@ const formFields: FormInputShortConfig<CompanyHead>[] = [
   [ 'passportValidDate', FormInputType.Date ],
   [ 'nationality' ],
   [ 'address' ],
-  [ 'phone' ]
+  [ 'phone' ],
 ].map(item => ([
   'companyFounder',
   ...item,
-] as FormInputShortConfig<CompanyHead>))
+] as FormInputShortConfig<CompanyFounderDto>))
 
 export default formFields

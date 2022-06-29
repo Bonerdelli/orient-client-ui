@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Typography, Skeleton, Spin, Row, Col, Button, message } from 'antd'
+import { Button, Col, Descriptions, Form, message, Modal, Row, Skeleton, Spin, Tabs, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -9,17 +9,15 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
-import { DocumentStatus } from 'library/models'
+import { CompanyHead, DocumentStatus } from 'library/models'
 
-import {
-  getFrameWizardStep,
-  frameWizardSetDocStatus,
-  sendFrameWizardStep2,
-} from 'library/api/frameWizard'
+import { frameWizardSetDocStatus, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
 
 const { Title } = Typography
+const { TabPane } = Tabs
+const { Item: DescItem } = Descriptions
 
 export interface OrderDocumentsProps {
   orderId?: number
@@ -50,9 +48,12 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[] | null>()
 
+  const [ clientCompanyFounder, setClientCompanyFounder ] = useState<CompanyHead | null>(null)
+  const [ companyFounderModalVisible, setCompanyFounderModalVisible ] = useState<boolean>(false)
+
   useEffect(() => {
     loadStepData()
-  }, [currentStep])
+  }, [ currentStep ])
 
   useEffect(() => {
     if (!stepData) return
@@ -80,7 +81,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     setDocumentTypesOptional(updatedDocumentTypesOptional)
     setDocumentsOptional(updatedDocumentsOptional.length ? updatedDocumentsOptional : null)
     setDocumentsLoading(false)
-  }, [stepData])
+  }, [ stepData ])
 
   const loadStepData = async () => {
     if (documentTypes === null) {
@@ -190,7 +191,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     return Boolean(result?.success)
   }
 
-  const renderDocuments = () =>  (
+  const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
@@ -221,6 +222,70 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Spin>
   )
 
+
+  const openCompanyFounderModal = () => {
+    setCompanyFounderModalVisible(true)
+  }
+  const closeCompanyFounderModal = () => {
+    setCompanyFounderModalVisible(false)
+  }
+  const renderCompanyHeadSection = () => (
+    <Div className="OrderStepDocuments__section">
+      <Form.Item label={t('orderStepDocuments.companyFounderInformation.title')}
+                 labelAlign="left"
+                 colon={false}
+      >
+        <Button type="primary"
+                onClick={openCompanyFounderModal}
+        >
+          {t('orderStepDocuments.companyFounderInformation.check')}
+        </Button>
+        <Modal
+          visible={companyFounderModalVisible}
+          centered
+          width={700}
+          bodyStyle={{ paddingTop: '0' }}
+          title="Данные о руководителе"
+          onCancel={closeCompanyFounderModal}
+          footer={
+            <Button type="primary"
+                    onClick={closeCompanyFounderModal}>
+              {t('models.bankRequisites.close')}
+            </Button>
+          }
+        >
+          {renderCompanyFounderInfo()}
+        </Modal>
+      </Form.Item>
+    </Div>
+  )
+  const descriptionsLayout = {
+    bordered: true,
+    column: 1,
+    size: 'small' as any,
+  }
+  const renderCompanyFounderInfo = () => (
+    <Tabs>
+      <TabPane tab="Общие сведения" key="general-info">
+        <Descriptions {...descriptionsLayout}>
+          {/*<DescItem label={t('models.bankRequisites.bankName')}>*/}
+          <DescItem label="Фамилия">
+
+          </DescItem>
+          {/*<DescItem label={t('models.bankRequisites.mfo')}>*/}
+          <DescItem label="Имя">
+          </DescItem>
+          {/*<DescItem label={t('models.bankRequisites.accountNumber')}>*/}
+          <DescItem label="Отчество">
+          </DescItem>
+        </Descriptions>
+      </TabPane>
+      <TabPane tab="Паспортные данные" key="passport-info">
+        Content of Tab Pane 2
+      </TabPane>
+    </Tabs>
+  )
+
   const renderStepContent = () => (
     <Div className="OrderStepDocuments">
       <Div className="OrderStepDocuments__title">
@@ -231,18 +296,19 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         {renderDocuments()}
       </Div>
       {documentsOptional !== null && renderOptionalDocumentsSection()}
+      {renderCompanyHeadSection()}
     </Div>
   )
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

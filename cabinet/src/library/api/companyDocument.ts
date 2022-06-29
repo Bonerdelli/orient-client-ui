@@ -1,5 +1,5 @@
-import { ApiSuccessResponse, get, getS3File, del } from 'orient-ui-library/library/helpers/api'
-import { CompanyDocument } from 'orient-ui-library/library/models/proxy'
+import { ApiSuccessResponse, del, get, getS3File } from 'orient-ui-library/library/helpers/api'
+import { CompanyDocumentDto } from 'orient-ui-library/library/models/proxy'
 import * as schema from 'orient-ui-library/library/api/schema'
 
 type FileLocation = schema.components['schemas']['FileLocation']
@@ -16,14 +16,14 @@ export interface CompanyDocumentItemParams {
 
 export const getCompanyDocumentUploadUrl = (
   companyId: bigint | number,
-  typeId: number
+  typeId: number,
 ) => (
   `/client/company/${companyId}/document/${typeId}`
 )
 
 export async function getCompanyDocuments(params: CompanyDocumentsListParams) {
   const { companyId } = params
-  return await get<CompanyDocument[]>(`/client/company/${companyId}/document`)
+  return await get<CompanyDocumentDto[]>(`/client/company/${companyId}/document`)
 }
 
 export async function deleteCompanyDocument(params: CompanyDocumentItemParams) {

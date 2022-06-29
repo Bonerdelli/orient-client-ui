@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Descriptions, Skeleton } from 'antd'
 
-import { Company } from 'library/models/proxy'
+import { CompanyDto } from 'library/models/proxy'
 
 const { Item: DescItem } = Descriptions
 
 export interface OrderInfoProps {
   orderId?: number
-  customerCompany?: Company
+  customerCompany?: CompanyDto
 }
 
 const OrderInfo: React.FC<OrderInfoProps> = ({ orderId, customerCompany }) => {
