@@ -18,28 +18,28 @@ import { useStoreState } from 'library/store'
 
 import { getCurrentFrameWizardStep } from 'library/api'
 
-import './FrameWizard.style.less'
+import './FrameClientWizard.style.less'
 
 const { Step } = Steps
 const { Title } = Typography
 const { useBreakpoint } = Grid
 
-export interface FrameWizardProps {
+export interface FrameClientWizardProps {
   // orderId?: number
   backUrl?: string
 }
 
-export interface FrameWizardPathParams {
+export interface FrameClientWizardPathParams {
   itemId?: string,
 }
 
 export const FRAME_WIZARD_LAST_STEP_INDEX = 3
 
-const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
+const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
-  const { itemId } = useParams<FrameWizardPathParams>()
+  const { itemId } = useParams<FrameClientWizardPathParams>()
   const company = useStoreState(state => state.company.current)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
@@ -153,7 +153,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
     if (!backUrl) return title
     return (
       <>
-        <Link className="FrameWizard__navigateBack" to={backUrl}>
+        <Link className="Wizard__navigateBack" to={backUrl}>
           <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
         </Link>
         {title}
@@ -169,7 +169,7 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
 
   return (
     <>
-      <Card className="Wizard FrameWizard">
+      <Card className="Wizard FrameClientWizard">
         <Title level={3}>{renderTitle()}</Title>
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
@@ -182,11 +182,11 @@ const FrameWizard: React.FC<FrameWizardProps> = ({ backUrl }) => {
           <Step disabled={currentStep < 4} title={t('frameOrder.fourthStep.title')} />
         </Steps>
       </Card>
-      <Card className="FrameWizard__step">
+      <Card className="Wizard__step">
         {renderCurrentStep()}
       </Card>
     </>
   )
 }
 
-export default FrameWizard
+export default FrameClientWizard

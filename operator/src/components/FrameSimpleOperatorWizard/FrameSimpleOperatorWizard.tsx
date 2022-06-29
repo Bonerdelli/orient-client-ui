@@ -12,28 +12,28 @@ import OrderStepStopFactors from 'components/OrderStepStopFactors'
 // import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
 
-import { getFrameOrderWizard } from 'library/api/frameOrder'
+import { getFrameSimpleOrderWizard } from 'library/api/frameOrder'
 
-import './FrameOperatorWizard.style.less'
+import './FrameSimpleOperatorWizard.style.less'
 
 const { Step } = Steps
 const { Title } = Typography
 const { useBreakpoint } = Grid
 
-export interface FrameOperatorWizardProps {
+export interface FrameSimpleOperatorWizardProps {
   orderId?: number
   backUrl?: string
 }
 
-export interface FrameOperatorWizardPathParams {
+export interface FrameSimpleOperatorWizardPathParams {
   itemId?: string,
 }
 
-const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, backUrl }) => {
+const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
-  const { itemId } = useParams<FrameOperatorWizardPathParams>()
+  const { itemId } = useParams<FrameSimpleOperatorWizardPathParams>()
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
@@ -52,7 +52,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   }, [currentStep])
 
   const loadCurrentStepData = async () => {
-    const result = await getFrameOrderWizard({
+    const result = await getFrameSimpleOrderWizard({
       orderId: Number(itemId) || orderId as number,
     })
     if (result.success) {
@@ -102,7 +102,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     if (!backUrl) return title
     return (
       <>
-        <Link className="FrameWizard__navigateBack" to={backUrl}>
+        <Link className="FrameSimpleOperatorWizard__navigateBack" to={backUrl}>
           <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
         </Link>
         {title}
@@ -118,7 +118,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
 
   return (
     <>
-      <Card className="Wizard FrameWizard">
+      <Card className="Wizard FrameSimpleOperatorWizard">
         <Title level={3}>{renderTitle()}</Title>
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
@@ -131,11 +131,11 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
           <Step disabled={!isFifthStepActive()} title={t('frameWizard.fifthStep.title')} />
         </Steps>
       </Card>
-      <Card className="FrameWizard__step">
+      <Card className="FrameSimpleOperatorWizard__step">
         {renderCurrentStep()}
       </Card>
     </>
   )
 }
 
-export default FrameOperatorWizard
+export default FrameSimpleOperatorWizard

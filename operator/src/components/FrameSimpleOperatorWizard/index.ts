@@ -1,1 +1,1 @@
-export { default } from './FrameOperatorWizard'
+export { default } from './FrameSimpleOperatorWizard'

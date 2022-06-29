@@ -4,18 +4,18 @@ import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import {
   getFrameWizardStep,
-  sendFrameWizardStep, // NOTE: replace ep with correct one!
+  sendFrameWizardStep1, // NOTE: replace ep with correct one!
 } from 'library/api/frameWizard'
 
-import './OrderStepBankOffers.style.less'
+import './ClientWizardStep.style.less'
 
 const { Title } = Typography
 
-export interface OrderStepBankOffersProps {
+export interface ClientWizardStepProps {
   wizardType?: FrameWizardType
   companyId: number
   orderId?: number
@@ -24,7 +24,7 @@ export interface OrderStepBankOffersProps {
   setCurrentStep: (step: number) => void
 }
 
-const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
+const ClientWizardStep: React.FC<ClientWizardStepProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
@@ -73,7 +73,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep({
+    const result = await sendFrameWizardStep({ // NOTE: replace ep with correct!
       step: sequenceStepNumber,
       type: wizardType,
       companyId,
@@ -151,8 +151,8 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="OrderStepBankOffers">
-      <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
+    <Div className="ClientWizardStep">
+      <Title level={5}>{t('ClientWizardStep.title')}</Title>
     </Div>
   )
 
@@ -176,4 +176,4 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   )
 }
 
-export default OrderStepBankOffers
+export default ClientWizardStep

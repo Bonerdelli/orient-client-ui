@@ -31,6 +31,7 @@ export interface WizardStep2Data {
   questionnaire: CompanyQuestionnaire | null
 }
 
+// NOTE: ep's compined with simple wizard
 const getBasePath = (companyId: number, type: FrameWizardType) => {
   const typePath = type === FrameWizardType.Full ? 'frame' : 'frameSimple'
   return `/client/company/${companyId}/wizard/${typePath}`
@@ -70,6 +71,19 @@ export async function sendFrameWizardStep3(
   const { companyId, orderId, type } = params
   const basePath = getBasePath(companyId, type)
   return await post(`${basePath}/${orderId}/3`, request, true)
+}
+
+/**
+ * Send wizard N-th step
+ * NOTE: don't care, as BE response have no typings
+ */
+export async function sendFrameWizardStep(
+  params: FrameWizardStepParameters,
+  request: unknown
+) {
+  const { companyId, orderId, step, type } = params
+  const basePath = getBasePath(companyId, type)
+  return await post(`${basePath}/${orderId}/${step}`, request, true)
 }
 
 /**
