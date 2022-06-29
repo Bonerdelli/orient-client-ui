@@ -34,6 +34,9 @@ dataEntity:
     unknown: Неизвестно
     yes: Да
     no: Нет
+  gender:
+    male: Мужской
+    female: Женский
 
 actions:
   add:
