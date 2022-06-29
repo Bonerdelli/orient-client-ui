@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Form, Typography, Row, Col, Button, Input, DatePicker, Select, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { OrderTerms, OrderTermCondition } from 'orient-ui-library/library/models/orderTerms'
 
 import {
   getFrameWizardStep,
-  sendFrameWizardStep1, // NOTE: replace ep with correct one!
+  sendFrameWizardStep2,
 } from 'library/api/frameWizard'
 
 import './OrderStepContractParams.style.less'
 
 const { Title } = Typography
+const { Item: FormItem } = Form
+const { Option } = Select
 
 export interface OrderStepContractParamsProps {
   bankId?: number | bigint
@@ -40,6 +43,9 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
+  const [ termCondition, setTermCondition ] = useState<OrderTermCondition>()
+  const [ formData, setFormData ] = useState<Partial<OrderTerms>>()
+
   useEffect(() => {
     loadCurrentStepData()
   }, [])
@@ -64,16 +70,18 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
+    setNextStepAllowed(true)
   }
 
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
+    const result = await sendFrameWizardStep2({
       bankId,
       orderId,
-    }, {})
+    }, {
+      conditions: formData,
+    })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
@@ -89,15 +97,9 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
     }
   }
 
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
-
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      sendNextStep()
+      setCurrentStep(sequenceStepNumber + 1)
     }
   }
 
@@ -114,7 +116,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
     <Button
       size="large"
       type="primary"
-      onClick={handleStepSubmit}
+      htmlType="submit"
       disabled={!isNextStepAllowed || submitting}
       loading={submitting}
     >
@@ -145,9 +147,98 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
     </Button>
   )
 
+  const handleFormSubmit = async (data: OrderTerms) => {
+    setFormData(data)
+    if (isNextStepAllowed) {
+      sendNextStep()
+    }
+  }
+
+  const isComission = () => termCondition === OrderTermCondition.Comission
+  const isDiscount = () => termCondition === OrderTermCondition.Discount
+
+  const renderFormInputs = () => (
+    <>
+      <FormItem name="conditionCode">
+        <Select placeholder={t('Выберите условие договора...')} onChange={setTermCondition}>
+          <Option value={OrderTermCondition.Comission}>{t('Комиссия от суммы финансирования')}</Option>
+          <Option value={OrderTermCondition.Discount}>{t('Дисконт от суммы финансирования')}</Option>
+        </Select>
+      </FormItem>
+      {isComission() &&
+        <FormItem
+          labelCol={{ span: 12 }}
+          name="payer"
+          label={t('Плательщик')}
+          rules={[{
+            required: true,
+          }]}
+        >
+          <Select placeholder={t('Выберите плательщика...')} defaultValue={1}>
+            <Option value={1}>{t('Поставщик')}</Option>
+          </Select>
+        </FormItem>
+      }
+      {isComission() &&
+        <FormItem
+          labelCol={{ span: 12 }}
+          name="percentOverall"
+          label={t('Cтавка (единовременная)')}
+          rules={[{
+            required: true,
+          }]}
+        >
+          <Input type="number" suffix="%" />
+        </FormItem>
+      }
+
+      {isComission() &&
+        <FormItem
+          labelCol={{ span: 12 }}
+          name="percentYear"
+          label={t('Cтавка (% годовых)')}
+          rules={[{
+            required: true,
+          }]}
+        >
+          <Input type="number" suffix="%" />
+        </FormItem>
+      }
+      {isDiscount() &&
+        <FormItem
+          labelCol={{ span: 12 }}
+          name="percentDiscount"
+          label={t('Размер дисконта')}
+          rules={[{
+            required: true,
+          }]}
+        >
+          <Input type="number" suffix="%" />
+        </FormItem>
+      }
+      {isComission() || isDiscount() &&
+        <FormItem
+          labelCol={{ span: 12 }}
+          name="startDate"
+          label={t('Дата начала действия')}
+          rules={[{
+            required: true,
+          }]}
+        >
+          <DatePicker />
+        </FormItem>
+      }
+    </>
+  )
+
   const renderStepContent = () => (
     <Div className="OrderStepContractParams">
-      <Title level={5}>{t('OrderStepContractParams.title')}</Title>
+      <Title level={5}>{t('orderStepContractParams.title')}</Title>
+      <Row>
+        <Col lg={14} xl={12}>
+          {renderFormInputs()}
+        </Col>
+      </Row>
     </Div>
   )
 
@@ -165,8 +256,14 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
 
   return (
     <Div className="WizardStep__content">
-      {renderStepContent()}
-      {renderActions()}
+      <Form
+        initialValues={formData}
+        onFinish={(data: any) => handleFormSubmit(data)}
+        labelWrap={true}
+      >
+        {renderStepContent()}
+        {renderActions()}
+      </Form>
     </Div>
   )
 }
