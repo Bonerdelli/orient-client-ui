@@ -4,28 +4,28 @@ import { PaginatedRequest, defaultPaginatedRequest } from 'library/helpers/api'
 import { Order } from 'orient-ui-library/library/models/order'
 import { GridResponse } from 'library/models'
 
-export async function getFrameOrdersList(
+export async function getFactoringOrdersList(
   _params: unknown,
   request: PaginatedRequest = defaultPaginatedRequest
 ) {
   return await post<GridResponse<Order[]>>('/operator/order/frame/list', request)
 }
 
-export interface FrameOrderItemParams {
+export interface FactoringItemParams {
   orderId: number | bigint
 }
 
-export async function getFrameOrderWizard(params: FrameOrderItemParams) {
+export async function getFactoringOrderWizard(params: FactoringItemParams) {
   const { orderId } = params
   return await get<Order>(`/operator/wizard/frame/${orderId}`)
 }
 
-export interface FrameOrderStepParams {
+export interface FactoringStepParams {
   orderId: number | bigint
   step: number
 }
 
-export async function getFrameOrderWizardStep(params: FrameOrderStepParams) {
+export async function getFactoringOrderWizardStep(params: FactoringStepParams) {
   const { orderId, step } = params
   return await get<Order>(`/operator/wizard/frame/${orderId}/${step}`)
 }

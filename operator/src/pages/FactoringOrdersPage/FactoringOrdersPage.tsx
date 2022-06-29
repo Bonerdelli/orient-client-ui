@@ -2,34 +2,33 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
-import FrameOrdersList from 'components/FrameOrdersList'
-import FrameBankWizard from 'components/FrameBankWizard' // TODO: add wizard
-import { MOCK_BANK_ID } from 'library/mock/bank'
+import FactoringOrdersList from 'components/FactoringOrdersList'
+import FrameOperatorWizard from 'components/FrameOperatorWizard' // TODO: FactoringOperatorWizard
 
-import './FrameOrdersPage.style.less'
+import './FactoringOrdersPage.style.less'
 
-const FrameOrdersPage = () => {
+const FactoringOrdersList = () => {
 
   const { path, url } = useRouteMatch()
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <FrameOrdersList bankId={MOCK_BANK_ID} />
+      <FactoringOrdersList />
     </Space>
   )
 
   return (
-    <Layout className="FrameOrdersPage" data-testid="FrameOrdersPage">
+    <Layout className="FactoringOrdersPage" data-testid="FactoringOrdersPage">
       <Switch>
         <Route exact path={path}>
           {renderList()}
         </Route>
         <Route path={`${path}/:itemId`}>
-          <FrameBankWizard backUrl={url} />
+          <FrameOperatorWizard backUrl={url} />
         </Route>
       </Switch>
     </Layout>
   )
 }
 
-export default FrameOrdersPage
+export default FactoringOrdersPage

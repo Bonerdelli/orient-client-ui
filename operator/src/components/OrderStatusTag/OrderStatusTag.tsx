@@ -13,11 +13,15 @@ export interface OrderStatusTagProps {
 const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, item }) => {
   const { t } = useTranslation()
   switch (statusCode) {
-    // TODO: make status as per specs
     case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
+      return <Tag color="green">{t('orderStatusTitles.waitForVerify')}</Tag>
     case OrderStatus.FRAME_OPERATOR_VERIFYING:
+      return <Tag color="green">{t('orderStatusTitles.verifying')}</Tag>
     case OrderStatus.FRAME_CLIENT_SIGN:
+      return <Tag color="blue">{t('orderStatusTitles.clientSign')}</Tag>
     case OrderStatus.FRAME_OPERATOR_VERIFYING:
+      return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
+
     case OrderStatus.FRAME_CLIENT_REWORK:
     case OrderStatus.FRAME_OPERATOR_VERIFYING:
     case OrderStatus.FRAME_HAS_OFFER:

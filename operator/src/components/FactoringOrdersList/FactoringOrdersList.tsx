@@ -7,21 +7,21 @@ import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
-import { formatDate } from 'orient-ui-library/library/helpers/date'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { formatDate } from 'orient-ui-library/library/helpers/date'
 
-import { getFrameSimpleOrdersList } from 'library/api/frameSimpleOrder'
+import { getFactoringOrdersList } from 'library/api/factoring'
 
-import './FrameSimpleOrdersList.style.less'
+import './FactoringOrdersList.style.less'
 
-export interface FrameSimpleOrdersListProps {
-  bankId: number | bigint
+export interface FactoringOrdersListProps {
+
 }
 
-const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId }) => {
+const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
@@ -29,13 +29,7 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
     data,
     dataLoaded,
   ] = useApi<GridResponse<Order[]>>(
-    getFrameSimpleOrdersList, {
-      bankId,
-    },
-  )
-
-  const renderStatus = (statusCode: OrderStatus, item: Order) => (
-    <OrderStatusTag statusCode={statusCode} item={item} />
+    getFactoringOrdersList, {},
   )
 
   const renderActions = (_val: unknown, item: Order) => (
@@ -50,6 +44,10 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
         />
       </Link>
     </Space>
+  )
+
+  const renderStatus = (statusCode: OrderStatus, item: Order) => (
+    <OrderStatusTag statusCode={statusCode} item={item} />
   )
 
   const columns: ColumnsType<Order> = [
@@ -72,7 +70,7 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
       align: 'left',
     },
     {
-      key: 'updatedAt',
+      key: 'updatedAt', // TODO: is it status updated time?
       dataIndex: 'updatedAt',
       title: t('frameOrdersPage.tableColumnTitles.updatedAt'),
       render: (val) => formatDate(val, { includeTime: true }),
@@ -85,7 +83,6 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
       render: renderStatus,
       align: 'center',
     },
-
     {
       key: 'actions',
       render: renderActions,
@@ -94,6 +91,12 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
     },
   ]
 
+  const rowClassName = (record: Order) => (
+    record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+      ? 'FactoringOrdersList__row--new'
+      : ''
+  )
+
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="error" />
@@ -101,16 +104,17 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
   }
 
   return (
-    <div className="FrameSimpleOrdersList" data-testid="FrameSimpleOrdersList">
+    <div className="FactoringOrdersList" data-testid="FactoringOrdersList">
       <Table
         size="middle"
         columns={columns}
         loading={dataLoaded === null}
         dataSource={data?.data as unknown as Order[] || []}
+        rowClassName={rowClassName}
         pagination={false}
       />
     </div>
   )
 }
 
-export default FrameSimpleOrdersList
+export default FactoringOrdersList

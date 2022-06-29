@@ -14,15 +14,14 @@ import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
 import { getFactoringOrdersList } from 'library/api/factoringOrder'
-import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FactoringOrdersList.style.less'
 
 export interface FactoringOrdersListProps {
-
+  bankId: number | bigint
 }
 
-const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
+const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
@@ -31,7 +30,7 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
     dataLoaded,
   ] = useApi<GridResponse<Order[]>>(
     getFactoringOrdersList, {
-      bankId: MOCK_BANK_ID,
+      bankId,
     },
   )
 

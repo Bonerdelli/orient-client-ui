@@ -2,7 +2,7 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
-import FrameOrdersList from 'components/FrameOrdersList'
+import FrameSimpleOrdersList from 'components/FrameSimpleOrdersList'
 import FrameBankWizard from 'components/FrameBankWizard' // TODO: add wizard
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
@@ -14,7 +14,7 @@ const FrameOrdersPage = () => {
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <FrameOrdersList bankId={MOCK_BANK_ID} />
+      <FrameSimpleOrdersList bankId={MOCK_BANK_ID} />
     </Space>
   )
 
