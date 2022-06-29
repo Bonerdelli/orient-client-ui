@@ -6,6 +6,9 @@ import { Dictionaries } from 'library/models/dictionaries'
 import {
   convertDictionaryToSelectOptions,
 } from 'components/QuestionnaireForm/converters/dictionary-to-select-options.converter'
+import {
+  defaultQuestionnaireFormState,
+} from 'components/QuestionnaireForm/constants/default-questionnaire-form-state.const'
 
 interface QuestionnaireSuppliersAndBuyersFormFieldsProps {
   dictionaries: Dictionaries,
@@ -32,11 +35,12 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliers
     ...formItemRowLayout,
     labelCol: { span: 10 },
   }
+  const maximumFieldsCount = 5
 
   const renderRows = (name: 'suppliers' | 'buyers') => (<>
     <Title level={5}>{t(`questionnaire.suppliersAndBuyers.${name}.title`)}</Title>
     <Form.Item>
-      <Text>{t(`questionnaire.suppliersAndBuyers.${name}.subtitle`)}</Text>
+      <Text>{t(`questionnaire.suppliersAndBuyers.${name}.subtitle`, { count: maximumFieldsCount })}</Text>
     </Form.Item>
     <Form.List name={name}>
       {(fields, { add, remove }) => (<>
@@ -45,37 +49,42 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliers
                gutter={16}
           >
             <Col span={9}>
-              <Form.Item name={[ field.name, 'name' ]}
+              <Form.Item name={[ field.key, 'name' ]}
                          {...formItemRowLayout}
-                         label={t('questionnaire.suppliersAndBuyers.fields.name')}>
-                <Input {...inputLayout}/>
+                         label={t('questionnaire.suppliersAndBuyers.fields.name.title')}
+              >
+                <Input {...inputLayout}
+                       placeholder={t('questionnaire.suppliersAndBuyers.fields.name.placeholder')}
+                />
               </Form.Item>
             </Col>
             <Col span={7}>
-              <Form.Item name={[ field.name, 'term' ]}
+              <Form.Item name={[ field.key, 'term' ]}
                          {...formItemRowLayout}
                          labelCol={{ span: 14 }}
-                         label={t('questionnaire.suppliersAndBuyers.fields.term')}>
-                <Input {...inputLayout}/>
+                         label={t('questionnaire.suppliersAndBuyers.fields.term.title')}>
+                <Input {...inputLayout}
+                       placeholder={t('questionnaire.suppliersAndBuyers.fields.term.placeholder')}/>
               </Form.Item>
             </Col>
             <Col span={7}>
-              <Form.Item name={[ field.name, 'paymentFormId' ]}
+              <Form.Item name={[ field.key, 'paymentFormId' ]}
                          {...formItemRowLayout}
-                         label={t('questionnaire.suppliersAndBuyers.fields.paymentFormId')}>
-                <Select defaultActiveFirstOption
+                         label={t('questionnaire.suppliersAndBuyers.fields.paymentFormId.title')}>
+                <Select placeholder={t('questionnaire.suppliersAndBuyers.fields.paymentFormId.placeholder')}
                         options={convertDictionaryToSelectOptions(dictionaries.paymentForm)}/>
               </Form.Item>
             </Col>
-            <Col span={1}>
+            {field.key > 0 && <Col span={1}>
               <Form.Item wrapperCol={{ span: 'auto' }}>
                 <MinusCircleOutlined onClick={() => remove(field.name)}/>
               </Form.Item>
-            </Col>
+            </Col>}
           </Row>
         ))}
         <Form.Item>
-          <Button onClick={() => add()}
+          <Button onClick={() => add(defaultQuestionnaireFormState[name][0])}
+                  disabled={fields.length >= maximumFieldsCount}
                   type="primary"
                   icon={<PlusOutlined/>}
           >

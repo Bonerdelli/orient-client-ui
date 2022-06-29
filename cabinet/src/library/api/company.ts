@@ -1,9 +1,9 @@
 import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
-
 import { Company } from 'orient-ui-library/library/models/proxy'
 
 export type CompanyPatchShortNameRequest = schema.components['schemas']['PatchShortNameDto']
+export type CompanyFactAddressesRequest = schema.components['schemas']['PatchAddressesDto']
 
 export async function getCompany() {
   return await get<Company[]>('/client/company')
@@ -26,4 +26,11 @@ export async function setCompanyShortName(
   request: CompanyPatchShortNameRequest,
 ) {
   return await post<Company>(`/client/company/${params.companyId}/shortName`, request, true)
+}
+
+export async function setCompanyFactAddresses(
+  companyId: number | bigint,
+  request: CompanyFactAddressesRequest,
+) {
+  return await post(`/client/company/${companyId}/factAddresses`, request, true)
 }

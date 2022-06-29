@@ -24,12 +24,12 @@ const formFields: Record<string, CompanyFormInputConfig[]> = {
     [ 'company', 'state', false ],
   ],
   contacts: [
-    [ 'companyContact', 'email', false, true, true ],
-    [ 'companyContact', 'phones', false, true, true ],
-    [ 'companyContact', 'soato', true, true, true ],
-    [ 'companyContact', 'address', true, true, true ],
-    [ 'companyContact', 'soatoFact', true, true, true ],
-    [ 'companyContact', 'addressFact', true, true, true ],
+    [ 'companyContact', 'email', false ],
+    [ 'companyContact', 'phones', false ],
+    [ 'companyContact', 'soato', false ],
+    [ 'companyContact', 'address', false ],
+    [ 'companyContact', 'soatoFact', false, true, true ],
+    [ 'companyContact', 'addressFact', false, true, true ],
   ],
   regAuthority: [
     [ 'company', 'regAuthority', false ],
@@ -40,6 +40,18 @@ const formFields: Record<string, CompanyFormInputConfig[]> = {
     [ 'companyFounder', 'lastName', false ], // TODO: ask for compound field
     [ 'companyFounder', 'inn', false ],
   ],
+}
+
+export const renderFieldWithSaveHandler = (config: CompanyFormInputConfig, saveFn: () => void) => {
+  return (
+    <FormTextItemEditable
+      model={config[0]}
+      field={config[1]}
+      isRequired={config[2]}
+      isEditable={config[3]}
+      onSave={saveFn}
+    />
+  )
 }
 
 export const renderTextInput = (
