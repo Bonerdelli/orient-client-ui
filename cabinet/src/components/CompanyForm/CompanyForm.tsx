@@ -3,10 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { Card, Checkbox, Col, Form, Grid, message, Row, Spin } from 'antd'
 
 import { Company } from 'orient-ui-library/library/models/proxy'
-import { setCompanyShortName } from 'library/api'
+import { setCompanyFactAddresses, setCompanyShortName } from 'library/api'
 import { twoColumnFormConfig } from 'library/helpers/form'
 
-import companyFormFields, { CompanyFormInputConfig, renderTextInput, renderTextInputs } from './CompanyForm.form'
+import companyFormFields, {
+  CompanyFormInputConfig,
+  renderFieldWithSaveHandler,
+  renderTextInput,
+  renderTextInputs,
+} from './CompanyForm.form'
 import './CompanyForm.style.less'
 
 const { useBreakpoint } = Grid
@@ -18,9 +23,9 @@ export interface CompanyFormProps {
 const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const { t } = useTranslation()
   const breakPoint = useBreakpoint()
-  const [ form ] = Form.useForm<Company>();
+  const [ form ] = Form.useForm<Company>()
 
-  const [ isAddressesSame, setIsAddressesSame ] = useState<boolean>(form.getFieldValue('isAddressesSame'));
+  const [ isAddressesSame, setIsAddressesSame ] = useState<boolean>(form.getFieldValue('isAddressesSame'))
   const [ submitting, setSubmitting ] = useState<boolean>(false)
 
   const updateCompanyName = async (value: string) => {
@@ -41,26 +46,41 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
       className="CompanyForm__mainInfo"
       title={t('companyPage.formSections.main.title')}
     >
-      {renderTextInputs(companyFormFields.main)}
+      {companyFormFields.main.map(item => item[1] === 'shortName'
+        ? renderFieldWithSaveHandler(item, () => updateCompanyName(form.getFieldValue('shortName')))
+        : renderTextInput(...item))}
     </Card>
   )
 
-  const factFields = [ 'soatoFact', 'addressFact' ];
-  const getFieldConfigForFactField = (config: CompanyFormInputConfig): CompanyFormInputConfig => {
-    const cfg = [ ...config ] as CompanyFormInputConfig;
-    cfg[3] = !isAddressesSame;
-    return cfg;
+  const factFields = [ 'soatoFact', 'addressFact' ]
+  const getConfigForFactField = (config: CompanyFormInputConfig): CompanyFormInputConfig => {
+    const cfg = [ ...config ] as CompanyFormInputConfig
+    cfg[3] = !isAddressesSame
+    cfg[4] = !isAddressesSame
+    return cfg
   }
   const handleAddressesSameChange = () => {
-    const newSameAddressState = !isAddressesSame;
+    const newSameAddressState = !isAddressesSame
 
     if (newSameAddressState) {
-      const soato = form.getFieldValue('soato');
-      const address = form.getFieldValue('address');
-      form.setFieldsValue({ addressFact: address, soatoFact: soato });
+      const soato = form.getFieldValue('soato')
+      const address = form.getFieldValue('address')
+      form.setFieldsValue({ addressFact: address, soatoFact: soato })
     }
 
-    setIsAddressesSame(newSameAddressState);
+    setIsAddressesSame(newSameAddressState)
+    setSubmitting(true)
+    updateFactAddress()
+  }
+  const updateFactAddress = async () => {
+    if (!company) return
+
+    const requestData = form.getFieldsValue([ 'soatoFact', 'addressFact', 'isAddressesSame' ])
+    const result = await setCompanyFactAddresses(company.id!, requestData)
+    if (!result.success) {
+      message.error(t('common.errors.requestError.title'))
+    }
+    setSubmitting(false)
   }
 
   const renderContacts = () => (
@@ -68,14 +88,14 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
       {companyFormFields.contacts.map((fieldConfig: CompanyFormInputConfig, index: number) => (
         <React.Fragment key={index}>
           {factFields.includes(fieldConfig[1])
-            ? renderTextInput(...getFieldConfigForFactField(fieldConfig))
+            ? renderFieldWithSaveHandler(getConfigForFactField(fieldConfig), updateFactAddress)
             : renderTextInput(...fieldConfig)}
-        </React.Fragment>)
+        </React.Fragment>),
       )}
       <Form.Item name="isAddressesSame"
                  valuePropName="checked">
         <Checkbox onChange={handleAddressesSameChange}>
-          Фактический адрес совпадает с адресом регистрации
+          {t('companyPage.formSections.contacts.isAddressesSame')}
         </Checkbox>
       </Form.Item>
     </Card>
@@ -91,8 +111,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
     </Card>
   )
 
-  const handleFormSubmit = (values: Record<string, string>) => {
-    updateCompanyName(values.shortName)
+  const handleFormSubmit = () => {
     setSubmitting(true)
   }
 

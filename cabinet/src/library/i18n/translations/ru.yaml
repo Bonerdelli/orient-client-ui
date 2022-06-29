@@ -28,6 +28,7 @@ companyPage:
       title: Общая информация
     contacts:
       title: Контактная информация
+      isAddressesSame: Фактический адрес совпадает с адресом регистрации
     regAuthority:
       title: Информация о регистрирующем органе
     founder:
