@@ -99,6 +99,9 @@ companyContact:
 
 companyFounder:
   title: Основатель компании
+  tabs:
+    generalInfo: Общие сведения
+    passportInfo: Паспортные данные
   fields:
     lastName:
       title: Фамилия
@@ -120,6 +123,7 @@ companyFounder:
       title: Серия
     passportNumber:
       title: Номер
+      titleUzId: ID документа
     passportIssueDate:
       title: Дата выдачи
     passportIssuePlace:
@@ -128,6 +132,7 @@ companyFounder:
       title: Код подразделения
     passportIssuerName:
       title: Орган власти, выдавший документ
+      titleRu: Кем выдано
     birthdate:
       title: Дата рождения
     birthplace:
@@ -142,6 +147,13 @@ companyFounder:
       title: Адрес регистрации
     phone:
       title: Телефон
+    passportSeriesAndNumber:
+      title: Серия и номер
+
+passportTypes:
+  ru: Пасспорт РФ
+  uz: Пасспорт Узбекистана
+  uzId: ID-карта Узбекистана
 
 companyRequisites:
   title: Реквизиты компании

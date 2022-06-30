@@ -1,31 +1,23 @@
-import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { remove } from 'lodash'
 
-import { Table, Button, Space, Popconfirm } from 'antd'
+import { Button, Popconfirm, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { CompanyHead } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderBinaryCell, renderNumericCell } from 'library/helpers/table' // TODO: to ui-lib
-
 import { useStoreState } from 'library/store'
-import { getCompanyHeads, deleteCompanyHead } from 'library/api'
+import { deleteCompanyHead, getCompanyHeads } from 'library/api'
 
 import './CompanyHeadsList.style.less'
 
 export interface CompanyHeadsListProps {
   companyId: number
-}
-
-export enum PassportType {
-  Ru = 'RU',
-  Uz = 'UZ',
-  Uz_Id = 'UZ_ID',
 }
 
 const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
@@ -56,7 +48,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
           shape="circle"
           title={t('common.actions.edit.title')}
           onClick={() => handleEdit(item)}
-          icon={<EditOutlined />}
+          icon={<EditOutlined/>}
         />
       </Link>
       <Popconfirm
@@ -69,7 +61,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
           type="link"
           shape="circle"
           title={t('common.actions.delete.title')}
-          icon={<DeleteOutlined />}
+          icon={<DeleteOutlined/>}
         />
       </Popconfirm>
     </Space>
@@ -81,7 +73,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
       key: 'fullName',
       dataIndex: 'fullName',
       title: t('headsPage.tableColumns.fullName'),
-      render: (_, item: CompanyHead) => ([item.lastName, item.firstName, item.secondName].filter(Boolean).join(' ')),
+      render: (_, item: CompanyHead) => ([ item.lastName, item.firstName, item.secondName ].filter(Boolean).join(' ')),
     },
     {
       key: 'isExecutive',
@@ -113,7 +105,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="error" />
+      <ErrorResultView centered status="error"/>
     )
   }
 
