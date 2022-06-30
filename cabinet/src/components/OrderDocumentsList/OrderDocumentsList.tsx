@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Table, Space } from 'antd'
+import { Table, Space, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { isUndefined } from 'lodash'
 
@@ -19,8 +19,6 @@ import {
 } from 'library/api'
 
 import './OrderDocumentsList.style.less'
-
-const { Text } = Typography
 
 export interface OrderDocumentsListProps {
   companyId: number
@@ -92,15 +90,15 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   const renderDocumentStatus = (status: DocumentStatus) => {
     switch (status) {
       case DocumentStatus.Uploaded:
-        return <Text>{t('common.documents.statuses.uploaded')}</Text>
+        return <Tag color="green">{t('common.documents.statuses.uploaded')}</Tag>
       case DocumentStatus.NotUploaded:
-        return <Text>{t('common.documents.statuses.notUploaded')}</Text>
+        return <Tag>{t('common.documents.statuses.notUploaded')}</Tag>
       case DocumentStatus.UploadingError:
-        return <Text>{t('common.documents.statuses.uploadingError')}</Text>
+        return <Tag color="red">{t('common.documents.statuses.uploadingError')}</Tag>
       case DocumentStatus.Signed:
-        return <Text>{t('common.documents.statuses.signed')}</Text>
+        return <Tag color="green">{t('common.documents.statuses.signed')}</Tag>
       case DocumentStatus.Unsigned:
-        return <Text>{t('common.documents.statuses.unsigned')}</Text>
+        return <Tag>{t('common.documents.statuses.unsigned')}</Tag>
     }
   }
 
@@ -130,6 +128,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       dataIndex: 'status',
       title: t('common.documents.fields.status.title'),
       render: renderDocumentStatus,
+      width: 120,
       align: 'center',
     },
     {

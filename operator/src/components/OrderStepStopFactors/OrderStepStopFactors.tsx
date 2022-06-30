@@ -222,11 +222,12 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
       key: 'isOk',
       dataIndex: 'isOk',
       render: renderStatus,
+      width: 120,
       align: 'center',
     },
     {
       key: 'actions',
-      width: 120,
+      width: 80,
       render: (item) => renderStopFactorActions(item),
       align: 'right',
     },
@@ -252,8 +253,8 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
       title={t('common.actions.approve.title')}
       onClick={() => handleApprove(item)}
       loading={approveInProccess[item.stopFactorId]}
-      disabled={stepDataLoading || rejectInProccess[item.stopFactorId]}
-      icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
+      disabled={stepDataLoading || rejectInProccess[item.stopFactorId] || item.isOk === true}
+      icon={<CheckCircleTwoTone twoToneColor={item.isOk !== true ? '#52c41a' : '#ccc'} />}
     />
   )
 
@@ -266,8 +267,8 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
       title={t('common.actions.reject.title')}
       onClick={() => handleReject(item)}
       loading={rejectInProccess[item.stopFactorId]}
-      disabled={stepDataLoading || approveInProccess[item.stopFactorId]}
-      icon={<CloseCircleTwoTone twoToneColor="#e83030" />}
+      disabled={stepDataLoading || approveInProccess[item.stopFactorId] || item.isOk === false}
+      icon={<CloseCircleTwoTone twoToneColor={item.isOk !== false ? '#e83030' : '#ccc'} />}
     />
   )
 

@@ -56,6 +56,9 @@ orderStepContractParams:
 
 orderStepContractDocuments:
   title: Документы по сделке
+  actions:
+    back:
+      title: Переформировать предложение
 
 orderStepOfferAcceptance:
   title: Принятие предложения

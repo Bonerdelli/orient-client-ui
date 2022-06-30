@@ -47,7 +47,7 @@ const CompanyFounderInfo: React.FC<CompanyFounderInfoProps> = ({ companyFounder 
       {passportTypeMap[companyFounder.passportType as PassportType]}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.isMaleGender.title')}>
-      {t(`dataEntity.gender.${companyFounder.isMaleGender ? 'male' : 'female'}`)}
+      {t(`common.dataEntity.gender.${companyFounder.isMaleGender ? 'male' : 'female'}`)}
     </DescItem>
   </>)
   const renderCommonPassportFooterFields = () => (<>

@@ -81,6 +81,7 @@ orderStepScoringResult:
     title: Соответствует параметрам
   nonCompliant:
     title: Не соответствует параметрам
+  orderSendedMessage: Заявка успешно отправлена на подпись Клиенту
 
 orderStepOptionalParameters:
   title: Дополнительные параметры

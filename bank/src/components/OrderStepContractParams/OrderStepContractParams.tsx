@@ -59,7 +59,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
     if (stepData?.conditions) {
       setInitialData({
         ...stepData.conditions,
-        startDate: moment(stepData.conditions.startDate),
+        startDate: stepData.conditions.startDate ? moment(stepData.conditions.startDate) : undefined,
       })
       setConditionCode(stepData.conditions.conditionCode)
     } else {

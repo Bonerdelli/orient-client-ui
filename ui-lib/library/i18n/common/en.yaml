@@ -88,6 +88,7 @@ documents:
     unsigned: Unsigned
     checked: Checked
     notChecked: Not Checked
+    notViewed: Not Viewed
     approved: Approved
     notApproved: Not Approved
   statusMessages:

@@ -91,8 +91,9 @@ documents:
     unsigned: Не подписан
     checked: Проверен
     notChecked: Не проверен
-    approved: Подтвержден
-    notApproved: Не подтвержден
+    notViewed: Не просмотрен
+    approved: Одобрен
+    notApproved: Не одобрен
   statusMessages:
     uploaded: Файл «{{name}}» успешно загружен
     uploadingError: Ошибка загрузки файла «{{name}}»

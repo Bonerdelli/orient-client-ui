@@ -176,7 +176,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       disabled={submitting}
       loading={submitting}
     >
-      {t('common.actions.back.title')}
+      {t('orderStepContractDocuments.actions.back.title')}
     </Button>
   )
 

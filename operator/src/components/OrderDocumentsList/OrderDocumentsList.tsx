@@ -45,7 +45,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     if (!document?.info) {
       return {
         type: typeId,
-        title: document?.typeName, // NOTE: this is cyrillic doc name, eg. Устав компании
+        title: document?.typeName,
         status: DocumentStatus.NotUploaded,
       }
     }
@@ -53,7 +53,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       type: typeId,
       title: document.typeName, // NOTE: this is cyrillic doc name, eg. Устав компании
       id: document.info.documentId,
-      status: document.info.documentStatus as DocumentStatus || DocumentStatus.Uploaded,
+      status: document.info.documentStatus as DocumentStatus || DocumentStatus.NotViewed,
     }
   }
 
@@ -81,10 +81,8 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
 
   const renderDocumentStatus = (status: DocumentStatus) => {
     switch (status) {
-      case DocumentStatus.NotUploaded:
-        return <Tag>{t('common.documents.statuses.notUploaded')}</Tag>
-      case DocumentStatus.Uploaded:
-        return <Tag>{t('common.documents.statuses.notChecked')}</Tag>
+      case DocumentStatus.NotViewed:
+        return <Tag>{t('common.documents.statuses.notViewed')}</Tag>
       case DocumentStatus.Approved:
         return <Tag color="green">{t('common.documents.statuses.approved')}</Tag>
       case DocumentStatus.NotApproved:
@@ -118,6 +116,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       dataIndex: 'status',
       title: t('common.documents.fields.status.title'),
       render: renderDocumentStatus,
+      width: 120,
       align: 'center',
     },
     {

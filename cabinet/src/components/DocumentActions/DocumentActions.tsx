@@ -70,7 +70,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       'common.documents.statusMessages.uploaded',
       { name: fileName },
     ))
-    // setOperationInProccess(false)
+    setOperationInProccess(false)
     onUploadSuccess && onUploadSuccess()
     onChange && onChange()
   }
@@ -85,6 +85,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   }
 
   const handleDownload = async () => {
+    if (!downloadHandler) return
     const result = await downloadHandler(document)
     if (!result) {
       message.error(
@@ -94,6 +95,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   }
 
   const handleDelete = async () => {
+    if (!deleteHandler) return
     setOperationInProccess(true)
     const result = await deleteHandler(document)
     if (!result) {
