@@ -6,7 +6,7 @@ export type CompanyPatchShortNameRequest = schema.components['schemas']['PatchSh
 export type CompanyFactAddressesRequest = schema.components['schemas']['PatchAddressesDto']
 
 export async function getCompany() {
-  return await get<CompanyDto[]>('/client/company')
+  return await get<CompanyDto[]>('/client/company') // TODO: have no EPs for Customer
 }
 
 export interface GetCompanyByIdParams {

@@ -7,13 +7,13 @@ import { useStoreState } from 'library/store'
 import Div from 'orient-ui-library/components/Div'
 
 import OrdersList from 'components/OrdersList'
-import FrameClientWizard from 'components/FrameClientWizard'
-import FrameSimpleClientWizard from 'components/FrameSimpleClientWizard'
-import FactoringClientWizard from 'components/FactoringClientWizard'
+import FrameCustomerWizard from 'components/FrameCustomerWizard'
+import FrameSimpleCustomerWizard from 'components/FrameSimpleCustomerWizard'
+import FactoringCustomerWizard from 'components/FactoringCustomerWizard'
 
-import './OrdersPage.style.less'
+import './OrdersCustomerPage.style.less'
 
-const OrdersPage = () => {
+const OrdersCustomerPage = () => {
   const { path, url } = useRouteMatch()
 
   const company = useStoreState(state => state.company.current)
@@ -33,23 +33,23 @@ const OrdersPage = () => {
   )
 
   return (
-    <Layout className="OrdersPage" data-testid="OrdersPage">
+    <Layout className="OrdersCustomerPage" data-testid="OrdersCustomerPage">
       <Switch>
         <Route exact path={path}>
           {renderList()}
         </Route>
         <Route path={`${path}/frame/:itemId`}>
-          <FrameClientWizard backUrl={url} companyId={company.id as number} />
+          <FrameCustomerWizard backUrl={url} companyId={company.id as number} />
         </Route>
         <Route path={`${path}/frame-simple/:itemId`}>
-          <FrameSimpleClientWizard backUrl={url} companyId={company.id as number} />
+          <FrameSimpleCustomerWizard backUrl={url} companyId={company.id as number} />
         </Route>
         <Route path={`${path}/factoring/:itemId`}>
-          <FactoringClientWizard backUrl={url} />
+          <FactoringCustomerWizard backUrl={url} />
         </Route>
       </Switch>
     </Layout>
   )
 }
 
-export default OrdersPage
+export default OrdersCustomerPage

@@ -4,18 +4,19 @@ import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import {
   getFrameWizardStep,
-  sendFrameWizardStep, // NOTE: replace ep with correct one!
+  sendFrameWizardStep,
 } from 'library/api/frameWizard'
+import { CabinetMode } from 'library/models/cabinet'
 
-import './FactoringStepBankOffers.style.less'
+import './CustomerOrderSignDocuments.style.less'
 
 const { Title } = Typography
 
-export interface FactoringStepBankOffersProps {
+export interface CustomerOrderSignDocumentsProps {
   wizardType?: FrameWizardType
   companyId: number
   orderId?: number
@@ -24,7 +25,7 @@ export interface FactoringStepBankOffersProps {
   setCurrentStep: (step: number) => void
 }
 
-const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
+const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
@@ -55,6 +56,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
+      mode: CabinetMode.Customer,
       type: wizardType,
       step: sequenceStepNumber,
       companyId,
@@ -74,6 +76,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
     if (!orderId) return
     setSubmitting(true)
     const result = await sendFrameWizardStep({
+      mode: CabinetMode.Customer,
       step: sequenceStepNumber,
       type: wizardType,
       companyId,
@@ -151,8 +154,8 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="FactoringStepBankOffers">
-      <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
+    <Div className="CustomerOrderSignDocuments">
+      <Title level={5}>{t('customerOrderSignDocuments.title')}</Title>
     </Div>
   )
 
@@ -176,4 +179,4 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   )
 }
 
-export default FactoringStepBankOffers
+export default CustomerOrderSignDocuments

@@ -67,6 +67,31 @@ orderStatusTitles:
   cancel: Cancel
   operatorReject: Operator Reject
 
+
+# TODO: translate me
+customerFrameOrder:
+  title: Заявка на заключение рамочного договора
+  firstStep:
+    title: Информация о Поставщике
+  secondStep:
+    title: Подписание документов
+
+# TODO: translate me
+customerFrameSimpleOrder:
+  title: Заявка на упрощенный рамочный договор
+  firstStep:
+    title: Информация о Поставщике
+  secondStep:
+    title: Подписание документов
+
+# TODO: translate me
+customerFactoring:
+  title: Заявка на факторинг
+  firstStep:
+    title: Параметры Поставщика и Заявки
+  secondStep:
+    title: Подписание документов
+
 ##
 # TODO: sync l10ns below and translate
 ##

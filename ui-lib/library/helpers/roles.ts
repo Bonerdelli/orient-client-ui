@@ -18,6 +18,7 @@ export const hasAccess = (
  * NOTE: roles not supported, so here is dirty checking by user login
  */
 
+// TODO: switch to login when be ready
 export const isAdmin = (user: User) => user.login === 'admin'
 
 /**
@@ -26,9 +27,6 @@ export const isAdmin = (user: User) => user.login === 'admin'
  */
 
 export const isClient = (user: User) => isAdmin(user) || user.login === 'client'
-
-export const isCustomer = (user: User) => isAdmin(user) || user.login === 'customer'
-
+export const isCustomer = (user: User) => user.login === 'customer' // NOTE: Admin cannot pretend as Customer
 export const isOperator = (user: User) => isAdmin(user) || user.login === 'operator'
-
 export const isBank = (user: User) => isAdmin(user) || user.login === 'bank'

@@ -8,7 +8,7 @@ import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/m
 
 import {
   getFrameWizardStep,
-  sendFrameWizardStep1, // NOTE: replace ep with correct one!
+  sendFrameWizardStep,
 } from 'library/api/frameWizard'
 
 import './ClientWizardStep.style.less'

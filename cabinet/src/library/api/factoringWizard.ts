@@ -1,4 +1,5 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
+import { CabinetMode } from 'library/models/cabinet'
 
 import {
   CompanyFounderDto,
@@ -9,6 +10,7 @@ import {
 
 interface FactoringWizardCommonParameters {
   companyId: number
+  mode?: CabinetMode,
   orderId?: number
   step?: number
 }
@@ -25,8 +27,10 @@ export interface WizardStep2Data {
   questionnaire: CompanyQuestionnaireDto | null
 }
 
-const getBasePath = (companyId: number) => {
-  return `/client/company/${companyId}/wizard/factor`
+// NOTE: some API wrappers for Client and Customer are combined
+const getBasePath = (companyId: number | bigint, mode: CabinetMode = CabinetMode.Client) => {
+  const modePath = mode === CabinetMode.Customer ? 'customer' : 'client'
+  return `/${modePath}/company/${companyId}/wizard/factor`
 }
 
 /**
@@ -37,8 +41,8 @@ export async function sendFactoringWizardStep(
   params: FactoringWizardStepParameters,
   request: unknown,
 ) {
-  const { companyId, orderId, step } = params
-  const basePath = getBasePath(companyId)
+  const { mode, companyId, orderId, step } = params
+  const basePath = getBasePath(companyId, mode)
   return await post(`${basePath}/${orderId}/${step}`, request, true)
 }
 
@@ -48,8 +52,8 @@ export async function sendFactoringWizardStep(
 export async function getCurrentFactoringWizardStep(
   params: FactoringWizardCommonParameters,
 ) {
-  const { companyId, orderId } = params
-  const basePath = getBasePath(companyId)
+  const { mode, companyId, orderId } = params
+  const basePath = getBasePath(companyId, mode)
   return await get(`${basePath}/${orderId}`)
 }
 
@@ -59,7 +63,7 @@ export async function getCurrentFactoringWizardStep(
 export async function getFactoringWizardStep(
   params: FactoringWizardCommonParameters,
 ) {
-  const { companyId, orderId, step } = params
-  const basePath = getBasePath(companyId)
+  const { mode, companyId, orderId, step } = params
+  const basePath = getBasePath(companyId, mode)
   return await get(`${basePath}/${orderId}/${step}`)
 }

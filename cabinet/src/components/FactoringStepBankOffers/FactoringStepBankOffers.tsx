@@ -4,19 +4,18 @@ import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import {
-  getFrameWizardStep,
-  sendFrameWizardStep, // NOTE: replace ep with correct one!
-} from 'library/api/frameWizard'
+  getFactoringWizardStep,
+  sendFactoringWizardStep,
+} from 'library/api/factoringWizard'
 
 import './FactoringStepBankOffers.style.less'
 
 const { Title } = Typography
 
 export interface FactoringStepBankOffersProps {
-  wizardType?: FrameWizardType
   companyId: number
   orderId?: number
   currentStep: number
@@ -25,7 +24,6 @@ export interface FactoringStepBankOffersProps {
 }
 
 const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
-  wizardType = FrameWizardType.Full,
   companyId,
   orderId,
   currentStep,
@@ -54,8 +52,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   }, [currentStep, sequenceStepNumber])
 
   const loadCurrentStepData = async () => {
-    const result = await getFrameWizardStep({
-      type: wizardType,
+    const result = await getFactoringWizardStep({
       step: sequenceStepNumber,
       companyId,
       orderId,
@@ -73,9 +70,8 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep({
+    const result = await sendFactoringWizardStep({
       step: sequenceStepNumber,
-      type: wizardType,
       companyId,
       orderId,
     }, {})

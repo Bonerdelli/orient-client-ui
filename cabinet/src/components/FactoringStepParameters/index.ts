@@ -1,1 +1,1 @@
-export { default } from './FactoringStepBankOffers'
+export { default } from './FactoringStepParameters'
