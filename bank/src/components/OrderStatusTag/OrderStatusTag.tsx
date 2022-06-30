@@ -10,10 +10,13 @@ export interface OrderStatusTagProps {
   item?: Order,
 }
 
-const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, item }) => {
+const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode }) => {
   const { t } = useTranslation()
   switch (statusCode) {
-    // TODO: make status as per specs
+    case OrderStatus.FRAME_CUSTOMER_SIGN:
+      return <Tag color="blue">{t('orderStatusTitles.customerSign')}</Tag>
+    case OrderStatus.FRAME_COMPLETED:
+      return <Tag>{t('orderStatusTitles.completed')}</Tag>
     case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
     case OrderStatus.FRAME_OPERATOR_VERIFYING:
     case OrderStatus.FRAME_CLIENT_SIGN:
@@ -21,12 +24,11 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, item }) => 
     case OrderStatus.FRAME_CLIENT_REWORK:
     case OrderStatus.FRAME_OPERATOR_VERIFYING:
     case OrderStatus.FRAME_HAS_OFFER:
-    case OrderStatus.FRAME_CUSTOMER_SIGN:
-    case OrderStatus.FRAME_COMPLETED:
     case OrderStatus.FRAME_CANCEL:
     case OrderStatus.FRAME_OPERATOR_REJECT:
     default:
-      return <Tag>{item?.statusName}</Tag>
+      // NOTE: unknown statutes shouldn't be displayed
+      return <></>
   }
 }
 

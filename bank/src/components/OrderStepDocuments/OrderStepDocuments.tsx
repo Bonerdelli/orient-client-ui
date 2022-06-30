@@ -135,6 +135,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
+      console.log('currentStep === sequenceStepNumber', currentStep === sequenceStepNumber)
       if (currentStep === sequenceStepNumber) {
         sendNextStep()
       } else {

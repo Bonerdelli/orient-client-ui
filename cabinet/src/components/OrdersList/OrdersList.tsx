@@ -82,7 +82,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
     }
   }
 
-  const renderStatus = (statusCode: OrderStatus, item: Order) => {
+  const renderStatus = (statusCode: OrderStatus, _item: Order) => {
     switch (statusCode) {
       case OrderStatus.FRAME_DRAFT:
         return <Tag>{t('orderStatusTitles.draft')}</Tag>
@@ -99,14 +99,15 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
         return <Tag color="green">{t('orderStatusTitles.hasOffer')}</Tag>
       case OrderStatus.FRAME_CUSTOMER_SIGN:
         return <Tag color="blue">{t('orderStatusTitles.customerSign')}</Tag>
-      case OrderStatus.FRAME_COMPLETED:
-        return <Tag color="blue">{t('orderStatusTitles.completed')}</Tag>
       case OrderStatus.FRAME_CANCEL:
         return <Tag>{t('orderStatusTitles.cancel')}</Tag>
       case OrderStatus.FRAME_OPERATOR_REJECT:
         return <Tag color="red">{t('orderStatusTitles.operatorReject')}</Tag>
+      case OrderStatus.FRAME_COMPLETED:
+        return <Tag>{t('orderStatusTitles.completed')}</Tag>
       default:
-        return <Tag>{item.statusName}</Tag>
+        // NOTE: unknown statutes shouldn't be displayed
+        return <></> // <Tag>{item.statusName}</Tag>
     }
   }
 
