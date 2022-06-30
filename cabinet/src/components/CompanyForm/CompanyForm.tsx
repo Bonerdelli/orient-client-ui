@@ -92,7 +92,8 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
             : renderTextInput(...fieldConfig)}
         </React.Fragment>),
       )}
-      <Form.Item name="isAddressesSame"
+      <Form.Item key="isAddressesSame"
+                 name="isAddressesSame"
                  valuePropName="checked">
         <Checkbox onChange={handleAddressesSameChange}>
           {t('companyPage.formSections.contacts.isAddressesSame')}
@@ -125,7 +126,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
       {...twoColumnFormConfig(breakPoint)}
     >
       <Row gutter={12}>
-        <Col xs={24} xl={12} xxl={10} key="first">
+        <Col xs={24} xl={12} xxl={10}>
           <Row gutter={12}>
             <Col span={24}>
               {renderMainSection()}
@@ -135,7 +136,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
             </Col>
           </Row>
         </Col>
-        <Col xs={24} xl={12} xxl={10} key="second">
+        <Col xs={24} xl={12} xxl={10}>
           <Row gutter={[ 12, 12 ]}>
             <Col span={24}>
               {renderContacts()}

@@ -45,6 +45,7 @@ const formFields: Record<string, CompanyFormInputConfig[]> = {
 export const renderFieldWithSaveHandler = (config: CompanyFormInputConfig, saveFn: () => void) => {
   return (
     <FormTextItemEditable
+      key={`${config[0]}-${config[1]}`}
       model={config[0]}
       field={config[1]}
       isRequired={config[2]}
@@ -63,11 +64,13 @@ export const renderTextInput = (
 ) => (
   isEditableInline ?
     <FormTextItemEditable
+      key={`${model}-${field}`}
       model={model}
       field={field}
       isRequired={isRequired}
       isEditable={isEditable}
     /> : <FormTextItem
+      key={`${model}-${field}`}
       model={model}
       field={field}
       isRequired={isRequired}
