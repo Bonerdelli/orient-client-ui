@@ -108,7 +108,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       step: sequenceStepNumber,
       bankId,
       orderId,
-    }, {})
+    })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)

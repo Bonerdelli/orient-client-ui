@@ -155,7 +155,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
 
   const renderStepContent = () => (
     <Div className="CustomerOrderSignDocuments">
-      <Title level={5}>{t('customerOrderSignDocuments.title')}</Title>
+      <Title level={5}>{t('Подписание документов')}</Title>
     </Div>
   )
 
