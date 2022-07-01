@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { every } from 'lodash'
+import { NavLink, useLocation } from 'react-router-dom'
+
+import type { ColumnsType } from 'antd/lib/table'
 
 import { Button, Col, Row, Skeleton, Spin, Typography, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { OrderDocument } from 'orient-ui-library/library/models/document'
+import { CompanyRequisitesDto, OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
@@ -31,6 +34,10 @@ export interface OrderDocumentsProps {
   setOrderStatus: (status: OrderStatus) => void
 }
 
+interface BankRequisitesTableData extends CompanyRequisitesDto {
+  key: number
+}
+
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
@@ -46,7 +53,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const [ stepData, setStepData ] = useState<WizardStep2Data>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ сompanyDataStatus, setСompanyDataStatus ] = useState({ ...сompanyDataInitialStatus })
+  const [ companyDataStatus, setCompanyDataStatus ] = useState({ ...companyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
@@ -55,6 +62,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
   const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[] | null>(null)
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
+
+  const [ bankRequisitesModalVisible, setBankRequisitesModalVisible ] = useState<boolean>(false)
+  const [ selectedBankRequisitesId, setSelectedBankRequisitesId ] = useState<number | null>(null)
 
   useEffect(() => {
     loadCurrentStepData()
@@ -68,15 +78,15 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     }
 
     const updatedCompanyStatus = {
-      сompanyHead: Boolean(stepData?.founder),
+      companyHead: Boolean(stepData?.founder),
       bankRequisites: Boolean(stepData?.requisites),
       questionnaire: Boolean(stepData?.questionnaire),
     }
 
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
     setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
-    setСompanyDataStatus(updatedCompanyStatus)
-
+    setCompanyDataStatus(updatedCompanyStatus)
+    setSelectedBankRequisitesId(stepData?.requisites?.id ?? null)
   }, [ stepData ])
 
   const updateCurrentDocuments = (documents: OrderDocument[]): boolean => {
