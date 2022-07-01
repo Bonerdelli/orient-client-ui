@@ -18,6 +18,7 @@ import './OrderStepDocuments.style.less'
 import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 
+
 const { Title } = Typography
 
 export interface OrderDocumentsProps {
