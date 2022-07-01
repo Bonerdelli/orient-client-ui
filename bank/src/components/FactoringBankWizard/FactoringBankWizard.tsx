@@ -5,41 +5,37 @@ import { Card, Steps, Grid, Skeleton } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-// import { OrderStatus } from 'orient-ui-library/library/models'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import OfferStatusTag from 'components/OfferStatusTag'
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
-import OrderStepContractParams from 'components/OrderStepContractParams'
-import OrderStepContractDocuments from 'components/OrderStepContractDocuments'
-import OrderStepOfferAcceptance from 'components/OrderStepOfferAcceptance'
 import OrderStepArchive from 'components/OrderStepArchive'
 
 import { OrderWizardType } from 'library/models'
 
-import { getFrameOrderWizard } from 'library/api/frameOrder'
+import { getFactoringOrderWizard } from 'library/api/factoringOrder'
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
-import './FrameBankWizard.style.less'
+import './FactoringBankWizard.style.less'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid
 
-export interface FrameBankWizardProps {
+export interface FactoringBankWizardProps {
   orderId?: number
   backUrl?: string
 }
 
-export interface FrameBankWizardPathParams {
+export interface FactoringBankWizardPathParams {
   itemId?: string,
 }
 
-const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) => {
+const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
-  const { itemId } = useParams<FrameBankWizardPathParams>()
+  const { itemId } = useParams<FactoringBankWizardPathParams>()
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
@@ -72,7 +68,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   }, [])
 
   const loadCurrentStepData = async () => {
-    const result = await getFrameOrderWizard({
+    const result = await getFactoringOrderWizard({
       orderId: Number(itemId) || orderId as number,
       bankId: MOCK_BANK_ID,
     })
@@ -93,9 +89,6 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const isFirstStepActive = (): boolean => true
   const isSecondStepActive = (): boolean => currentStep > 1
   const isThirdStepActive = (): boolean => currentStep > 2
-  const isFourthStepActive = (): boolean => currentStep > 3
-  const isFifthStepActive = (): boolean => currentStep > 4
-  const isSixthStepActive = (): boolean => currentStep > 5
 
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
@@ -104,7 +97,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     const stepBaseProps = {
       bankId: MOCK_BANK_ID,
       orderId: Number(itemId) || orderId,
-      oprderType: OrderWizardType.Frame,
+      oprderType: OrderWizardType.Factoring,
       currentStep: currentStep,
       setCurrentStep: setSelectedStep,
     }
@@ -114,13 +107,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       case 2:
         return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
       case 3:
-        return <OrderStepContractParams {...stepBaseProps} sequenceStepNumber={3} />
-      case 4:
-        return <OrderStepContractDocuments {...stepBaseProps} sequenceStepNumber={4} />
-      case 5:
-        return <OrderStepOfferAcceptance {...stepBaseProps} orderStatus={orderStatus} sequenceStepNumber={5} />
-      case 6:
-        return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={6} />
+        return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={3} />
       default:
         return <></>
     }
@@ -136,7 +123,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     <>
       <Card className="Wizard FrameWizard">
         <WizardHeader
-          title={t('frameWizard.title')}
+          title={t('factoringWizard.title')}
           backUrl={backUrl}
           statusTag={
             <OfferStatusTag
@@ -150,12 +137,9 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
-          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
-          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fourthStep.title')} />
-          <Step disabled={!isFifthStepActive()} title={t('frameWizard.fifthStep.title')} />
-          <Step disabled={!isSixthStepActive()} title={t('frameWizard.sixthStep.title')} />
+          <Step disabled={!isFirstStepActive()} title={t('factoringWizard.firstStep.title')} />
+          <Step disabled={!isSecondStepActive()} title={t('factoringWizard.secondStep.title')} />
+          <Step disabled={!isThirdStepActive()} title={t('factoringWizard.thirdStep.title')} />
         </Steps>
       </Card>
       <Card className="FrameWizard__step">
@@ -165,4 +149,4 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   )
 }
 
-export default FrameBankWizard
+export default FactoringBankWizard

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, Result, message } from 'antd'
+import { Row, Col, Button, Skeleton, Result, message } from 'antd'
 import { ClockCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { OrderStatus } from 'orient-ui-library/library/models'
+import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import {
   getFrameWizardStep,
@@ -15,12 +15,10 @@ import {
 
 import './OrderStepOfferAcceptance.style.less'
 
-const { Title, Paragraph } = Typography
-
 export interface BlankWizardStepProps {
   bankId?: number | bigint
   orderId?: number
-  orderStatus?: OrderStatus
+  orderStatus?: BankOfferStatus
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -53,7 +51,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
 
   useEffect(() => {
     if (orderStatus) {
-      setWaiting(orderStatus === OrderStatus.FRAME_CUSTOMER_SIGN)
+      setWaiting(orderStatus === BankOfferStatus.CustomerSign)
     }
   }, [orderStatus])
 

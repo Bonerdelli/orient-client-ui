@@ -38,6 +38,28 @@ frameWizard:
   sixthStep:
     title: Архив
 
+frameSimpleWizard:
+  title: Заявка на упрощенный рамочный договор
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Подпись Заказчика
+  fourthStep:
+    title: Архив
+
+factoringWizard:
+  title: Заявка на факторинг
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Архив и итоги финансирования
+
 orderStepParameters:
   title: Параметры заявки и клиента
 

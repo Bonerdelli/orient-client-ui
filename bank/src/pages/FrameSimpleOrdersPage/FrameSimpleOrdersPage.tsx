@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
 import FrameSimpleOrdersList from 'components/FrameSimpleOrdersList'
-import FrameBankWizard from 'components/FrameBankWizard' // TODO: add wizard
+import FrameSimpleBankWizard from 'components/FrameSimpleBankWizard'
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FrameSimpleOrdersPage.style.less'
@@ -25,7 +25,7 @@ const FrameSimpleOrdersPage = () => {
           {renderList()}
         </Route>
         <Route path={`${path}/:itemId`}>
-          <FrameBankWizard backUrl={url} />
+          <FrameSimpleBankWizard backUrl={url} />
         </Route>
       </Switch>
     </Layout>
