@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, useLocation } from 'react-router-dom'
-
-import { Button, Col, message, Row, Skeleton, Spin, Timeline, Typography } from 'antd'
-import { CheckCircleFilled, ClockCircleOutlined, ExclamationCircleOutlined, FormOutlined } from '@ant-design/icons'
 import { every } from 'lodash'
+
+import { Button, Col, Row, Skeleton, Spin, Typography, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -14,14 +12,14 @@ import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/m
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
+import CompanyDataReadyStatuses from 'components/CompanyDataReadyStatuses'
+import { сompanyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
 
 import { getFrameWizardStep, sendFrameWizardStep2, WizardStep2Data } from 'library/api'
 
 import './OrderStepDocuments.style.less'
-import { RETURN_URL_PARAM } from 'library/constants'
 
 const { Title } = Typography
-const { Item: TimelineItem } = Timeline
 
 export interface OrderDocumentsProps {
   wizardType?: FrameWizardType
@@ -31,12 +29,6 @@ export interface OrderDocumentsProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: OrderStatus) => void
-}
-
-const сompanyDataInitialStatus: Record<string, boolean | null> = {
-  сompanyHead: null,
-  bankRequisites: null,
-  questionnaire: null,
 }
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
@@ -49,8 +41,6 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   setOrderStatus,
 }) => {
   const { t } = useTranslation()
-  const location = useLocation()
-
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
@@ -214,48 +204,6 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Row>
   )
 
-  const dotParams = (ready: boolean | null) => ({
-    dot: ready === true
-      ? <CheckCircleFilled className="OrderStepDocuments__companyDataStatus__okIcon"/>
-      : (ready === null ? <ClockCircleOutlined/> : <ExclamationCircleOutlined/>),
-    color: ready === true ? 'green'
-      : (ready === null ? 'grey' : 'red'),
-  })
-
-  const renderReadyStatuses = () => (
-    <Timeline className="OrderStepDocuments__companyDataStatus">
-      <TimelineItem {...dotParams(сompanyDataStatus?.сompanyHead ?? null)}>
-        {t('frameSteps.documents.сompanyData.сompanyHead')}
-        {!сompanyDataStatus?.сompanyHead && (
-          <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('frameSteps.documents.fillDataButton.title')}
-            </Button>
-          </NavLink>
-        )}
-      </TimelineItem>
-      <TimelineItem {...dotParams(сompanyDataStatus?.bankRequisites ?? null)}>
-        {t('frameSteps.documents.сompanyData.bankRequisites')}
-        {!сompanyDataStatus?.bankRequisites && (
-          <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('frameSteps.documents.fillDataButton.title')}
-            </Button>
-          </NavLink>
-        )}
-      </TimelineItem>
-      <TimelineItem {...dotParams(сompanyDataStatus?.questionnaire ?? null)}>
-        {t('frameSteps.documents.сompanyData.questionnaire')}
-        <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
-                 className="OrderStepDocuments__companyDataStatus__link">
-          <Button size="small" type="link" icon={<FormOutlined/>}>
-            {t(`frameSteps.documents.fillDataButton.${сompanyDataStatus?.questionnaire ? 'check' : 'fill'}`)}
-          </Button>
-        </NavLink>
-      </TimelineItem>
-    </Timeline>
-  )
-
   const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
@@ -299,7 +247,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       {documentTypesOptional !== null && renderOptionalDocumentsSection}
       <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
-        {renderReadyStatuses()}
+        <CompanyDataReadyStatuses сompanyDataStatus={сompanyDataStatus} />
       </Div>
     </Div>
   )

@@ -1,20 +1,37 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { every } from 'lodash'
+
+import { Typography, Row, Col, Button, Skeleton, Table, Space, Tag, message } from 'antd'
+import type { ColumnsType } from 'antd/lib/table'
+import { EyeOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep,
-} from 'library/api/frameWizard'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
+import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
+import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
+
+import OrderDocumentsList from 'components/OrderDocumentsList'
+import OrderBankOfferInfo from 'components/OrderBankOfferInfo'
+import CompanyDataReadyStatuses from 'components/CompanyDataReadyStatuses'
+import { сompanyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
+
 import { CabinetMode } from 'library/models/cabinet'
+import { getFrameWizardStep, sendFrameWizardStep } from 'library/api/frameWizard'
 
 import './CustomerOrderSignDocuments.style.less'
 
 const { Title } = Typography
+
+interface BankOfferRow {
+  offerStatus: BankOfferStatus
+  bankName: string
+  bankId: number
+  offer: BankOffer
+}
 
 export interface CustomerOrderSignDocumentsProps {
   wizardType?: FrameWizardType
@@ -23,6 +40,7 @@ export interface CustomerOrderSignDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: OrderStatus) => void
 }
 
 const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
@@ -32,27 +50,88 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  setOrderStatus,
 }) => {
   const { t } = useTranslation()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ сompanyDataStatus, setСompanyDataStatus ] = useState({ ...сompanyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
+
+  const [ offers, setOffers ] = useState<BankOffer[]>()
+  const [ offersTableData, setOffersTableData ] = useState<BankOfferRow[]>()
+  const [ selectedOffer, setSelectedOffer ] = useState<BankOffer | null>()
+  const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
 
   useEffect(() => {
     loadCurrentStepData()
   }, [])
 
   useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      // NOTE: only for debugging
-      setNextStepAllowed(true)
+    const currentDocuments = stepData?.documents ?? []
+    const updatedDocumentTypes: number[] = []
+    currentDocuments.forEach((doc: OrderDocument) => {
+      if (doc.isGenerated && doc.info) {
+        updatedDocumentTypes.push(doc.typeId)
+      }
+    })
+    const updatedCompanyStatus = {
+      сompanyHead: Boolean(stepData?.founder),
+      bankRequisites: Boolean(stepData?.requisites),
+      questionnaire: Boolean(stepData?.questionnaire),
     }
-  }, [currentStep, sequenceStepNumber])
+    const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
+    setNextStepAllowed(isCompanyDataReady)
+    setСompanyDataStatus(updatedCompanyStatus)
+    setDocumentTypes(updatedDocumentTypes)
+  }, [stepData])
+
+  useEffect(() => {
+    if (stepData?.offers) {
+      setOffers(stepData.offers)
+    }
+  }, [stepData])
+
+  useEffect(() => {
+    if (offers) {
+      // NOTE: bank offers not implemented by back-end
+      const updatedOffers = stepData.offers.map((offer: BankOffer) => ({
+        mode: CabinetMode.Customer,
+        offerStatus: offer.offerStatus,
+        bankName: offer.bank.name,
+        bankId: offer.bank.id,
+        offer,
+      }))
+      setOffersTableData(updatedOffers)
+      setDataLoaded(true)
+    }
+  }, [offers])
+
+  const sendNextStep = async () => {
+    if (!orderId) return
+    setSubmitting(true)
+    const result = await sendFrameWizardStep({
+      mode: CabinetMode.Customer,
+      type: wizardType,
+      step: sequenceStepNumber,
+      companyId: companyId as number,
+      orderId,
+    }, {
+
+    })
+    if (!result.success) {
+      message.error(t('common.errors.requestError.title'))
+      setNextStepAllowed(false)
+    } else {
+      setCurrentStep(sequenceStepNumber + 1)
+    }
+    setSubmitting(false)
+  }
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -64,43 +143,11 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setDataLoaded(true)
+      setOrderStatus((result.data as WizardStepResponse<any>).orderStatus as OrderStatus)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
-  }
-
-  const sendNextStep = async () => {
-    if (!orderId) return
-    setSubmitting(true)
-    const result = await sendFrameWizardStep({
-      mode: CabinetMode.Customer,
-      step: sequenceStepNumber,
-      type: wizardType,
-      companyId,
-      orderId,
-    }, {})
-    if (!result.success) {
-      message.error(t('common.errors.requestError.title'))
-      setNextStepAllowed(false)
-    } else {
-      setCurrentStep(sequenceStepNumber + 1)
-    }
-    setSubmitting(false)
-  }
-
-  const handlePrevStep = () => {
-    if (isPrevStepAllowed) {
-      setCurrentStep(sequenceStepNumber - 1)
-    }
-  }
-
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
   }
 
   const handleNextStep = () => {
@@ -109,53 +156,117 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
     }
   }
 
+  const handlePrevStep = () => {
+    if (isPrevStepAllowed) {
+      setCurrentStep(sequenceStepNumber - 1)
+    }
+  }
+
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
+      <Col>{currentStep <= sequenceStepNumber &&  renderSubmitButton()}</Col>
     </Row>
   )
 
-  const renderSubmitButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleStepSubmit}
-      disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
-    >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
-
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
-    >
-      {t('orderActions.saveAndContinue.title')}
-    </Button>
-  )
+  const renderSubmitButton = () => {
+    return (
+      <Button
+        size="large"
+        type="primary"
+        onClick={handleNextStep}
+        disabled={!isNextStepAllowed || submitting}
+        loading={submitting}
+      >
+        {t('orders.actions.signAndSubmit.title')}
+      </Button>
+    )
+  }
 
   const renderPrevButton = () => (
     <Button
       size="large"
       type="primary"
       onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
     >
       {t('common.actions.back.title')}
     </Button>
   )
 
+  const renderColumnActions = (_val: unknown, item: BankOfferRow) => (
+    <Space size="small">
+      <Button
+        key="view"
+        type="link"
+        shape="circle"
+        title={t('common.actions.view.title')}
+        onClick={() => setSelectedOffer(item.offer)}
+        icon={<EyeOutlined />}
+      />
+    </Space>
+  )
+
+  const renderDocuments = () =>  (
+    <OrderDocumentsList
+      companyId={companyId}
+      orderId={orderId as number}
+      types={documentTypes || []}
+      current={stepData?.documents || []}
+    />
+  )
+
+  const renderOfferStatus = (status: BankOfferStatus) => {
+    switch (status) {
+      case BankOfferStatus.CustomerSign:
+        return <Tag color="blue">{t('offerStatusTitles.customerSign')}</Tag>
+      case BankOfferStatus.Completed:
+        return <Tag>{t('offerStatusTitles.completed')}</Tag>
+      default:
+        return <></>
+    }
+  }
+
+  const columns: ColumnsType<BankOfferRow> = [
+    {
+      key: 'bankName',
+      dataIndex: 'bankName',
+    },
+    {
+      key: 'offerStatus',
+      dataIndex: 'offerStatus',
+      render: renderOfferStatus,
+      align: 'center',
+      width: 120,
+    },
+    {
+      key: 'actions',
+      render: renderColumnActions,
+      align: 'right',
+      width: 100,
+    },
+  ]
+
   const renderStepContent = () => (
-    <Div className="CustomerOrderSignDocuments">
-      <Title level={5}>{t('Подписание документов')}</Title>
+    <Div className="OrderStepBankOffers">
+      <Div className="WizardStep__section">
+        <Title level={5}>{t('customerOrderStepDocuments.sections.selectBank.title')}</Title>
+        <Table
+          size={'middle'}
+          columns={columns}
+          loading={dataLoaded === null}
+          dataSource={offersTableData || []}
+          pagination={false}
+          showHeader={false}
+        />
+      </Div>
+      <Div className="WizardStep__section">
+        <Title level={5}>{t('customerOrderStepDocuments.sections.documentsForSign.title')}</Title>
+        {renderDocuments()}
+      </Div>
+      <Div className="WizardStep__section">
+        <Title level={5}>{t('customerOrderStepDocuments.sections.сompanyData.title')}</Title>
+        <CompanyDataReadyStatuses сompanyDataStatus={сompanyDataStatus} />
+      </Div>
     </Div>
   )
 
@@ -168,6 +279,25 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
+    )
+  }
+
+  if (selectedOffer) {
+    // TODO: make slide transition when navigate
+    return (
+      <OrderBankOfferInfo
+        offer={selectedOffer}
+        companyId={companyId}
+        orderId={orderId}
+        onBack={() => setSelectedOffer(null)}
+        onSuccess={() => loadCurrentStepData()}
+      />
+    )
+  }
+
+  if (!stepData && stepDataLoading) {
+    return (
+      <Skeleton active={true} />
     )
   }
 

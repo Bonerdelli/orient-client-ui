@@ -68,7 +68,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
 
   useEffect(() => {
     if (offers) {
-      const updatedOffers = stepData.offers.map((offer: BankOffer) => ({
+      const updatedOffers = offers.map((offer: BankOffer) => ({
         offerStatus: offer.offerStatus,
         bankName: offer.bank.name,
         bankId: offer.bank.id,
