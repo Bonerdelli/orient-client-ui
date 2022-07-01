@@ -173,7 +173,6 @@ export async function del(
 export function isApiCallSuccessful<T = void>(
   response: ApiSuccessResponse<T>,
 ): boolean {
-  console.log('Call isApiCallSuccessful', response)
   if (typeof response === 'undefined') {
     return false
   }
