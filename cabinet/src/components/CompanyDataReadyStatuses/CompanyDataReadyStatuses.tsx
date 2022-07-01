@@ -17,7 +17,7 @@ export interface CompanyDataReadyStatusesProps {
   companyDataStatus: Record<string, boolean | null>
   selectedBankRequisitesId?: number | null
   setSelectedBankRequisitesId?: (id: number | null) => void
-  requisites?: CompanyRequisitesDto // stepData?.requisites
+  requisites?: CompanyRequisitesDto
 }
 
 interface BankRequisitesTableData extends CompanyRequisitesDto {
@@ -51,7 +51,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
   })
 
   const renderSelectBankRequisitesModal = () => {
-    if (!stepData || !stepData.requisites) return 'There is no requisites here'
+    if (!requisites) return 'There is no requisites here'
 
     const columns: ColumnsType<BankRequisitesTableData> = [
       {
