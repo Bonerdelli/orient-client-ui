@@ -29,7 +29,7 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, refreshActi
     case OrderStatus.FRAME_CUSTOMER_SIGN:
       return <Tag color="green">{t('orderStatusCustomerTitles.customerSign')}{refreshButton}</Tag>
     case OrderStatus.FRAME_COMPLETED:
-      return <Tag color="blue">{t('orderStatusCustomerTitles.completed')}{refreshButton}</Tag>
+      return <Tag color="blue">{t('orderStatusCustomerTitles.completed')}</Tag>
     default:
       // NOTE: unknown statutes shouldn't be displayed
       return <></> // <Tag>{item.statusName}{refreshButton}</Tag>

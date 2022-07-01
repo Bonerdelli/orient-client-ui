@@ -18,7 +18,7 @@ import './OrderStepOfferAcceptance.style.less'
 export interface BlankWizardStepProps {
   bankId?: number | bigint
   orderId?: number
-  orderStatus?: BankOfferStatus
+  offerStatus?: BankOfferStatus
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -28,7 +28,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   bankId,
   orderId,
   currentStep,
-  orderStatus,
+  offerStatus,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
@@ -50,10 +50,10 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   }, [isWaiting])
 
   useEffect(() => {
-    if (orderStatus) {
-      setWaiting(orderStatus === BankOfferStatus.CustomerSign)
+    if (offerStatus) {
+      setWaiting(offerStatus === BankOfferStatus.CustomerSign)
     }
-  }, [orderStatus])
+  }, [offerStatus])
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
