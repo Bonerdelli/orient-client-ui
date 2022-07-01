@@ -198,7 +198,12 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   if (selectedOffer) {
     // TODO: make slide transition when navigate
     return (
-      <OrderBankOfferInfo offer={selectedOffer} onBack={() => setSelectedOffer(null)} />
+      <OrderBankOfferInfo
+        offer={selectedOffer}
+        companyId={companyId}
+        orderId={orderId}
+        onBack={() => setSelectedOffer(null)}
+      />
     )
   }
 
