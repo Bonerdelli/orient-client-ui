@@ -87,7 +87,15 @@ orderActions:
   signAndSendOffer:
     title: Подписать и отправить предложение
 
-orderStatusTitles:
+offerStatusTitles:
+  bankWaitForVerify: Ожидает проверки
+  bankViewed: Просмотрена
+  bankVerify: Проверка
+  bankOffer: Формирование предложения
+  bankSign: Формирование документов
+  bankOfferSent: Отправлено предложение
+  needsForRework: На доработке
   customerSign: Требует подписи Заказчика
   completed: Договор заключен
-  bankReject: Отказ от предложения
+  cancel: Отмена заявки
+  offerRejected: Отказ от предложения

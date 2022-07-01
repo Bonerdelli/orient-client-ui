@@ -7,9 +7,10 @@ import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
+import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 
-import OrderStatusTag from 'components/OrderStatusTag'
+import OfferStatusTag from 'components/OfferStatusTag'
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
@@ -34,8 +35,8 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
     },
   )
 
-  const renderStatus = (statusCode: OrderStatus, item: Order) => (
-    <OrderStatusTag statusCode={statusCode} item={item} />
+  const renderStatus = (statusCode: OrderStatus) => (
+    <OfferStatusTag statusCode={statusCode} />
   )
 
   const renderActions = (_val: unknown, item: Order) => (
@@ -50,6 +51,12 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
         />
       </Link>
     </Space>
+  )
+
+  const rowClassName = (item: any) => ( // TODO: fixme
+    item.statusCode as BankOfferStatus === BankOfferStatus.BankWaitForVerify
+      ? 'FrameOrdersList__row--new'
+      : ''
   )
 
   const columns: ColumnsType<Order> = [
@@ -106,6 +113,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
         size="middle"
         columns={columns}
         loading={dataLoaded === null}
+        rowClassName={rowClassName}
         dataSource={data?.data as unknown as Order[] || []}
         pagination={false}
       />
