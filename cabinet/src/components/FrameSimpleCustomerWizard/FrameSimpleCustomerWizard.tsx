@@ -4,10 +4,12 @@ import { Link, useParams } from 'react-router-dom'
 import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
+import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models'
 
+import OrderStatusTag from 'components/OrderStatusTag'
 import CustomerOrderStepInfo from 'components/CustomerOrderStepInfo'
 import CustomerOrderSignDocuments from 'components/CustomerOrderSignDocuments'
 

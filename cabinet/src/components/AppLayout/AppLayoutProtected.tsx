@@ -8,6 +8,7 @@ import themeConfig from 'config/theme.yaml'
 
 import CompanyWrapper from 'components/CompanyWrapper'
 import ClientAppHeader from 'components/ClientAppHeader'
+import CustomerAppHeader from 'components/CustomerAppHeader'
 import SideMenu from 'components/SideMenu'
 
 import { ClientRoutes, CustomerRoutes } from 'library/routes'
@@ -40,7 +41,7 @@ const AppLayoutProtected = () => {
 
   return (
     <Layout className="AppLayout AppLayout--protected">
-      <ClientAppHeader />
+      {isCustomer(user) ? <CustomerAppHeader /> : <ClientAppHeader />}
       <Layout>
         <Sider
           theme="light"

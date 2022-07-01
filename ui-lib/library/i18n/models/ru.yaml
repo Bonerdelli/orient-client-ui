@@ -96,6 +96,16 @@ companyContact:
       title: Код СОАТО (юридический)
     soatoFact:
       title: Код СОАТО (фактический)
+    primaryEmail:
+      title: Основной адрес эл. почты
+    additionalEmail:
+      title: Дополнительный адрес эл. почты
+    primaryPhone:
+      title: Рабочий телефон
+    additionalPhone:
+      title: Дополнительный телефон
+    site:
+      title: WEB-сайт
 
 companyFounder:
   title: Основатель компании
@@ -151,8 +161,8 @@ companyFounder:
       title: Серия и номер
 
 passportTypes:
-  ru: Пасспорт РФ
-  uz: Пасспорт Узбекистана
+  ru: Паспорт РФ
+  uz: Паспорт Узбекистана
   uzId: ID-карта Узбекистана
 
 companyRequisites:

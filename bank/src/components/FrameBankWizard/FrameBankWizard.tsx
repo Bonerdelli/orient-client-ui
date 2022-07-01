@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router-dom'
+import { Card, Steps, Grid, Skeleton } from 'antd'
 
+import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { OrderStatus } from 'orient-ui-library/library/models'
+// import { OrderStatus } from 'orient-ui-library/library/models'
+import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
+import OfferStatusTag from 'components/OfferStatusTag'
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepContractParams from 'components/OrderStepContractParams'
@@ -22,7 +24,6 @@ import { MOCK_BANK_ID } from 'library/mock/bank'
 import './FrameBankWizard.style.less'
 
 const { Step } = Steps
-const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FrameBankWizardProps {
@@ -45,7 +46,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ orderStatus, setOrderStatus ] = useState<BankOfferStatus>()
   const [ bankId, setBankId ] = useState<number>()
 
   useEffect(() => {
@@ -57,7 +58,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
 
   useEffect(() => {
     if (currentStep === 4 && (
-        orderStatus === OrderStatus.FRAME_CUSTOMER_SIGN
+        orderStatus === BankOfferStatus.CustomerSign
     )) {
       // NOTE: show waiting for customer sign message
       setSelectedStep(5)
@@ -90,11 +91,11 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   }
 
   const isFirstStepActive = (): boolean => true
-  const isSecondStepActive = (): boolean => true
-  const isThirdStepActive = (): boolean => true
-  const isFourthStepActive = (): boolean => true
-  const isFifthStepActive = (): boolean => true
-  const isSixthStepActive = (): boolean => true
+  const isSecondStepActive = (): boolean => currentStep > 1
+  const isThirdStepActive = (): boolean => currentStep > 2
+  const isFourthStepActive = (): boolean => currentStep > 3
+  const isFifthStepActive = (): boolean => currentStep > 4
+  const isSixthStepActive = (): boolean => currentStep > 5
 
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
@@ -125,19 +126,6 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     }
   }
 
-  const renderTitle = () => {
-    const title = t('frameWizard.title')
-    if (!backUrl) return title
-    return (
-      <>
-        <Link className="FrameWizard__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
-        </Link>
-        {title}
-      </>
-    )
-  }
-
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
@@ -147,7 +135,16 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   return (
     <>
       <Card className="Wizard FrameWizard">
-        <Title level={3}>{renderTitle()}</Title>
+        <WizardHeader
+          title={t('frameWizard.title')}
+          backUrl={backUrl}
+          statusTag={
+            <OfferStatusTag
+              statusCode={orderStatus}
+              refreshAction={() => loadCurrentStepData()}
+            />
+          }
+        />
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}

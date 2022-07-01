@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Table, Button, Skeleton, Tag, message } from 'antd'
-import { EyeOutlined, DownloadOutlined } from '@ant-design/icons'
+import { Typography, Row, Col, Table, Button, Skeleton, Result, Tag, message } from 'antd'
+import { EyeOutlined, DownloadOutlined, ClockCircleFilled } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
@@ -10,17 +10,18 @@ import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { Bank } from 'orient-ui-library/library/models/bank'
 
-import { StopFactor } from 'library/models/stopFactor'
+// import { ScoringResult } from 'library/models/stopFactor'
+type ScoringResult = any // NOTE: not implemented
 
-interface BankWithStopFactors extends Bank {
+interface BankWithScoringResults extends Bank {
   isOk: boolean
-  stopFactors: StopFactor[]
+  stopFactors: ScoringResult[]
 }
 
-interface BankStopFactor extends StopFactor {
+interface BankScoringResult extends ScoringResult {
   bankId: Bank['bankId']
   bankName: Bank['bankName']
-  bankStopFactorId: string
+  bankScoringResultId: string
 }
 
 import {
@@ -50,15 +51,16 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
   const [ isWizardCompleted, setWizardCompleted ] = useState<boolean>(false)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings typings typings typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
-  const [ scorings, setScorings ] = useState<BankWithStopFactors[] | null>(null)
+  const [ scorings, setScorings ] = useState<BankWithScoringResults[] | null>(null)
   const [ selectedBankIds, setSelectedBankIds ] = useState<Bank['bankId'][]>([])
   const [ selectedRowKeys, setSelectedRowKeys ] = useState<React.Key[]>([])
-  const [ tableData, setTableData ] = useState<BankStopFactor[] | null>(null)
+  const [ tableData, setTableData ] = useState<BankScoringResult[] | null>(null)
 
   useEffect(() => {
     loadCurrentStepData()
@@ -79,18 +81,18 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   useEffect(() => {
     if (!scorings) return
     let bankIds: Bank['bankId'][] = []
-    let updatedTableData: BankStopFactor[] = []
+    let updatedTableData: BankScoringResult[] = []
     scorings.forEach(bankScoring => {
       const { bankId, bankName } = bankScoring
-      const bankStopFactors = bankScoring.stopFactors.map(scoring => ({
-        bankStopFactorId: `${bankId}-${scoring.stopFactorId}`,
+      const bankScoringResults = bankScoring.stopFactors.map(scoring => ({
+        bankScoringResultId: `${bankId}-${scoring.stopFactorId}`,
         bankId,
         bankName,
         ...scoring,
       }))
       updatedTableData = [
         ...updatedTableData,
-        ...bankStopFactors,
+        ...bankScoringResults,
       ]
       bankIds.push(bankId)
     })
@@ -106,6 +108,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
       if ((result as any).data.orderStatus === OrderStatus.FRAME_CLIENT_SIGN) {
         setWizardCompleted(true)
       }
@@ -124,11 +127,12 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     }, {
       bankIds: selectedBankIds,
     })
-    if (!result.success) {
+    if (result.success) {
+      message.success(t('orderStepScoringResult.orderSendedMessage'))
+      setWizardCompleted(true)
+    } else {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
-    } else {
-      setWizardCompleted(true)
     }
     setSubmitting(false)
   }
@@ -186,7 +190,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     return <Tag color="red">{t('orderStepScoringResult.nonCompliant.title')}</Tag>
   }
 
-  const bankColumns: ColumnsType<BankWithStopFactors> = [
+  const bankColumns: ColumnsType<BankWithScoringResults> = [
     {
       key: 'bankName',
       dataIndex: 'bankName',
@@ -207,7 +211,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     },
   ]
 
-  const scoringColumns: ColumnsType<StopFactor> = [
+  const scoringColumns: ColumnsType<ScoringResult> = [
     {
       key: 'stopFactorName',
       dataIndex: 'stopFactorName',
@@ -216,12 +220,13 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       key: 'isOk',
       dataIndex: 'isOk',
       render: renderStatus,
+      width: 120,
       align: 'center',
     },
     {
       key: 'actions',
       width: 120,
-      render: (item) => renderStopFactorActions(item),
+      render: (item) => renderScoringResultActions(item),
       align: 'right',
     },
   ]
@@ -234,7 +239,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     }),
   }
 
-  const expandedRowRender = (rowData: BankWithStopFactors) => (
+  const expandedRowRender = (rowData: BankWithScoringResults) => (
     <Table
       size={'middle'}
       columns={scoringColumns}
@@ -245,7 +250,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     />
   )
 
-  const renderStopFactors = () => (
+  const renderScoringResults = () => (
     <Table
       size={'middle'}
       loading={!tableData}
@@ -259,7 +264,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     />
   )
 
-  const renderStopFactorViewButton = (_item: StopFactor) => (
+  const renderScoringResultViewButton = (_item: ScoringResult) => (
     <Button
       key="view"
       type="link"
@@ -271,7 +276,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     />
   )
 
-  const renderStopFactorDownloadButton = (_item: StopFactor) => (
+  const renderScoringResultDownloadButton = (_item: ScoringResult) => (
     <Button
       key="download"
       type="link"
@@ -283,10 +288,10 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     />
   )
 
-  const renderStopFactorActions = (item: StopFactor) => (
+  const renderScoringResultActions = (item: ScoringResult) => (
     <Div className="OrderStepScoringResults__actions">
-      {renderStopFactorViewButton(item)}
-      {renderStopFactorDownloadButton(item)}
+      {renderScoringResultViewButton(item)}
+      {renderScoringResultDownloadButton(item)}
     </Div>
   )
 
@@ -294,7 +299,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     <Div className="OrderStepScoringResults">
       <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('orderStepScoringResult.title')}</Title>
-        {renderStopFactors()}
+        {renderScoringResults()}
       </Div>
     </Div>
   )
@@ -312,6 +317,16 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
+    )
+  }
+
+  if (isWizardCompleted || orderStatus !== OrderStatus.FRAME_OPERATOR_VERIFYING) {
+    return (
+      <Result
+        icon={<ClockCircleFilled />}
+        title={t('orderStepScoringResult.waitForAccept.title')}
+        subTitle={t('orderStepScoringResult.waitForAccept.desc')}
+      />
     )
   }
 

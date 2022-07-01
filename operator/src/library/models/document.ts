@@ -1,8 +1,8 @@
 export enum DocumentStatus {
-  Uploaded = 'uploaded',
-  NotUploaded = 'notUploaded',
+  NotViewed = 'not_viewed',
   Approved = 'approved',
   NotApproved = 'not_approved',
+  NotUploaded = 'not_uploaded',
 }
 
 export interface Document {

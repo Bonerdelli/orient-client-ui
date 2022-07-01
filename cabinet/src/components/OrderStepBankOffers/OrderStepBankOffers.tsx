@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, Table, Space, Tag } from 'antd'
+import type { ColumnsType } from 'antd/lib/table'
+import { EyeOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+
+import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep, // NOTE: replace ep with correct one!
-} from 'library/api/frameWizard'
+import OrderBankOfferInfo from 'components/OrderBankOfferInfo'
+import { getFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepBankOffers.style.less'
 
@@ -24,34 +26,55 @@ export interface OrderStepBankOffersProps {
   setCurrentStep: (step: number) => void
 }
 
+interface BankOfferRow {
+  offerStatus: BankOfferStatus
+  bankName: string
+  bankId: number
+  offer: BankOffer
+}
+
 const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
-  currentStep,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
   const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ submitting, setSubmitting ] = useState<boolean>()
+  const [ submitting, _setSubmitting ] = useState<boolean>()
+
+  const [ offers, setOffers ] = useState<BankOffer[]>()
+  const [ offersTableData, setOffersTableData ] = useState<BankOfferRow[]>()
+  const [ selectedOffer, setSelectedOffer ] = useState<BankOffer | null>()
 
   useEffect(() => {
     loadCurrentStepData()
   }, [])
 
   useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      // NOTE: only for debugging
-      setNextStepAllowed(true)
+    if (stepData?.offers) {
+      setOffers(stepData.offers)
     }
-  }, [currentStep, sequenceStepNumber])
+  }, [stepData])
+
+  useEffect(() => {
+    if (offers) {
+      const updatedOffers = stepData.offers.map((offer: BankOffer) => ({
+        offerStatus: offer.offerStatus,
+        bankName: offer.bank.name,
+        bankId: offer.bank.id,
+        offer,
+      }))
+      setOffersTableData(updatedOffers)
+      setDataLoaded(true)
+    }
+  }, [offers])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -62,30 +85,10 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
-  }
-
-  const sendNextStep = async () => {
-    if (!orderId) return
-    setSubmitting(true)
-    const result = await sendFrameWizardStep({
-      step: sequenceStepNumber,
-      type: wizardType,
-      companyId,
-      orderId,
-    }, {})
-    if (!result.success) {
-      message.error(t('common.errors.requestError.title'))
-      setNextStepAllowed(false)
-    } else {
-      setCurrentStep(sequenceStepNumber + 1)
-    }
-    setSubmitting(false)
   }
 
   const handlePrevStep = () => {
@@ -94,48 +97,10 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
     }
   }
 
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
-
-  const handleNextStep = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
-
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
     </Row>
-  )
-
-  const renderSubmitButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleStepSubmit}
-      disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
-    >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
-
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
-    >
-      {t('orderActions.saveAndContinue.title')}
-    </Button>
   )
 
   const renderPrevButton = () => (
@@ -150,9 +115,71 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
     </Button>
   )
 
+  const renderColumnActions = (_val: unknown, item: BankOfferRow) => (
+    <Space size="small">
+      <Button
+        key="view"
+        type="link"
+        shape="circle"
+        title={t('common.actions.view.title')}
+        onClick={() => setSelectedOffer(item.offer)}
+        icon={<EyeOutlined />}
+      />
+    </Space>
+  )
+
+  const renderOfferStatus = (status: BankOfferStatus) => {
+    switch (status) {
+      case BankOfferStatus.BankWaitForVerify:
+      case BankOfferStatus.BankViewed:
+      case BankOfferStatus.BankVerify:
+      case BankOfferStatus.BankSign:
+      case BankOfferStatus.BankOffer:
+        return <Tag color="blue">{t('offerStatusTitles.bankVerify')}</Tag>
+      case BankOfferStatus.BankOfferSent:
+        return <Tag color="green">{t('offerStatusTitles.bankOfferSent')}</Tag>
+      case BankOfferStatus.CustomerSign:
+        return <Tag color="blue">{t('offerStatusTitles.customerSign')}</Tag>
+      case BankOfferStatus.Completed:
+        return <Tag>{t('offerStatusTitles.completed')}</Tag>
+      default:
+        return <></>
+    }
+  }
+
+  const columns: ColumnsType<BankOfferRow> = [
+    {
+      key: 'bankName',
+      dataIndex: 'bankName',
+    },
+    {
+      key: 'offerStatus',
+      dataIndex: 'offerStatus',
+      render: renderOfferStatus,
+      align: 'center',
+      width: 120,
+    },
+    {
+      key: 'actions',
+      render: renderColumnActions,
+      align: 'right',
+      width: 100,
+    },
+  ]
+
   const renderStepContent = () => (
     <Div className="OrderStepBankOffers">
-      <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
+      <Div className="WizardStep__section">
+        <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
+        <Table
+          size={'middle'}
+          columns={columns}
+          loading={dataLoaded === null}
+          dataSource={offersTableData || []}
+          pagination={false}
+          showHeader={false}
+        />
+      </Div>
     </Div>
   )
 
@@ -165,6 +192,13 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
+    )
+  }
+
+  if (selectedOffer) {
+    // TODO: make slide transition when navigate
+    return (
+      <OrderBankOfferInfo offer={selectedOffer} onBack={() => setSelectedOffer(null)} />
     )
   }
 

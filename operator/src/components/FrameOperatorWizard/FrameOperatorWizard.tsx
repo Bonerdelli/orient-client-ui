@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router-dom'
+import { Card, Steps, Grid, Skeleton } from 'antd'
 
+import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 
+import OrderStatusTag from 'components/OrderStatusTag'
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepStopFactors from 'components/OrderStepStopFactors'
-// import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
 
 import { getFrameOrderWizard } from 'library/api/frameOrder'
@@ -17,7 +18,6 @@ import { getFrameOrderWizard } from 'library/api/frameOrder'
 import './FrameOperatorWizard.style.less'
 
 const { Step } = Steps
-const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FrameOperatorWizardProps {
@@ -39,6 +39,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
+  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
   useEffect(() => {
     setStepDataLoading(true)
@@ -57,6 +58,8 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     })
     if (result.success) {
       const step = Number((result.data as any).step)
+      const orderStatus = (result.data as any).orderStatus
+      setOrderStatus(orderStatus)
       setCurrentStep(step)
       setSelectedStep(step)
       setDataLoaded(true)
@@ -69,8 +72,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const isFirstStepActive = (): boolean => true
   const isSecondStepActive = (): boolean => currentStep > 1
   const isThirdStepActive = (): boolean => currentStep > 2
-  // const isFourthStepActive = (): boolean => currentStep > 1 // NOTE: disabled for Demo
-  const isFifthStepActive = (): boolean => currentStep > 3
+  const isFourthStepActive = (): boolean => currentStep > 3
 
   const renderCurrentStep = () => {
     if (stepDataLoading) {
@@ -88,26 +90,11 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
         return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
         return <OrderStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
-      // case 4: // NOTE: disabled for Demo
-      //   return <OrderStepOptionalParameters {...stepBaseProps} sequenceStepNumber={4}/>
       case 4:
         return <OrderStepScoringResults {...stepBaseProps} sequenceStepNumber={4}/>
       default:
         return <></>
     }
-  }
-
-  const renderTitle = () => {
-    const title = t('frameWizard.title')
-    if (!backUrl) return title
-    return (
-      <>
-        <Link className="FrameWizard__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
-        </Link>
-        {title}
-      </>
-    )
   }
 
   if (dataLoaded === false) {
@@ -119,7 +106,16 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   return (
     <>
       <Card className="Wizard FrameWizard">
-        <Title level={3}>{renderTitle()}</Title>
+        <WizardHeader
+          title={t('frameWizard.title')}
+          backUrl={backUrl}
+          statusTag={
+            <OrderStatusTag
+              statusCode={orderStatus}
+              refreshAction={() => loadCurrentStepData()}
+            />
+          }
+        />
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
@@ -128,7 +124,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
           <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
           <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
           <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
-          <Step disabled={!isFifthStepActive()} title={t('frameWizard.fifthStep.title')} />
+          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fifthStep.title')} />
         </Steps>
       </Card>
       <Card className="FrameWizard__step">

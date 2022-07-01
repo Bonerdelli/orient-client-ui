@@ -38,6 +38,12 @@ orderStatusTitles:
   verifying: Проверка
   clientSign: Требует подписи Клиента
   bankVerify: В Банке
+  needsForRework: На доработке
+  hasOffer: Есть предложение
+  customerSign: Требует подписи Заказчика
+  cancel: Отмена заявки
+  operatorReject: Отказ системы
+  bankReject: Отказ Банка
 
 frameWizard:
   title: Заявка на заключение рамочного договора
@@ -80,6 +86,10 @@ orderStepScoringResult:
     title: Соответствует параметрам
   nonCompliant:
     title: Не соответствует параметрам
+  orderSendedMessage: Заявка успешно отправлена на подпись Клиенту
+  waitForAccept:
+    title: Заявка успешно отправлена в Банки
+    desc: Ожидайте принятия предложения от Поставщика и подписание договора со стороны Дебитора
 
 orderStepOptionalParameters:
   title: Дополнительные параметры

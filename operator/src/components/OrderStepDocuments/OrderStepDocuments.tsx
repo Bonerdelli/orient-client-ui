@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, Col, Form, message, Modal, Row, Skeleton, Spin, Typography } from 'antd'
+import { Button, Col, message, Modal, Row, Skeleton, Spin, Typography } from 'antd'
+import { SelectOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -230,34 +231,34 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const closeCompanyFounderModal = () => {
     setCompanyFounderModalVisible(false)
   }
-  const renderCompanyHeadSection = () => (
+  const renderCompanyFounderSection = () => (
     <Div className="OrderStepDocuments__section">
-      <Form.Item label={t('orderStepDocuments.companyFounderInformation.title')}
-                 labelAlign="left"
-                 colon={false}
-      >
-        <Button type="primary"
+      <Title level={5}>
+        {t('orderStepDocuments.companyFounderInformation.title')}
+        <Button size="small"
+                type="link"
+                icon={<SelectOutlined/>}
                 onClick={openCompanyFounderModal}
         >
           {t('orderStepDocuments.companyFounderInformation.check')}
         </Button>
-        <Modal
-          visible={companyFounderModalVisible}
-          centered
-          width={700}
-          bodyStyle={{ paddingTop: '0' }}
-          title="Данные о руководителе"
-          onCancel={closeCompanyFounderModal}
-          footer={
-            <Button type="primary"
-                    onClick={closeCompanyFounderModal}>
-              {t('models.bankRequisites.close')}
-            </Button>
-          }
-        >
-          <CompanyFounderInfo companyFounder={clientCompanyFounder}/>
-        </Modal>
-      </Form.Item>
+      </Title>
+      <Modal
+        visible={companyFounderModalVisible}
+        centered
+        width={700}
+        bodyStyle={{ paddingTop: '0' }}
+        title={t('orderStepDocuments.companyFounderInformation.title')}
+        onCancel={closeCompanyFounderModal}
+        footer={
+          <Button type="primary"
+                  onClick={closeCompanyFounderModal}>
+            {t('models.bankRequisites.close')}
+          </Button>
+        }
+      >
+        <CompanyFounderInfo companyFounder={clientCompanyFounder}/>
+      </Modal>
     </Div>
   )
 
@@ -271,7 +272,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         {renderDocuments()}
       </Div>
       {documentsOptional !== null && renderOptionalDocumentsSection()}
-      {renderCompanyHeadSection()}
+      {renderCompanyFounderSection()}
     </Div>
   )
 
