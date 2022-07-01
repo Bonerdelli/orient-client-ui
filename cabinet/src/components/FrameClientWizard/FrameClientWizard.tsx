@@ -34,8 +34,6 @@ export interface FrameClientWizardPathParams {
   itemId?: string,
 }
 
-export const FRAME_WIZARD_LAST_STEP_INDEX = 3
-
 const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
