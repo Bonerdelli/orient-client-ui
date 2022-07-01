@@ -6,8 +6,11 @@ import { EyeOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+
+import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
+import OrderBankOfferInfo from 'components/OrderBankOfferInfo'
 import { getFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepBankOffers.style.less'
@@ -21,6 +24,13 @@ export interface OrderStepBankOffersProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+}
+
+interface BankOfferRow {
+  offerStatus: BankOfferStatus
+  bankName: string
+  bankId: number
+  offer: BankOffer
 }
 
 const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
@@ -38,23 +48,33 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, _setSubmitting ] = useState<boolean>()
-  const [ offers, setOffers ] = useState<any[]>()
+
+  const [ offers, setOffers ] = useState<BankOffer[]>()
+  const [ offersTableData, setOffersTableData ] = useState<BankOfferRow[]>()
+  const [ selectedOffer, setSelectedOffer ] = useState<BankOffer | null>()
 
   useEffect(() => {
     loadCurrentStepData()
   }, [])
 
   useEffect(() => {
-    let updatedOffers = []
     if (stepData?.offers) {
-      updatedOffers = stepData.offers.map((offer: any) => ({
+      setOffers(stepData.offers)
+    }
+  }, [stepData])
+
+  useEffect(() => {
+    if (offers) {
+      const updatedOffers = stepData.offers.map((offer: BankOffer) => ({
         offerStatus: offer.offerStatus,
         bankName: offer.bank.name,
-        banId: offer.bank.id,
+        bankId: offer.bank.id,
+        offer,
       }))
+      setOffersTableData(updatedOffers)
+      setDataLoaded(true)
     }
-    setOffers(updatedOffers)
-  }, [stepData])
+  }, [offers])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -65,7 +85,6 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
@@ -96,19 +115,39 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
     </Button>
   )
 
-  const renderColumnActions = (_val: unknown, _item: any) => (
+  const renderColumnActions = (_val: unknown, item: BankOfferRow) => (
     <Space size="small">
       <Button
         key="view"
         type="link"
         shape="circle"
         title={t('common.actions.view.title')}
+        onClick={() => setSelectedOffer(item.offer)}
         icon={<EyeOutlined />}
       />
     </Space>
   )
 
-  const columns: ColumnsType<any> = [
+  const renderOfferStatus = (status: BankOfferStatus) => {
+    switch (status) {
+      case BankOfferStatus.BankWaitForVerify:
+      case BankOfferStatus.BankViewed:
+      case BankOfferStatus.BankVerify:
+      case BankOfferStatus.BankSign:
+        return <Tag color="blue">{t('offerStatusTitles.bankVerify')}</Tag>
+      case BankOfferStatus.BankOfferSent:
+      case BankOfferStatus.BankOffer:
+        return <Tag color="blue">{t('offerStatusTitles.bankOfferSent')}</Tag>
+      case BankOfferStatus.CustomerSign:
+        return <Tag color="blue">{t('offerStatusTitles.customerSign')}</Tag>
+      case BankOfferStatus.Completed:
+        return <Tag>{t('offerStatusTitles.completed')}</Tag>
+      default:
+        return <></>
+    }
+  }
+
+  const columns: ColumnsType<BankOfferRow> = [
     {
       key: 'bankName',
       dataIndex: 'bankName',
@@ -116,7 +155,9 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
     {
       key: 'offerStatus',
       dataIndex: 'offerStatus',
-      render: () => <Tag color="blue">На проверке</Tag>
+      render: renderOfferStatus,
+      align: 'center',
+      width: 120,
     },
     {
       key: 'actions',
@@ -134,7 +175,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
           size={'middle'}
           columns={columns}
           loading={dataLoaded === null}
-          dataSource={offers || []}
+          dataSource={offersTableData || []}
           pagination={false}
           showHeader={false}
         />
@@ -151,6 +192,13 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
+    )
+  }
+
+  if (selectedOffer) {
+    // TODO: make slide transition when navigate
+    return (
+      <OrderBankOfferInfo offer={selectedOffer} onBack={() => setSelectedOffer(null)} />
     )
   }
 

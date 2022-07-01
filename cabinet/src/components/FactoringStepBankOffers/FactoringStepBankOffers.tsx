@@ -40,6 +40,8 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
+  const [ selectedOffer, setSelectedOffer ] = useState<number>()
+
   useEffect(() => {
     loadCurrentStepData()
   }, [])
