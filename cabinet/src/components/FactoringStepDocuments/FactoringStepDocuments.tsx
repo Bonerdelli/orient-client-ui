@@ -10,12 +10,12 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderDocument } from 'orient-ui-library/library/models/proxy'
-import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
-import { getFrameWizardStep, sendFrameWizardStep2, WizardStep2Data } from 'library/api'
+import { getFactoringWizardStep, sendFactoringWizardStep, WizardStep2Data } from 'library/api'
 
 import './FactoringStepDocuments.style.less'
 import { RETURN_URL_PARAM } from 'library/constants'
@@ -24,7 +24,6 @@ const { Title } = Typography
 const { Item: TimelineItem } = Timeline
 
 export interface OrderDocumentsProps {
-  wizardType?: FrameWizardType
   companyId?: number
   orderId?: number
   currentStep: number
@@ -40,7 +39,6 @@ const companyDataInitialStatus: Record<string, boolean | null> = {
 }
 
 const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
-  wizardType = FrameWizardType.Full,
   companyId,
   orderId,
   currentStep,
@@ -122,8 +120,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       // NOTE: do not show loader every time updates
       setDocumentsLoading(true)
     }
-    const result = await getFrameWizardStep({
-      type: wizardType,
+    const result = await getFactoringWizardStep({
       companyId: companyId as number,
       step: sequenceStepNumber,
       orderId,
@@ -149,8 +146,8 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       documentId: document.info?.documentId,
       status: document.info?.documentStatus,
     }))
-    const result = await sendFrameWizardStep2({
-      type: wizardType,
+    const result = await sendFactoringWizardStep({
+      step: sequenceStepNumber,
       companyId,
       orderId,
     }, {
@@ -206,7 +203,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
@@ -268,7 +265,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   )
 
   const renderOptionalDocumentsSection = () => (
-    <Div className="FactoringStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
@@ -291,12 +288,12 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       <Div className="FactoringStepDocuments__title">
         <Title level={4}>{t('frameSteps.documents.title')}</Title>
       </Div>
-      <Div className="FactoringStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
       {documentTypesOptional !== null && renderOptionalDocumentsSection}
-      <Div className="FactoringStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
         {renderReadyStatuses()}
       </Div>
@@ -316,7 +313,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {currentStep <= sequenceStepNumber && renderActions()}
     </Div>

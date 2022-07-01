@@ -24,6 +24,7 @@ frameOrdersPage:
     statusName: Статус
 
 frameWizard:
+  # TODO: translate me
   title: Заявка на рамочный договор
   firstStep:
     title: Параметры заявки и клиента
@@ -39,6 +40,30 @@ frameWizard:
     title: Принятие предложения
   sixthStep:
     title: Архив
+
+frameSimpleWizard:
+  # TODO: translate me
+  title: Заявка на упрощенный рамочный договор
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Подпись Заказчика
+  fourthStep:
+    title: Архив
+
+factoringWizard:
+  # TODO: translate me
+  title: Заявка на факторинг
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Архив и итоги финансирования
 
 orderStepParameters:
   title: Параметры заявки и клиента
@@ -58,6 +83,9 @@ orderStepContractParams:
 
 orderStepContractDocuments:
   title: Документы по сделке
+  actions:
+    back:
+      title: Переформировать предложение
 
 orderStepOfferAcceptance:
   title: Принятие предложения
@@ -84,17 +112,15 @@ orderActions:
   signAndSendOffer:
     title: Подписать и отправить предложение
 
-orderStatuses:
-  # Ожидает проверки
-  # Просмотрена
-  # Проверка
-  # На доработке
-  # Проверка исправлений
-  # Формирование предложения
-  # Формирование документов
-  # Отправлено предложение
-  # Требует подписи Заказчика
-  # Договор заключен
-  # Отказ Банка
-  # Отмена заявки
-  # Отказ от предложения
+offerStatusTitles:
+  bankWaitForVerify: Ожидает проверки
+  bankViewed: Просмотрена
+  bankVerify: Проверка
+  bankOffer: Формирование предложения
+  bankSign: Формирование документов
+  bankOfferSent: Отправлено предложение
+  needsForRework: На доработке
+  customerSign: Требует подписи Заказчика
+  completed: Договор заключен
+  cancel: Отмена заявки
+  offerRejected: Отказ от предложения

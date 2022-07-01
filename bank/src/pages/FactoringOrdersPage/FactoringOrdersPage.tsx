@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
 import FactoringOrdersList from 'components/FactoringOrdersList'
-import FrameBankWizard from 'components/FrameBankWizard' // TODO: add wizard
+import FactoringBankWizard from 'components/FactoringBankWizard'
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FactoringOrdersPage.style.less'
@@ -25,7 +25,7 @@ const FactoringOrdersPage = () => {
           {renderList()}
         </Route>
         <Route path={`${path}/:itemId`}>
-          <FrameBankWizard backUrl={url} />
+          <FactoringBankWizard backUrl={url} />
         </Route>
       </Switch>
     </Layout>

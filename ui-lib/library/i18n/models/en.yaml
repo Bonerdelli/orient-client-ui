@@ -25,6 +25,16 @@ customer:
       title: SOATO Code
     address:
       title: Address
+    primaryEmail:
+      title: Primary Email
+    additionalEmail:
+      title: Additional Email
+    primaryPhone:
+      title: Primary Phone Number
+    additionalPhone:
+      title: Additional Phone Number
+    site:
+      title: Website
 
 client:
   title: Client

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Tag } from 'antd'
+import { Table, Button, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
@@ -15,6 +15,8 @@ import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompanyOrdersList } from 'library/api'
 import { useStoreState } from 'library/store'
 import { GridResponse } from 'library/models' // TODO: to ui-lib
+
+import OrderStatusTag from 'components/OrderStatusTag'
 
 import './OrdersList.style.less'
 
@@ -82,33 +84,9 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
     }
   }
 
-  const renderStatus = (statusCode: OrderStatus, item: Order) => {
-    switch (statusCode) {
-      case OrderStatus.FRAME_DRAFT:
-        return <Tag>{t('orderStatusTitles.draft')}</Tag>
-      case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
-      case OrderStatus.FRAME_OPERATOR_VERIFYING:
-        return <Tag color="blue">{t('orderStatusTitles.verifying')}</Tag>
-      case OrderStatus.FRAME_CLIENT_REWORK:
-        return <Tag color="green">{t('orderStatusTitles.needsForRework')}</Tag>
-      case OrderStatus.FRAME_CLIENT_SIGN:
-        return <Tag color="green">{t('orderStatusTitles.clientSign')}</Tag>
-      case OrderStatus.FRAME_OPERATOR_VERIFYING:
-        return <Tag color="blue">{t('orderStatusTitles.bankVerify')}</Tag>
-      case OrderStatus.FRAME_HAS_OFFER:
-        return <Tag color="green">{t('orderStatusTitles.hasOffer')}</Tag>
-      case OrderStatus.FRAME_CUSTOMER_SIGN:
-        return <Tag color="blue">{t('orderStatusTitles.customerSign')}</Tag>
-      case OrderStatus.FRAME_COMPLETED:
-        return <Tag color="blue">{t('orderStatusTitles.completed')}</Tag>
-      case OrderStatus.FRAME_CANCEL:
-        return <Tag>{t('orderStatusTitles.cancel')}</Tag>
-      case OrderStatus.FRAME_OPERATOR_REJECT:
-        return <Tag color="red">{t('orderStatusTitles.operatorReject')}</Tag>
-      default:
-        return <Tag>{item.statusName}</Tag>
-    }
-  }
+  const renderStatus = (statusCode: OrderStatus) => (
+    <OrderStatusTag statusCode={statusCode} />
+  )
 
   const columns: ColumnsType<Order> = [
     {

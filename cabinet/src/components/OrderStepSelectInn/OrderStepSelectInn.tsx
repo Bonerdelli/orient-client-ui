@@ -186,7 +186,6 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
             <DescItem label={t('models.customer.fields.chief.title')}>{customer.chief}</DescItem>
             <DescItem label={t('models.customer.fields.soato.title')}>{customer.soato}</DescItem>
             <DescItem label={t('models.customer.fields.address.title')}>{customer.address}</DescItem>
-            <DescItem label={t('models.customer.fields.inn.title')}>{customer.inn}</DescItem>
           </Descriptions>
         </Card>
       </Div>

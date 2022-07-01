@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Typography, Skeleton, Spin, Row, Col, Button, message } from 'antd'
@@ -135,6 +135,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
+      console.log('currentStep === sequenceStepNumber', currentStep === sequenceStepNumber)
       if (currentStep === sequenceStepNumber) {
         sendNextStep()
       } else {
@@ -143,7 +144,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     }
   }
 
-  const renderCancelButton = () => {
+  const renderPrevStepButton = () => {
+    // NOTE: disabled as we can't go back by status model
     return (
       <Button
         size="large"
@@ -172,7 +174,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const renderActions = () => (
     <Row className="WizardStep__actions">
-      <Col>{renderCancelButton()}</Col>
+      <Col>{renderPrevStepButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
     </Row>

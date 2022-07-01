@@ -85,8 +85,8 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       loading={approveInProccess}
       title={t('common.actions.approve.title')}
       onClick={handleApprove}
-      disabled={loading === true || rejectInProccess}
-      icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
+      disabled={loading === true || rejectInProccess || document.status === DocumentStatus.Approved}
+      icon={<CheckCircleTwoTone twoToneColor={document.status !== DocumentStatus.Approved ? '#52c41a' : '#ccc' } />}
     />
   )
 
@@ -99,8 +99,8 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       loading={rejectInProccess}
       title={t('common.actions.reject.title')}
       onClick={handleReject}
-      disabled={loading === true || approveInProccess}
-      icon={<CloseCircleTwoTone twoToneColor="#e83030" />}
+      disabled={loading === true || approveInProccess || document.status === DocumentStatus.NotApproved}
+      icon={<CloseCircleTwoTone twoToneColor={document.status !== DocumentStatus.NotApproved ? '#e83030' : '#ccc' } />}
     />
   )
 

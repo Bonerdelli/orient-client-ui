@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
 import FactoringOrdersList from 'components/FactoringOrdersList'
-import FrameOperatorWizard from 'components/FrameOperatorWizard' // TODO: FactoringOperatorWizard
+import FactoringOperatorWizard from 'components/FactoringOperatorWizard' // TODO: FactoringOperatorWizard
 
 import './FactoringOrdersPage.style.less'
 
@@ -24,7 +24,7 @@ const FactoringOrdersPage = () => {
           {renderList()}
         </Route>
         <Route path={`${path}/:itemId`}>
-          <FrameOperatorWizard backUrl={url} />
+          <FactoringOperatorWizard backUrl={url} />
         </Route>
       </Switch>
     </Layout>
