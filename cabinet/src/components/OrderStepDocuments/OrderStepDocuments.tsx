@@ -1,22 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { every } from 'lodash'
-import { NavLink, useLocation } from 'react-router-dom'
-
-import type { ColumnsType } from 'antd/lib/table'
 
 import { Button, Col, Row, Skeleton, Spin, Typography, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { CompanyRequisitesDto, OrderDocument } from 'orient-ui-library/library/models/document'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import CompanyDataReadyStatuses from 'components/CompanyDataReadyStatuses'
-import { сompanyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
+import { companyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
 
 import { getFrameWizardStep, sendFrameWizardStep2, WizardStep2Data } from 'library/api'
 
@@ -32,10 +29,6 @@ export interface OrderDocumentsProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: OrderStatus) => void
-}
-
-interface BankRequisitesTableData extends CompanyRequisitesDto {
-  key: number
 }
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
@@ -63,7 +56,6 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[] | null>(null)
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
 
-  const [ bankRequisitesModalVisible, setBankRequisitesModalVisible ] = useState<boolean>(false)
   const [ selectedBankRequisitesId, setSelectedBankRequisitesId ] = useState<number | null>(null)
 
   useEffect(() => {
@@ -86,6 +78,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
     setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
     setCompanyDataStatus(updatedCompanyStatus)
+
     setSelectedBankRequisitesId(stepData?.requisites?.id ?? null)
   }, [ stepData ])
 
@@ -256,8 +249,12 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       </Div>
       {documentTypesOptional !== null && renderOptionalDocumentsSection}
       <Div className="OrderStepDocuments__section">
-        <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
-        <CompanyDataReadyStatuses сompanyDataStatus={сompanyDataStatus} />
+        <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
+        <CompanyDataReadyStatuses
+          companyDataStatus={companyDataStatus}
+          selectedBankRequisitesId={selectedBankRequisitesId}
+          setSelectedBankRequisitesId={setSelectedBankRequisitesId}
+        />
       </Div>
     </Div>
   )

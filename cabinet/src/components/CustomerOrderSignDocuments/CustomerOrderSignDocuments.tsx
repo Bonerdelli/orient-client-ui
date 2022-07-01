@@ -17,7 +17,7 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import CustomerOrderBankOfferInfo from 'components/CustomerOrderBankOfferInfo'
 import CompanyDataReadyStatuses from 'components/CompanyDataReadyStatuses'
-import { сompanyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
+import { companyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
 
 import { CabinetMode } from 'library/models/cabinet'
 import { getFrameWizardStep, sendFrameWizardStep } from 'library/api/frameWizard'
@@ -60,7 +60,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
 
   const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ сompanyDataStatus, setСompanyDataStatus ] = useState({ ...сompanyDataInitialStatus })
+  const [ companyDataStatus, setСompanyDataStatus ] = useState({ ...companyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
   const [ completed, setCompleted ] = useState<boolean>()
@@ -84,7 +84,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
       }
     })
     const updatedCompanyStatus = {
-      сompanyHead: Boolean(stepData?.customerCompanyFounder),
+      companyHead: Boolean(stepData?.customerCompanyFounder),
       bankRequisites: Boolean(stepData?.customerCompanyRequisites),
       questionnaire: Boolean(stepData?.customerCompanyQuestionnaire),
     }
@@ -279,8 +279,8 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
         {renderDocuments()}
       </Div>
       <Div className="WizardStep__section">
-        <Title level={5}>{t('customerOrderStepDocuments.sections.сompanyData.title')}</Title>
-        <CompanyDataReadyStatuses сompanyDataStatus={сompanyDataStatus} />
+        <Title level={5}>{t('customerOrderStepDocuments.sections.companyData.title')}</Title>
+        <CompanyDataReadyStatuses companyDataStatus={companyDataStatus} />
       </Div>
     </Div>
   )

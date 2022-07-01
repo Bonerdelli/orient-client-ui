@@ -249,9 +249,9 @@ customerOrderStepDocuments:
     selectBank:
       # title: Выберите Банк, для которого необходимо подписать документы
       title: Банк, для которого необходимо подписать документы
-    сompanyData:
+    companyData:
       title: Для подписания заявки необходимо заполнить Данные о компании
-      сompanyHead: Данные о руководителе компании
+      companyHead: Данные о руководителе компании
       bankRequisites: Банковские реквизиты компании
       questionnaire: Анкета компании
 
