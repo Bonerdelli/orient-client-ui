@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Row, Col, Button, Skeleton, Result, message } from 'antd'
+import { ClockCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -118,28 +119,6 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
     </Row>
   )
 
-  const renderSubmitButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleStepSubmit}
-      disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
-    >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
-
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
-    >
-      {t('orderActions.saveAndContinue.title')}
-    </Button>
-  )
 
   const renderPrevButton = () => (
     <Button
@@ -163,6 +142,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   if (isWaiting) {
     return (
       <Result
+        icon={<ClockCircleFilled />}
         title={t('orderStepOfferAcceptance.waitForAccept.title')}
         subTitle={t('orderStepOfferAcceptance.waitForAccept.desc')}
       />

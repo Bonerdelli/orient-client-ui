@@ -87,6 +87,9 @@ orderStepScoringResult:
   nonCompliant:
     title: Не соответствует параметрам
   orderSendedMessage: Заявка успешно отправлена на подпись Клиенту
+  waitForAccept:
+    title: Заявка успешно отправлена в Банки
+    desc: Ожидайте принятия предложения от Поставщика и подписание договора со стороны Дебитора
 
 orderStepOptionalParameters:
   title: Дополнительные параметры

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Table, Button, Skeleton, Tag, message } from 'antd'
-import { EyeOutlined, DownloadOutlined } from '@ant-design/icons'
+import { Typography, Row, Col, Table, Button, Skeleton, Result, Tag, message } from 'antd'
+import { EyeOutlined, DownloadOutlined, ClockCircleFilled } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
@@ -51,8 +51,9 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
   const [ isWizardCompleted, setWizardCompleted ] = useState<boolean>(false)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings typings typings typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
@@ -107,6 +108,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
       if ((result as any).data.orderStatus === OrderStatus.FRAME_CLIENT_SIGN) {
         setWizardCompleted(true)
       }
@@ -315,6 +317,16 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
+    )
+  }
+
+  if (isWizardCompleted || orderStatus !== OrderStatus.FRAME_OPERATOR_VERIFYING) {
+    return (
+      <Result
+        icon={<ClockCircleFilled />}
+        title={t('orderStepScoringResult.waitForAccept.title')}
+        subTitle={t('orderStepScoringResult.waitForAccept.desc')}
+      />
     )
   }
 
