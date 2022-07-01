@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router-dom'
+import { Card, Steps, Grid, Skeleton } from 'antd'
 
+import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models'
 
+import OrderStatusTag from 'components/OrderStatusTag'
 import OrderStepSelectInn from 'components/OrderStepSelectInn'
 import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
@@ -19,7 +20,6 @@ import { getCurrentFrameWizardStep } from 'library/api'
 import './FrameSimpleClientWizard.style.less'
 
 const { Step } = Steps
-const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FrameSimpleWizardProps {
@@ -130,19 +130,6 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
     }
   }
 
-  const renderTitle = () => {
-    const title = t('frameSimpleOrder.title')
-    if (!backUrl) return title
-    return (
-      <>
-        <Link className="Wizard__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
-        </Link>
-        {title}
-      </>
-    )
-  }
-
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
@@ -152,7 +139,16 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
   return (
     <>
       <Card className="Wizard FrameSimpleWizard">
-        <Title level={3}>{renderTitle()}</Title>
+        <WizardHeader
+          title={t('frameSimpleOrder.title')}
+          backUrl={backUrl}
+          statusTag={
+            <OrderStatusTag
+              statusCode={orderStatus}
+              refreshAction={() => loadCurrentStepData()}
+            />
+          }
+        />
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}

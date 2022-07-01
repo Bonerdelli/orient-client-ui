@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router-dom'
+import { Card, Steps, Grid, Skeleton } from 'antd'
 
+import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderStatus } from 'orient-ui-library/library/models'
 
+import OrderStatusTag from 'components/OrderStatusTag'
 import FactoringStepParameters from 'components/FactoringStepParameters'
 import FactoringStepDocuments from 'components/FactoringStepDocuments'
 import FactoringStepSignDocuments from 'components/FactoringStepSignDocuments'
@@ -19,7 +20,6 @@ import { getCurrentFactoringWizardStep } from 'library/api'
 import './FactoringClientWizard.style.less'
 
 const { Step } = Steps
-const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FactoringClientWizardProps {
@@ -123,19 +123,6 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
     }
   }
 
-  const renderTitle = () => {
-    const title = t('factoring.title')
-    if (!backUrl) return title
-    return (
-      <>
-        <Link className="Wizard__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
-        </Link>
-        {title}
-      </>
-    )
-  }
-
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning" />
@@ -145,7 +132,16 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
   return (
     <>
       <Card className="Wizard FactoringClientWizard">
-        <Title level={3}>{renderTitle()}</Title>
+        <WizardHeader
+          title={t('factoring.title')}
+          backUrl={backUrl}
+          statusTag={
+            <OrderStatusTag
+              statusCode={orderStatus}
+              refreshAction={() => loadCurrentStepData()}
+            />
+          }
+        />
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
