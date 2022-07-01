@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useHistory } from 'react-router-dom'
-import { Card, Form, Grid, Row, Col, Space, Spin, Button, message } from 'antd'
-import { PlusOutlined, ArrowLeftOutlined, StopOutlined } from '@ant-design/icons'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Button, Card, Col, Form, Grid, message, Row, Space, Spin } from 'antd'
+import { ArrowLeftOutlined, PlusOutlined, StopOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 
 import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
 import { callApi } from 'library/helpers/api' // TODO: to ui-lib
-import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
+import { baseFormConfig, renderFormInputs } from 'library/helpers/form'
 import { addCompanyRequisites } from 'library/api'
 
 import formFields from './BankRequisitesForm.form'
 import './BankRequisitesForm.style.less'
+import { RETURN_URL_PARAM } from 'library/constants'
 
 const { useBreakpoint } = Grid
 const { useForm } = Form
@@ -29,6 +30,8 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
   const history = useHistory()
   const breakpoint = useBreakpoint()
   const [ form ] = useForm()
+  const { search } = useLocation()
+  const returnUrl = new URLSearchParams(search).get(RETURN_URL_PARAM)
 
   const [ formData, setFormData ] = useState<Partial<CompanyRequisitesDto>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
@@ -95,10 +98,10 @@ export const BankRequisitesAddForm: React.FC<BankRequisitesAddFormProps> = (prop
 
   const renderCardTitle = () => {
     const title = t('bankRequisitesPage.formSections.main.title')
-    if (!backUrl) return title
+    if (!backUrl && !returnUrl) return title
     return (
       <>
-        <Link className="BankRequisitesForm__navigateBack" to={backUrl}>
+        <Link className="BankRequisitesForm__navigateBack" to={(returnUrl || backUrl)!}>
           <Button icon={<ArrowLeftOutlined/>} type="link" size="large"></Button>
         </Link>
         {title}
