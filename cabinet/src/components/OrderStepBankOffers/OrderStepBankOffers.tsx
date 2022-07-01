@@ -7,6 +7,7 @@ import { EyeOutlined } from '@ant-design/icons'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
@@ -24,6 +25,7 @@ export interface OrderStepBankOffersProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: OrderStatus) => void
 }
 
 interface BankOfferRow {
@@ -39,6 +41,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   orderId,
   setCurrentStep,
   sequenceStepNumber,
+  setOrderStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -85,6 +88,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setOrderStatus((result.data as WizardStepResponse<any>).orderStatus as OrderStatus)
     } else {
       setDataLoaded(false)
     }
@@ -203,6 +207,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
         companyId={companyId}
         orderId={orderId}
         onBack={() => setSelectedOffer(null)}
+        onSuccess={() => loadCurrentStepData()}
       />
     )
   }

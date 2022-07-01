@@ -18,7 +18,7 @@ const WizardHeader: React.FC<WizardHeaderProps> = ({
   statusTag,
 }) => (
   <Row className="WizardHeader" align="middle">
-    <Col span={20}>
+    <Col span={18}>
       {backUrl && (
         <Link className="WizardHeader__navigateBack" to={backUrl}>
           <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
@@ -26,7 +26,7 @@ const WizardHeader: React.FC<WizardHeaderProps> = ({
       )}
       <Title className="WizardHeader__title" level={3}>{title}</Title>
     </Col>
-    <Col className="WizardHeader__status" span={4} style={{ textAlign: 'right' }}>
+    <Col className="WizardHeader__status" span={6} style={{ textAlign: 'right' }}>
       {statusTag}
     </Col>
   </Row>

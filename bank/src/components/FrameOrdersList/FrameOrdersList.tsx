@@ -6,7 +6,7 @@ import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
+import { Order } from 'orient-ui-library/library/models/order'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 
@@ -35,7 +35,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
     },
   )
 
-  const renderStatus = (statusCode: OrderStatus) => (
+  const renderStatus = (statusCode: BankOfferStatus) => (
     <OfferStatusTag statusCode={statusCode} />
   )
 

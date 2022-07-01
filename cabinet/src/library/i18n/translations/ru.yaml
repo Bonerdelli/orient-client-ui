@@ -103,7 +103,7 @@ orderStatusTitles:
   operatorReject: Отказ от предложения
 
 orderStatusCustomerTitles:
-  customerSign: Требует подписи Заказчика
+  customerSign: Требует подписи
   completed: Договор заключен
 
 frameOrder: ## TODO: rename to frameWizard

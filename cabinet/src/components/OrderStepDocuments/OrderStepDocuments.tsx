@@ -130,6 +130,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<WizardStep2Data>).data)
+      setOrderStatus((result.data as WizardStepResponse<WizardStep2Data>).orderStatus as OrderStatus)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)

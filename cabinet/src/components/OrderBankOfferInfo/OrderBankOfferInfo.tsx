@@ -1,36 +1,44 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Result, Typography, Button, Skeleton } from 'antd'
+import { Row, Col, Result, Typography, Button, Skeleton, message } from 'antd'
 import { ArrowLeftOutlined, ClockCircleFilled } from '@ant-design/icons'
 
+import Div from 'orient-ui-library/components/Div'
 import OrderConditionView from 'orient-ui-library/components/OrderCondition'
 import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 
-import Div from 'orient-ui-library/components/Div'
+
 import OrderDocumentsList from 'components/OrderDocumentsList'
+import { sendFrameWizardStep4 } from 'library/api/frameWizard'
 
 import './OrderBankOfferInfo.style.less'
 
 const { Title, Paragraph } = Typography
 
 export interface OrderBankOfferInfoProps {
+  wizardType?: FrameWizardType
   companyId: number
   orderId?: number
   offer: BankOffer
   onBack: () => void
+  onSuccess: () => void
 }
 
 const OrderBankOfferInfo: React.FC<OrderBankOfferInfoProps> = ({
+  wizardType = FrameWizardType.Full,
   companyId,
   orderId,
   offer,
   onBack,
+  onSuccess,
 }) => {
   const { t } = useTranslation()
   const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
   const [ readyForApprove, setReadyForApprove ] = useState<boolean>()
-  const [ submitting, setSubmitting ] = useState<false>()
+  const [ submitting, setSubmitting ] = useState<boolean>()
+  const [ bankId, setBankId ] = useState<number>()
 
   useEffect(() => {
     if (!offer) return
@@ -41,6 +49,7 @@ const OrderBankOfferInfo: React.FC<OrderBankOfferInfoProps> = ({
         updatedDocumentTypes.push(doc.typeId)
       }
     })
+    setBankId(offer.bank.id)
     setReadyForApprove(offer.offerStatus === BankOfferStatus.BankOfferSent)
     setDocumentTypes(updatedDocumentTypes)
   }, [offer])
@@ -48,8 +57,26 @@ const OrderBankOfferInfo: React.FC<OrderBankOfferInfoProps> = ({
   const handleReject = () => {
     onBack()
   }
-  const handleAccept = () => {
-    onBack()
+
+  const handleAccept = async () => {
+    if (!orderId || !companyId || !bankId) {
+      return
+    }
+    setSubmitting(true)
+    const result = await sendFrameWizardStep4({
+      type: wizardType,
+      companyId,
+      orderId,
+    }, {
+      bankId,
+    })
+    if (!result.success) {
+      message.error(t('common.errors.requestError.title'))
+    } else {
+      onSuccess()
+      onBack()
+    }
+    setSubmitting(false)
   }
 
   const renderDocuments = () =>  (
