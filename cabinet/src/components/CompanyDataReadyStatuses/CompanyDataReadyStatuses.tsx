@@ -54,7 +54,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
   })
 
   const renderSelectBankRequisitesModal = () => {
-    if (!requisites) return 'There is no requisites here'
+    if (!requisites) return <></>
 
     const columns: ColumnsType<BankRequisitesTableData> = [
       {
@@ -127,7 +127,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
       </TimelineItem>
       <TimelineItem {...dotParams(companyDataStatus?.bankRequisites ?? null)}>
         {t('frameSteps.documents.companyData.bankRequisites')}
-        <Div className="CompanyDataReadyStatuses__item__link">
+        {requisites && <Div className="CompanyDataReadyStatuses__item__link">
           <Button size="small"
                   type="link"
                   onClick={() => setBankRequisitesModalVisible(true)}
@@ -135,7 +135,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
           >
             {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.bankRequisites ? 'choose' : 'fill'}`)}
           </Button>
-        </Div>
+        </Div>}
         {renderSelectBankRequisitesModal()}
       </TimelineItem>
       <TimelineItem {...dotParams(companyDataStatus?.questionnaire ?? null)}>
