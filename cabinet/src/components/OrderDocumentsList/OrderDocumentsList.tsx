@@ -133,7 +133,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     },
     {
       key: 'actions',
-      width: 120,
+      width: 80,
       render: renderActions,
       align: 'right',
     },

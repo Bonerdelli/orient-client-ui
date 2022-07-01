@@ -24,13 +24,13 @@ const OfferStatusTag: React.FC<OfferStatusTagProps> = ({ statusCode }) => {
       return <Tag color="green">{t('offerStatusTitles.bankSign')}</Tag>
     case BankOfferStatus.BankOfferSent:
       return <Tag color="green">{t('offerStatusTitles.bankOfferSent')}</Tag>
-
-    case BankOfferStatus.NeedsForRework:
-      return <Tag color="blue">{t('offerStatusTitles.needsForRework')}</Tag>
+    // NOTE: no such status in proccess, need for check
+    // case BankOfferStatus.NeedsForRework:
+    //   return <Tag color="blue">{t('offerStatusTitles.needsForRework')}</Tag>
     case BankOfferStatus.CustomerSign:
       return <Tag color="blue">{t('offerStatusTitles.customerSign')}</Tag>
     case BankOfferStatus.Completed:
-      return <Tag>{t('offerStatusTitles.completed')}</Tag>
+      return <Tag color="blue">{t('offerStatusTitles.completed')}</Tag>
     default:
       // NOTE: unknown statutes shouldn't be displayed
       return <></>

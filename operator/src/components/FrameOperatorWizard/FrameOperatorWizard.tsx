@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
+import { Row, Col, Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
 import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepStopFactors from 'components/OrderStepStopFactors'
 // import OrderStepOptionalParameters from 'components/OrderStepOptionalParameters'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
+import OrderStatusTag from 'components/OrderStatusTag'
 
 import { getFrameOrderWizard } from 'library/api/frameOrder'
 
@@ -39,6 +41,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
+  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
   useEffect(() => {
     setStepDataLoading(true)
@@ -57,6 +60,8 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     })
     if (result.success) {
       const step = Number((result.data as any).step)
+      const orderStatus = (result.data as any).orderStatus
+      setOrderStatus(orderStatus)
       setCurrentStep(step)
       setSelectedStep(step)
       setDataLoaded(true)
@@ -101,15 +106,20 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     const title = t('frameWizard.title')
     if (!backUrl) return title
     return (
-      <>
-        <Link className="FrameWizard__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
-        </Link>
-        {title}
-        <Button icon={<ReloadOutlined />} onClick={loadCurrentStepData} type="link" size="large">
-          {t('common.actions.refresh.title')}
-        </Button>
-      </>
+      <Row>
+        <Col span={20}>
+          <Link className="FrameWizard__navigateBack" to={backUrl}>
+            <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
+          </Link>
+          {title}
+          <Button icon={<ReloadOutlined />} onClick={loadCurrentStepData} type="link" size="large">
+            {t('common.actions.refresh.title')}
+          </Button>
+        </Col>
+        <Col span={4} style={{ textAlign: 'right' }}>
+          <OrderStatusTag statusCode={orderStatus} />
+        </Col>
+      </Row>
     )
   }
 
