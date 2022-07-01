@@ -10,7 +10,7 @@ import Div from 'orient-ui-library/components/Div'
 import DocumentActions from 'components/DocumentActions'
 
 import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
-import { OrderDocument } from 'orient-ui-library/library/models/proxy'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 
 import {
   getOrderDocumentUploadUrl,
