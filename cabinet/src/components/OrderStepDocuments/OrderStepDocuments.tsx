@@ -255,6 +255,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
           selectedBankRequisitesId={selectedBankRequisitesId}
           setSelectedBankRequisitesId={setSelectedBankRequisitesId}
           requisites={stepData?.requisites}
+          founderId={stepData?.founder?.id}
         />
       </Div>
     </Div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, NavLink } from 'react-router-dom'
 
+import Div from 'orient-ui-library/components/Div'
 import { CompanyRequisitesDto } from 'orient-ui-library/library/models/document'
 
 import { CheckCircleFilled, ClockCircleOutlined, ExclamationCircleOutlined, FormOutlined } from '@ant-design/icons'
@@ -18,6 +19,7 @@ export interface CompanyDataReadyStatusesProps {
   selectedBankRequisitesId?: number | null
   setSelectedBankRequisitesId?: (id: number | null) => void
   requisites?: CompanyRequisitesDto
+  founderId?: number
 }
 
 interface BankRequisitesTableData extends CompanyRequisitesDto {
@@ -35,6 +37,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
   selectedBankRequisitesId,
   setSelectedBankRequisitesId,
   requisites,
+  founderId,
 }) => {
   const { t } = useTranslation()
   const location = useLocation()
@@ -44,7 +47,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
 
   const dotParams = (ready: boolean | null) => ({
     dot: ready === true
-      ? <CheckCircleFilled className="OrderStepDocuments__companyDataStatus__okIcon"/>
+      ? <CheckCircleFilled className="CompanyDataReadyStatuses__item__okIcon"/>
       : (ready === null ? <ClockCircleOutlined/> : <ExclamationCircleOutlined/>),
     color: ready === true ? 'green'
       : (ready === null ? 'grey' : 'red'),
@@ -80,7 +83,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
           <Row gutter={16}>
             {t('frameSteps.documents.bankRequisites.title')}
             <NavLink to={`/bank-details/add?${RETURN_URL_PARAM}=${location.pathname}`}
-                     className="OrderStepDocuments__companyDataStatus__link">
+                     className="CompanyDataReadyStatuses__item__link">
               <Button size="small" type="link" icon={<FormOutlined/>}>
                 {t('frameSteps.documents.bankRequisites.add')}
               </Button>
@@ -112,40 +115,33 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
   }
 
   return (
-    <Timeline className="OrderStepDocuments__companyDataStatus">
+    <Timeline className="CompanyDataReadyStatuses__item">
       <TimelineItem {...dotParams(companyDataStatus?.companyHead ?? null)}>
         {t('frameSteps.documents.companyData.companyHead')}
-        {!companyDataStatus?.companyHead && (
-          <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('common.actions.fill.title')}
-            </Button>
-          </NavLink>
-        )}
+        <NavLink to={`/company-heads/${founderId}?${RETURN_URL_PARAM}=${location.pathname}`}
+                 className="CompanyDataReadyStatuses__item__link">
+          <Button size="small" type="link" icon={<FormOutlined/>}>
+            {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.companyHead ? 'check' : 'fill'}`)}
+          </Button>
+        </NavLink>
       </TimelineItem>
       <TimelineItem {...dotParams(companyDataStatus?.bankRequisites ?? null)}>
         {t('frameSteps.documents.companyData.bankRequisites')}
-        {!companyDataStatus?.bankRequisites && (
-          <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('common.actions.fill.title')}
-            </Button>
-            <Button size="small"
-                    type="link"
-                    onClick={() => setBankRequisitesModalVisible(true)}
-                    icon={<FormOutlined/>}
-            >
-              {t('common.actions.fill.title')}
-            </Button>
-            {renderSelectBankRequisitesModal()}
-
-          </NavLink>
-        )}
+        <Div className="CompanyDataReadyStatuses__item__link">
+          <Button size="small"
+                  type="link"
+                  onClick={() => setBankRequisitesModalVisible(true)}
+                  icon={<FormOutlined/>}
+          >
+            {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.bankRequisites ? 'choose' : 'fill'}`)}
+          </Button>
+        </Div>
+        {renderSelectBankRequisitesModal()}
       </TimelineItem>
       <TimelineItem {...dotParams(companyDataStatus?.questionnaire ?? null)}>
         {t('frameSteps.documents.companyData.questionnaire')}
         <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
-                 className="OrderStepDocuments__companyDataStatus__link">
+                 className="CompanyDataReadyStatuses__item__link">
           <Button size="small" type="link" icon={<FormOutlined/>}>
             {t(`common.actions.${companyDataStatus?.questionnaire ? 'check' : 'fill'}.title`)}
           </Button>
