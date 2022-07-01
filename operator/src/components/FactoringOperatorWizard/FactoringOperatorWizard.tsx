@@ -13,27 +13,27 @@ import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepStopFactors from 'components/OrderStepStopFactors'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
 
-import { getFrameOrderWizard } from 'library/api/frameOrder'
+import { getFactoringOrderWizard } from 'library/api/factoring'
 
-import './FrameOperatorWizard.style.less'
+import './FactoringOperatorWizard.style.less'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid
 
-export interface FrameOperatorWizardProps {
+export interface FactoringOperatorWizardProps {
   orderId?: number
   backUrl?: string
 }
 
-export interface FrameOperatorWizardPathParams {
+export interface FactoringOperatorWizardPathParams {
   itemId?: string,
 }
 
-const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, backUrl }) => {
+const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
-  const { itemId } = useParams<FrameOperatorWizardPathParams>()
+  const { itemId } = useParams<FactoringOperatorWizardPathParams>()
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
@@ -53,7 +53,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   }, [currentStep])
 
   const loadCurrentStepData = async () => {
-    const result = await getFrameOrderWizard({
+    const result = await getFactoringOrderWizard({
       orderId: Number(itemId) || orderId as number,
     })
     if (result.success) {
@@ -105,7 +105,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
 
   return (
     <>
-      <Card className="Wizard FrameWizard">
+      <Card className="Wizard FactoringOperatorWizard">
         <WizardHeader
           title={t('frameWizard.title')}
           backUrl={backUrl}
@@ -127,11 +127,11 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
           <Step disabled={!isFourthStepActive()} title={t('frameWizard.fifthStep.title')} />
         </Steps>
       </Card>
-      <Card className="FrameWizard__step">
+      <Card className="FactoringOperatorWizard__step">
         {renderCurrentStep()}
       </Card>
     </>
   )
 }
 
-export default FrameOperatorWizard
+export default FactoringOperatorWizard

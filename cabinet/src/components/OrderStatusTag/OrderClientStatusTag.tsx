@@ -14,21 +14,20 @@ export interface OrderStatusTagProps {
 
 const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, refreshAction }) => {
   const { t } = useTranslation()
-  let refreshButton: JSX.Element | null = null
-  if (refreshAction) {
-    refreshButton = (
-      <Button
-        className="OrderStatusTag__refreshButton"
-        icon={<ReloadOutlined />}
-        onClick={refreshAction}
-        type="link"
-        size="small"
-      />
-    )
-  }
+
+  const refreshButton = refreshAction ? (
+    <Button
+      className="OrderStatusTag__refreshButton"
+      icon={<ReloadOutlined />}
+      onClick={refreshAction}
+      type="link"
+      size="small"
+    />
+  ) : <></>
+
   switch (statusCode) {
     case OrderStatus.FRAME_DRAFT:
-      return <Tag>{t('orderStatusTitles.draft')}{refreshButton}</Tag>
+      return <Tag>{t('orderStatusTitles.draft')}</Tag>
     case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
     case OrderStatus.FRAME_OPERATOR_VERIFYING:
       return <Tag color="blue">{t('orderStatusTitles.verifying')}{refreshButton}</Tag>
@@ -43,11 +42,11 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, refreshActi
     case OrderStatus.FRAME_CUSTOMER_SIGN:
       return <Tag color="blue">{t('orderStatusTitles.customerSign')}{refreshButton}</Tag>
     case OrderStatus.FRAME_CANCEL:
-      return <Tag>{t('orderStatusTitles.cancel')}{refreshButton}</Tag>
+      return <Tag>{t('orderStatusTitles.cancel')}</Tag>
     case OrderStatus.FRAME_OPERATOR_REJECT:
-      return <Tag color="red">{t('orderStatusTitles.operatorReject')}{refreshButton}</Tag>
+      return <Tag color="red">{t('orderStatusTitles.operatorReject')}</Tag>
     case OrderStatus.FRAME_COMPLETED:
-      return <Tag>{t('orderStatusTitles.completed')}{refreshButton}</Tag>
+      return <Tag>{t('orderStatusTitles.completed')}</Tag>
     default:
       // NOTE: unknown statutes shouldn't be displayed
       return <></> // <Tag>{item.statusName}{refreshButton}</Tag>

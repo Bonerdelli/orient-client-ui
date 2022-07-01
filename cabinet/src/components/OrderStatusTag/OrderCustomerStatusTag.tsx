@@ -14,18 +14,17 @@ export interface OrderStatusTagProps {
 
 const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, refreshAction }) => {
   const { t } = useTranslation()
-  let refreshButton: JSX.Element | null = null
-  if (refreshAction) {
-    refreshButton = (
-      <Button
-        className="OrderStatusTag__refreshButton"
-        icon={<ReloadOutlined />}
-        onClick={refreshAction}
-        type="link"
-        size="small"
-      />
-    )
-  }
+
+  const refreshButton = refreshAction ? (
+    <Button
+      className="OrderStatusTag__refreshButton"
+      icon={<ReloadOutlined />}
+      onClick={refreshAction}
+      type="link"
+      size="small"
+    />
+  ) : <></>
+
   switch (statusCode) {
     case OrderStatus.FRAME_CUSTOMER_SIGN:
       return <Tag color="green">{t('orderStatusCustomerTitles.customerSign')}{refreshButton}</Tag>
