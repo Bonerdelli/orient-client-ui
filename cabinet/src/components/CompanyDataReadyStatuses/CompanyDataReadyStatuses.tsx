@@ -37,7 +37,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({ сo
         {!сompanyDataStatus?.сompanyHead && (
           <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
             <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('frameSteps.documents.fillDataButton.title')}
+              {t('common.actions.fill.title')}
             </Button>
           </NavLink>
         )}
@@ -47,7 +47,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({ сo
         {!сompanyDataStatus?.bankRequisites && (
           <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
             <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('frameSteps.documents.fillDataButton.title')}
+              {t('common.actions.fill.title')}
             </Button>
           </NavLink>
         )}
@@ -57,7 +57,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({ сo
         <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
                  className="OrderStepDocuments__companyDataStatus__link">
           <Button size="small" type="link" icon={<FormOutlined/>}>
-            {t(`frameSteps.documents.fillDataButton.${сompanyDataStatus?.questionnaire ? 'check' : 'fill'}`)}
+            {t(`common.actions.${сompanyDataStatus?.questionnaire ? 'check' : 'fill'}.title`)}
           </Button>
         </NavLink>
       </TimelineItem>

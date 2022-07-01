@@ -90,6 +90,7 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
           sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
           setOrderStatus={setOrderStatus}
+          orderStatus={orderStatus}
           orderId={Number(itemId)}
         />
       default:

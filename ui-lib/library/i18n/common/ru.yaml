@@ -71,6 +71,10 @@ actions:
     title: Одобрить
   reject:
     title: Отказать
+  fill:
+    title: Заполнить
+  check:
+    title: Проверить
 
 documents:
   fields:

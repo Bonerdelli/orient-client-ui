@@ -15,7 +15,7 @@ import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/m
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
-import OrderBankOfferInfo from 'components/OrderBankOfferInfo'
+import CustomerOrderBankOfferInfo from 'components/CustomerOrderBankOfferInfo'
 import CompanyDataReadyStatuses from 'components/CompanyDataReadyStatuses'
 import { сompanyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
 
@@ -41,16 +41,17 @@ export interface CustomerOrderSignDocumentsProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: OrderStatus) => void
+  orderStatus?: OrderStatus
 }
 
 const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
-  currentStep,
   setCurrentStep,
   sequenceStepNumber,
   setOrderStatus,
+  orderStatus
 }) => {
   const { t } = useTranslation()
 
@@ -62,11 +63,13 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   const [ сompanyDataStatus, setСompanyDataStatus ] = useState({ ...сompanyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
+  const [ completed, setCompleted ] = useState<boolean>()
 
   const [ offers, setOffers ] = useState<BankOffer[]>()
   const [ offersTableData, setOffersTableData ] = useState<BankOfferRow[]>()
-  const [ selectedOffer, setSelectedOffer ] = useState<BankOffer | null>()
+  const [ selectedOffer, setSelectedOffer ] = useState<any>() // TODO: ask be to generate typings
   const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
+  const [ bankId, setBankId ] = useState<number>()
 
   useEffect(() => {
     loadCurrentStepData()
@@ -81,9 +84,9 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
       }
     })
     const updatedCompanyStatus = {
-      сompanyHead: Boolean(stepData?.founder),
-      bankRequisites: Boolean(stepData?.requisites),
-      questionnaire: Boolean(stepData?.questionnaire),
+      сompanyHead: Boolean(stepData?.customerCompanyFounder),
+      bankRequisites: Boolean(stepData?.customerCompanyRequisites),
+      questionnaire: Boolean(stepData?.customerCompanyQuestionnaire),
     }
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
     setNextStepAllowed(isCompanyDataReady)
@@ -92,28 +95,37 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   }, [stepData])
 
   useEffect(() => {
-    if (stepData?.offers) {
-      setOffers(stepData.offers)
+    if (stepData?.bankOffers) {
+      setOffers(stepData.bankOffers)
     }
   }, [stepData])
 
   useEffect(() => {
+    console.log('orderStatus', orderStatus)
+    if (orderStatus === OrderStatus.FRAME_COMPLETED) {
+      setCompleted(true)
+    }
+  }, [orderStatus])
+
+  useEffect(() => {
     if (offers) {
-      // NOTE: bank offers not implemented by back-end
-      const updatedOffers = stepData.offers.map((offer: BankOffer) => ({
+      // NOTE: various model with Client cabinet
+      const updatedOffers = offers.map((offer: any) => ({
         mode: CabinetMode.Customer,
-        offerStatus: offer.offerStatus,
+        offerStatus: offer.offer.status,
         bankName: offer.bank.name,
         bankId: offer.bank.id,
-        offer,
+        offer: offer.offer,
+        bank: offer.bank,
       }))
+      setBankId(updatedOffers[0].bankId) // NOTE: workaround for a single bank scenario
       setOffersTableData(updatedOffers)
       setDataLoaded(true)
     }
   }, [offers])
 
-  const sendNextStep = async () => {
-    if (!orderId) return
+  const handleSign = async () => {
+    if (!orderId || !bankId) return
     setSubmitting(true)
     const result = await sendFrameWizardStep({
       mode: CabinetMode.Customer,
@@ -122,13 +134,15 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
       companyId: companyId as number,
       orderId,
     }, {
-
+      bankId,
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setCurrentStep(sequenceStepNumber + 1)
+      message.success(t('orderStepBankOffer.statuses.completed.title'))
+      loadCurrentStepData()
+      setCompleted(true)
     }
     setSubmitting(false)
   }
@@ -152,7 +166,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      sendNextStep()
+      handleSign()
     }
   }
 
@@ -165,7 +179,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep <= sequenceStepNumber &&  renderSubmitButton()}</Col>
+      <Col>{!completed &&  renderSubmitButton()}</Col>
     </Row>
   )
 
@@ -218,9 +232,9 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   const renderOfferStatus = (status: BankOfferStatus) => {
     switch (status) {
       case BankOfferStatus.CustomerSign:
-        return <Tag color="blue">{t('offerStatusTitles.customerSign')}</Tag>
+        return <Tag color="blue">{t('orderStatusCustomerTitles.customerSign')}</Tag>
       case BankOfferStatus.Completed:
-        return <Tag>{t('offerStatusTitles.completed')}</Tag>
+        return <Tag>{t('orderStatusCustomerTitles.completed')}</Tag>
       default:
         return <></>
     }
@@ -240,7 +254,8 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
     },
     {
       key: 'actions',
-      render: renderColumnActions,
+      // TODO: enable for multiple banks scenario
+      // render: renderColumnActions,
       align: 'right',
       width: 100,
     },
@@ -283,10 +298,13 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   }
 
   if (selectedOffer) {
+    // TODO: use this for multiple banks scenario
     // TODO: make slide transition when navigate
     return (
-      <OrderBankOfferInfo
-        offer={selectedOffer}
+      <CustomerOrderBankOfferInfo
+        offer={selectedOffer.offer}
+        bank={selectedOffer.bank}
+        documents={stepData?.documents}
         companyId={companyId}
         orderId={orderId}
         onBack={() => setSelectedOffer(null)}

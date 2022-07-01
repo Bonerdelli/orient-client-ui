@@ -11,7 +11,7 @@ import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
-import OrderBankOfferInfo from 'components/OrderBankOfferInfo'
+import ClientOrderBankOfferInfo from 'components/ClientOrderBankOfferInfo'
 import { getFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepBankOffers.style.less'
@@ -202,7 +202,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   if (selectedOffer) {
     // TODO: make slide transition when navigate
     return (
-      <OrderBankOfferInfo
+      <ClientOrderBankOfferInfo
         offer={selectedOffer}
         companyId={companyId}
         orderId={orderId}
