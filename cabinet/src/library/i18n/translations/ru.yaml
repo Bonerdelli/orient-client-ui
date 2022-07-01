@@ -102,6 +102,10 @@ orderStatusTitles:
   cancel: Отмена заявки
   operatorReject: Отказ от предложения
 
+orderStatusCustomerTitles:
+  customerSign: Требует подписи Заказчика
+  completed: Договор заключен
+
 frameOrder: ## TODO: rename to frameWizard
   title: Заявка на заключение рамочного договора
   firstStep:

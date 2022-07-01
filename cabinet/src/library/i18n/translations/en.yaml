@@ -67,6 +67,9 @@ orderStatusTitles:
   cancel: Cancel
   operatorReject: Operator Reject
 
+orderStatusCustomerTitles:
+  customerSign: Requires a signature
+  completed: Completed
 
 # TODO: translate me
 customerFrameOrder:
