@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 // import SlideRoutes from 'react-slide-routes' // TODO: make slide animation works
-import { Switch, Route, Link, useRouteMatch } from 'react-router-dom'
-import { Space, Layout, Spin, Button } from 'antd'
+import { Link, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Button, Layout, Space, Spin } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 
 import { useStoreState } from 'library/store'
@@ -22,16 +22,16 @@ const CompanyHeadsPage = () => {
   if (!company) {
     return (
       <Div className="AppLayout__loaderWrap">
-        <Spin size="large" />
+        <Spin size="large"/>
       </Div>
     )
   }
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <CompanyHeadsList companyId={company.id as number} />
+      <CompanyHeadsList companyId={company.id as number}/>
       <Link to={`${url}/add`}>
-        <Button icon={<PlusOutlined />} type="link" size="large">{t('common.actions.add.title')}</Button>
+        <Button icon={<PlusOutlined/>} type="link" size="large">{t('common.actions.add.title')}</Button>
       </Link>
     </Space>
   )
@@ -43,7 +43,7 @@ const CompanyHeadsPage = () => {
           {renderList()}
         </Route>
         <Route path={`${path}/:itemId`}>
-          <CompanyHeadForm backUrl={url} companyId={company.id as number} />
+          <CompanyHeadForm backUrl={url} companyId={company.id as number}/>
         </Route>
       </Switch>
     </Layout>

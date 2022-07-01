@@ -180,9 +180,9 @@ frameSteps:
     sectionTitles:
       mainDocs: Обязательные документы
       additionalDocs: Дополнительные документы
-      сompanyData: Заполните данные о компании в каждом разделе
-    сompanyData:
-      сompanyHead: Данные о руководителе компании
+      companyData: Заполните данные о компании в каждом разделе
+    companyData:
+      companyHead: Данные о руководителе компании
       bankRequisites: Банковские реквизиты компании
       questionnaire: Анкета компании
 

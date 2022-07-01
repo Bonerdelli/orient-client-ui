@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams, useHistory } from 'react-router-dom'
-import { Card, Form, Grid, Row, Col, Space, Spin, Skeleton, Button } from 'antd'
-import { SaveOutlined, ArrowLeftOutlined, StopOutlined } from '@ant-design/icons'
-import { isUndefined, isNull } from 'lodash'
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom'
+import { Button, Card, Col, Form, Grid, Row, Skeleton, Space, Spin } from 'antd'
+import { ArrowLeftOutlined, SaveOutlined, StopOutlined } from '@ant-design/icons'
+import { isNull, isUndefined } from 'lodash'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import Div from 'orient-ui-library/components/Div'
 
 import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
-import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
-import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
+import { callApi, useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { baseFormConfig, renderFormInputs } from 'library/helpers/form'
 import { getCompanyRequisites, updateCompanyRequisites } from 'library/api'
 
 import formFields from './BankRequisitesForm.form'
 import './BankRequisitesForm.style.less'
+import { RETURN_URL_PARAM } from 'library/constants'
 
 const { useBreakpoint } = Grid
 const { useForm } = Form
@@ -37,6 +38,8 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
   const { itemId } = useParams<CompanyRequisitesPathParams>()
   const breakPoint = useBreakpoint()
   const [ form ] = useForm()
+  const { search } = useLocation()
+  const returnUrl = new URLSearchParams(search).get(RETURN_URL_PARAM)
 
   const [ formData, setFormData ] = useState<Partial<CompanyRequisitesDto> | null>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
@@ -108,10 +111,10 @@ export const BankRequisitesEditForm: React.FC<BankRequisitesEditFormProps> = (pr
 
   const renderCardTitle = () => {
     const title = t('bankRequisitesPage.formSections.main.title')
-    if (!backUrl) return title
+    if (!backUrl && !returnUrl) return title
     return (
       <>
-        <Link className="BankRequisitesForm__navigateBack" to={backUrl}>
+        <Link className="BankRequisitesForm__navigateBack" to={(returnUrl || backUrl)!}>
           <Button icon={<ArrowLeftOutlined/>} type="link" size="large"></Button>
         </Link>
         {title}

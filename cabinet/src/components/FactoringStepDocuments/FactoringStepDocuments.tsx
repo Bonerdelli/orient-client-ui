@@ -33,8 +33,8 @@ export interface OrderDocumentsProps {
   setOrderStatus: (status: OrderStatus) => void
 }
 
-const сompanyDataInitialStatus: Record<string, boolean | null> = {
-  сompanyHead: null,
+const companyDataInitialStatus: Record<string, boolean | null> = {
+  companyHead: null,
   bankRequisites: null,
   questionnaire: null,
 }
@@ -56,7 +56,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const [ stepData, setStepData ] = useState<WizardStep2Data>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ сompanyDataStatus, setСompanyDataStatus ] = useState({ ...сompanyDataInitialStatus })
+  const [ companyDataStatus, setcompanyDataStatus ] = useState({ ...companyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
@@ -78,14 +78,14 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     }
 
     const updatedCompanyStatus = {
-      сompanyHead: Boolean(stepData?.founder),
+      companyHead: Boolean(stepData?.founder),
       bankRequisites: Boolean(stepData?.requisites),
       questionnaire: Boolean(stepData?.questionnaire),
     }
 
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
     setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
-    setСompanyDataStatus(updatedCompanyStatus)
+    setcompanyDataStatus(updatedCompanyStatus)
 
   }, [ stepData ])
 
@@ -223,9 +223,9 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const renderReadyStatuses = () => (
     <Timeline className="FactoringStepDocuments__companyDataStatus">
-      <TimelineItem {...dotParams(сompanyDataStatus?.сompanyHead ?? null)}>
-        {t('frameSteps.documents.сompanyData.сompanyHead')}
-        {!сompanyDataStatus?.сompanyHead && (
+      <TimelineItem {...dotParams(companyDataStatus?.companyHead ?? null)}>
+        {t('frameSteps.documents.companyData.companyHead')}
+        {!companyDataStatus?.companyHead && (
           <NavLink to="/my-company" className="FactoringStepDocuments__companyDataStatus__link">
             <Button size="small" type="link" icon={<FormOutlined/>}>
               {t('frameSteps.documents.fillDataButton.title')}
@@ -233,9 +233,9 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
           </NavLink>
         )}
       </TimelineItem>
-      <TimelineItem {...dotParams(сompanyDataStatus?.bankRequisites ?? null)}>
-        {t('frameSteps.documents.сompanyData.bankRequisites')}
-        {!сompanyDataStatus?.bankRequisites && (
+      <TimelineItem {...dotParams(companyDataStatus?.bankRequisites ?? null)}>
+        {t('frameSteps.documents.companyData.bankRequisites')}
+        {!companyDataStatus?.bankRequisites && (
           <NavLink to="/my-company" className="FactoringStepDocuments__companyDataStatus__link">
             <Button size="small" type="link" icon={<FormOutlined/>}>
               {t('frameSteps.documents.fillDataButton.title')}
@@ -243,12 +243,12 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
           </NavLink>
         )}
       </TimelineItem>
-      <TimelineItem {...dotParams(сompanyDataStatus?.questionnaire ?? null)}>
-        {t('frameSteps.documents.сompanyData.questionnaire')}
+      <TimelineItem {...dotParams(companyDataStatus?.questionnaire ?? null)}>
+        {t('frameSteps.documents.companyData.questionnaire')}
         <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
                  className="FactoringStepDocuments__companyDataStatus__link">
           <Button size="small" type="link" icon={<FormOutlined/>}>
-            {t(`frameSteps.documents.fillDataButton.${сompanyDataStatus?.questionnaire ? 'check' : 'fill'}`)}
+            {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.questionnaire ? 'check' : 'fill'}`)}
           </Button>
         </NavLink>
       </TimelineItem>
@@ -297,7 +297,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       </Div>
       {documentTypesOptional !== null && renderOptionalDocumentsSection}
       <Div className="FactoringStepDocuments__section">
-        <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
+        <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
         {renderReadyStatuses()}
       </Div>
     </Div>

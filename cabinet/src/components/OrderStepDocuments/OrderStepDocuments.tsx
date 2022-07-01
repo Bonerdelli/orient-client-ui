@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
 
-import { Button, Col, message, Row, Skeleton, Spin, Timeline, Typography } from 'antd'
+import { Button, Col, message, Modal, Row, Skeleton, Spin, Table, Timeline, Typography } from 'antd'
 import { CheckCircleFilled, ClockCircleOutlined, ExclamationCircleOutlined, FormOutlined } from '@ant-design/icons'
 import { every } from 'lodash'
+import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { OrderDocument } from 'orient-ui-library/library/models/proxy'
+import { CompanyRequisitesDto, OrderDocument } from 'orient-ui-library/library/models/proxy'
 import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
@@ -33,8 +34,12 @@ export interface OrderDocumentsProps {
   setOrderStatus: (status: OrderStatus) => void
 }
 
-const сompanyDataInitialStatus: Record<string, boolean | null> = {
-  сompanyHead: null,
+interface BankRequisitesTableData extends CompanyRequisitesDto {
+  key: number
+}
+
+const companyDataInitialStatus: Record<string, boolean | null> = {
+  companyHead: null,
   bankRequisites: null,
   questionnaire: null,
 }
@@ -56,7 +61,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const [ stepData, setStepData ] = useState<WizardStep2Data>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ сompanyDataStatus, setСompanyDataStatus ] = useState({ ...сompanyDataInitialStatus })
+  const [ companyDataStatus, setCompanyDataStatus ] = useState({ ...companyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
@@ -65,6 +70,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
   const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[] | null>(null)
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
+
+  const [ bankRequisitesModalVisible, setBankRequisitesModalVisible ] = useState<boolean>(false)
+  const [ selectedBankRequisitesId, setSelectedBankRequisitesId ] = useState<number | null>(null)
 
   useEffect(() => {
     loadCurrentStepData()
@@ -78,15 +86,15 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     }
 
     const updatedCompanyStatus = {
-      сompanyHead: Boolean(stepData?.founder),
+      companyHead: Boolean(stepData?.founder),
       bankRequisites: Boolean(stepData?.requisites),
       questionnaire: Boolean(stepData?.questionnaire),
     }
 
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
     setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
-    setСompanyDataStatus(updatedCompanyStatus)
-
+    setCompanyDataStatus(updatedCompanyStatus)
+    setSelectedBankRequisitesId(stepData?.requisites?.id ?? null)
   }, [ stepData ])
 
   const updateCurrentDocuments = (documents: OrderDocument[]): boolean => {
@@ -221,34 +229,98 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       : (ready === null ? 'grey' : 'red'),
   })
 
+  const renderSelectBankRequisitesModal = () => {
+    if (!stepData || !stepData.requisites) return 'There is no requisites here'
+
+    const columns: ColumnsType<BankRequisitesTableData> = [
+      {
+        title: t('frameSteps.documents.bankRequisites.bankName'),
+        dataIndex: 'bankName',
+      },
+      {
+        title: t('frameSteps.documents.bankRequisites.mfo'),
+        dataIndex: 'mfo',
+      },
+      {
+        title: t('frameSteps.documents.bankRequisites.accountNumber'),
+        dataIndex: 'accountNumber',
+      },
+    ]
+    // TODO: replace with plain requisites obj when array comes from BE
+    const tableData: BankRequisitesTableData[] = [ stepData?.requisites ]
+      .map((r, i) => ({ ...r, key: i }))
+
+    return (
+      <Modal
+        centered
+        width={800}
+        visible={bankRequisitesModalVisible}
+        title={
+          <Row gutter={16}>
+            {t('frameSteps.documents.bankRequisites.title')}
+            {stepData &&
+              <NavLink to={`/bank-details/add?${RETURN_URL_PARAM}=${location.pathname}`}
+                       className="OrderStepDocuments__companyDataStatus__link">
+                <Button size="small" type="link" icon={<FormOutlined/>}>
+                  {t('frameSteps.documents.bankRequisites.add')}
+                </Button>
+              </NavLink>
+            }
+          </Row>
+        }
+        onCancel={() => setBankRequisitesModalVisible(false)}
+        footer={
+          <Button type="primary"
+                  onClick={() => setBankRequisitesModalVisible(false)}>
+            {t('frameSteps.documents.bankRequisites.save')}
+          </Button>
+        }
+      >
+        <Table
+          rowSelection={{
+            type: 'radio',
+            onChange: (_, selectedRows) => {
+              setSelectedBankRequisitesId(selectedRows[0].id ?? null)
+              console.log(selectedBankRequisitesId)
+            },
+          }}
+          pagination={false}
+          columns={columns}
+          dataSource={tableData}/>
+      </Modal>
+    )
+  }
+
   const renderReadyStatuses = () => (
     <Timeline className="OrderStepDocuments__companyDataStatus">
-      <TimelineItem {...dotParams(сompanyDataStatus?.сompanyHead ?? null)}>
-        {t('frameSteps.documents.сompanyData.сompanyHead')}
-        {!сompanyDataStatus?.сompanyHead && (
-          <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
+      <TimelineItem {...dotParams(companyDataStatus?.companyHead ?? null)}>
+        {t('frameSteps.documents.companyData.companyHead')}
+        {stepData &&
+          <NavLink to={`/company-heads/${stepData.founder?.id}?${RETURN_URL_PARAM}=${location.pathname}`}
+                   className="OrderStepDocuments__companyDataStatus__link">
             <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('frameSteps.documents.fillDataButton.title')}
+              {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.companyHead ? 'check' : 'fill'}`)}
             </Button>
           </NavLink>
-        )}
+        }
       </TimelineItem>
-      <TimelineItem {...dotParams(сompanyDataStatus?.bankRequisites ?? null)}>
-        {t('frameSteps.documents.сompanyData.bankRequisites')}
-        {!сompanyDataStatus?.bankRequisites && (
-          <NavLink to="/my-company" className="OrderStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('frameSteps.documents.fillDataButton.title')}
-            </Button>
-          </NavLink>
-        )}
+      <TimelineItem {...dotParams(companyDataStatus?.bankRequisites ?? null)}>
+        {t('frameSteps.documents.companyData.bankRequisites')}
+        <Button size="small"
+                type="link"
+                onClick={() => setBankRequisitesModalVisible(true)}
+                icon={<FormOutlined/>}
+        >
+          {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.bankRequisites ? 'choose' : 'fill'}`)}
+        </Button>
+        {renderSelectBankRequisitesModal()}
       </TimelineItem>
-      <TimelineItem {...dotParams(сompanyDataStatus?.questionnaire ?? null)}>
-        {t('frameSteps.documents.сompanyData.questionnaire')}
+      <TimelineItem {...dotParams(companyDataStatus?.questionnaire ?? null)}>
+        {t('frameSteps.documents.companyData.questionnaire')}
         <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
                  className="OrderStepDocuments__companyDataStatus__link">
           <Button size="small" type="link" icon={<FormOutlined/>}>
-            {t(`frameSteps.documents.fillDataButton.${сompanyDataStatus?.questionnaire ? 'check' : 'fill'}`)}
+            {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.questionnaire ? 'check' : 'fill'}`)}
           </Button>
         </NavLink>
       </TimelineItem>
@@ -297,7 +369,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       </Div>
       {documentTypesOptional !== null && renderOptionalDocumentsSection}
       <Div className="OrderStepDocuments__section">
-        <Title level={5}>{t('frameSteps.documents.sectionTitles.сompanyData')}</Title>
+        <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
         {renderReadyStatuses()}
       </Div>
     </Div>

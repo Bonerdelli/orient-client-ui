@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useHistory, useParams } from 'react-router-dom'
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom'
 import { Button, Card, Col, Form, Grid, Row, Skeleton, Spin } from 'antd'
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons'
 import { isUndefined } from 'lodash'
@@ -13,6 +13,7 @@ import { baseFormConfig, renderFormInputs } from 'library/helpers/form'
 import { getCompanyHead, updateCompanyHead } from 'library/api' // TODO: to ui-lib
 import formFields from './CompanyHeadForm.form'
 import './CompanyHeadForm.style.less'
+import { RETURN_URL_PARAM } from 'library/constants'
 
 const { useBreakpoint } = Grid
 const { Item: FormItem } = Form
@@ -32,6 +33,8 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
   const { itemId } = useParams<CompanyHeadPathParams>()
   const breakPoint = useBreakpoint()
   const history = useHistory()
+  const { search } = useLocation()
+  const returnUrl = new URLSearchParams(search).get(RETURN_URL_PARAM)
 
   const [ formData, setFormData ] = useState<Partial<CompanyFounderDto>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
@@ -82,10 +85,11 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
 
   const renderCardTitle = () => {
     const title = t('headsPage.formSections.main.title')
-    if (!backUrl) return title
+    if (!backUrl && !returnUrl) return title
+
     return (
       <>
-        <Link className="CompanyHeadForm__navigateBack" to={backUrl}>
+        <Link className="CompanyHeadForm__navigateBack" to={(returnUrl || backUrl)!}>
           <Button icon={<ArrowLeftOutlined/>} type="link" size="large"></Button>
         </Link>
         {title}
