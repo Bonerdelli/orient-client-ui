@@ -9,7 +9,7 @@ import { every } from 'lodash'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { OrderDocument } from 'orient-ui-library/library/models/proxy'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 

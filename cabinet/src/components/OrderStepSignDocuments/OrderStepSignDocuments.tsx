@@ -7,7 +7,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
-import { OrderDocument } from 'orient-ui-library/library/models/proxy'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { Bank } from 'library/models/bank' // TODO: to ui-lib
 
 import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'

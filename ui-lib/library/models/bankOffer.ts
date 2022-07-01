@@ -1,8 +1,12 @@
-import { BankDto } from 'library/models/proxy'
+import { BankDto } from './proxy'
+import { OrderConditions } from './orderCondition'
+import { OrderDocument } from './document'
 
 export interface BankOffer {
   bank: BankDto
   offerStatus: BankOfferStatus
+  conditions?: OrderConditions
+  documents?: OrderDocument[]
 }
 
 export enum BankOfferStatus {
