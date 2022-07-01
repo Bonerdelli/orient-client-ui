@@ -67,7 +67,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     const updatedDocumentTypes: number[] = []
 
     currentDocuments.forEach((doc: OrderDocument) => {
-      if (doc.isGenerated) {
+      if (doc.isGenerated && doc.info) {
         updatedDocumentTypes.push(doc.typeId)
         updatedDocuments.push(doc)
       }
@@ -108,7 +108,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       step: sequenceStepNumber,
       bankId,
       orderId,
-    })
+    }, undefined)
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
@@ -168,12 +168,13 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     </Button>
   )
 
+  // NOTE: disabled as we can't go back by status model
   const renderPrevButton = () => (
     <Button
       size="large"
       type="primary"
       onClick={handlePrevStep}
-      disabled={submitting}
+      disabled={true}
       loading={submitting}
     >
       {t('orderStepContractDocuments.actions.back.title')}

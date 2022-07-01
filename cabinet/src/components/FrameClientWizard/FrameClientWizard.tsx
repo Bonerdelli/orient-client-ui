@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
@@ -149,6 +149,9 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
           <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
         </Link>
         {title}
+        <Button icon={<ReloadOutlined />} onClick={loadCurrentStepData} type="link" size="large">
+          {t('common.actions.refresh.title')}
+        </Button>
       </>
     )
   }

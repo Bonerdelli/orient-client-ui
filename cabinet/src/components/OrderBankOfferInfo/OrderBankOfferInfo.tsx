@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Typography, Button } from 'antd'
+import { Typography, Button, Skeleton } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
@@ -18,9 +18,17 @@ export interface OrderBankOfferInfoProps {
 const OrderBankOfferInfo: React.FC<OrderBankOfferInfoProps> = ({ offer, onBack }) => {
   const { t } = useTranslation()
 
-  const renderStatus = () => (
-    <Paragraph>{t('orderStepBankOffer.statuses.waitingForBank.title')}</Paragraph>
-  )
+  const renderStatus = () => {
+    if (offer.offerStatus === BankOfferStatus.BankOfferSent) {
+      return (
+        <Skeleton></Skeleton>
+      )
+    }
+    return (
+      <Paragraph>{t('orderStepBankOffer.statuses.waitingForBank.title')}</Paragraph>
+    )
+  }
+
 
   return (
     <Div className="OrderBankOfferInfo">

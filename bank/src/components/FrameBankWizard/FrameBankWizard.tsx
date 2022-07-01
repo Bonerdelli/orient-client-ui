@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { Row, Col, Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
+import { ArrowLeftOutlined, ReloadOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderStatus } from 'orient-ui-library/library/models'
@@ -90,11 +90,11 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   }
 
   const isFirstStepActive = (): boolean => true
-  const isSecondStepActive = (): boolean => true
-  const isThirdStepActive = (): boolean => true
-  const isFourthStepActive = (): boolean => true
-  const isFifthStepActive = (): boolean => true
-  const isSixthStepActive = (): boolean => true
+  const isSecondStepActive = (): boolean => currentStep > 1
+  const isThirdStepActive = (): boolean => currentStep > 2
+  const isFourthStepActive = (): boolean => currentStep > 3
+  const isFifthStepActive = (): boolean => currentStep > 4
+  const isSixthStepActive = (): boolean => currentStep > 5
 
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
@@ -129,12 +129,19 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     const title = t('frameWizard.title')
     if (!backUrl) return title
     return (
-      <>
-        <Link className="FrameWizard__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
-        </Link>
-        {title}
-      </>
+      <Row>
+        <Col span={20}>
+          <Link className="FrameWizard__navigateBack" to={backUrl}>
+            <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
+          </Link>
+          {title}
+          <Button icon={<ReloadOutlined />} onClick={loadCurrentStepData} type="link" size="large">
+            {t('common.actions.refresh.title')}
+          </Button>
+        </Col>
+        <Col span={4} style={{ textAlign: 'right' }}>
+        </Col>
+      </Row>
     )
   }
 

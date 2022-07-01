@@ -20,8 +20,8 @@ const { Title, Paragraph } = Typography
 export interface BlankWizardStepProps {
   bankId?: number | bigint
   orderId?: number
+  orderStatus?: OrderStatus
   currentStep: number
-  orderStatus: OrderStatus
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
@@ -134,8 +134,11 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
 
   const renderStepContent = () => (
     <Div className="OrderStepOfferAcceptance">
-      <Title level={5}>{t('orderStepOfferAcceptance.title')}</Title>
-      <Paragraph>{t('Ожидайте принятия предложения от Поставщика и подписание договора со стороны Дебитора')}</Paragraph>
+      <Result
+        icon={<ClockCircleFilled />}
+        title={t('orderStepOfferAcceptance.waitForAccept.title')}
+        subTitle={t('orderStepOfferAcceptance.waitForAccept.desc')}
+      />
     </Div>
   )
 
