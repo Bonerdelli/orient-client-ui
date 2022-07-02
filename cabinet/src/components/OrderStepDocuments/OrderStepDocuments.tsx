@@ -15,10 +15,11 @@ import OrderDocumentsList from 'components/OrderDocumentsList'
 import CompanyDataReadyStatuses from 'components/CompanyDataReadyStatuses'
 import { companyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
 
-import { getFrameWizardStep, sendFrameWizardStep2, WizardStep2Data } from 'library/api'
+import { getFrameWizardStep, saveRequisitesToOrder, sendFrameWizardStep2, WizardStep2Data } from 'library/api'
 
 import './OrderStepDocuments.style.less'
 import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
+import { CabinetMode } from 'library/models/cabinet'
 
 const { Title } = Typography
 
@@ -239,6 +240,16 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Spin>
   )
 
+  const handleSaveRequisites = (requisites: CompanyRequisitesDto) => {
+    saveRequisitesToOrder({
+      mode: CabinetMode.Client,
+      type: wizardType,
+      orderId: orderId!,
+      companyId: companyId!,
+      requisitesId: requisites.id!,
+    })
+  }
+
   const renderStepContent = () => (
     <Div className="OrderStepDocuments">
       <Div className="OrderStepDocuments__title">
@@ -253,8 +264,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
         <CompanyDataReadyStatuses
           companyDataStatus={companyDataStatus}
-          setSelectedBankRequisites={setSelectedBankRequisites}
-          selectedRequisites={stepData?.requisites}
+          onSaveRequisites={handleSaveRequisites}
+          selectedRequisitesId={stepData?.requisites?.id}
           founderId={stepData?.founder?.id}
           companyId={companyId}
         />

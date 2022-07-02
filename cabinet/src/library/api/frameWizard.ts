@@ -30,6 +30,11 @@ export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
   orderId: number
 }
 
+interface SaveBankRequisitesToOrderParams extends FrameWizardCommonParameters {
+  orderId: number
+  requisitesId: number
+}
+
 // TODO: ask be generate models for this
 export interface WizardStep2Data {
   documents: OrderDocument[] | null
@@ -131,4 +136,14 @@ export async function getFrameWizardStep(
   const { mode, companyId, orderId, type, step } = params
   const basePath = getBasePath(companyId, type, mode)
   return await get(`${basePath}/${orderId}/${step}`)
+}
+
+/**
+ * Set selected bank requisites in the second step of frame order
+ */
+export async function saveRequisitesToOrder(
+  { orderId, companyId, requisitesId, mode, type }: SaveBankRequisitesToOrderParams,
+) {
+  const basePath = getBasePath(companyId, type, mode)
+  return await post(`${basePath}/${orderId}/requisites`, { requisitesId }, true)
 }

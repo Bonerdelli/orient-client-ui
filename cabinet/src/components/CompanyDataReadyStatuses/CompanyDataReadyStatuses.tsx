@@ -13,13 +13,14 @@ import './CompanyDataReadyStatuses.style.less'
 import { RETURN_URL_PARAM } from 'library/constants'
 import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
 import { getCompanyRequisitesList } from 'library/api'
+import { Key } from 'antd/lib/table/interface'
 
 const { Item: TimelineItem } = Timeline
 
 export interface CompanyDataReadyStatusesProps {
   companyDataStatus: Record<string, boolean | null>
-  setSelectedBankRequisites?: (requisites: CompanyRequisitesDto) => void
-  selectedRequisites?: CompanyRequisitesDto | null
+  selectedRequisitesId?: number
+  onSaveRequisites?: (requisites: CompanyRequisitesDto) => void
   founderId?: number
   companyId?: number
 }
@@ -36,8 +37,8 @@ export const companyDataInitialStatus: Record<string, boolean | null> = {
 
 const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
   companyDataStatus,
-  setSelectedBankRequisites,
-  selectedRequisites,
+  selectedRequisitesId,
+  onSaveRequisites,
   founderId,
   companyId,
 }) => {
@@ -47,6 +48,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
   const [ bankRequisitesModalVisible, setBankRequisitesModalVisible ] = useState<boolean>(false)
   const [ requisitesList, setRequisitesList ] = useState<CompanyRequisitesDto[]>([])
   const [ companyRequisitesLoading, setCompanyRequisitesLoading ] = useState<boolean>(false)
+  const [ selectedRowKeys, setSelectedRowKeys ] = useState<Key[]>([])
 
   const dotParams = (ready: boolean | null) => ({
     dot: ready === true
@@ -71,6 +73,15 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
         dataIndex: 'accountNumber',
       },
     ]
+    const handleSaveBankRequisites = () => {
+      const selectedReqId = selectedRowKeys[0]
+      const requisites = requisitesList.find(({ id }) => id === selectedReqId)
+      if (requisites) {
+        const { key, ...rest } = requisites
+        onSaveRequisites?.(rest)
+      }
+      setBankRequisitesModalVisible(false)
+    }
 
     return (
       <Modal
@@ -91,7 +102,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
         onCancel={() => setBankRequisitesModalVisible(false)}
         footer={
           <Button type="primary"
-                  onClick={() => setBankRequisitesModalVisible(false)}>
+                  onClick={handleSaveBankRequisites}>
             {t('frameSteps.documents.bankRequisites.save')}
           </Button>
         }
@@ -101,10 +112,10 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
           <Table
             rowSelection={{
               type: 'radio',
-              onChange: (_, selectedRows) => {
-                setSelectedBankRequisites?.(selectedRows[0] ?? null)
+              onChange: (keys) => {
+                setSelectedRowKeys(keys)
               },
-              selectedRowKeys: selectedRequisites ? [ selectedRequisites.id! ] : [],
+              selectedRowKeys: selectedRowKeys,
             }}
             pagination={false}
             columns={columns}
@@ -120,7 +131,11 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
     setCompanyRequisitesLoading(true)
     const res = await getCompanyRequisitesList({ companyId: companyId! })
     if (res.success) {
-      setRequisitesList(res.data?.map(requisites => ({ ...requisites, key: requisites.id! })) ?? [])
+      const list = res.data?.map(requisites => ({ ...requisites, key: requisites.id! })) ?? []
+      setRequisitesList(list)
+      if (selectedRequisitesId) {
+        setSelectedRowKeys([ selectedRequisitesId ])
+      }
     }
     setCompanyRequisitesLoading(false)
   }
@@ -138,7 +153,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
       </TimelineItem>
       <TimelineItem {...dotParams(companyDataStatus?.bankRequisites ?? null)}>
         {t('frameSteps.documents.companyData.bankRequisites')}
-        {selectedRequisites && <Div className="CompanyDataReadyStatuses__item__link">
+        {selectedRequisitesId && <Div className="CompanyDataReadyStatuses__item__link">
           <Button size="small"
                   type="link"
                   onClick={openRequisitesModal}
