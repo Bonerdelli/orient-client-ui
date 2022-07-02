@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { every } from 'lodash'
 
-import { Button, Col, Row, Skeleton, Spin, Typography, message } from 'antd'
+import { Button, Col, message, Row, Skeleton, Spin, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -18,6 +18,7 @@ import { companyDataInitialStatus } from 'components/CompanyDataReadyStatuses/Co
 import { getFrameWizardStep, sendFrameWizardStep2, WizardStep2Data } from 'library/api'
 
 import './OrderStepDocuments.style.less'
+import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
 
 const { Title } = Typography
 
@@ -56,7 +57,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[] | null>(null)
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
 
-  const [ selectedBankRequisitesId, setSelectedBankRequisitesId ] = useState<number | null>(null)
+  const [ selectedBankRequisites, setSelectedBankRequisites ] = useState<CompanyRequisitesDto | null>(null)
 
   useEffect(() => {
     loadCurrentStepData()
@@ -79,7 +80,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
     setCompanyDataStatus(updatedCompanyStatus)
 
-    setSelectedBankRequisitesId(stepData?.requisites?.id ?? null)
+    setSelectedBankRequisites(stepData?.requisites ?? null)
   }, [ stepData ])
 
   const updateCurrentDocuments = (documents: OrderDocument[]): boolean => {
@@ -252,10 +253,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
         <CompanyDataReadyStatuses
           companyDataStatus={companyDataStatus}
-          selectedBankRequisitesId={selectedBankRequisitesId}
-          setSelectedBankRequisitesId={setSelectedBankRequisitesId}
-          requisites={stepData?.requisites}
+          setSelectedBankRequisites={setSelectedBankRequisites}
+          selectedRequisites={stepData?.requisites}
           founderId={stepData?.founder?.id}
+          companyId={companyId}
         />
       </Div>
     </Div>
