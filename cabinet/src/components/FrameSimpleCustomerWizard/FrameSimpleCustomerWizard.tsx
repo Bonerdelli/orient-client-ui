@@ -42,7 +42,7 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ _orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
   useEffect(() => {
     if (companyId && Number(itemId)) {
@@ -91,6 +91,7 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
           wizardType={FrameWizardType.Simple}
           companyId={companyId}
           currentStep={currentStep}
+          orderStatus={orderStatus}
           sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId)}

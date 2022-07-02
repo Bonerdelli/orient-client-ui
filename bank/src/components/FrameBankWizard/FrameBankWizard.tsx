@@ -46,7 +46,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ orderStatus, setOrderStatus ] = useState<BankOfferStatus>()
+  const [ offerStatus, setOfferStatus ] = useState<BankOfferStatus>()
   const [ bankId, setBankId ] = useState<number>()
 
   useEffect(() => {
@@ -58,13 +58,13 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
 
   useEffect(() => {
     if (currentStep === 4 && (
-        orderStatus === BankOfferStatus.CustomerSign
+        offerStatus === BankOfferStatus.CustomerSign
     )) {
       // NOTE: show waiting for customer sign message
       setSelectedStep(5)
       setCurrentStep(5)
     }
-  }, [currentStep, orderStatus])
+  }, [currentStep, offerStatus])
 
   useEffect(() => {
     // TODO: load bank from be (when ready)
@@ -79,8 +79,8 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     if (result.success) {
       setCurrentStepData((result.data as any).data)
       const step = Number((result.data as any).step)
-      let orderStatus = (result.data as any).orderStatus
-      setOrderStatus(orderStatus)
+      let offerStatus = (result.data as any).offerStatus
+      setOfferStatus(offerStatus)
       setCurrentStep(step)
       setSelectedStep(step)
       setDataLoaded(true)
@@ -118,7 +118,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       case 4:
         return <OrderStepContractDocuments {...stepBaseProps} sequenceStepNumber={4} />
       case 5:
-        return <OrderStepOfferAcceptance {...stepBaseProps} orderStatus={orderStatus} sequenceStepNumber={5} />
+        return <OrderStepOfferAcceptance {...stepBaseProps} offerStatus={offerStatus} sequenceStepNumber={5} />
       case 6:
         return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={6} />
       default:
@@ -140,7 +140,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
           backUrl={backUrl}
           statusTag={
             <OfferStatusTag
-              statusCode={orderStatus}
+              statusCode={offerStatus}
               refreshAction={() => loadCurrentStepData()}
             />
           }

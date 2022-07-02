@@ -1,21 +1,16 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Table, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { isUndefined } from 'lodash'
 
-import { getEndpointUrl } from 'orient-ui-library/library'
-
 import Div from 'orient-ui-library/components/Div'
 import DocumentActions from 'components/DocumentActions'
 
-import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
+import { Document, DocumentStatus } from 'library/models'
+import { downloadOrderDocument } from 'library/api'
 
-import {
-  getOrderDocumentUploadUrl,
-  downloadOrderDocument,
-} from 'library/api'
 
 import './OrderDocumentsToSignList.style.less'
 
@@ -51,6 +46,7 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
       return {
         type: typeId,
         status: DocumentStatus.NotUploaded,
+        name: document?.typeName,
       }
     }
     return {
@@ -60,12 +56,6 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
       status: DocumentStatus.Uploaded,
     }
   }
-
-  const getUploadUrl = useCallback((typeId: number) => {
-    const apiPath = getOrderDocumentUploadUrl(companyId, orderId, typeId)
-    return getEndpointUrl(apiPath)
-  }, [companyId, orderId])
-
 
   const renderDocumentStatus = (status: DocumentStatus) => {
     switch (status) {
@@ -93,7 +83,6 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
     <Space className="DataTable__actions DataTable__ghostActions--">
       <DocumentActions
         document={item}
-        uploadUrl={getUploadUrl(item.type)}
         downloadHandler={handleItemDownload}
         onChange={onChange}
       />
@@ -102,11 +91,10 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
 
   const columns: ColumnsType<Document> = [
     {
-      key: 'type',
-      dataIndex: 'type',
+      key: 'name',
+      dataIndex: 'name',
       width: 'auto',
       title: t('common.documents.fields.type.title'),
-      render: (value) => DOCUMENT_TYPE[value],
     },
     {
       key: 'status',

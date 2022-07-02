@@ -28,7 +28,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   const [ data, dataLoaded, reloadData ] = useApi<CompanyHead[]>(getCompanyHeads, { companyId })
 
   const handleEdit = (item: CompanyHead) => {
-    // console.log('handleEdit', item)
+    // console.log('handleEdit', item) // TODO: why?? Look for missed changes
   }
 
   const handleDelete = async (item: CompanyHead) => {

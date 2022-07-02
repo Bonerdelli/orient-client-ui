@@ -9,7 +9,7 @@ import { getEndpointUrl } from 'orient-ui-library/library'
 import Div from 'orient-ui-library/components/Div'
 import DocumentActions from 'components/DocumentActions'
 
-import { DOCUMENT_TYPE, Document, DocumentStatus } from 'library/models'
+import { Document, DocumentStatus } from 'library/models'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 
 import {
@@ -50,6 +50,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       return {
         type: typeId,
         status: DocumentStatus.NotUploaded,
+        name: document?.typeName,
       }
     }
     return {
@@ -117,11 +118,10 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
 
   const columns: ColumnsType<Document> = [
     {
-      key: 'type',
-      dataIndex: 'type',
+      key: 'name',
+      dataIndex: 'name',
       width: 'auto',
       title: t('common.documents.fields.type.title'),
-      render: (value) => DOCUMENT_TYPE[value],
     },
     {
       key: 'status',

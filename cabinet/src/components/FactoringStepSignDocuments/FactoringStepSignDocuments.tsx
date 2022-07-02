@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Row, Col, Button, Result, Skeleton, List, Spin, message } from 'antd'
+import { InfoCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -217,6 +218,7 @@ const FactoringStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
   const renderWaitMessage = () => (
     <Result
+      icon={<InfoCircleFilled />}
       title={t('frameSteps.signDocuments.waitForOperator.title')}
       subTitle={t('frameSteps.signDocuments.waitForOperator.desc')}
     />

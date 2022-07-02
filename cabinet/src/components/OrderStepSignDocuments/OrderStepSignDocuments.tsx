@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Row, Col, Button, Result, Skeleton, List, Spin, message } from 'antd'
+import { InfoCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -28,6 +29,7 @@ export interface OrderSignDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: OrderStatus) => void
 }
 
 const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
@@ -38,6 +40,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
+  setOrderStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -135,6 +138,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<any>).data)
+      setOrderStatus((result.data as WizardStepResponse<any>).orderStatus as OrderStatus)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -223,6 +227,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
   const renderWaitMessage = () => (
     <Result
+      icon={<InfoCircleFilled />}
       title={t('frameSteps.signDocuments.waitForOperator.title')}
       subTitle={t('frameSteps.signDocuments.waitForOperator.desc')}
     />

@@ -6,10 +6,11 @@ import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
+import { Order } from 'orient-ui-library/library/models/order'
+import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 
-import OrderStatusTag from 'components/OrderStatusTag'
+import OfferStatusTag from 'components/OfferStatusTag'
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 
@@ -34,8 +35,8 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
     },
   )
 
-  const renderStatus = (statusCode: OrderStatus, item: Order) => (
-    <OrderStatusTag statusCode={statusCode} item={item} />
+  const renderStatus = (statusCode: BankOfferStatus) => (
+    <OfferStatusTag statusCode={statusCode} />
   )
 
   const renderActions = (_val: unknown, item: Order) => (

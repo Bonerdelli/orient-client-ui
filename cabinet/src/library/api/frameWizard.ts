@@ -2,6 +2,7 @@ import { get, post } from 'orient-ui-library/library/helpers/api'
 import * as schema from 'orient-ui-library/library/api/schema'
 
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 
 import { CabinetMode } from 'library/models/cabinet'
 
@@ -9,10 +10,13 @@ import {
   CompanyFounderDto,
   CompanyQuestionnaireDto,
   CompanyRequisitesDto,
-  OrderDocument,
 } from 'orient-ui-library/library/models/proxy'
 
 export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
+
+export interface WizardStep4Request {
+  bankId: number
+}
 
 interface FrameWizardCommonParameters {
   type: FrameWizardType
@@ -80,6 +84,18 @@ export async function sendFrameWizardStep3(
   const { mode, companyId, orderId, type } = params
   const basePath = getBasePath(companyId, type, mode)
   return await post(`${basePath}/${orderId}/3`, request)
+}
+
+/**
+ * Send wizard step 4
+ */
+export async function sendFrameWizardStep4(
+  params: FrameWizardStepParameters,
+  request: WizardStep4Request,
+) {
+  const { mode, companyId, orderId, type } = params
+  const basePath = getBasePath(companyId, type, mode)
+  return await post(`${basePath}/${orderId}/4`, request)
 }
 
 /**

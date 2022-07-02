@@ -42,7 +42,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ orderStatus, setOrderStatus ] = useState<BankOfferStatus>()
+  const [ offerStatus, setOfferStatus ] = useState<BankOfferStatus>()
   const [ bankId, setBankId ] = useState<number>()
 
   useEffect(() => {
@@ -54,13 +54,13 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
 
   useEffect(() => {
     if (currentStep === 4 && (
-        orderStatus === BankOfferStatus.CustomerSign
+        offerStatus === BankOfferStatus.CustomerSign
     )) {
       // NOTE: show waiting for customer sign message
       setSelectedStep(5)
       setCurrentStep(5)
     }
-  }, [currentStep, orderStatus])
+  }, [currentStep, offerStatus])
 
   useEffect(() => {
     // TODO: load bank from be (when ready)
@@ -75,8 +75,8 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
     if (result.success) {
       setCurrentStepData((result.data as any).data)
       const step = Number((result.data as any).step)
-      let orderStatus = (result.data as any).orderStatus
-      setOrderStatus(orderStatus)
+      let offerStatus = (result.data as any).offerStatus
+      setOfferStatus(offerStatus)
       setCurrentStep(step)
       setSelectedStep(step)
       setDataLoaded(true)
@@ -127,7 +127,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
           backUrl={backUrl}
           statusTag={
             <OfferStatusTag
-              statusCode={orderStatus}
+              statusCode={offerStatus}
               refreshAction={() => loadCurrentStepData()}
             />
           }

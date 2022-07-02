@@ -68,6 +68,10 @@ actions:
     title: Approve
   reject:
     title: Reject
+  fill:
+    title: Fill
+  check:
+    title: Check
 
 documents:
   fields:

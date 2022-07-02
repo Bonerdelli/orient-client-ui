@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Table, Button, Skeleton, Result, Tag, message } from 'antd'
-import { EyeOutlined, DownloadOutlined, ClockCircleFilled } from '@ant-design/icons'
+import { Typography, Row, Col, Table, Button, Skeleton, Tag, message } from 'antd'
+import { EyeOutlined, DownloadOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
@@ -38,12 +38,14 @@ export interface OrderStepScoringResultsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: OrderStatus) => void
 }
 
 const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   orderId,
   setCurrentStep,
   sequenceStepNumber,
+  setOrderStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -53,7 +55,6 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
 
   const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings typings typings typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
@@ -130,6 +131,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     if (result.success) {
       message.success(t('orderStepScoringResult.orderSendedMessage'))
       setWizardCompleted(true)
+      loadCurrentStepData()
     } else {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
@@ -320,15 +322,16 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     )
   }
 
-  if (isWizardCompleted || orderStatus !== OrderStatus.FRAME_OPERATOR_VERIFYING) {
-    return (
-      <Result
-        icon={<ClockCircleFilled />}
-        title={t('orderStepScoringResult.waitForAccept.title')}
-        subTitle={t('orderStepScoringResult.waitForAccept.desc')}
-      />
-    )
-  }
+  // NOTE: always show banks list
+  // if (isWizardCompleted || orderStatus !== OrderStatus.FRAME_OPERATOR_VERIFYING) {
+  //   return (
+  //     <Result
+  //       icon={<ClockCircleFilled />}
+  //       title={t('orderStepScoringResult.waitForAccept.title')}
+  //       subTitle={t('orderStepScoringResult.waitForAccept.desc')}
+  //     />
+  //   )
+  // }
 
   return (
     <Div className="FrameWizard__step__content">

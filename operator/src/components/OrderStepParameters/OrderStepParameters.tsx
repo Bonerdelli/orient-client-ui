@@ -7,6 +7,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { FrameWizardStep1Response, getFrameWizardStep, sendFrameWizardStep1 } from 'library/api/frameWizard'
 
@@ -17,6 +18,7 @@ export interface OrderStepParametersProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: OrderStatus) => void
 }
 
 const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
@@ -24,6 +26,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  setOrderStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -63,6 +66,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOrderStatus(OrderStatus.FRAME_OPERATOR_VERIFYING)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)

@@ -1,11 +1,12 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
 import { CabinetMode } from 'library/models/cabinet'
 
+import { OrderDocument } from 'orient-ui-library/library/models/document'
+
 import {
   CompanyFounderDto,
   CompanyQuestionnaireDto,
   CompanyRequisitesDto,
-  OrderDocument,
 } from 'orient-ui-library/library/models/proxy'
 
 interface FactoringWizardCommonParameters {
