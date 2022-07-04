@@ -5,7 +5,7 @@ import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { OrderStatus } from 'orient-ui-library/library/models'
+import { FactoringStatus } from 'orient-ui-library/library/models'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import FactoringStepParameters from 'components/FactoringStepParameters'
@@ -46,7 +46,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
   const [ orderId, _setOrderId ] = useState<number>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
 
   useEffect(() => {
     if (companyId && (Number(itemId) || orderId)) {

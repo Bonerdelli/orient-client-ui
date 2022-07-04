@@ -6,7 +6,7 @@ import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
+import { FactoringStatus, Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import { GridResponse } from 'library/models'
@@ -92,7 +92,7 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
   ]
 
   const rowClassName = (record: Order) => (
-    record.statusCode === OrderStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY
+    record.statusCode === FactoringStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY
       ? 'FactoringOrdersList__row--new'
       : ''
   )

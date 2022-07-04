@@ -68,6 +68,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const updatedDocumentTypesGenerated: number[] = []
 
     currentDocuments
+      .filter((doc: OrderDocument) => Boolean(doc.info))
       .forEach((doc: OrderDocument) => {
         if (doc.isGenerated) {
           updatedDocumentTypesGenerated.push(doc.typeId)
@@ -117,7 +118,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const result = await sendFrameWizardStep2({
       bankId,
       orderId,
-    }, {})
+    }, undefined)
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
@@ -135,7 +136,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      if (currentStep === sequenceStepNumber) {
+      if (currentStep <= sequenceStepNumber) {
         sendNextStep()
       } else {
         setCurrentStep(sequenceStepNumber + 1)

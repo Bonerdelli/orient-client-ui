@@ -7,7 +7,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { OrderStatus } from 'orient-ui-library/library/models/order'
+import { FactoringStatus } from 'orient-ui-library/library/models/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList' // NOTE: вроде как можно не разделять с Рамочным
 import {
@@ -27,7 +27,7 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
-  setOrderStatus: (status: OrderStatus) => void
+  setOrderStatus: (status: FactoringStatus) => void
 }
 
 const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
@@ -105,7 +105,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as FactoringWizardStep2ResponseDto).data)
-      setOrderStatus((result.data as FactoringWizardStep2ResponseDto).orderStatus as OrderStatus)
+      setOrderStatus((result.data as FactoringWizardStep2ResponseDto).orderStatus as FactoringStatus)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -136,7 +136,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderStatus(OrderStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY)
+      setOrderStatus(FactoringStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)

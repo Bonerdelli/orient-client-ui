@@ -1,173 +1,152 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+
+import { Typography, Skeleton, Spin, Row, Col, Button } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep1, // NOTE: replace ep with correct one!
-} from 'library/api/frameWizard'
+import OrderDocumentsList from 'components/OrderDocumentsList'
+
+import { getFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepArchive.style.less'
 
 const { Title } = Typography
 
-export interface OrderStepArchiveProps {
-  bankId?: number | bigint
-  orderId?: number
-  currentStep: number
-  sequenceStepNumber: number
-  setCurrentStep: (step: number) => void
+export interface OrderDocumentsProps {
+ bankId?: number | bigint
+ orderId?: number
+ currentStep: number
+ sequenceStepNumber: number
+ setCurrentStep: (step: number) => void
 }
 
-const OrderStepArchive: React.FC<OrderStepArchiveProps> = ({
-  bankId,
-  orderId,
-  currentStep,
-  setCurrentStep,
-  sequenceStepNumber,
+const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
+ bankId,
+ orderId,
+ currentStep,
+ sequenceStepNumber,
+ setCurrentStep,
 }) => {
-  const { t } = useTranslation()
+ const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
+ const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
-  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ submitting, setSubmitting ] = useState<boolean>()
+ const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate models
+ const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+ const [ dataLoaded, setDataLoaded ] = useState<boolean>()
 
-  useEffect(() => {
-    loadCurrentStepData()
-  }, [])
+ const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
+ const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
+ const [ documents, setDocuments ] = useState<OrderDocument[]>([])
 
-  useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      // NOTE: only for debugging
-      setNextStepAllowed(true)
-    }
-  }, [ currentStep, sequenceStepNumber ])
+ useEffect(() => {
+   loadStepData()
+ }, [currentStep])
 
-  const loadCurrentStepData = async () => {
-    const result = await getFrameWizardStep({
-      step: sequenceStepNumber,
-      bankId,
-      orderId,
-    })
-    if (result.success) {
-      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setDataLoaded(true)
-    } else {
-      setDataLoaded(false)
-    }
-    setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
-  }
+ useEffect(() => {
+   if (!stepData) return
+   const currentDocuments = stepData?.documents ?? []
+   const updatedDocuments: OrderDocument[] = []
+   const updatedDocumentTypes: number[] = []
 
-  const sendNextStep = async () => {
-    if (!orderId) return
-    setSubmitting(true)
-    const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
-      bankId,
-      orderId,
-    }, {})
-    if (!result.success) {
-      message.error(t('common.errors.requestError.title'))
-      setNextStepAllowed(false)
-    } else {
-      setCurrentStep(sequenceStepNumber + 1)
-    }
-    setSubmitting(false)
-  }
+   currentDocuments
+     .filter((doc: OrderDocument) => Boolean(doc.info))
+     .forEach((doc: OrderDocument) => {
+       updatedDocumentTypes.push(doc.typeId)
+       updatedDocuments.push(doc)
+     })
 
-  const handlePrevStep = () => {
-    if (isPrevStepAllowed) {
-      setCurrentStep(sequenceStepNumber - 1)
-    }
-  }
+   setDocuments(updatedDocuments)
+   setDocumentTypes(updatedDocumentTypes)
+   setDocumentsLoading(false)
+ }, [stepData ])
 
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
+ const loadStepData = async () => {
+   if (documentTypes === null) {
+     // NOTE: do not show loader every time updates
+     setDocumentsLoading(true)
+   }
+   const result = await getFrameWizardStep({
+     step: sequenceStepNumber,
+     bankId,
+     orderId,
+   })
+   if (result.success) {
+     setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
+     setDataLoaded(true)
+   } else {
+     setDataLoaded(false)
+   }
+   setStepDataLoading(false)
+ }
 
-  const handleNextStep = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
+ const handlePrevStep = () => {
+   if (isPrevStepAllowed) {
+     setCurrentStep(sequenceStepNumber - 1)
+   }
+ }
 
-  const renderActions = () => (
-    <Row className="WizardStep__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
-    </Row>
-  )
+ const renderPrevStepButton = () => {
+   // NOTE: disabled as we can't go back by status model
+   return (
+     <Button
+       size="large"
+       type="primary"
+       onClick={handlePrevStep}
+       disabled={!isPrevStepAllowed}
+     >
+       {t('common.actions.back.title')}
+     </Button>
+   )
+ }
 
-  const renderSubmitButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleStepSubmit}
-      disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
-    >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
+ const renderActions = () => (
+   <Row className="WizardStep__actions">
+     <Col>{renderPrevStepButton()}</Col>
+     <Col flex={1}></Col>
+   </Row>
+ )
 
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
-    >
-      {t('orderActions.saveAndContinue.title')}
-    </Button>
-  )
+ const renderDocuments = () =>  (
+   <Spin spinning={documentsLoading}>
+     <OrderDocumentsList
+       orderId={orderId as number}
+       types={documentTypes || []}
+       current={documents}
+     />
+   </Spin>
+ )
 
-  const renderPrevButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
-    >
-      {t('common.actions.back.title')}
-    </Button>
-  )
+ const renderStepContent = () => (
+   <Div className="OrderStepArchive">
+     <Div className="WizardStep__section">
+       <Title level={5}>{t('orderStepArchive.docsSectionTitle')}</Title>
+       {renderDocuments()}
+     </Div>
+   </Div>
+ )
 
-  const renderStepContent = () => (
-    <Div className="OrderStepArchive">
-      <Title level={5}>{t('OrderStepArchive.title')}</Title>
-    </Div>
-  )
+ if (!stepData && stepDataLoading) {
+   return (
+     <Skeleton active={true}/>
+   )
+ }
 
-  if (!stepData && stepDataLoading) {
-    return (
-      <Skeleton active={true}/>
-    )
-  }
+ if (dataLoaded === false) {
+   return (
+     <ErrorResultView centered status="warning"/>
+   )
+ }
 
-  if (dataLoaded === false) {
-    return (
-      <ErrorResultView centered status="warning"/>
-    )
-  }
-
-  return (
-    <Div className="WizardStep__content">
-      {renderStepContent()}
-      {renderActions()}
-    </Div>
-  )
+ return (
+   <Div className="WizardStep__content">
+     {renderStepContent()}
+     {renderActions()}
+   </Div>
+ )
 }
 export default OrderStepArchive

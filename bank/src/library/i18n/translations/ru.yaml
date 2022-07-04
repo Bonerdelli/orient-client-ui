@@ -90,6 +90,7 @@ orderStepOfferAcceptance:
 
 orderStepArchive:
   title: Параметры заявки и клиента
+  docsSectionTitle: Архив документов по заявке
 
 orderActions:
   cancel:

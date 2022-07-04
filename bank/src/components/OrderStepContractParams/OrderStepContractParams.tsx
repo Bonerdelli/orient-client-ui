@@ -9,6 +9,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderConditions, OrderConditionType } from 'orient-ui-library/library/models/orderCondition'
+import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 
 import {
   getFrameWizardStep,
@@ -225,7 +226,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
         label={t('models.orderCondition.fields.startDate.title')}
         rules={[ requiredRule ]}
       >
-        <DatePicker disabled={formDisabled}/>
+        <DatePicker format={DATE_FORMAT} disabled={formDisabled}/>
       </FormItem>
     }
   </>)
