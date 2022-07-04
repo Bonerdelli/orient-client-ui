@@ -43,7 +43,7 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, refreshActi
     case OrderStatus.FRAME_CLIENT_SIGN:
     case FactoringStatus.FACTOR_CLIENT_SIGN:
       return <Tag color="green">{t('orderStatusTitles.clientSign')}{refreshButton}</Tag>
-    case OrderStatus.FRAME_OPERATOR_VERIFYING:
+    case OrderStatus.FRAME_BANK_VERIFYING:
       return <Tag color="blue">{t('orderStatusTitles.bankVerify')}{refreshButton}</Tag>
     case OrderStatus.FRAME_HAS_OFFER:
       return <Tag color="green">{t('orderStatusTitles.hasOffer')}{refreshButton}</Tag>

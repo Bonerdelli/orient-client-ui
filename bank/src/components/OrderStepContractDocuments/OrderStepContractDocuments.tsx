@@ -113,7 +113,18 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setCurrentStep(sequenceStepNumber + 1)
+      // NOTE: workaround requested by be, send next step after current
+      const result = await sendFrameWizardStep({
+        step: sequenceStepNumber + 1,
+        bankId,
+        orderId,
+      }, undefined)
+      if (!result.success) {
+        message.error(t('common.errors.requestError.title'))
+        setNextStepAllowed(false)
+      } else {
+        setCurrentStep(sequenceStepNumber + 1)
+      }
     }
     setSubmitting(false)
   }
