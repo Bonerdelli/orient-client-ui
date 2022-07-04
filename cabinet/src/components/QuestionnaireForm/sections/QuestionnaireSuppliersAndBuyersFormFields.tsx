@@ -3,9 +3,7 @@ import { Button, Col, Form, Input, Row, Select, Typography } from 'antd'
 import React from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 import { Dictionaries } from 'library/models/dictionaries'
-import {
-  convertDictionaryToSelectOptions,
-} from 'components/QuestionnaireForm/converters/dictionary-to-select-options.converter'
+import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
 import {
   defaultQuestionnaireFormState,
 } from 'components/QuestionnaireForm/constants/default-questionnaire-form-state.const'

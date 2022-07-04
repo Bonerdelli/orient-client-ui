@@ -1,61 +1,121 @@
-import { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Button, Col, Form, Input, message, Row, Select, Skeleton, Space, Spin, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import {
+  FactoringWizardStep1To2RequestDto,
   getFactoringWizardStep,
+  initFactoringWizard,
   sendFactoringWizardStep,
 } from 'library/api/factoringWizard'
 
 import './FactoringStepParameters.style.less'
+import { BaseOptionType } from 'antd/es/select'
+import { getOrdersForFactoring } from 'library/api/orders'
+import { OrderForFactoringDto } from 'library/models/orders'
+import { getOffersForFactoring } from 'library/api/offers'
+import { OfferForFactoringDto } from 'library/models/offers'
+import { Dictionaries } from 'library/models/dictionaries'
+import { CabinetMode } from 'library/models/cabinet'
+import { EditOutlined } from '@ant-design/icons'
+import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
 
-const { Title } = Typography
+const { Text, Title, Paragraph } = Typography
 
 export interface FactoringStepParametersProps {
   companyId: number
-  orderId?: number
+  setCompanyId: (id: number) => void
+  factoringOrderId?: number
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  dictionaries?: Dictionaries
 }
+
+type FactoringParamsForm = Omit<FactoringWizardStep1To2RequestDto, 'orderId' | 'bankId'>
 
 const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   companyId,
-  orderId,
+  setCompanyId,
+  factoringOrderId,
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  dictionaries,
 }) => {
   const { t } = useTranslation()
+  const [ factoringParamsForm ] = Form.useForm<FactoringParamsForm>()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
-
   const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
+  const [ orderList, setOrderList ] = useState<OrderForFactoringDto[]>([])
+  const [ orderOptions, setOrderOptions ] = useState<BaseOptionType[]>()
+  const [ selectedOrderId, setSelectedOrderId ] = useState<number | null>(null)
+
+  const [ offerList, setOfferList ] = useState<OfferForFactoringDto[]>([])
+  const [ offerOptions, setOfferOptions ] = useState<BaseOptionType[]>()
+  const [ selectedOfferBankId, setSelectedOfferBankId ] = useState<number | null>(null)
+
   useEffect(() => {
-    loadCurrentStepData()
-  }, [])
+    if (factoringOrderId) {
+      loadCurrentStepData()
+    } else {
+      loadOrdersForFactoring()
+    }
+  }, [ factoringOrderId ])
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
       // NOTE: only for debugging
       setNextStepAllowed(true)
     }
-  }, [currentStep, sequenceStepNumber])
+  }, [ currentStep, sequenceStepNumber ])
+  useEffect(() => {
+    const options = orderList.map((order: OrderForFactoringDto) => ({
+      value: order.id,
+      label: (<Space>
+        <Text>{order.id}</Text>
+        <Text type="secondary">
+          {t('factoringStepParameters.frameOrderNumber.customer')} {order.customer.inn}
+        </Text>
+      </Space>),
+    }))
+    setOrderOptions(options)
+  }, [ orderList ])
+
+  useEffect(() => {
+    if (selectedOrderId !== null) {
+      loadOffersForFactoring()
+    }
+  }, [ selectedOrderId ])
+  useEffect(() => {
+    const options = offerList.map((order: OfferForFactoringDto) => ({
+      value: order.bankId,
+      label: order.bankName,
+    }))
+    setOfferOptions(options)
+  }, [ offerList ])
+
+  useEffect(() => {
+    if (selectedOfferBankId) {
+      setNextStepAllowed(true)
+    }
+  }, [ selectedOfferBankId ])
 
   const loadCurrentStepData = async () => {
+    setStepDataLoading(true)
     const result = await getFactoringWizardStep({
       step: sequenceStepNumber,
       companyId,
-      orderId,
+      orderId: factoringOrderId,
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
@@ -66,33 +126,72 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     setStepDataLoading(false)
     setNextStepAllowed(true) // NOTE: only for debugging
   }
+  const loadOrdersForFactoring = async () => {
+    setStepDataLoading(true)
 
-  const sendNextStep = async () => {
-    if (!orderId) return
-    setSubmitting(true)
-    const result = await sendFactoringWizardStep({
+    const result = await getOrdersForFactoring(companyId)
+    if (result.success) {
+      const orders = result.data?.data ?? []
+      setOrderList(orders)
+    } else {
+      setDataLoaded(false)
+    }
+
+    setStepDataLoading(false)
+  }
+  const loadOffersForFactoring = async () => {
+    setStepDataLoading(true)
+
+    const result = await getOffersForFactoring({ orderId: selectedOrderId!, companyId })
+    if (result.success) {
+      const offers = result.data?.data ?? []
+      setOfferList(offers)
+    } else {
+      message.error('Не удалось загрузить предложения от банков')
+    }
+
+    setStepDataLoading(false)
+  }
+
+  const createFactoringOrder = async (request: FactoringWizardStep1To2RequestDto) => {
+    const result = await initFactoringWizard({
       step: sequenceStepNumber,
       companyId,
-      orderId,
-    }, {})
-    if (!result.success) {
-      message.error(t('common.errors.requestError.title'))
-      setNextStepAllowed(false)
-    } else {
-      setCurrentStep(sequenceStepNumber + 1)
+      mode: CabinetMode.Client,
+    }, request)
+    if (result.success) {
+      const id = result.data?.orderId
+      if (!id) {
+        message.error(`Некорректный id заказа: ${id}`)
+      } else {
+        setCompanyId(id)
+        setCurrentStep(sequenceStepNumber + 1)
+      }
     }
     setSubmitting(false)
   }
 
-  const handlePrevStep = () => {
-    if (isPrevStepAllowed) {
-      setCurrentStep(sequenceStepNumber - 1)
-    }
+  const handleFactoringFormSubmit = (values: FactoringParamsForm) => {
+    setSubmitting(true)
+    createFactoringOrder({ ...values, orderId: selectedOrderId!, bankId: selectedOfferBankId! })
   }
-
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
+  const sendNextStep = async () => {
+    if (factoringOrderId === undefined) {
+      factoringParamsForm.submit()
+    } else {
+      setSubmitting(true)
+      const result = await sendFactoringWizardStep({
+        step: sequenceStepNumber,
+        companyId,
+        orderId: factoringOrderId,
+      }, {})
+      if (!result.success) {
+        message.error(t('common.errors.requestError.title'))
+        setNextStepAllowed(false)
+      } else {
+        setCurrentStep(sequenceStepNumber + 1)
+      }
+      setSubmitting(false)
     }
   }
 
@@ -102,73 +201,206 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     }
   }
 
-  const renderActions = () => (
-    <Row className="WizardStep__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
-    </Row>
-  )
-
-  const renderSubmitButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleStepSubmit}
-      disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
-    >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
-
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
-    >
-      {t('orderActions.saveAndContinue.title')}
-    </Button>
-  )
-
-  const renderPrevButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
-    >
-      {t('common.actions.back.title')}
-    </Button>
-  )
-
-  const renderStepContent = () => (
-    <Div className="FactoringStepParameters">
-      <Title level={5}>{t('frameSteps.bankOffers.bankList.title')}</Title>
-    </Div>
-  )
-
-  if (!stepData && stepDataLoading) {
+  const renderActions = () => {
     return (
-      <Skeleton active={true} />
+      <Row className="WizardStep__actions"
+           justify="end">
+        <Col>
+          <Button
+            size="large"
+            type="primary"
+            onClick={handleNextStep}
+            loading={submitting}
+            disabled={!isNextStepAllowed}
+          >
+            {t('factoringStepParameters.nextStep')}
+          </Button>
+        </Col>
+      </Row>
+    )
+  }
+
+  const renderSelectOrder = () => (
+    <Form.Item label={t('factoringStepParameters.frameOrderNumber.title')}>
+      <Select
+        placeholder={t('factoringStepParameters.frameOrderNumber.placeholder')}
+        options={orderOptions}
+        defaultValue={selectedOrderId}
+        onSelect={setSelectedOrderId}
+        disabled={!!factoringOrderId}
+      />
+    </Form.Item>
+  )
+  const renderSelectBank = () => (
+    <Form.Item label={t('factoringStepParameters.selectBank.title')}>
+      <Select
+        placeholder={t('factoringStepParameters.selectBank.placeholder')}
+        options={offerOptions}
+        defaultValue={selectedOfferBankId}
+        onSelect={setSelectedOfferBankId}
+        disabled={!!factoringOrderId}
+      />
+    </Form.Item>
+  )
+
+  const renderCustomerInfo = () => {
+    const customer = orderList.find(({ id }) => id === selectedOrderId)?.customer
+
+    if (!customer) return (<></>)
+
+    return (
+      <Space direction="vertical">
+        <Title level={5}>
+          {t('factoringStepParameters.customerInfoFromOrder.title')}
+        </Title>
+        <Text>{customer.shortName}</Text>
+        <Text>{t('factoringStepParameters.customerInfoFromOrder.head')} {customer.chief}</Text>
+        <Text>{customer.soato}</Text>
+        <Text>{t('factoringStepParameters.customerInfoFromOrder.address')} {customer.address}</Text>
+      </Space>
+    )
+  }
+
+  const renderConditions = () => {
+    const conditions = offerList.find(({ bankId }) => bankId === selectedOfferBankId)?.conditions
+
+    if (!conditions) return (<></>)
+
+    const conditionNameFromDict = dictionaries?.orderCondition
+      .find(({ code }) => code === conditions.conditionCode)?.name
+
+    return (
+      <Space direction="vertical" style={{ marginBottom: '16px' }}>
+        <Text>
+          <Text strong>{t('factoringStepParameters.conditions.condition')}</Text>&nbsp;
+          <Text>{conditionNameFromDict ?? conditions.conditionCode ?? '—'}</Text>
+        </Text>
+        <Text>
+          <Text strong>{t('factoringStepParameters.conditions.commissionYearly')}</Text>&nbsp;
+          <Text>{conditions.percentYear ?? '—'}</Text>
+        </Text>
+        <Text>
+          <Text strong>{t('factoringStepParameters.conditions.commissionImmediate')}</Text>&nbsp;
+          <Text>{conditions.percentOverall ?? '—'}</Text>
+        </Text>
+      </Space>
+    )
+  }
+
+  const renderFactoringOrderParams = () => {
+    const factoringParamsFormLayout = {
+      colon: false,
+      wrapperCol: { span: 'auto' },
+      labelCol: { span: 10 },
+      labelAlign: 'left' as any,
+    }
+    const inputLayout = {
+      suffix: <EditOutlined/>,
+      disabled: !!factoringOrderId,
+    }
+
+    const currencyOptions = dictionaries && convertDictionaryToSelectOptions(dictionaries.currency)
+
+    return (
+      <Form {...factoringParamsFormLayout}
+            form={factoringParamsForm}
+            onFinish={handleFactoringFormSubmit}
+      >
+        {!!factoringOrderId && <Paragraph>{t('factoringStepParameters.form.title')}</Paragraph>}
+        <Row gutter={16} wrap>
+          <Col sm={24} md={12}>
+            <Form.Item name="amount"
+                       required
+                       label={t('factoringStepParameters.form.amount.title')}>
+              <Input {...inputLayout}
+                     type={'number'}
+                     placeholder={t('factoringStepParameters.form.amount.placeholder')}/>
+            </Form.Item>
+          </Col>
+          <Col sm={24} md={12}>
+            <Form.Item name="currencyCode"
+                       required
+                       label={t('factoringStepParameters.form.currencyCode.title')}>
+              <Select placeholder={t('factoringStepParameters.form.currencyCode.placeholder')}
+                      disabled={!!factoringOrderId}
+                      options={currencyOptions}/>
+            </Form.Item>
+          </Col>
+          <Col sm={24} md={12}>
+            <Form.Item name="days"
+                       required
+                       label={t('factoringStepParameters.form.days.title')}>
+              <Input {...inputLayout}
+                     type={'number'}
+                     placeholder={t('factoringStepParameters.form.days.placeholder')}/>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col sm={24} md={12}>
+            <Form.Item name="contractNumber"
+                       label={t('factoringStepParameters.form.contractNumber.title')}>
+              <Input {...inputLayout}
+                     placeholder={t('factoringStepParameters.form.contractNumber.placeholder')}/>
+            </Form.Item>
+          </Col>
+          <Col sm={24} md={12}>
+            <Form.Item name="purchaseNumber"
+                       label={t('factoringStepParameters.form.purchaseNumber.title')}>
+              <Input {...inputLayout}
+                     placeholder={t('factoringStepParameters.form.purchaseNumber.placeholder')}/>
+            </Form.Item>
+          </Col>
+        </Row>
+
+
+      </Form>
+    )
+  }
+
+  const selectFormLayout = {
+    layout: 'vertical' as any,
+    colon: false,
+    wrapperCol: { span: 24 },
+  }
+  const renderStepContent = () => (<>
+    {!factoringOrderId && t('factoringStepParameters.desc')}
+    <Div className="FactoringStepParameters">
+      <Row gutter={24}>
+        <Col span={12}>
+          <Form {...selectFormLayout}>
+            {renderSelectOrder()}
+            {selectedOrderId !== null && renderSelectBank()}
+          </Form>
+        </Col>
+        <Col span={12}>
+          {selectedOrderId !== null && renderCustomerInfo()}
+        </Col>
+      </Row>
+      {selectedOfferBankId && renderConditions()}
+      {selectedOfferBankId && renderFactoringOrderParams()}
+    </Div>
+  </>)
+
+  if (factoringOrderId !== undefined && !stepData && stepDataLoading) {
+    return (
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
   return (
-    <Div className="WizardStep__content">
+    <Spin spinning={stepDataLoading}
+          className="FactoringStepParameters__content"
+    >
       {renderStepContent()}
       {renderActions()}
-    </Div>
+    </Spin>
   )
 }
 

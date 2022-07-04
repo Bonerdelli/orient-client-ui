@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Form, Select, Typography } from 'antd'
-import {
-  convertDictionaryToSelectOptions,
-} from 'components/QuestionnaireForm/converters/dictionary-to-select-options.converter'
+import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
 import { Dictionaries } from 'library/models/dictionaries'
 
 interface QuestionnaireGeneralFormFieldsProps {
@@ -10,8 +8,8 @@ interface QuestionnaireGeneralFormFieldsProps {
 }
 
 const QuestionnaireGeneralFormFields: React.FC<QuestionnaireGeneralFormFieldsProps> = ({
-                                                                                         dictionaries,
-                                                                                       }) => {
+  dictionaries,
+}) => {
   const { t } = useTranslation()
   const { Title } = Typography
   const formItemLayout = {
