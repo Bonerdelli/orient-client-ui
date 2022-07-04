@@ -40,7 +40,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
 }) => {
   const { t } = useTranslation()
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
+  const [ isPrevStepAllowed, setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<FactoringWizardStep2Dto>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -60,7 +60,8 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   useEffect(() => {
     const currentDocuments = stepData?.documents ?? []
     if (stepData && currentDocuments) {
-      updateCurrentDocuments(currentDocuments)
+      const isAllDocumentsReady = updateCurrentDocuments(currentDocuments)
+      setNextStepAllowed(isAllDocumentsReady)
     }
   }, [ stepData ])
 
