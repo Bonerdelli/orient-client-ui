@@ -139,6 +139,45 @@ factoring:
   fourthStep:
     title: Предложение Банка
 
+factoringStepParameters:
+  desc: Чтобы завести заявку на факторинг, необходимо выбрать, на основе какой заявки на рамочный договор будет подаваться текущая заявка
+  frameOrderNumber:
+    title: Номер заявки
+    placeholder: Выберите номер заявки...
+    customer: Заказчик
+  customerInfoFromOrder:
+    title: 'Информация о Заказчике из выбранной заявки:'
+    head: 'Руководитель:'
+    address: 'Адрес:'
+  selectBank:
+    title: Рамочный договор с Банком
+    placeholder: Выберите Банк...
+  nextStep: Далее
+  conditions:
+    condition: 'Условие заключение договора:'
+    commissionYearly: 'Размер комиссии (% годовых):'
+    commissionImmediate: 'Размер комиссии (единовременный):'
+  apiErrors:
+    incorrectFactoringOrderId: 'Некорректный номер заявки: {{orderId}}'
+    fetchOfferList: Не удалось загрузить предложения от банков
+  form:
+    title: Заполните параметры заявки
+    amount:
+      title: Сумма заявки
+      placeholder: Введите сумму заявки...
+    days:
+      title: Срок заявки, дней
+      placeholder: Введите срок заявки...
+    contractNumber:
+      title: Номер конртакта
+      placeholder: Введите номер конртакта...
+    purchaseNumber:
+      title: Номер закупки
+      placeholder: Введите номер закупки...
+    currencyCode:
+      title: Валюта
+      placeholder: Выберите валюту...
+
 customerFrameOrder:
   title: Заявка на заключение рамочного договора
   firstStep:

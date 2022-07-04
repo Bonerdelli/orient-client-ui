@@ -8,6 +8,7 @@ import {
   CompanyQuestionnaireDto,
   CompanyRequisitesDto,
 } from 'orient-ui-library/library/models/proxy'
+import * as schema from 'orient-ui-library/library/api/schema'
 
 interface FactoringWizardCommonParameters {
   companyId: number
@@ -19,6 +20,9 @@ interface FactoringWizardCommonParameters {
 export interface FactoringWizardStepParameters extends FactoringWizardCommonParameters {
   orderId: number
 }
+
+export type FactoringWizardStep1To2RequestDto = schema.components['schemas']['ClientFactorStep1To2Request']
+export type InitFactoringWizardResponseDto = schema.components['schemas']['ClientFactorStep1To2Response']
 
 // TODO: ask be generate models for this
 export interface WizardStep2Data {
@@ -32,6 +36,21 @@ export interface WizardStep2Data {
 const getBasePath = (companyId: number | bigint, mode: CabinetMode = CabinetMode.Client) => {
   const modePath = mode === CabinetMode.Customer ? 'customer' : 'client'
   return `/${modePath}/company/${companyId}/wizard/factor`
+}
+
+/**
+ * Send initial setup of wizard
+ */
+export async function initFactoringWizard(
+  params: Omit<FactoringWizardStepParameters, 'orderId'>,
+  request: FactoringWizardStep1To2RequestDto,
+) {
+  const { mode, companyId } = params
+  return post<InitFactoringWizardResponseDto>(
+    getBasePath(companyId, mode),
+    request,
+    true,
+  )
 }
 
 /**

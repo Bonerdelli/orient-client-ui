@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Grid, Skeleton } from 'antd'
+import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -37,6 +37,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
 
   const { itemId } = useParams<FactoringClientWizardPathParams>()
   const company = useStoreState(state => state.company.current)
+  const dicts = useStoreState(state => state.dictionary.list)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
@@ -52,13 +53,13 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [companyId])
+  }, [ companyId ])
 
   useEffect(() => {
     if (company) {
       setCompanyId(company.id)
     }
-  }, [company])
+  }, [ company ])
 
   const loadCurrentStepData = async () => {
     const result = await getCurrentFactoringWizardStep({
@@ -81,16 +82,18 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
 
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
-      return <Skeleton active={true} />
+      return <Skeleton active={true}/>
     }
     switch (selectedStep) {
       case 1:
         return <FactoringStepParameters
           companyId={companyId}
-          orderId={Number(itemId) || orderId}
+          setCompanyId={setCompanyId}
+          factoringOrderId={Number(itemId) || orderId}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
           sequenceStepNumber={1}
+          dictionaries={dicts}
         />
       case 2:
         return <FactoringStepDocuments
@@ -125,7 +128,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -147,10 +150,10 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step title={t('factoring.firstStep.title')} />
-          <Step disabled={!currentStep} title={t('factoring.secondStep.title')} />
-          <Step disabled={currentStep < 3} title={t('factoring.thirdStep.title')} />
-          <Step disabled={currentStep < 4} title={t('factoring.fourthStep.title')} />
+          <Step title={t('factoring.firstStep.title')}/>
+          <Step disabled={!currentStep} title={t('factoring.secondStep.title')}/>
+          <Step disabled={currentStep < 3} title={t('factoring.thirdStep.title')}/>
+          <Step disabled={currentStep < 4} title={t('factoring.fourthStep.title')}/>
         </Steps>
       </Card>
       <Card className="Wizard__step">
