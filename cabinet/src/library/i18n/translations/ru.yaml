@@ -157,6 +157,9 @@ factoringStepParameters:
     condition: 'Условие заключение договора:'
     commissionYearly: 'Размер комиссии (% годовых):'
     commissionImmediate: 'Размер комиссии (единовременный):'
+  apiErrors:
+    incorrectFactoringOrderId: 'Некорректный номер заявки: {{orderId}}'
+    fetchOfferList: Не удалось загрузить предложения от банков
   form:
     title: Заполните параметры заявки
     amount:

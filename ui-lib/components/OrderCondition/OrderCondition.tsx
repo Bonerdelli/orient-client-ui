@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Descriptions, Skeleton } from 'antd'
-
-import { Company } from 'library/models/proxy'
 import { OrderConditions, OrderConditionType } from 'library/models/orderCondition'
 import { formatDate } from 'library/helpers/date'
 
@@ -9,9 +7,13 @@ const { Item: DescItem } = Descriptions
 
 export interface OrderConditionProps {
   condition?: OrderConditions
+  size?: 'middle' | 'small' | 'default'
 }
 
-const OrderCondition: React.FC<OrderConditionProps> = ({ condition }) => {
+const OrderCondition: React.FC<OrderConditionProps> = ({
+  condition,
+  size,
+}) => {
   const { t } = useTranslation()
 
   if (!condition) {
@@ -66,7 +68,7 @@ const OrderCondition: React.FC<OrderConditionProps> = ({ condition }) => {
 
   return (
     <Descriptions
-      size="middle"
+      size={size ?? 'middle'}
       title={t('models.orderCondition.title')}
       className="OrderCondition"
       bordered
