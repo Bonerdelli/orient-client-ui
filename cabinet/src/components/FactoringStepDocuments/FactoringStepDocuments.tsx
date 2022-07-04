@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, useLocation } from 'react-router-dom'
 
-import { Button, Col, message, Row, Skeleton, Spin, Timeline, Typography } from 'antd'
-import { CheckCircleFilled, ClockCircleOutlined, ExclamationCircleOutlined, FormOutlined } from '@ant-design/icons'
-import { every } from 'lodash'
+import { Button, Col, message, Row, Skeleton, Spin, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -13,15 +10,12 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
-import OrderDocumentsList from 'components/OrderDocumentsList'
-
+import OrderDocumentsList from 'components/OrderDocumentsList' // NOTE: вроде как можно не разделять с Рамочным
 import { getFactoringWizardStep, sendFactoringWizardStep, WizardStep2Data } from 'library/api'
 
 import './FactoringStepDocuments.style.less'
-import { RETURN_URL_PARAM } from 'library/constants'
 
 const { Title } = Typography
-const { Item: TimelineItem } = Timeline
 
 export interface OrderDocumentsProps {
   companyId?: number
@@ -30,12 +24,6 @@ export interface OrderDocumentsProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: OrderStatus) => void
-}
-
-const companyDataInitialStatus: Record<string, boolean | null> = {
-  companyHead: null,
-  bankRequisites: null,
-  questionnaire: null,
 }
 
 const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
@@ -47,14 +35,11 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   setOrderStatus,
 }) => {
   const { t } = useTranslation()
-  const location = useLocation()
-
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<WizardStep2Data>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ companyDataStatus, setcompanyDataStatus ] = useState({ ...companyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
@@ -69,22 +54,10 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   }, [])
 
   useEffect(() => {
-    let isAllDocumentsReady = true
     const currentDocuments = stepData?.documents ?? []
     if (stepData && currentDocuments) {
-      isAllDocumentsReady = updateCurrentDocuments(currentDocuments)
+      updateCurrentDocuments(currentDocuments)
     }
-
-    const updatedCompanyStatus = {
-      companyHead: Boolean(stepData?.founder),
-      bankRequisites: Boolean(stepData?.requisites),
-      questionnaire: Boolean(stepData?.questionnaire),
-    }
-
-    const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
-    setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
-    setcompanyDataStatus(updatedCompanyStatus)
-
   }, [ stepData ])
 
   const updateCurrentDocuments = (documents: OrderDocument[]): boolean => {
@@ -127,6 +100,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<WizardStep2Data>).data)
+      setOrderStatus((result.data as WizardStepResponse<WizardStep2Data>).orderStatus as OrderStatus)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -147,7 +121,6 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       status: document.info?.documentStatus,
     }))
     const result = await sendFactoringWizardStep({
-      step: sequenceStepNumber,
       companyId,
       orderId,
     }, {
@@ -203,53 +176,11 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="WizardStep__actions">
+    <Row className="FrameWizard__step__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
     </Row>
-  )
-
-  const dotParams = (ready: boolean | null) => ({
-    dot: ready === true
-      ? <CheckCircleFilled className="FactoringStepDocuments__companyDataStatus__okIcon"/>
-      : (ready === null ? <ClockCircleOutlined/> : <ExclamationCircleOutlined/>),
-    color: ready === true ? 'green'
-      : (ready === null ? 'grey' : 'red'),
-  })
-
-  const renderReadyStatuses = () => (
-    <Timeline className="FactoringStepDocuments__companyDataStatus">
-      <TimelineItem {...dotParams(companyDataStatus?.companyHead ?? null)}>
-        {t('frameSteps.documents.companyData.companyHead')}
-        {!companyDataStatus?.companyHead && (
-          <NavLink to="/my-company" className="FactoringStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('frameSteps.documents.fillDataButton.title')}
-            </Button>
-          </NavLink>
-        )}
-      </TimelineItem>
-      <TimelineItem {...dotParams(companyDataStatus?.bankRequisites ?? null)}>
-        {t('frameSteps.documents.companyData.bankRequisites')}
-        {!companyDataStatus?.bankRequisites && (
-          <NavLink to="/my-company" className="FactoringStepDocuments__companyDataStatus__link">
-            <Button size="small" type="link" icon={<FormOutlined/>}>
-              {t('frameSteps.documents.fillDataButton.title')}
-            </Button>
-          </NavLink>
-        )}
-      </TimelineItem>
-      <TimelineItem {...dotParams(companyDataStatus?.questionnaire ?? null)}>
-        {t('frameSteps.documents.companyData.questionnaire')}
-        <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
-                 className="FactoringStepDocuments__companyDataStatus__link">
-          <Button size="small" type="link" icon={<FormOutlined/>}>
-            {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.questionnaire ? 'check' : 'fill'}`)}
-          </Button>
-        </NavLink>
-      </TimelineItem>
-    </Timeline>
   )
 
   const renderDocuments = () => (
@@ -265,7 +196,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   )
 
   const renderOptionalDocumentsSection = () => (
-    <Div className="WizardStep__section">
+    <Div className="FactoringStepDocuments__section">
       <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
@@ -288,15 +219,11 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       <Div className="FactoringStepDocuments__title">
         <Title level={4}>{t('frameSteps.documents.title')}</Title>
       </Div>
-      <Div className="WizardStep__section">
+      <Div className="FactoringStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
       {documentTypesOptional !== null && renderOptionalDocumentsSection}
-      <Div className="WizardStep__section">
-        <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
-        {renderReadyStatuses()}
-      </Div>
     </Div>
   )
 
@@ -313,7 +240,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   return (
-    <Div className="WizardStep__content">
+    <Div className="FrameWizard__step__content">
       {renderStepContent()}
       {currentStep <= sequenceStepNumber && renderActions()}
     </Div>
