@@ -5,7 +5,7 @@ import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { OrderStatus } from 'orient-ui-library/library/models'
+import { FactoringStatus } from 'orient-ui-library/library/models'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import FactoringStepParameters from 'components/FactoringStepParameters'
@@ -46,7 +46,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ companyId, setCompanyId ] = useState<number>()
   const [ orderId, _setOrderId ] = useState<number>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
 
   useEffect(() => {
     if (companyId && (Number(itemId) || orderId)) {
@@ -88,7 +88,6 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
       case 1:
         return <FactoringStepParameters
           companyId={companyId}
-          setCompanyId={setCompanyId}
           factoringOrderId={Number(itemId) || orderId}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
@@ -111,6 +110,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           sequenceStepNumber={3}
           setCurrentStep={setSelectedStep}
           orderStatus={orderStatus}
+          setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
         />
       case 4:
@@ -151,7 +151,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           onChange={(step) => setSelectedStep(step + 1)}
         >
           <Step title={t('factoring.firstStep.title')}/>
-          <Step disabled={!currentStep} title={t('factoring.secondStep.title')}/>
+          <Step disabled={currentStep < 2} title={t('factoring.secondStep.title')}/>
           <Step disabled={currentStep < 3} title={t('factoring.thirdStep.title')}/>
           <Step disabled={currentStep < 4} title={t('factoring.fourthStep.title')}/>
         </Steps>

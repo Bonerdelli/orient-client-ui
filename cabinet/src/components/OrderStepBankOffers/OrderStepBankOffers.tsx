@@ -9,7 +9,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
-import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import ClientOrderBankOfferInfo from 'components/ClientOrderBankOfferInfo'
 import { getFrameWizardStep } from 'library/api/frameWizard'
@@ -64,7 +64,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
     if (stepData?.offers) {
       setOffers(stepData.offers)
     }
-  }, [stepData])
+  }, [ stepData ])
 
   useEffect(() => {
     if (offers) {
@@ -77,7 +77,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
       setOffersTableData(updatedOffers)
       setDataLoaded(true)
     }
-  }, [offers])
+  }, [ offers ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -87,8 +87,8 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setOrderStatus((result.data as WizardStepResponse<any>).orderStatus as OrderStatus)
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setOrderStatus((result.data as FrameWizardStepResponse<any>).orderStatus as OrderStatus)
     } else {
       setDataLoaded(false)
     }
@@ -127,7 +127,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
         shape="circle"
         title={t('common.actions.view.title')}
         onClick={() => setSelectedOffer(item.offer)}
-        icon={<EyeOutlined />}
+        icon={<EyeOutlined/>}
       />
     </Space>
   )
@@ -189,13 +189,13 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

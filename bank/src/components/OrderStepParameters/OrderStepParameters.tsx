@@ -7,7 +7,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { FrameWizardStep1Response, getFrameWizardStep, sendFrameWizardStep1 } from 'library/api/frameWizard'
 
 import './OrderStepParameters.style.less'
@@ -47,7 +47,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
       bankId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<FrameWizardStep1Response>).data)
+      setStepData((result.data as FrameWizardStepResponse<FrameWizardStep1Response>).data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -131,13 +131,13 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

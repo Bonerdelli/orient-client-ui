@@ -6,7 +6,7 @@ import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { Bank } from 'orient-ui-library/library/models/bank'
 
@@ -72,12 +72,12 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     if ((stepData as any)?.banks) {
       setScorings((stepData as any).banks)
     }
-  }, [stepData])
+  }, [ stepData ])
 
   useEffect(() => {
     setNextStepAllowed(selectedRowKeys.length > 0)
     setSelectedBankIds(selectedRowKeys as number[])
-  }, [selectedRowKeys])
+  }, [ selectedRowKeys ])
 
   useEffect(() => {
     if (!scorings) return
@@ -100,7 +100,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     setTableData(updatedTableData)
     // NOTE: have no idea how to check this
     // setNextStepAllowed(true)
-  }, [scorings])
+  }, [ scorings ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -108,7 +108,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
       if ((result as any).data.orderStatus === OrderStatus.FRAME_CLIENT_SIGN) {
         setWizardCompleted(true)
@@ -271,9 +271,10 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       key="view"
       type="link"
       shape="circle"
-      onClick={() => {}}
+      onClick={() => {
+      }}
       title={t('common.actions.view.title')}
-      icon={<EyeOutlined />}
+      icon={<EyeOutlined/>}
       disabled={true}
     />
   )
@@ -283,9 +284,10 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       key="download"
       type="link"
       shape="circle"
-      onClick={() => {}}
+      onClick={() => {
+      }}
       title={t('common.actions.download.title')}
-      icon={<DownloadOutlined />}
+      icon={<DownloadOutlined/>}
       disabled={true}
     />
   )
@@ -312,13 +314,13 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
 
   if ((!stepData && stepDataLoading) || tableData === null) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

@@ -10,7 +10,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
-import { WizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import CustomerOrderBankOfferInfo from 'components/CustomerOrderBankOfferInfo'
 import CompanyDataReadyStatuses from 'components/CompanyDataReadyStatuses'
@@ -48,7 +48,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   setCurrentStep,
   sequenceStepNumber,
   setOrderStatus,
-  orderStatus
+  orderStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -76,19 +76,19 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
       questionnaire: Boolean(stepData?.customerCompanyQuestionnaire),
     }
     setСompanyDataStatus(updatedCompanyStatus)
-  }, [stepData])
+  }, [ stepData ])
 
   useEffect(() => {
     if (stepData?.bankOffers) {
       setOffers(stepData.bankOffers)
     }
-  }, [stepData])
+  }, [ stepData ])
 
   useEffect(() => {
     if (orderStatus === OrderStatus.FRAME_COMPLETED) {
       setCompleted(true)
     }
-  }, [orderStatus])
+  }, [ orderStatus ])
 
   useEffect(() => {
     if (offers) {
@@ -105,7 +105,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
       setOffersTableData(updatedOffers)
       setDataLoaded(true)
     }
-  }, [offers])
+  }, [ offers ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -116,8 +116,8 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setOrderStatus((result.data as WizardStepResponse<any>).orderStatus as OrderStatus)
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setOrderStatus((result.data as FrameWizardStepResponse<any>).orderStatus as OrderStatus)
     } else {
       setDataLoaded(false)
     }
@@ -154,7 +154,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
         shape="circle"
         title={t('common.actions.view.title')}
         onClick={() => setSelectedOffer(item)}
-        icon={<EyeOutlined />}
+        icon={<EyeOutlined/>}
       />
     </Space>
   )
@@ -205,20 +205,20 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
       </Div>
       <Div className="WizardStep__section">
         <Title level={5}>{t('customerOrderStepDocuments.sections.companyData.title')}</Title>
-        <CompanyDataReadyStatuses companyDataStatus={companyDataStatus} />
+        <CompanyDataReadyStatuses companyDataStatus={companyDataStatus}/>
       </Div>
     </Div>
   )
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -240,7 +240,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 

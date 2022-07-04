@@ -1,5 +1,5 @@
 import { isCustomer } from 'orient-ui-library/library/helpers/roles'
-import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
+import { FactoringStatus, Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import { useStoreState } from 'library/store'
 import './OrderStatusTag.style.less'
@@ -8,7 +8,7 @@ import OrderClientStatusTag from './OrderClientStatusTag'
 import OrderCustomerStatusTag from './OrderCustomerStatusTag'
 
 export interface OrderStatusTagProps {
-  statusCode?: OrderStatus,
+  statusCode?: OrderStatus | FactoringStatus,
   refreshAction?: () => void
   item?: Order,
 }

@@ -2,7 +2,7 @@ import { post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui
 import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
 import { GridResponse } from 'library/models' // TODO: move to ui-lib after debugging
 import portalConfig from 'config/portal.yaml'
-import { OfferForFactoringDto } from 'library/models/offers'
+import { FrameOrderOfferForFactoringDto } from 'library/models/offers'
 
 const QUICK_SEARCH_MAX_ITEMS = portalConfig.dataDisplay.quickSearchMaxItems
 
@@ -19,7 +19,7 @@ export async function getOffersForFactoring({ orderId, companyId }: GetOffersFor
     page: 1,
     orderId,
   }
-  return post<GridResponse<OfferForFactoringDto>>(
+  return post<GridResponse<FrameOrderOfferForFactoringDto>>(
     `/client/company/${companyId}/offer/readyToFactor/list`,
     request,
   )

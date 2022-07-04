@@ -7,7 +7,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 
@@ -48,7 +48,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<any>).data)
+      setStepData((result.data as FrameWizardStepResponse<any>).data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -133,13 +133,13 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

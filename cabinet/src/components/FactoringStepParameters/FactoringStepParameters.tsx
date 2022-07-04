@@ -4,9 +4,10 @@ import { Button, Col, Form, Input, message, Row, Select, Skeleton, Space, Spin, 
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import {
+  FactoringWizardStep1Dto,
+  FactoringWizardStep1ResponseDto,
   FactoringWizardStep1To2RequestDto,
   getFactoringWizardStep,
   initFactoringWizard,
@@ -16,9 +17,9 @@ import {
 import './FactoringStepParameters.style.less'
 import { BaseOptionType } from 'antd/es/select'
 import { getOrdersForFactoring } from 'library/api/orders'
-import { OrderForFactoringDto } from 'library/models/orders'
+import { FrameOrderForFactoringDto } from 'library/models/orders'
 import { getOffersForFactoring } from 'library/api/offers'
-import { OfferForFactoringDto } from 'library/models/offers'
+import { FrameOrderOfferForFactoringDto } from 'library/models/offers'
 import { Dictionaries } from 'library/models/dictionaries'
 import { CabinetMode } from 'library/models/cabinet'
 import { EditOutlined } from '@ant-design/icons'
@@ -30,7 +31,6 @@ const { Text, Title, Paragraph } = Typography
 
 export interface FactoringStepParametersProps {
   companyId: number
-  setCompanyId: (id: number) => void
   factoringOrderId?: number
   currentStep: number
   sequenceStepNumber: number
@@ -42,7 +42,6 @@ type FactoringParamsForm = Omit<FactoringWizardStep1To2RequestDto, 'orderId' | '
 
 const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   companyId,
-  setCompanyId,
   factoringOrderId,
   currentStep,
   setCurrentStep,
@@ -54,16 +53,16 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   const [ factoringParamsForm ] = Form.useForm<FactoringParamsForm>()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<FactoringWizardStep1Dto>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
-  const [ orderList, setOrderList ] = useState<OrderForFactoringDto[]>([])
+  const [ orderList, setOrderList ] = useState<FrameOrderForFactoringDto[]>([])
   const [ orderOptions, setOrderOptions ] = useState<BaseOptionType[]>()
   const [ selectedOrderId, setSelectedOrderId ] = useState<number | null>(null)
 
-  const [ offerList, setOfferList ] = useState<OfferForFactoringDto[]>([])
+  const [ offerList, setOfferList ] = useState<FrameOrderOfferForFactoringDto[]>([])
   const [ offerOptions, setOfferOptions ] = useState<BaseOptionType[]>()
   const [ selectedOfferBankId, setSelectedOfferBankId ] = useState<number | null>(null)
 
@@ -76,6 +75,21 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   }, [ factoringOrderId ])
 
   useEffect(() => {
+    if (stepData) {
+      const { bank, frameOrder } = stepData
+      setOrderList([ frameOrder ])
+      setOrderOptions([ frameOrder ].map(renderOrderOption))
+      setSelectedOrderId(frameOrder.id)
+      setOfferList([ bank ])
+      setOfferOptions([ bank ].map((order: FrameOrderOfferForFactoringDto) => ({
+        value: order.bankId,
+        label: order.bankName,
+      })))
+      setSelectedOfferBankId(bank.bankId)
+    }
+  }, [ stepData ])
+
+  useEffect(() => {
     if (currentStep > sequenceStepNumber) {
       // NOTE: only for debugging
       setNextStepAllowed(true)
@@ -83,7 +97,9 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   }, [ currentStep, sequenceStepNumber ])
 
   useEffect(() => {
-    if (selectedOrderId !== null) {
+    if (selectedOrderId !== null && !factoringOrderId) {
+      setSelectedOfferBankId(null)
+      setOfferOptions([])
       loadOffersForFactoring()
     }
   }, [ selectedOrderId ])
@@ -96,19 +112,18 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
 
   const loadCurrentStepData = async () => {
     setStepDataLoading(true)
-    const result = await getFactoringWizardStep({
+    const result = await getFactoringWizardStep<FactoringWizardStep1ResponseDto>({
       step: sequenceStepNumber,
       companyId,
       orderId: factoringOrderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData(result.data!.data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
   }
   const loadOrdersForFactoring = async () => {
     setStepDataLoading(true)
@@ -131,7 +146,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     const result = await getOffersForFactoring({ orderId: selectedOrderId!, companyId })
     if (result.success) {
       const offers = result.data?.data ?? []
-      const options = offers.map((order: OfferForFactoringDto) => ({
+      const options = offers.map((order: FrameOrderOfferForFactoringDto) => ({
         value: order.bankId,
         label: order.bankName,
       }))
@@ -153,7 +168,6 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     if (result.success) {
       const id = result.data?.orderId ?? null
       if (id !== null) {
-        setCompanyId(id) // TODO: надо ли?
         history.push(`/requests/factoring/${id}`)
       } else {
         message.error(t('factoringStepParameters.apiErrors.incorrectFactoringOrderId', { orderId: id }))
@@ -191,7 +205,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     }
   }
 
-  const renderOrderOption = (order: OrderForFactoringDto) => ({
+  const renderOrderOption = (order: FrameOrderForFactoringDto) => ({
     value: order.id,
     label: (<Space>
       <Text>{order.id}</Text>
@@ -225,7 +239,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       <Select
         placeholder={t('factoringStepParameters.frameOrderNumber.placeholder')}
         options={orderOptions}
-        defaultValue={selectedOrderId}
+        value={selectedOrderId}
         onSelect={setSelectedOrderId}
         disabled={!!factoringOrderId}
       />
@@ -236,7 +250,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       <Select
         placeholder={t('factoringStepParameters.selectBank.placeholder')}
         options={offerOptions}
-        defaultValue={selectedOfferBankId}
+        value={selectedOfferBankId}
         onSelect={setSelectedOfferBankId}
         disabled={!!factoringOrderId}
       />
@@ -262,11 +276,18 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   }
 
   const renderFactoringOrderParams = () => {
+    let initialValues
+    if (!!factoringOrderId && stepData) {
+      const { bank, frameOrder, ...formData } = stepData
+      initialValues = formData
+    }
+
     const factoringParamsFormLayout = {
       colon: false,
       wrapperCol: { span: 'auto' },
       labelCol: { span: 10 },
       labelAlign: 'left' as any,
+      initialValues,
     }
     const inputLayout = {
       suffix: <EditOutlined/>,
@@ -326,8 +347,6 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
             </Form.Item>
           </Col>
         </Row>
-
-
       </Form>
     )
   }
@@ -379,7 +398,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
           className="FactoringStepParameters__content"
     >
       {renderStepContent()}
-      {renderActions()}
+      {!factoringOrderId && renderActions()}
     </Spin>
   )
 }

@@ -3,8 +3,12 @@ export enum FrameWizardType {
   Full,
 }
 
-export interface WizardStepResponse<T = Record<string, unknown>> {
+export interface FrameWizardStepResponse<T = Record<string, unknown>> {
   orderStatus: string
   step: number
   data: T
+}
+
+export interface FactoringWizardStepResponse<T> extends FrameWizardStepResponse<T> {
+  offerStatus: string
 }

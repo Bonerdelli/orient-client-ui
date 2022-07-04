@@ -8,7 +8,7 @@ import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
 import { OrderStatus } from 'orient-ui-library/library/models/order'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 
 import './FactoringStepParameters.style.less'
@@ -47,7 +47,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       orderId: orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<any>).data)
+      setStepData((result.data as FrameWizardStepResponse<any>).data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
