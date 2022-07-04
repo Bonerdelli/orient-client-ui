@@ -8,9 +8,9 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import OfferStatusTag from 'components/OfferStatusTag'
-import OrderStepParameters from 'components/OrderStepParameters'
-import OrderStepDocuments from 'components/OrderStepDocuments'
-import OrderStepArchive from 'components/OrderStepArchive'
+import FactoringStepParameters from 'components/FactoringStepParameters'
+import FactoringStepDocuments from 'components/FactoringStepDocuments'
+import FactoringStepArchive from 'components/FactoringStepArchive'
 
 import { OrderWizardType } from 'library/models'
 
@@ -103,11 +103,11 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1} />
+        return <FactoringStepParameters {...stepBaseProps} sequenceStepNumber={1} />
       case 2:
-        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
+        return <FactoringStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
       case 3:
-        return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={3} />
+        return <FactoringStepArchive {...stepBaseProps} sequenceStepNumber={3} />
       default:
         return <></>
     }
