@@ -277,11 +277,9 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
 
   const renderFactoringOrderParams = () => {
     let initialValues
-    if (!!factoringOrderId) {
-      if (stepData) {
-        const { bank, frameOrder, ...formData } = stepData
-        initialValues = formData
-      }
+    if (!!factoringOrderId && stepData) {
+      const { bank, frameOrder, ...formData } = stepData
+      initialValues = formData
     }
 
     const factoringParamsFormLayout = {
