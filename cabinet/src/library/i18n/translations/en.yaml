@@ -66,10 +66,12 @@ orderStatusTitles:
   completed: Completed
   cancel: Cancel
   operatorReject: Operator Reject
+  chagred: Funding redeemed
 
 orderStatusCustomerTitles:
   customerSign: Requires a signature
   completed: Completed
+  chagred: Funding redeemed
 
 # TODO: translate me
 customerFrameOrder:

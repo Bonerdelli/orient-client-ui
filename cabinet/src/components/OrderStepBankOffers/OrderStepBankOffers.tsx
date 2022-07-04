@@ -145,7 +145,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
       case BankOfferStatus.CustomerSign:
         return <Tag color="blue">{t('offerStatusTitles.customerSign')}</Tag>
       case BankOfferStatus.Completed:
-        return <Tag>{t('offerStatusTitles.completed')}</Tag>
+        return <Tag color="blue">{t('offerStatusTitles.completed')}</Tag>
       default:
         return <></>
     }

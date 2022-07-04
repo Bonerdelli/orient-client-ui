@@ -164,7 +164,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
       case BankOfferStatus.CustomerSign:
         return <Tag color="blue">{t('orderStatusCustomerTitles.customerSign')}</Tag>
       case BankOfferStatus.Completed:
-        return <Tag>{t('orderStatusCustomerTitles.completed')}</Tag>
+        return <Tag color="blue">{t('orderStatusCustomerTitles.completed')}</Tag>
       default:
         return <></>
     }
