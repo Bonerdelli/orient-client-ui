@@ -20,7 +20,7 @@ const FactoringCustomerWizardPage = () => {
 
   return (
     <div className="FactoringCustomerWizardPage" data-testid="FactoringCustomerWizardPage">
-      <FactoringCustomerWizard />
+      <FactoringCustomerWizard companyId={company.id as number} />
     </div>
   )
 }

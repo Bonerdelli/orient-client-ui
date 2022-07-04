@@ -1,77 +1,78 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, Col, message, Row, Skeleton, Spin, Typography } from 'antd'
+import { Button, Col, message, Modal, Row, Skeleton, Spin, Typography } from 'antd'
+import { SelectOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { OrderStatus } from 'orient-ui-library/library/models/order'
 
-import OrderDocumentsList from 'components/OrderDocumentsList' // NOTE: вроде как можно не разделять с Рамочным
-import { getFactoringWizardStep, sendFactoringWizardStep, WizardStep2Data } from 'library/api'
+import OrderDocumentsList from 'components/OrderDocumentsList'
+import { DocumentStatus } from 'library/models'
+
+import {
+  getFactoringWizardStep,
+  sendFactoringWizardStep,
+  factoringWizardSetDocStatus
+} from 'library/api/factoringWizard'
 
 import './FactoringStepDocuments.style.less'
+import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
+import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 
 const { Title } = Typography
 
-export interface OrderDocumentsProps {
-  companyId?: number
+export interface FactoringStepDocumentsProps {
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
-  setOrderStatus: (status: OrderStatus) => void
 }
 
-const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
-  companyId,
+const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   orderId,
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
-  setOrderStatus,
 }) => {
   const { t } = useTranslation()
-  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
+
+  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(true)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<WizardStep2Data>()
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate models
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
-  const [ documentTypes, setDocumentTypes ] = useState<number[]>([])
+  const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
+  const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[]>()
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
-  const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[] | null>(null)
-  const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
+  const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[] | null>()
+
+  const [ clientCompanyFounder, setClientCompanyFounder ] = useState<CompanyFounderDto | null>(null)
+  const [ companyFounderModalVisible, setCompanyFounderModalVisible ] = useState<boolean>(false)
 
   useEffect(() => {
-    loadCurrentStepData()
-  }, [])
+    loadStepData()
+  }, [ currentStep ])
 
   useEffect(() => {
+    if (!stepData) return
+
     const currentDocuments = stepData?.documents ?? []
-    if (stepData && currentDocuments) {
-      updateCurrentDocuments(currentDocuments)
-    }
-  }, [ stepData ])
-
-  const updateCurrentDocuments = (documents: OrderDocument[]): boolean => {
-    let isAllDocumentsReady = true
     const updatedDocuments: OrderDocument[] = []
     const updatedDocumentsOptional: OrderDocument[] = []
     const updatedDocumentTypes: number[] = []
     const updatedDocumentTypesOptional: number[] = []
 
-    documents
-      .filter((doc: OrderDocument) => !doc.isGenerated)
+    currentDocuments
+      .filter((doc: OrderDocument) => !(doc.isGenerated && !doc.info))
       .forEach((doc: OrderDocument) => {
         if (doc.isRequired) {
-          isAllDocumentsReady = isAllDocumentsReady && doc.info !== null
           updatedDocumentTypes.push(doc.typeId)
           updatedDocuments.push(doc)
         } else {
@@ -80,27 +81,25 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
         }
       })
 
+    setClientCompanyFounder(stepData?.clientCompanyFounder)
     setDocuments(updatedDocuments)
-    setDocumentsOptional(updatedDocumentsOptional)
     setDocumentTypes(updatedDocumentTypes)
     setDocumentTypesOptional(updatedDocumentTypesOptional)
+    setDocumentsOptional(updatedDocumentsOptional.length ? updatedDocumentsOptional : null)
     setDocumentsLoading(false)
-    return isAllDocumentsReady
-  }
+  }, [ stepData ])
 
-  const loadCurrentStepData = async () => {
+  const loadStepData = async () => {
     if (documentTypes === null) {
       // NOTE: do not show loader every time updates
       setDocumentsLoading(true)
     }
     const result = await getFactoringWizardStep({
-      companyId: companyId as number,
       step: sequenceStepNumber,
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<WizardStep2Data>).data)
-      setOrderStatus((result.data as WizardStepResponse<WizardStep2Data>).orderStatus as OrderStatus)
+      setStepData((result.data as WizardStepResponse<any>).data) // TODO: ask be to generate models
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -109,19 +108,22 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const sendNextStep = async () => {
-    if (!orderId || !companyId) {
+    if (!orderId) {
       return
     }
     setSubmitting(true)
+    // NOTE: shouldn't be sent cause statuses switches immediately
     const documentStatuses = [
-      ...documentsOptional,
+      ...documentsOptional || [],
       ...documents,
-    ].map(document => ({
-      documentId: document.info?.documentId,
-      status: document.info?.documentStatus,
-    }))
+    ]
+      .filter(document => document.info)
+      .map(document => ({
+        documentId: document.info?.documentId,
+        documentStatus: document.info?.documentStatus ?? DocumentStatus.NotApproved,
+      }))
     const result = await sendFactoringWizardStep({
-      companyId,
+      step: sequenceStepNumber,
       orderId,
     }, {
       documentStatuses,
@@ -130,7 +132,6 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderStatus(OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
@@ -144,7 +145,11 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      sendNextStep()
+      if (currentStep === sequenceStepNumber) {
+        sendNextStep()
+      } else {
+        setCurrentStep(sequenceStepNumber + 1)
+      }
     }
   }
 
@@ -170,7 +175,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
         disabled={!isNextStepAllowed || submitting}
         loading={submitting}
       >
-        {t('orders.actions.next.title')}
+        {t('orderActions.next.title')}
       </Button>
     )
   }
@@ -183,21 +188,31 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Row>
   )
 
+  const changeDocStatus = async (documentId: number, status: DocumentStatus) => {
+    const result = await factoringWizardSetDocStatus({
+      orderId,
+    }, {
+      documentId,
+      documentStatus: status,
+    })
+    return Boolean(result?.success)
+  }
+
   const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
-        companyId={companyId as number}
         orderId={orderId as number}
-        types={documentTypes}
+        types={documentTypes || []}
         current={documents}
-        onChange={loadCurrentStepData}
+        onChange={loadStepData}
+        setStatusHandler={changeDocStatus}
       />
     </Spin>
   )
 
   const renderOptionalDocumentsSection = () => (
     <Div className="FactoringStepDocuments__section">
-      <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
+      <Title level={5}>{t('orderStepDocuments.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
   )
@@ -205,25 +220,64 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   const renderOptionalDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
-        companyId={companyId as number}
         orderId={orderId as number}
-        types={documentTypesOptional || []}
-        current={documentsOptional}
-        onChange={loadCurrentStepData}
+        types={documentTypesOptional as number[]}
+        current={documentsOptional as OrderDocument[]}
+        onChange={loadStepData}
+        setStatusHandler={changeDocStatus}
       />
     </Spin>
+  )
+
+
+  const openCompanyFounderModal = () => {
+    setCompanyFounderModalVisible(true)
+  }
+  const closeCompanyFounderModal = () => {
+    setCompanyFounderModalVisible(false)
+  }
+  const renderCompanyFounderSection = () => (
+    <Div className="FactoringStepDocuments__section">
+      <Title level={5}>
+        {t('orderStepDocuments.companyFounderInformation.title')}
+        <Button size="small"
+                type="link"
+                icon={<SelectOutlined/>}
+                onClick={openCompanyFounderModal}
+        >
+          {t('orderStepDocuments.companyFounderInformation.check')}
+        </Button>
+      </Title>
+      <Modal
+        visible={companyFounderModalVisible}
+        centered
+        width={700}
+        bodyStyle={{ paddingTop: '0' }}
+        title={t('orderStepDocuments.companyFounderInformation.title')}
+        onCancel={closeCompanyFounderModal}
+        footer={
+          <Button type="primary"
+                  onClick={closeCompanyFounderModal}>
+            {t('models.bankRequisites.close')}
+          </Button>
+        }
+      >
+        <CompanyFounderInfo companyFounder={clientCompanyFounder}/>
+      </Modal>
+    </Div>
   )
 
   const renderStepContent = () => (
     <Div className="FactoringStepDocuments">
       <Div className="FactoringStepDocuments__title">
-        <Title level={4}>{t('frameSteps.documents.title')}</Title>
+        <Title level={4}>{t('orderStepDocuments.title')}</Title>
       </Div>
       <Div className="FactoringStepDocuments__section">
-        <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
+        <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
-      {documentTypesOptional !== null && renderOptionalDocumentsSection}
+      {documentsOptional !== null && renderOptionalDocumentsSection()}
+      {renderCompanyFounderSection()}
     </Div>
   )
 
@@ -242,7 +296,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {currentStep <= sequenceStepNumber && renderActions()}
+      {renderActions()}
     </Div>
   )
 }

@@ -5,27 +5,28 @@ import { Button, Col, message, Row, Skeleton } from 'antd'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
+import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
-import { CabinetMode } from 'library/models/cabinet'
 
-import './CustomerFactoringStepInfo.style.less'
+import './FactoringStepParameters.style.less'
 
-export interface CustomerFactoringStepInfoProps {
-  companyId: number
+export interface FactoringStepParametersProps {
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: OrderStatus) => void
 }
 
-const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
-  companyId,
+const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   orderId,
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  setOrderStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -42,10 +43,8 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
 
   const loadCurrentStepData = async () => {
     const result = await getFactoringWizardStep({
-      mode: CabinetMode.Customer,
       step: sequenceStepNumber,
-      companyId,
-      orderId,
+      orderId: orderId,
     })
     if (result.success) {
       setStepData((result.data as WizardStepResponse<any>).data)
@@ -61,15 +60,14 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
     if (!orderId) return
     setSubmitting(true)
     const result = await sendFactoringWizardStep({
-      mode: CabinetMode.Customer,
       step: sequenceStepNumber,
-      companyId,
-      orderId,
+      orderId: orderId,
     }, {})
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOrderStatus(OrderStatus.FRAME_OPERATOR_VERIFYING)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
@@ -82,7 +80,7 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="FactoringWizard__step__actions">
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
@@ -108,18 +106,24 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
       disabled={submitting}
       onClick={handleNextStep}
     >
-      {t('common.actions.next.title')}
+      Взять на проверку
     </Button>
   )
 
   const renderStepContent = () => (
-    <Div className="CustomerFactoringStepInfo">
+    <Div className="FactoringStepParameters">
       <Row gutter={12}>
-        <Col span={18}>
+        <Col span={12}>
           <ClientInfo
             company={stepData?.clientCompany}
             companyHead={stepData?.clientCompanyFounder}
             companyRequisites={stepData?.clientCompanyRequisites}
+          />
+        </Col>
+        <Col span={12}>
+          <OrderInfo
+            orderId={orderId}
+            customerCompany={stepData?.customerCompany}
           />
         </Col>
       </Row>
@@ -139,11 +143,11 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="FactoringWizard__step__content">
       {renderStepContent()}
       {renderActions()}
     </Div>
   )
 }
 
-export default CustomerFactoringStepInfo
+export default FactoringStepParameters
