@@ -6,7 +6,7 @@ import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 
 import { StopFactor } from 'library/models/stopFactor'
@@ -56,7 +56,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
     if ((stepData as any)?.stopFactors) {
       setStopFactors((stepData as any).stopFactors)
     }
-  }, [stepData])
+  }, [ stepData ])
 
   useEffect(() => {
     if (!stopFactors) return
@@ -68,7 +68,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       }
     }
     setNextStepAllowed(allChecked)
-  }, [stopFactors])
+  }, [ stopFactors ])
 
   const loadCurrentStepData = async () => {
     const result = await getFactoringWizardStep({
@@ -76,7 +76,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -124,11 +124,11 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       orderId,
     }, {
       stopFactorId,
-      isOk: true
+      isOk: true,
     })
     if (!result) {
       message.error(
-        t('common.errors.requestError.title')
+        t('common.errors.requestError.title'),
       )
     } else {
       loadCurrentStepData()
@@ -149,11 +149,11 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       orderId,
     }, {
       stopFactorId,
-      isOk: false
+      isOk: false,
     })
     if (!result) {
       message.error(
-        t('common.errors.requestError.title')
+        t('common.errors.requestError.title'),
       )
     } else {
       loadCurrentStepData()
@@ -253,7 +253,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       onClick={() => handleApprove(item)}
       loading={approveInProccess[item.stopFactorId]}
       disabled={stepDataLoading || rejectInProccess[item.stopFactorId] || item.isOk === true}
-      icon={<CheckCircleTwoTone twoToneColor={item.isOk !== true ? '#52c41a' : '#ccc'} />}
+      icon={<CheckCircleTwoTone twoToneColor={item.isOk !== true ? '#52c41a' : '#ccc'}/>}
     />
   )
 
@@ -267,7 +267,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       onClick={() => handleReject(item)}
       loading={rejectInProccess[item.stopFactorId]}
       disabled={stepDataLoading || approveInProccess[item.stopFactorId] || item.isOk === false}
-      icon={<CloseCircleTwoTone twoToneColor={item.isOk !== false ? '#e83030' : '#ccc'} />}
+      icon={<CloseCircleTwoTone twoToneColor={item.isOk !== false ? '#e83030' : '#ccc'}/>}
     />
   )
 
@@ -293,13 +293,13 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

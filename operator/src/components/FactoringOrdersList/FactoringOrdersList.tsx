@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space } from 'antd'
+import { Button, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
@@ -40,14 +40,14 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
           type="link"
           shape="circle"
           title={t('common.actions.view.title')}
-          icon={<EyeOutlined />}
+          icon={<EyeOutlined/>}
         />
       </Link>
     </Space>
   )
 
   const renderStatus = (statusCode: OrderStatus, item: Order) => (
-    <OrderStatusTag statusCode={statusCode} item={item} />
+    <OrderStatusTag statusCode={statusCode} item={item}/>
   )
 
   const columns: ColumnsType<Order> = [
@@ -92,14 +92,14 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
   ]
 
   const rowClassName = (record: Order) => (
-    record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+    record.statusCode === OrderStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY
       ? 'FactoringOrdersList__row--new'
       : ''
   )
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="error" />
+      <ErrorResultView centered status="error"/>
     )
   }
 

@@ -7,7 +7,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import OrderCondition from 'orient-ui-library/components/OrderCondition'
 import { OrderConditions } from 'orient-ui-library/library/models/orderCondition'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
@@ -58,7 +58,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     if (stepData?.conditions) {
       setOrderConditions(stepData.conditions)
     }
-  }, [stepData])
+  }, [ stepData ])
 
   useEffect(() => {
     if (!stepData) return
@@ -76,14 +76,14 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     setDocuments(updatedDocuments)
     setDocumentTypes(updatedDocumentTypes)
     setDocumentsLoading(false)
-  }, [stepData])
+  }, [ stepData ])
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
       // NOTE: only for debugging
       setNextStepAllowed(true)
     }
-  }, [currentStep, sequenceStepNumber])
+  }, [ currentStep, sequenceStepNumber ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -92,7 +92,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -181,7 +181,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     </Button>
   )
 
-  const renderDocuments = () =>  (
+  const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
@@ -194,7 +194,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   const renderStepContent = () => (
     <Div className="OrderStepContractDocuments">
       <Div className="WizardStep__section">
-        <OrderCondition condition={orderConditions} />
+        <OrderCondition condition={orderConditions}/>
       </Div>
       <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepContractDocuments.title')}</Title>
@@ -205,13 +205,13 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

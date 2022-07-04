@@ -6,7 +6,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
 
-import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType, FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { getFrameWizardStep, sendFrameWizardStep } from 'library/api/frameWizard'
 import { CabinetMode } from 'library/models/cabinet'
 
@@ -51,7 +51,7 @@ const CustomerOrderStepInfo: React.FC<CustomerOrderStepInfoProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<any>).data)
+      setStepData((result.data as FrameWizardStepResponse<any>).data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)

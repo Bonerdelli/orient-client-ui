@@ -7,7 +7,7 @@ import { Form, Typography, Row, Col, Button, Input, DatePicker, Select, Skeleton
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderConditions, OrderConditionType } from 'orient-ui-library/library/models/orderCondition'
 
 import {
@@ -66,14 +66,14 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
     } else {
       setInitialData(null)
     }
-  }, [stepData])
+  }, [ stepData ])
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
       setNextStepAllowed(true)
       setFormDisabled(true)
     }
-  }, [currentStep, sequenceStepNumber])
+  }, [ currentStep, sequenceStepNumber ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -82,7 +82,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -166,9 +166,12 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
 
   const renderFormInputs = () => (<>
     <FormItem name="conditionCode">
-      <Select disabled={formDisabled} placeholder={t('models.orderCondition.fields.conditionCode.placeholder')} onChange={setConditionCode}>
-        <Option value={OrderConditionType.Comission}>{t('models.orderCondition.fields.conditionCode.options.comission')}</Option>
-        <Option value={OrderConditionType.Discount}>{t('models.orderCondition.fields.conditionCode.options.discount')}</Option>
+      <Select disabled={formDisabled} placeholder={t('models.orderCondition.fields.conditionCode.placeholder')}
+              onChange={setConditionCode}>
+        <Option
+          value={OrderConditionType.Comission}>{t('models.orderCondition.fields.conditionCode.options.comission')}</Option>
+        <Option
+          value={OrderConditionType.Discount}>{t('models.orderCondition.fields.conditionCode.options.discount')}</Option>
       </Select>
     </FormItem>
     {isComission() && !hidePayer &&
@@ -176,9 +179,10 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
         {...formItemProps}
         name="payer"
         label={t('models.orderCondition.fields.payer.title')}
-        rules={[requiredRule]}
+        rules={[ requiredRule ]}
       >
-        <Select disabled={formDisabled} placeholder={t('models.orderCondition.fields.payer.placeholder')} defaultValue={1}>
+        <Select disabled={formDisabled} placeholder={t('models.orderCondition.fields.payer.placeholder')}
+                defaultValue={1}>
           <Option value={1}>{t('models.orderCondition.fields.payer.options.provider')}</Option>
         </Select>
       </FormItem>
@@ -188,9 +192,9 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
         {...formItemProps}
         name="percentOverall"
         label={t('models.orderCondition.fields.percentOverall.title')}
-        rules={[requiredRule]}
+        rules={[ requiredRule ]}
       >
-        <Input disabled={formDisabled} type="number" suffix="%" />
+        <Input disabled={formDisabled} type="number" suffix="%"/>
       </FormItem>
     }
 
@@ -199,9 +203,9 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
         {...formItemProps}
         name="percentYear"
         label={t('models.orderCondition.fields.percentYear.title')}
-        rules={[requiredRule]}
+        rules={[ requiredRule ]}
       >
-        <Input disabled={formDisabled} type="number" suffix="%" />
+        <Input disabled={formDisabled} type="number" suffix="%"/>
       </FormItem>
     }
     {isDiscount() &&
@@ -209,9 +213,9 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
         {...formItemProps}
         name="percentDiscount"
         label={t('models.orderCondition.fields.percentDiscount.title')}
-        rules={[requiredRule]}
+        rules={[ requiredRule ]}
       >
-        <Input disabled={formDisabled} type="number" suffix="%" />
+        <Input disabled={formDisabled} type="number" suffix="%"/>
       </FormItem>
     }
     {(isComission() || isDiscount()) &&
@@ -219,9 +223,9 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
         {...formItemProps}
         name="startDate"
         label={t('models.orderCondition.fields.startDate.title')}
-        rules={[requiredRule]}
+        rules={[ requiredRule ]}
       >
-        <DatePicker disabled={formDisabled} />
+        <DatePicker disabled={formDisabled}/>
       </FormItem>
     }
   </>)
@@ -239,13 +243,13 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
 
   if (isUndefined(initialData)) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

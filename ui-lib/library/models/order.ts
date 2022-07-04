@@ -18,6 +18,7 @@ export enum OrderWizardType {
 }
 
 export enum OrderStatus {
+  // Frame orders
   FRAME_DRAFT = 'frame_draft',
   FRAME_OPERATOR_WAIT_FOR_VERIFY = 'frame_operator_wait_for_verify',
   FRAME_OPERATOR_VERIFYING = 'frame_operator_verify',
@@ -29,4 +30,8 @@ export enum OrderStatus {
   FRAME_COMPLETED = 'frame_completed',
   FRAME_CANCEL = 'frame_cancel',
   FRAME_OPERATOR_REJECT = 'frame_operator_reject',
+  // Factoring orders
+  FACTOR_DRAFT = 'factor_draft',
+  FACTOR_OPERATOR_WAIT_FOR_VERIFY = 'factor_operator_wait_for_verify',
+  FACTOR_OPERATOR_VERIFYING = 'factor_operator_verify'
 }

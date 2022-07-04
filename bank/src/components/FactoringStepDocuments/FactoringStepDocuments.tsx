@@ -1,4 +1,4 @@
- import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Typography, Skeleton, Spin, Row, Col, Button, message } from 'antd'
@@ -6,7 +6,7 @@ import { Typography, Skeleton, Spin, Row, Col, Button, message } from 'antd'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
@@ -51,7 +51,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   useEffect(() => {
     loadStepData()
-  }, [currentStep])
+  }, [ currentStep ])
 
   useEffect(() => {
     if (!stepData) return
@@ -85,7 +85,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     setDocumentTypesGenerated(updatedDocumentTypesGenerated)
     setDocumentsGenerated(updatedDocumentsGenerated.length ? updatedDocumentsGenerated : null)
     setDocumentsLoading(false)
-  }, [stepData])
+  }, [ stepData ])
 
   const loadStepData = async () => {
     if (documentTypes === null) {
@@ -98,7 +98,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<any>).data) // TODO: ask be to generate models
+      setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -176,7 +176,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Row>
   )
 
-  const renderDocuments = () =>  (
+  const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
@@ -236,13 +236,13 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

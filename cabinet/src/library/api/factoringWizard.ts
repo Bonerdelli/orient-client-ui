@@ -1,14 +1,9 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
 import { CabinetMode } from 'library/models/cabinet'
-
-import { OrderDocument } from 'orient-ui-library/library/models/document'
-
-import {
-  CompanyFounderDto,
-  CompanyQuestionnaireDto,
-  CompanyRequisitesDto,
-} from 'orient-ui-library/library/models/proxy'
 import * as schema from 'orient-ui-library/library/api/schema'
+import { FactoringWizardStepResponse, OrderConditions } from 'orient-ui-library/library'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
+import { FrameOrderForFactoringDto } from 'library/models/orders'
 
 interface FactoringWizardCommonParameters {
   companyId: number
@@ -25,11 +20,20 @@ export type FactoringWizardStep1To2RequestDto = schema.components['schemas']['Cl
 export type InitFactoringWizardResponseDto = schema.components['schemas']['ClientFactorStep1To2Response']
 
 // TODO: ask be generate models for this
-export interface WizardStep2Data {
+export type FactoringWizardStep1ResponseDto = FactoringWizardStepResponse<FactoringWizardStep1Dto>
+export type FactoringWizardStep2ResponseDto = FactoringWizardStepResponse<FactoringWizardStep2Dto>
+
+export interface FactoringWizardStep1Dto extends Omit<FactoringWizardStep1To2RequestDto, 'bankId' | 'orderId'> {
+  bank: {
+    bankId: number,
+    bankName: string
+    conditions: OrderConditions
+  }
+  frameOrder: FrameOrderForFactoringDto
+}
+
+export interface FactoringWizardStep2Dto {
   documents: OrderDocument[] | null
-  founder: CompanyFounderDto | null
-  requisites: CompanyRequisitesDto | null
-  questionnaire: CompanyQuestionnaireDto | null
 }
 
 // NOTE: some API wrappers for Client and Customer are combined
@@ -80,10 +84,10 @@ export async function getCurrentFactoringWizardStep(
 /**
  * Get wizard step by number
  */
-export async function getFactoringWizardStep(
+export async function getFactoringWizardStep<T = any>(
   params: FactoringWizardCommonParameters,
 ) {
   const { mode, companyId, orderId, step } = params
   const basePath = getBasePath(companyId, mode)
-  return await get(`${basePath}/${orderId}/${step}`)
+  return await get<T>(`${basePath}/${orderId}/${step}`)
 }

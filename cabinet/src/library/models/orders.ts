@@ -1,6 +1,6 @@
 import { Customer } from 'library/models/customer'
 
-export interface OrderForFactoringDto {
+export interface FrameOrderForFactoringDto {
   id: number
   customer: Customer
 }

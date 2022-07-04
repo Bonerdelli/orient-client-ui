@@ -7,11 +7,15 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList' // NOTE: вроде как можно не разделять с Рамочным
-import { getFactoringWizardStep, sendFactoringWizardStep, WizardStep2Data } from 'library/api'
+import {
+  FactoringWizardStep2Dto,
+  FactoringWizardStep2ResponseDto,
+  getFactoringWizardStep,
+  sendFactoringWizardStep,
+} from 'library/api'
 
 import './FactoringStepDocuments.style.less'
 
@@ -38,7 +42,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<WizardStep2Data>()
+  const [ stepData, setStepData ] = useState<FactoringWizardStep2Dto>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -99,13 +103,12 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<WizardStep2Data>).data)
-      setOrderStatus((result.data as WizardStepResponse<WizardStep2Data>).orderStatus as OrderStatus)
+      setStepData((result.data as FactoringWizardStep2ResponseDto).data)
+      setOrderStatus((result.data as FactoringWizardStep2ResponseDto).orderStatus as OrderStatus)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
-    setNextStepAllowed(true) // TODO: for debug
     setStepDataLoading(false)
   }
 
@@ -132,7 +135,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderStatus(OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY)
+      setOrderStatus(OrderStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
@@ -178,7 +181,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row>
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>

@@ -10,7 +10,7 @@ import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import { OptionalParameter } from 'library/models/optionalParameter'
 
@@ -57,7 +57,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       // NOTE: only for debugging
       setNextStepAllowed(true)
     }
-  }, [currentStep, sequenceStepNumber])
+  }, [ currentStep, sequenceStepNumber ])
 
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
     if ((stepData as any)?.optionalParameters) {
       setOptionalParameters((stepData as any).optionalParameters)
     }
-  }, [stepData])
+  }, [ stepData ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -73,7 +73,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -189,7 +189,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       type="link"
       shape="circle"
       title={t('common.actions.approve.title')}
-      icon={<CheckCircleTwoTone twoToneColor="#52c41a" />}
+      icon={<CheckCircleTwoTone twoToneColor="#52c41a"/>}
     />
   )
 
@@ -200,7 +200,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       type="link"
       shape="circle"
       title={t('common.actions.reject.title')}
-      icon={<CloseCircleTwoTone twoToneColor="#e83030" />}
+      icon={<CloseCircleTwoTone twoToneColor="#e83030"/>}
     />
   )
 
@@ -226,13 +226,13 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

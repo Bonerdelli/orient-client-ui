@@ -6,7 +6,7 @@ import { Typography, Skeleton, Spin, Row, Col, Button } from 'antd'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 
@@ -31,157 +31,157 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   sequenceStepNumber,
   setCurrentStep,
 }) => {
- const { t } = useTranslation()
+  const { t } = useTranslation()
 
- const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
+  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
- const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate models
- const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
- const [ dataLoaded, setDataLoaded ] = useState<boolean>()
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate models
+  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
 
- const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
- const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
- const [ documents, setDocuments ] = useState<OrderDocument[]>([])
- const [ documentTypesGenerated, setDocumentTypesGenerated ] = useState<number[]>()
- const [ documentsGenerated, setDocumentsGenerated ] = useState<OrderDocument[] | null>()
+  const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
+  const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
+  const [ documents, setDocuments ] = useState<OrderDocument[]>([])
+  const [ documentTypesGenerated, setDocumentTypesGenerated ] = useState<number[]>()
+  const [ documentsGenerated, setDocumentsGenerated ] = useState<OrderDocument[] | null>()
 
- useEffect(() => {
-   loadStepData()
- }, [currentStep])
+  useEffect(() => {
+    loadStepData()
+  }, [ currentStep ])
 
- useEffect(() => {
-   if (!stepData) return
+  useEffect(() => {
+    if (!stepData) return
 
-   const currentDocuments = stepData?.documents ?? []
-   const updatedDocuments: OrderDocument[] = []
-   const updatedDocumentsGenerated: OrderDocument[] = []
-   const updatedDocumentTypes: number[] = []
-   const updatedDocumentTypesGenerated: number[] = []
+    const currentDocuments = stepData?.documents ?? []
+    const updatedDocuments: OrderDocument[] = []
+    const updatedDocumentsGenerated: OrderDocument[] = []
+    const updatedDocumentTypes: number[] = []
+    const updatedDocumentTypesGenerated: number[] = []
 
-   currentDocuments
-     .forEach((doc: OrderDocument) => {
-       if (doc.isGenerated) {
-         updatedDocumentTypesGenerated.push(doc.typeId)
-         updatedDocumentsGenerated.push(doc)
-       } else {
-         updatedDocumentTypes.push(doc.typeId)
-         updatedDocuments.push(doc)
-       }
-     })
+    currentDocuments
+      .forEach((doc: OrderDocument) => {
+        if (doc.isGenerated) {
+          updatedDocumentTypesGenerated.push(doc.typeId)
+          updatedDocumentsGenerated.push(doc)
+        } else {
+          updatedDocumentTypes.push(doc.typeId)
+          updatedDocuments.push(doc)
+        }
+      })
 
-   setDocuments(updatedDocuments)
-   setDocumentTypes(updatedDocumentTypes)
-   setDocumentTypesGenerated(updatedDocumentTypesGenerated)
-   setDocumentsGenerated(updatedDocumentsGenerated.length ? updatedDocumentsGenerated : null)
-   setDocumentsLoading(false)
- }, [stepData])
+    setDocuments(updatedDocuments)
+    setDocumentTypes(updatedDocumentTypes)
+    setDocumentTypesGenerated(updatedDocumentTypesGenerated)
+    setDocumentsGenerated(updatedDocumentsGenerated.length ? updatedDocumentsGenerated : null)
+    setDocumentsLoading(false)
+  }, [ stepData ])
 
- const loadStepData = async () => {
-   if (documentTypes === null) {
-     // NOTE: do not show loader every time updates
-     setDocumentsLoading(true)
-   }
-   const result = await getFactoringWizardStep({
-     step: sequenceStepNumber,
-     companyId: companyId as number,
-     orderId,
-   })
-   if (result.success) {
-     setStepData((result.data as WizardStepResponse<any>).data) // TODO: ask be to generate models
-     setDataLoaded(true)
-   } else {
-     setDataLoaded(false)
-   }
-   setStepDataLoading(false)
- }
+  const loadStepData = async () => {
+    if (documentTypes === null) {
+      // NOTE: do not show loader every time updates
+      setDocumentsLoading(true)
+    }
+    const result = await getFactoringWizardStep({
+      step: sequenceStepNumber,
+      companyId: companyId as number,
+      orderId,
+    })
+    if (result.success) {
+      setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
+      setDataLoaded(true)
+    } else {
+      setDataLoaded(false)
+    }
+    setStepDataLoading(false)
+  }
 
- const handlePrevStep = () => {
-   if (isPrevStepAllowed) {
-     setCurrentStep(sequenceStepNumber - 1)
-   }
- }
+  const handlePrevStep = () => {
+    if (isPrevStepAllowed) {
+      setCurrentStep(sequenceStepNumber - 1)
+    }
+  }
 
- const renderPrevStepButton = () => {
-   // NOTE: disabled as we can't go back by status model
-   return (
-     <Button
-       size="large"
-       type="primary"
-       onClick={handlePrevStep}
-       disabled={!isPrevStepAllowed}
-     >
-       {t('common.actions.back.title')}
-     </Button>
-   )
- }
+  const renderPrevStepButton = () => {
+    // NOTE: disabled as we can't go back by status model
+    return (
+      <Button
+        size="large"
+        type="primary"
+        onClick={handlePrevStep}
+        disabled={!isPrevStepAllowed}
+      >
+        {t('common.actions.back.title')}
+      </Button>
+    )
+  }
 
- const renderActions = () => (
-   <Row className="WizardStep__actions">
-     <Col>{renderPrevStepButton()}</Col>
-     <Col flex={1}></Col>
-   </Row>
- )
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
+      <Col>{renderPrevStepButton()}</Col>
+      <Col flex={1}></Col>
+    </Row>
+  )
 
- const renderDocuments = () =>  (
-   <Spin spinning={documentsLoading}>
-     <OrderDocumentsToSignList
-       companyId={companyId as number}
-       orderId={orderId as number}
-       types={documentTypes || []}
-       current={documents}
-     />
-   </Spin>
- )
+  const renderDocuments = () => (
+    <Spin spinning={documentsLoading}>
+      <OrderDocumentsToSignList
+        companyId={companyId as number}
+        orderId={orderId as number}
+        types={documentTypes || []}
+        current={documents}
+      />
+    </Spin>
+  )
 
- const renderGeneratedDocumentsSection = () => (
-   <Div className="WizardStep__section">
-     <Title level={5}>{t('orderStepDocuments.sectionTitles.autoGeneratedDocs')}</Title>
-     {renderGeneratedDocuments()}
-   </Div>
- )
+  const renderGeneratedDocumentsSection = () => (
+    <Div className="WizardStep__section">
+      <Title level={5}>{t('orderStepDocuments.sectionTitles.autoGeneratedDocs')}</Title>
+      {renderGeneratedDocuments()}
+    </Div>
+  )
 
- const renderGeneratedDocuments = () => (
-   <Spin spinning={documentsLoading}>
-     <OrderDocumentsToSignList
-       companyId={companyId as number}
-       orderId={orderId as number}
-       types={documentTypesGenerated as number[]}
-       current={documentsGenerated as OrderDocument[]}
-     />
-   </Spin>
- )
+  const renderGeneratedDocuments = () => (
+    <Spin spinning={documentsLoading}>
+      <OrderDocumentsToSignList
+        companyId={companyId as number}
+        orderId={orderId as number}
+        types={documentTypesGenerated as number[]}
+        current={documentsGenerated as OrderDocument[]}
+      />
+    </Spin>
+  )
 
- const renderStepContent = () => (
-   <Div className="FactoringStepBankOffers">
-     <Div className="FactoringStepBankOffers__title">
-       <Title level={4}>{t('orderStepDocuments.title')}</Title>
-     </Div>
-     <Div className="WizardStep__section">
-       <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
-       {renderDocuments()}
-     </Div>
-     {documentsGenerated !== null && renderGeneratedDocumentsSection()}
-   </Div>
- )
+  const renderStepContent = () => (
+    <Div className="FactoringStepBankOffers">
+      <Div className="FactoringStepBankOffers__title">
+        <Title level={4}>{t('orderStepDocuments.title')}</Title>
+      </Div>
+      <Div className="WizardStep__section">
+        <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
+        {renderDocuments()}
+      </Div>
+      {documentsGenerated !== null && renderGeneratedDocumentsSection()}
+    </Div>
+  )
 
- if (!stepData && stepDataLoading) {
-   return (
-     <Skeleton active={true} />
-   )
- }
+  if (!stepData && stepDataLoading) {
+    return (
+      <Skeleton active={true}/>
+    )
+  }
 
- if (dataLoaded === false) {
-   return (
-     <ErrorResultView centered status="warning" />
-   )
- }
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="warning"/>
+    )
+  }
 
- return (
-   <Div className="WizardStep__content">
-     {renderStepContent()}
-     {renderActions()}
-   </Div>
- )
+  return (
+    <Div className="WizardStep__content">
+      {renderStepContent()}
+      {renderActions()}
+    </Div>
+  )
 }
 
 export default FactoringStepBankOffers

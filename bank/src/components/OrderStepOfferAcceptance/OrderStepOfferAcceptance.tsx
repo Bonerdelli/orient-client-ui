@@ -5,7 +5,7 @@ import { InfoCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import {
@@ -47,19 +47,19 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
     if (isWaiting === false) {
       loadCurrentStepData()
     }
-  }, [isWaiting])
+  }, [ isWaiting ])
 
   useEffect(() => {
     if (offerStatus) {
       setWaiting(offerStatus === BankOfferStatus.CustomerSign)
     }
-  }, [offerStatus])
+  }, [ offerStatus ])
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
       setNextStepAllowed(true)
     }
-  }, [currentStep, sequenceStepNumber])
+  }, [ currentStep, sequenceStepNumber ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -68,7 +68,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -133,7 +133,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   const renderStepContent = () => (
     <Div className="OrderStepOfferAcceptance">
       <Result
-        icon={<InfoCircleFilled />}
+        icon={<InfoCircleFilled/>}
         title={t('orderStepOfferAcceptance.waitForAccept.title')}
         subTitle={t('orderStepOfferAcceptance.waitForAccept.desc')}
       />
@@ -143,7 +143,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   if (isWaiting) {
     return (
       <Result
-        icon={<InfoCircleFilled />}
+        icon={<InfoCircleFilled/>}
         title={t('orderStepOfferAcceptance.waitForAccept.title')}
         subTitle={t('orderStepOfferAcceptance.waitForAccept.desc')}
       />
@@ -152,13 +152,13 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 

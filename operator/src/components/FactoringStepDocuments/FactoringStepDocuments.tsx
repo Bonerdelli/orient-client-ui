@@ -7,7 +7,7 @@ import { SelectOutlined } from '@ant-design/icons'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import { DocumentStatus } from 'library/models'
@@ -15,7 +15,7 @@ import { DocumentStatus } from 'library/models'
 import {
   getFactoringWizardStep,
   sendFactoringWizardStep,
-  factoringWizardSetDocStatus
+  factoringWizardSetDocStatus,
 } from 'library/api/factoringWizard'
 
 import './FactoringStepDocuments.style.less'
@@ -99,7 +99,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<any>).data) // TODO: ask be to generate models
+      setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
       setDataLoaded(true)
     } else {
       setDataLoaded(false)

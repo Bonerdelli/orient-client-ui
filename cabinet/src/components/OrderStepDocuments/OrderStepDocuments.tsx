@@ -8,7 +8,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { FrameWizardType, WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType, FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
@@ -124,8 +124,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<WizardStep2Data>).data)
-      setOrderStatus((result.data as WizardStepResponse<WizardStep2Data>).orderStatus as OrderStatus)
+      setStepData((result.data as FrameWizardStepResponse<WizardStep2Data>).data)
+      setOrderStatus((result.data as FrameWizardStepResponse<WizardStep2Data>).orderStatus as OrderStatus)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)

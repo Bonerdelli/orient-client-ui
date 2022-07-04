@@ -88,7 +88,6 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
       case 1:
         return <FactoringStepParameters
           companyId={companyId}
-          setCompanyId={setCompanyId}
           factoringOrderId={Number(itemId) || orderId}
           currentStep={currentStep}
           setCurrentStep={setSelectedStep}
@@ -111,6 +110,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           sequenceStepNumber={3}
           setCurrentStep={setSelectedStep}
           orderStatus={orderStatus}
+          setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
         />
       case 4:
@@ -151,7 +151,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           onChange={(step) => setSelectedStep(step + 1)}
         >
           <Step title={t('factoring.firstStep.title')}/>
-          <Step disabled={!currentStep} title={t('factoring.secondStep.title')}/>
+          <Step disabled={currentStep < 2} title={t('factoring.secondStep.title')}/>
           <Step disabled={currentStep < 3} title={t('factoring.thirdStep.title')}/>
           <Step disabled={currentStep < 4} title={t('factoring.fourthStep.title')}/>
         </Steps>
