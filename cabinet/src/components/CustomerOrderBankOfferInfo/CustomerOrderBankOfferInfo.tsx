@@ -1,5 +1,3 @@
-// NOTE: this component aren't used yet
-
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, Typography, Button, Skeleton, message } from 'antd'
@@ -7,23 +5,27 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import OrderConditionView from 'orient-ui-library/components/OrderCondition'
-import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
+import { BankOffer } from 'orient-ui-library/library/models/bankOffer'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { BankDto } from 'orient-ui-library/library/models/proxy'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
-import { sendFrameWizardStep4 } from 'library/api/frameWizard'
+import { sendFrameWizardStep } from 'library/api/frameWizard'
+import { CabinetMode } from 'library/models/cabinet'
 
 import './CustomerOrderBankOfferInfo.style.less'
 
-const { Title, Paragraph } = Typography
+const { Title } = Typography
 
 export interface CustomerOrderBankOfferInfoProps {
   wizardType?: FrameWizardType
   companyId: number
   orderId?: number
+  stepNumber: number
   offer: BankOffer
+  orderStatus: OrderStatus
   documents: OrderDocument[]
   bank: BankDto
   onBack: () => void
@@ -34,8 +36,10 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
+  stepNumber,
   offer,
   bank,
+  orderStatus,
   documents,
   onBack,
   onSuccess,
@@ -56,31 +60,31 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
       }
     })
     setBankId(bank.id)
-    setReadyForApprove(offer.offerStatus === BankOfferStatus.BankOfferSent)
+    setReadyForApprove(orderStatus === OrderStatus.FRAME_CUSTOMER_SIGN)
     setDocumentTypes(updatedDocumentTypes)
-  }, [offer, bank, documents])
-
-  const handleReject = () => {
-    onBack()
-  }
+  }, [orderStatus, offer, bank, documents])
 
   const handleAccept = async () => {
     if (!orderId || !companyId || !bankId) {
       return
     }
     setSubmitting(true)
-    const result = await sendFrameWizardStep4({
+    const result = await sendFrameWizardStep({
+      mode: CabinetMode.Customer,
       type: wizardType,
-      companyId,
+      step: stepNumber,
+      companyId: companyId as number,
       orderId,
     }, {
       bankId,
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
+      setReadyForApprove(false)
     } else {
-      onSuccess()
-      onBack()
+      onSuccess && onSuccess()
+      message.success(t('orderStepBankOffer.statuses.completed.title'))
+      setReadyForApprove(false)
     }
     setSubmitting(false)
   }
@@ -103,43 +107,23 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
         <Title level={5}>{t('orderStepBankOffer.sections.documentsForSign.title')}</Title>
         {renderDocuments()}
       </Div>
-      <Div className="CustomerOrderBankOfferInfo__section">
-        <Paragraph>{t('orderStepBankOffer.sections.confirmation.part1')}</Paragraph>
-        <Paragraph>{t('orderStepBankOffer.sections.confirmation.part2')}</Paragraph>
-      </Div>
     </Div>
   )
 
-  const renderRejectButton = () => {
-    return (
-      <Button
-        danger
-        size="large"
-        type="default"
-        onClick={handleReject}
-      >
-        {t('orderStepBankOffer.actions.reject.title')}
-      </Button>
-    )
-  }
-
-  const renderAcceptButton = () => {
-    return (
-      <Button
-        size="large"
-        type="primary"
-        onClick={handleAccept}
-        disabled={submitting}
-        loading={submitting}
-      >
-        {t('orderStepBankOffer.actions.accept.title')}
-      </Button>
-    )
-  }
+  const renderAcceptButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      onClick={handleAccept}
+      disabled={submitting}
+      loading={submitting}
+    >
+      {t('orderStepBankOffer.actions.accept.title')}
+    </Button>
+  )
 
   const renderActions = () => (
     <Row className="FrameWizard__step__actions">
-      <Col>{renderRejectButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderAcceptButton()}</Col>
     </Row>
