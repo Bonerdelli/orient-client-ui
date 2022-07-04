@@ -8,10 +8,10 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStatusTag from 'components/OrderStatusTag'
-import OrderStepParameters from 'components/OrderStepParameters'
-import OrderStepDocuments from 'components/OrderStepDocuments'
-import OrderStepStopFactors from 'components/OrderStepStopFactors'
-import OrderStepScoringResults from 'components/OrderStepScoringResults'
+import FactoringStepParameters from 'components/FactoringStepParameters'
+import FactoringStepDocuments from 'components/FactoringStepDocuments'
+import FactoringStepStopFactors from 'components/FactoringStepStopFactors'
+import FactoringStepSendToBank from 'components/FactoringStepSendToBank'
 
 import { getFactoringOrderWizard } from 'library/api/factoring'
 
@@ -85,13 +85,13 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
+        return <FactoringStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
       case 2:
-        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
+        return <FactoringStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
-        return <OrderStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
+        return <FactoringStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
       case 4:
-        return <OrderStepScoringResults {...stepBaseProps} sequenceStepNumber={4}/>
+        return <FactoringStepSendToBank {...stepBaseProps} sequenceStepNumber={4}/>
       default:
         return <></>
     }
