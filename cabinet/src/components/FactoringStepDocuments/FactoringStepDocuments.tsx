@@ -105,6 +105,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     } else {
       setDataLoaded(false)
     }
+    setNextStepAllowed(true) // TODO: for debug
     setStepDataLoading(false)
   }
 
@@ -123,6 +124,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     const result = await sendFactoringWizardStep({
       companyId,
       orderId,
+      step: sequenceStepNumber,
     }, {
       documentStatuses,
     })
