@@ -6,10 +6,8 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep,
-} from 'library/api/factoringWizard'
+import { CabinetMode } from 'library/models/cabinet'
+import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 
 import './CustomerFactoringSignDocuments.style.less'
 
@@ -52,9 +50,8 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   }, [currentStep, sequenceStepNumber])
 
   const loadCurrentStepData = async () => {
-    const result = await getFrameWizardStep({
-
-      type: wizardType,
+    const result = await getFactoringWizardStep({
+      mode: CabinetMode.Customer,
       step: sequenceStepNumber,
       companyId,
       orderId,
@@ -72,10 +69,9 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep({
-
+    const result = await sendFactoringWizardStep({
+      mode: CabinetMode.Customer,
       step: sequenceStepNumber,
-      type: wizardType,
       companyId,
       orderId,
     }, {})

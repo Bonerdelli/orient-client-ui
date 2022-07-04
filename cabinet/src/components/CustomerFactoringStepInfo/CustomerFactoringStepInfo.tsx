@@ -1,19 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Button, Col, message, Row, Skeleton } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import ClientInfo from 'orient-ui-library/components/ClientInfo'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep,
-} from 'library/api/factoringWizard'
+import { WizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
+import { CabinetMode } from 'library/models/cabinet'
 
 import './CustomerFactoringStepInfo.style.less'
-
-const { Title } = Typography
 
 export interface CustomerFactoringStepInfoProps {
   companyId: number
@@ -33,9 +30,8 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   const { t } = useTranslation()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<any>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -44,23 +40,15 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
     loadCurrentStepData()
   }, [])
 
-  useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      // NOTE: only for debugging
-      setNextStepAllowed(true)
-    }
-  }, [currentStep, sequenceStepNumber])
-
   const loadCurrentStepData = async () => {
-    const result = await getFrameWizardStep({
-
-      type: wizardType,
+    const result = await getFactoringWizardStep({
+      mode: CabinetMode.Customer,
       step: sequenceStepNumber,
       companyId,
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as WizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData((result.data as WizardStepResponse<any>).data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -72,10 +60,9 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep({
-
+    const result = await sendFactoringWizardStep({
+      mode: CabinetMode.Customer,
       step: sequenceStepNumber,
-      type: wizardType,
       companyId,
       orderId,
     }, {})
@@ -88,18 +75,6 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
     setSubmitting(false)
   }
 
-  const handlePrevStep = () => {
-    if (isPrevStepAllowed) {
-      setCurrentStep(sequenceStepNumber - 1)
-    }
-  }
-
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
-
   const handleNextStep = () => {
     if (isNextStepAllowed) {
       sendNextStep()
@@ -107,69 +82,64 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="WizardStep__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
+    <Row className="FrameWizard__step__actions">
+      <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
         : renderSubmitButton()}</Col>
     </Row>
   )
 
-  const renderSubmitButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleStepSubmit}
-      disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
-    >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
-
   const renderNextButton = () => (
     <Button
       size="large"
       type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
+      onClick={() => setCurrentStep(sequenceStepNumber + 1)}
+      disabled={!isNextStepAllowed}
     >
-      {t('orderActions.saveAndContinue.title')}
+      {t('common.actions.next.title')}
     </Button>
   )
 
-  const renderPrevButton = () => (
+  const renderSubmitButton = () => (
     <Button
       size="large"
       type="primary"
-      onClick={handlePrevStep}
       disabled={submitting}
-      loading={submitting}
+      onClick={handleNextStep}
     >
-      {t('common.actions.back.title')}
+      {t('common.actions.next.title')}
     </Button>
   )
 
   const renderStepContent = () => (
     <Div className="CustomerFactoringStepInfo">
-      <Title level={5}>{t('customerFactoringStepInfo.title')}</Title>
+      <Row gutter={12}>
+        <Col span={18}>
+          <ClientInfo
+            company={stepData?.clientCompany}
+            companyHead={stepData?.clientCompanyFounder}
+            companyRequisites={stepData?.clientCompanyRequisites}
+          />
+        </Col>
+      </Row>
     </Div>
   )
 
   if (!stepData && stepDataLoading) {
     return (
-      <Skeleton active={true} />
+      <Skeleton active={true}/>
     )
   }
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
   return (
-    <Div className="WizardStep__content">
+    <Div className="FrameWizard__step__content">
       {renderStepContent()}
       {renderActions()}
     </Div>

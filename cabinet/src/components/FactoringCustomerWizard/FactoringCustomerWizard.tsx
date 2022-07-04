@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router-dom'
+import { Card, Steps, Grid, Skeleton } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -19,7 +18,6 @@ import { getCurrentFrameWizardStep } from 'library/api'
 import './FactoringCustomerWizard.style.less'
 
 const { Step } = Steps
-const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FactoringCustomerWizardProps {
@@ -42,7 +40,7 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ compa
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ _orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
 
   useEffect(() => {
     if (companyId && Number(itemId)) {
@@ -96,19 +94,6 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ compa
       default:
         return <></>
     }
-  }
-
-  const renderTitle = () => {
-    const title = t('customerFrameOrder.title')
-    if (!backUrl) return title
-    return (
-      <>
-        <Link className="Wizard__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
-        </Link>
-        {title}
-      </>
-    )
   }
 
   if (dataLoaded === false) {
