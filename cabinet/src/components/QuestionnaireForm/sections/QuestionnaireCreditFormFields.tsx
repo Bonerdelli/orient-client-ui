@@ -1,8 +1,10 @@
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Col, DatePicker, Divider, Form, Input, Radio, Row, Typography } from 'antd'
-import React, { useState } from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
+
 import { QuestionnaireFormData } from 'components/QuestionnaireForm/models/questionnaire-form.interface'
+import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 
 const QuestionnaireCreditFormFields: React.FC = () => {
   const { t } = useTranslation()
@@ -85,7 +87,7 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                   label={t('questionnaire.credits.creditDate')}
                   name={[ field.name, 'creditDate' ]}
                 >
-                  <DatePicker/>
+                  <DatePicker format={DATE_FORMAT} />
                 </Form.Item>
               </Col>
               <Col span={4}>
