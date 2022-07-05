@@ -8,6 +8,7 @@ import OrderCondition from 'orient-ui-library/components/OrderCondition'
 import { OrderConditions } from 'orient-ui-library/library/models/orderCondition'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
@@ -23,6 +24,7 @@ const { Title } = Typography
 export interface OrderStepContractDocumentsProps {
   bankId?: number | bigint
   orderId?: number
+  offerStatus?: BankOfferStatus
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -31,6 +33,7 @@ export interface OrderStepContractDocumentsProps {
 const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   bankId,
   orderId,
+  offerStatus,
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
@@ -49,6 +52,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
   const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
+  const [ isAccepted, setAccepted ] = useState<boolean>()
 
   useEffect(() => {
     loadCurrentStepData()
@@ -59,6 +63,12 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       setOrderConditions(stepData.conditions)
     }
   }, [ stepData ])
+
+  useEffect(() => {
+    if (offerStatus) {
+      setAccepted(offerStatus === BankOfferStatus.Completed)
+    }
+  }, [ offerStatus ])
 
   useEffect(() => {
     if (!stepData) return
@@ -229,7 +239,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {!isAccepted && renderActions()}
     </Div>
   )
 }

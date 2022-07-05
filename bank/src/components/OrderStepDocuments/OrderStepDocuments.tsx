@@ -7,6 +7,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
@@ -22,6 +23,7 @@ const { Title } = Typography
 export interface OrderDocumentsProps {
   bankId?: number | bigint
   orderId?: number
+  offerStatus?: BankOfferStatus
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -30,6 +32,7 @@ export interface OrderDocumentsProps {
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   bankId,
   orderId,
+  offerStatus,
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
@@ -51,10 +54,17 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[] | null>()
   const [ documentTypesGenerated, setDocumentTypesGenerated ] = useState<number[]>()
   const [ documentsGenerated, setDocumentsGenerated ] = useState<OrderDocument[] | null>()
+  const [ isAccepted, setAccepted ] = useState<boolean>()
 
   useEffect(() => {
     loadStepData()
   }, [ currentStep ])
+
+  useEffect(() => {
+    if (offerStatus) {
+      setAccepted(offerStatus === BankOfferStatus.Completed)
+    }
+  }, [ offerStatus ])
 
   useEffect(() => {
     if (!stepData) return
@@ -253,7 +263,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {!isAccepted && renderActions()}
     </Div>
   )
 }
