@@ -5,9 +5,13 @@ import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
+import { FactoringStatus } from 'orient-ui-library/library/models/order'
 
 import { CabinetMode } from 'library/models/cabinet'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
+import { FACTORING_CUSTOMER_COMPLETED_STATUSES } from 'components/FactoringCustomerWizard'
+import OrderDocumentsList from 'components/OrderDocumentsList'
 
 import './CustomerFactoringSignDocuments.style.less'
 
@@ -19,22 +23,26 @@ export interface CustomerFactoringSignDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  orderStatus?: FactoringStatus,
+  completed?: boolean,
 }
 
 const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsProps> = ({
   companyId,
   orderId,
-  currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  orderStatus,
+  completed,
 }) => {
   const { t } = useTranslation()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
 
@@ -43,11 +51,24 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   }, [])
 
   useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
+    if (orderStatus &&
+        !FACTORING_CUSTOMER_COMPLETED_STATUSES.includes(orderStatus) &&
+        orderStatus !== FactoringStatus.FACTOR_BANK_SIGN) {
       // NOTE: only for debugging
       setNextStepAllowed(true)
     }
-  }, [ currentStep, sequenceStepNumber ])
+  }, [ orderStatus ])
+
+  useEffect(() => {
+    const currentDocuments = stepData?.documents ?? []
+    const updatedDocumentTypes: number[] = []
+    currentDocuments.forEach((doc: OrderDocument) => {
+      if (doc.isGenerated && doc.info) {
+        updatedDocumentTypes.push(doc.typeId)
+      }
+    })
+    setDocumentTypes(updatedDocumentTypes)
+  }, [ stepData ])
 
   const loadCurrentStepData = async () => {
     const result = await getFactoringWizardStep({
@@ -63,7 +84,6 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
   }
 
   const sendNextStep = async () => {
@@ -78,8 +98,6 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
-    } else {
-      setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
   }
@@ -95,19 +113,10 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       sendNextStep()
     }
   }
-
-  const handleNextStep = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
-
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
+      <Col>{renderSubmitButton()}</Col>
     </Row>
   )
 
@@ -119,18 +128,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       disabled={!isNextStepAllowed || submitting}
       loading={submitting}
     >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
-
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
-    >
-      {t('orderActions.saveAndContinue.title')}
+      {t('common.actions.sign.title')}
     </Button>
   )
 
@@ -146,9 +144,19 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     </Button>
   )
 
+  const renderDocuments = () =>  (
+    <OrderDocumentsList
+      companyId={companyId}
+      orderId={orderId as number}
+      types={documentTypes || []}
+      current={stepData?.documents || []}
+    />
+  )
+
   const renderStepContent = () => (
     <Div className="CustomerFactoringSignDocuments">
-      <Title level={5}>{t('customerFactoringStepInfo.title')}</Title>
+      <Title level={5}>{t('customerOrderStepDocuments.sections.documentsForSign.title')}</Title>
+      {renderDocuments()}
     </Div>
   )
 
@@ -167,7 +175,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {!completed && renderActions()}
     </Div>
   )
 }

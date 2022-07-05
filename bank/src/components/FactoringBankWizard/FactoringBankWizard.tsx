@@ -62,7 +62,6 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
   }, [bankId])
 
   useEffect(() => {
-    console.log('orderStatus', orderStatus)
     if (orderStatus && FACTORING_BANK_COMPLETED_STATUSES.includes(orderStatus)) {
       setCompleted(true)
     }

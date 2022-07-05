@@ -72,6 +72,8 @@ actions:
     title: Fill
   check:
     title: Check
+  sign:
+    title: Sign
 
 documents:
   fields:
