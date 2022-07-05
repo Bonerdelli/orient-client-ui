@@ -26,13 +26,19 @@ const QuestionnaireGeneralFormFields: React.FC<QuestionnaireGeneralFormFieldsPro
                  name="averageEmployeesCountId"
                  label={t('questionnaire.generalInfo.averageEmployeesCount.label')}
       >
-        <Select options={convertDictionaryToSelectOptions(dictionaries.employeeCount)}/>
+        <Select
+          placeholder={t('questionnaire.generalInfo.averageEmployeesCount.placeholder')}
+          options={convertDictionaryToSelectOptions(dictionaries.employeeCount)}
+        />
       </Form.Item>
       <Form.Item {...formItemLayout}
                  name="taxationSystemId"
                  label={t('questionnaire.generalInfo.taxSystem.label')}
       >
-        <Select options={convertDictionaryToSelectOptions(dictionaries.taxationSystem)}/>
+        <Select
+          placeholder={t('questionnaire.generalInfo.taxSystem.placeholder')}
+          options={convertDictionaryToSelectOptions(dictionaries.taxationSystem)}
+        />
       </Form.Item>
     </>
   )

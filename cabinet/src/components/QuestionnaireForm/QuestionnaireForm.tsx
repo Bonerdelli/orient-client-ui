@@ -2,7 +2,7 @@ import './QuestionnaireForm.style.less'
 import { useApi } from 'library/helpers/api'
 import { getQuestionnaire, sendQuestionnaire } from 'library/api/questionnaire'
 import QuestionnaireGeneralFormFields from './sections/QuestionnaireGeneralInfoFormFields'
-import { Button, Form, message, Row, Spin } from 'antd'
+import { Button, Form, message, Row, Skeleton } from 'antd'
 import { QuestionnaireFormData } from './models/questionnaire-form.interface'
 import QuestionnaireHoldingFormFields from './sections/QuestionnaireHoldingFormFields'
 import QuestionnaireCreditFormFields from './sections/QuestionnaireCreditFormFields'
@@ -15,7 +15,6 @@ import {
   convertQuestionnaireFormToDto,
 } from 'components/QuestionnaireForm/converters/questionnaire-form-to-dto.converter'
 import { useStoreState } from 'library/store'
-import { Div } from 'orient-ui-library/components'
 import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useState } from 'react'
@@ -26,7 +25,6 @@ interface QuestionnaireFormProps {
   returnUrl: string | null,
 }
 
-// TODO: Добавить плейсхолдеры, добить переводы где нету, допилить маппинги
 const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, returnUrl }) => {
   const { t } = useTranslation()
   const [ form ] = Form.useForm<QuestionnaireFormData>()
@@ -37,9 +35,7 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
 
   if (!isDataLoaded || !dictionaries || !initialValues) {
     return (
-      <Spin spinning>
-        <Div style={{ width: '100%', height: '500px' }}/>
-      </Spin>
+      <Skeleton active/>
     )
   }
 
