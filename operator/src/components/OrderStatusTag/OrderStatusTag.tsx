@@ -29,7 +29,6 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({
     />
   ) : <></>
 
-  // TODO: support all FactoringStatuses related to operator
   switch (statusCode) {
     case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
     case FactoringStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY:
@@ -48,12 +47,17 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({
     case OrderStatus.FRAME_HAS_OFFER:
       return <Tag color="blue">{t('orderStatusTitles.hasOffer')}{refreshButton}</Tag>
     case OrderStatus.FRAME_CUSTOMER_SIGN:
+    case FactoringStatus.FACTOR_CUSTOMER_SIGN:
       return <Tag color="blue">{t('orderStatusTitles.customerSign')}{refreshButton}</Tag>
+    case OrderStatus.FRAME_COMPLETED:
+    case FactoringStatus.FACTOR_COMPLETED:
+      return <Tag color="blue">{t('orderStatusTitles.completed')}</Tag>
     case OrderStatus.FRAME_CANCEL:
+    case FactoringStatus.FACTOR_CANCEL:
       return <Tag>{t('orderStatusTitles.cancel')}</Tag>
     case OrderStatus.FRAME_OPERATOR_REJECT:
+    case FactoringStatus.FACTOR_OPERATOR_REJECT:
       return <Tag color="red">{t('orderStatusTitles.operatorReject')}</Tag>
-    case OrderStatus.FRAME_COMPLETED:
     default:
       return <Tag>{item?.statusName}</Tag>
   }

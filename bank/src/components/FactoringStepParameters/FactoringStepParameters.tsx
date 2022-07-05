@@ -19,6 +19,7 @@ export interface FactoringStepParametersProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  completed?: boolean
 }
 
 const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
@@ -27,6 +28,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  completed,
 }) => {
   const { t } = useTranslation()
 
@@ -146,7 +148,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {!completed && renderActions()}
     </Div>
   )
 }

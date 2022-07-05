@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Typography, Skeleton, Spin, Row, Col, Button } from 'antd'
+import { Typography, Skeleton, Spin } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -29,11 +29,8 @@ const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
  orderId,
  currentStep,
  sequenceStepNumber,
- setCurrentStep,
 }) => {
  const { t } = useTranslation()
-
- const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate models
  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
@@ -84,33 +81,6 @@ const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
    setStepDataLoading(false)
  }
 
- const handlePrevStep = () => {
-   if (isPrevStepAllowed) {
-     setCurrentStep(sequenceStepNumber - 1)
-   }
- }
-
- const renderPrevStepButton = () => {
-   // NOTE: disabled as we can't go back by status model
-   return (
-     <Button
-       size="large"
-       type="primary"
-       onClick={handlePrevStep}
-       disabled={!isPrevStepAllowed}
-     >
-       {t('common.actions.back.title')}
-     </Button>
-   )
- }
-
- const renderActions = () => (
-   <Row className="WizardStep__actions">
-     <Col>{renderPrevStepButton()}</Col>
-     <Col flex={1}></Col>
-   </Row>
- )
-
  const renderDocuments = () =>  (
    <Spin spinning={documentsLoading}>
      <OrderDocumentsList
@@ -145,7 +115,6 @@ const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
  return (
    <Div className="WizardStep__content">
      {renderStepContent()}
-     {renderActions()}
    </Div>
  )
 }

@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Button, Skeleton, Result, message } from 'antd'
-import { InfoCircleFilled } from '@ant-design/icons'
+import { Row, Col, Button, Skeleton, Result } from 'antd'
+import { InfoCircleFilled, CheckCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep1, // NOTE: replace ep with correct one!
-} from 'library/api/frameWizard'
+import { getFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepOfferAcceptance.style.less'
 
@@ -27,21 +24,19 @@ export interface BlankWizardStepProps {
 const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   bankId,
   orderId,
-  currentStep,
   offerStatus,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
   const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ submitting, setSubmitting ] = useState<boolean>()
   const [ isWaiting, setWaiting ] = useState<boolean>()
+  const [ isAccepted, setAccepted ] = useState<boolean>()
 
   useEffect(() => {
     if (isWaiting === false) {
@@ -52,14 +47,9 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   useEffect(() => {
     if (offerStatus) {
       setWaiting(offerStatus === BankOfferStatus.CustomerSign)
+      setAccepted(offerStatus === BankOfferStatus.Completed)
     }
   }, [ offerStatus ])
-
-  useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      setNextStepAllowed(true)
-    }
-  }, [ currentStep, sequenceStepNumber ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -74,40 +64,11 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
-  }
-
-  const sendNextStep = async () => {
-    if (!orderId) return
-    setSubmitting(true)
-    const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
-      bankId,
-      orderId,
-    }, {})
-    if (!result.success) {
-      message.error(t('common.errors.requestError.title'))
-      setNextStepAllowed(false)
-    } else {
-      setCurrentStep(sequenceStepNumber + 1)
-    }
-    setSubmitting(false)
   }
 
   const handlePrevStep = () => {
     if (isPrevStepAllowed) {
       setCurrentStep(sequenceStepNumber - 1)
-    }
-  }
-
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
-
-  const handleNextStep = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
     }
   }
 
@@ -123,8 +84,6 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
       size="large"
       type="primary"
       onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
     >
       {t('common.actions.back.title')}
     </Button>
@@ -146,6 +105,16 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
         icon={<InfoCircleFilled/>}
         title={t('orderStepOfferAcceptance.waitForAccept.title')}
         subTitle={t('orderStepOfferAcceptance.waitForAccept.desc')}
+      />
+    )
+  }
+
+  if (isAccepted) {
+    return (
+      <Result
+        icon={<CheckCircleFilled />}
+        title={t('orderStepOfferAcceptance.accepted.title')}
+        subTitle={t('orderStepOfferAcceptance.accepted.desc')}
       />
     )
   }
