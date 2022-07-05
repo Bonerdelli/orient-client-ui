@@ -44,6 +44,7 @@ orderStatusTitles:
   cancel: Отмена заявки
   operatorReject: Отказ системы
   bankReject: Отказ Банка
+  completed: Договор заключен
 
 frameWizard:
   title: Заявка на заключение рамочного договора

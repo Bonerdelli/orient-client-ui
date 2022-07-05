@@ -107,6 +107,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       oprderType: OrderWizardType.Frame,
       currentStep: currentStep,
       setCurrentStep: setSelectedStep,
+      offerStatus,
     }
     switch (selectedStep) {
       case 1:
@@ -118,7 +119,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       case 4:
         return <OrderStepContractDocuments {...stepBaseProps} sequenceStepNumber={4} />
       case 5:
-        return <OrderStepOfferAcceptance {...stepBaseProps} offerStatus={offerStatus} sequenceStepNumber={5} />
+        return <OrderStepOfferAcceptance {...stepBaseProps} sequenceStepNumber={5} />
       case 6:
         return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={6} />
       default:

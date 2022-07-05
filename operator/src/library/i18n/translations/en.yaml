@@ -48,6 +48,7 @@ orderStatusTitles:
   cancel: Canceled
   operatorReject: Rejected by Operator
   bankReject: Rejected by Bank
+  completed: Completed
 
 ## TODO: translate me
 frameWizard:

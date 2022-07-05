@@ -9,6 +9,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderConditions, OrderConditionType } from 'orient-ui-library/library/models/orderCondition'
+import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 
 import {
@@ -25,6 +26,7 @@ const { Option } = Select
 export interface OrderStepContractParamsProps {
   bankId?: number | bigint
   orderId?: number
+  offerStatus?: BankOfferStatus
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -33,6 +35,7 @@ export interface OrderStepContractParamsProps {
 const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   bankId,
   orderId,
+  offerStatus,
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
@@ -49,6 +52,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   const [ conditionCode, setConditionCode ] = useState<OrderConditionType>()
   const [ initialData, setInitialData ] = useState<OrderConditions | null>()
   const [ formDisabled, setFormDisabled ] = useState<boolean>(false)
+  const [ isAccepted, setAccepted ] = useState<boolean>()
 
   useEffect(() => {
     loadCurrentStepData()
@@ -68,6 +72,12 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
       setInitialData(null)
     }
   }, [ stepData ])
+
+  useEffect(() => {
+    if (offerStatus) {
+      setAccepted(offerStatus === BankOfferStatus.Completed)
+    }
+  }, [ offerStatus ])
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
@@ -262,7 +272,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
         labelWrap={true}
       >
         {renderStepContent()}
-        {renderActions()}
+        {!isAccepted && renderActions()}
       </Form>
     </Div>
   )
