@@ -20,8 +20,8 @@ const AppLayoutProtected = () => {
   const history = useHistory()
 
   const handleLogout = () => {
-    history.push('/')
     setLogout()
+    history.push('/')
   }
 
   if (!isBank(user)) {

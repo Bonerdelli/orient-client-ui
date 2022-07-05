@@ -21,8 +21,8 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
   const user = useStoreState(state => state.user.current)
 
   const handleLogout = () => {
-    history.push('/')
     setLogout()
+    history.push('/')
   }
 
   const menuItems = [
