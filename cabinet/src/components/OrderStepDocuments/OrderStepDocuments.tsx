@@ -58,8 +58,6 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[] | null>(null)
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
 
-  const [ selectedBankRequisites, setSelectedBankRequisites ] = useState<CompanyRequisitesDto | null>(null)
-
   useEffect(() => {
     loadCurrentStepData()
   }, [])
@@ -80,8 +78,6 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
     setNextStepAllowed(isAllDocumentsReady && isCompanyDataReady)
     setCompanyDataStatus(updatedCompanyStatus)
-
-    setSelectedBankRequisites(stepData?.requisites ?? null)
   }, [ stepData ])
 
   const updateCurrentDocuments = (documents: OrderDocument[]): boolean => {
@@ -169,8 +165,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const handleNextStep = () => {
-    if (isNextStepAllowed) {
+    if (currentStep === sequenceStepNumber) {
       sendNextStep()
+    } else {
+      setCurrentStep(sequenceStepNumber + 1)
     }
   }
 
@@ -288,7 +286,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {currentStep <= sequenceStepNumber && renderActions()}
+      {renderActions()}
     </Div>
   )
 }

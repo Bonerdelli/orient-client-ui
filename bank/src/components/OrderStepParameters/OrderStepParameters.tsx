@@ -20,6 +20,7 @@ export interface OrderStepParametersProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOfferStatus: (step: BankOfferStatus) => void
 }
 
 const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
@@ -29,6 +30,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  setOfferStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -77,6 +79,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOfferStatus(BankOfferStatus.BankViewed)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)

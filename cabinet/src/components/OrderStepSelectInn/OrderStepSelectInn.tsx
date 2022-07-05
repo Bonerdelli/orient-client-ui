@@ -193,10 +193,12 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   }
 
   const handleNextStep = () => {
-    if (orderId && isNextStepAllowed) {
-      setCurrentStep(sequenceStepNumber + 1)
-    } else if (isNextStepAllowed) {
-      sendNextStep()
+    if (isNextStepAllowed) {
+      if (orderId) {
+        setCurrentStep(sequenceStepNumber + 1)
+      } else if (isNextStepAllowed) {
+        sendNextStep()
+      }
     }
   }
 
@@ -259,7 +261,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {currentStep <= sequenceStepNumber && renderActions()}
+      {renderActions()}
     </Div>
   )
 }
