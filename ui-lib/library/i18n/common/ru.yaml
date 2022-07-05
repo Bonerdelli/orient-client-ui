@@ -75,6 +75,8 @@ actions:
     title: Заполнить
   check:
     title: Проверить
+  sendInBank:
+    title: Отправить в Банк
 
 documents:
   fields:

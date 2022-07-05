@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Button, Col, List, message, Row, Skeleton, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 
 import './FactoringStepSendToBank.style.less'
+import { OperatorFactoringStep4Dto, OperatorFactoringWizardStep4ResponseDto } from 'library/models/factoringWizard'
+import { StopFactor } from 'library/models/stopFactor'
+import { FactoringStatus } from 'orient-ui-library/library'
 
 const { Title } = Typography
 
@@ -17,6 +19,7 @@ export interface FactoringStepSendToBankProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  orderStatus: FactoringStatus
 }
 
 const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
@@ -24,13 +27,15 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  orderStatus,
 }) => {
   const { t } = useTranslation()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<OperatorFactoringStep4Dto['bank']>()
+  const [ failedStopFactors, setFailedStopFactors ] = useState<StopFactor[]>([])
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -41,10 +46,10 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   }, [])
 
   useEffect(() => {
-    if (currentStep >= sequenceStepNumber) {
+    if (orderStatus !== FactoringStatus.FACTOR_OPERATOR_VERIFY) {
       setCompleted(true)
     }
-  }, [ currentStep, sequenceStepNumber ])
+  }, [ orderStatus ])
 
   const loadCurrentStepData = async () => {
     const result = await getFactoringWizardStep({
@@ -52,13 +57,16 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      const response = result.data as OperatorFactoringWizardStep4ResponseDto
+      setStepData(response.data.bank)
+      const failedStopFactors = response.data.bank.stopFactors?.filter(({ isOk }) => isOk) ?? []
+      setFailedStopFactors(failedStopFactors)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
+    setNextStepAllowed(true)
   }
 
   const sendNextStep = async () => {
@@ -72,7 +80,8 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setCompleted(true)
+      loadCurrentStepData()
+      // setCompleted(true)
     }
     setSubmitting(false)
   }
@@ -104,7 +113,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       disabled={!isNextStepAllowed || submitting}
       loading={submitting}
     >
-      {t('common.actions.saveAndContinue.title')}
+      {t('common.actions.sendInBank.title')}
     </Button>
   )
 
@@ -120,9 +129,23 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     </Button>
   )
 
+  const renderStopFactors = () => (
+    <List
+      size="small"
+      dataSource={failedStopFactors}
+      renderItem={item => <List.Item>{item.stopFactorName}</List.Item>}
+    />
+  )
+
   const renderStepContent = () => (
     <Div className="FactoringStepSendToBank">
-      <Title level={5}>{t('FactoringStepSendToBank.title')}</Title>
+      <Title level={5}>
+        {t(
+          `factoringStepSendToBank.title.${completed ? 'sent' : 'readyForSending'}`,
+          { bankName: stepData?.bankName ?? '' },
+        )}
+      </Title>
+      {!completed && !!failedStopFactors?.length && renderStopFactors()}
     </Div>
   )
 

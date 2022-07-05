@@ -95,6 +95,13 @@ orderStepScoringResult:
 orderStepOptionalParameters:
   title: Дополнительные параметры
 
+factoringStepSendToBank:
+  title:
+    readyForSending: Заявка будет направлена в Банк {{bankName}}
+    sent: Заявка направлена в Банк {{bankName}}
+  negativeStopFactors: 'По заявке сработали стоп-факторы:'
+  notRecommendedBank: Не рекомендуется направлять заявку в Банк {{bankName}}
+
 orderActions:
   cancel:
     title: Отказать
