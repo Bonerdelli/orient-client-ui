@@ -1,170 +1,123 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+
+import { Typography, Skeleton, Spin } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
-import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
+import OrderDocumentsList from 'components/OrderDocumentsList'
+
+import { getFactoringWizardStep } from 'library/api/factoringWizard'
 
 import './FactoringStepArchive.style.less'
 
 const { Title } = Typography
 
-export interface FactoringStepArchiveProps {
+export interface OrderDocumentsProps {
   bankId?: number | bigint
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  completed?: boolean
 }
 
-const FactoringStepArchive: React.FC<FactoringStepArchiveProps> = ({
+const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
   bankId,
   orderId,
   currentStep,
-  setCurrentStep,
   sequenceStepNumber,
 }) => {
-  const { t } = useTranslation()
+ const { t } = useTranslation()
 
-  const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
-  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
+ const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate models
+ const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+ const [ dataLoaded, setDataLoaded ] = useState<boolean>()
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
-  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ submitting, setSubmitting ] = useState<boolean>()
+ const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
+ const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
+ const [ documents, setDocuments ] = useState<OrderDocument[]>([])
 
-  useEffect(() => {
-    loadCurrentStepData()
-  }, [])
+ useEffect(() => {
+   loadStepData()
+ }, [currentStep])
 
-  useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      // NOTE: only for debugging
-      setNextStepAllowed(true)
-    }
-  }, [ currentStep, sequenceStepNumber ])
+ useEffect(() => {
+   if (!stepData) return
+   const currentDocuments = stepData?.documents ?? []
+   const updatedDocuments: OrderDocument[] = []
+   const updatedDocumentTypes: number[] = []
 
-  const loadCurrentStepData = async () => {
-    const result = await getFactoringWizardStep({
-      step: sequenceStepNumber,
-      bankId: bankId as number,
-      orderId,
-    })
-    if (result.success) {
-      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setDataLoaded(true)
-    } else {
-      setDataLoaded(false)
-    }
-    setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
-  }
+   currentDocuments
+     .filter((doc: OrderDocument) => Boolean(doc.info))
+     .forEach((doc: OrderDocument) => {
+       updatedDocumentTypes.push(doc.typeId)
+       updatedDocuments.push(doc)
+     })
 
-  const sendNextStep = async () => {
-    if (!orderId) return
-    setSubmitting(true)
-    const result = await sendFactoringWizardStep({ // NOTE: replace ep with correct!
-      bankId: bankId as number,
-      orderId,
-    }, {})
-    if (!result.success) {
-      message.error(t('common.errors.requestError.title'))
-      setNextStepAllowed(false)
-    } else {
-      setCurrentStep(sequenceStepNumber + 1)
-    }
-    setSubmitting(false)
-  }
+   setDocuments(updatedDocuments)
+   setDocumentTypes(updatedDocumentTypes)
+   setDocumentsLoading(false)
+ }, [stepData ])
 
-  const handlePrevStep = () => {
-    if (isPrevStepAllowed) {
-      setCurrentStep(sequenceStepNumber - 1)
-    }
-  }
+ const loadStepData = async () => {
+   if (documentTypes === null) {
+     // NOTE: do not show loader every time updates
+     setDocumentsLoading(true)
+   }
+   const result = await getFactoringWizardStep({
+     step: sequenceStepNumber,
+     bankId: bankId as number,
+     orderId,
+   })
+   if (result.success) {
+     setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
+     setDataLoaded(true)
+   } else {
+     setDataLoaded(false)
+   }
+   setStepDataLoading(false)
+ }
 
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
+ const renderDocuments = () =>  (
+   <Spin spinning={documentsLoading}>
+     <OrderDocumentsList
+       orderId={orderId as number}
+       types={documentTypes || []}
+       current={documents}
+     />
+   </Spin>
+ )
 
-  const handleNextStep = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
+ const renderStepContent = () => (
+   <Div className="FactoringStepArchive">
+     <Div className="WizardStep__section">
+       <Title level={5}>{t('orderStepArchive.docsSectionTitle')}</Title>
+       {renderDocuments()}
+     </Div>
+   </Div>
+ )
 
-  const renderActions = () => (
-    <Row className="WizardStep__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
-    </Row>
-  )
+ if (!stepData && stepDataLoading) {
+   return (
+     <Skeleton active={true}/>
+   )
+ }
 
-  const renderSubmitButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleStepSubmit}
-      disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
-    >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
+ if (dataLoaded === false) {
+   return (
+     <ErrorResultView centered status="warning"/>
+   )
+ }
 
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
-    >
-      {t('orderActions.saveAndContinue.title')}
-    </Button>
-  )
-
-  const renderPrevButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
-    >
-      {t('common.actions.back.title')}
-    </Button>
-  )
-
-  const renderStepContent = () => (
-    <Div className="FactoringStepArchive">
-      <Title level={5}>{t('FactoringStepArchive.title')}</Title>
-    </Div>
-  )
-
-  if (!stepData && stepDataLoading) {
-    return (
-      <Skeleton active={true}/>
-    )
-  }
-
-  if (dataLoaded === false) {
-    return (
-      <ErrorResultView centered status="warning"/>
-    )
-  }
-
-  return (
-    <Div className="WizardStep__content">
-      {renderStepContent()}
-      {renderActions()}
-    </Div>
-  )
+ return (
+   <Div className="WizardStep__content">
+     {renderStepContent()}
+   </Div>
+ )
 }
+
 export default FactoringStepArchive
