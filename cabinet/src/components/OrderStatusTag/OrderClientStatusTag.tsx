@@ -44,6 +44,7 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, refreshActi
     case FactoringStatus.FACTOR_CLIENT_SIGN:
       return <Tag color="green">{t('orderStatusTitles.clientSign')}{refreshButton}</Tag>
     case OrderStatus.FRAME_BANK_VERIFYING:
+    case FactoringStatus.FACTOR_BANK_SIGN:
       return <Tag color="blue">{t('orderStatusTitles.bankVerify')}{refreshButton}</Tag>
     case OrderStatus.FRAME_HAS_OFFER:
       return <Tag color="green">{t('orderStatusTitles.hasOffer')}{refreshButton}</Tag>
@@ -59,8 +60,10 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({ statusCode, refreshActi
     case OrderStatus.FRAME_COMPLETED:
     case FactoringStatus.FACTOR_COMPLETED:
       return <Tag color="blue">{t('orderStatusTitles.completed')}</Tag>
+    case FactoringStatus.FACTOR_WAIT_FOR_CHARGE:
+      return <Tag color="blue">{t('orderStatusTitles.factorWaitForCharge')}</Tag>
     case FactoringStatus.FACTOR_CHARGED:
-      return <Tag color="blue">{t('orderStatusTitles.chagred')}</Tag>
+      return <Tag color="blue">{t('orderStatusTitles.factorCharged')}</Tag>
     default:
       // NOTE: unknown statutes shouldn't be displayed
       return <></> // <Tag>{item.statusName}{refreshButton}</Tag>

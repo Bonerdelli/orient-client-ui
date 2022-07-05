@@ -77,6 +77,8 @@ actions:
     title: Проверить
   sendInBank:
     title: Отправить в Банк
+  sign:
+    title: Подписать
 
 documents:
   fields:

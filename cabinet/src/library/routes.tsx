@@ -69,26 +69,31 @@ export const PublicRoutes = () => (
 
 const commonRoutes = [
   <PrivateRoute
+    key="company"
     path={portalConfig.sections.company}
     component={MyCompanyPage}
     roles={portalConfig.roles.pages.all}
   />,
   <PrivateRoute
+    key="heads"
     path={portalConfig.sections.heads}
     component={CompanyHeadsPage}
     roles={portalConfig.roles.pages.all}
   />,
   <PrivateRoute
+    key="bankDetails"
     path={portalConfig.sections.bankDetails}
     component={BankRequisitesPage}
     roles={portalConfig.roles.pages.all}
   />,
   <PrivateRoute
+    key="documents"
     path={portalConfig.sections.documents}
     component={DocumentsPage}
     roles={portalConfig.roles.pages.all}
   />,
   <PrivateRoute
+    key="questionnaire"
     path={portalConfig.sections.questionnaire}
     component={QuestionnairePage}
     roles={portalConfig.roles.pages.all}
