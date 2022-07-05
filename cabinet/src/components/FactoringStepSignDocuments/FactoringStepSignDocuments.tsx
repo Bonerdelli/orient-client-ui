@@ -113,6 +113,7 @@ const FactoringStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     if (!orderId) return
     setSubmitting(true)
     const result = await sendFactoringWizardStep({
+      step: sequenceStepNumber,
       companyId: companyId as number,
       orderId,
     }, {
