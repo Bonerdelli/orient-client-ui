@@ -45,7 +45,7 @@ const OrdersCustomerPage = () => {
           <FrameSimpleCustomerWizard backUrl={url} companyId={company.id as number} />
         </Route>
         <Route path={`${path}/factoring/:itemId`}>
-          <FactoringCustomerWizard backUrl={url} />
+          <FactoringCustomerWizard backUrl={url} companyId={company.id as number} />
         </Route>
       </Switch>
     </Layout>

@@ -101,12 +101,17 @@ orderStatusTitles:
   completed: Договор заключен
   cancel: Отмена заявки
   operatorReject: Отказ от предложения
-  chagred: Финансирование погашено
+  factorWaitForCharge: Ожидает финансирования
+  factorCharged: Профинансировано
+  factorCompleted: Финансирование погашено
 
 orderStatusCustomerTitles:
   customerSign: Требует подписи
   completed: Договор заключен
-  chagred: Финансирование погашено
+  bankVerify: В Банке
+  factorWaitForCharge: Ожидает финансирования
+  factorCharged: Профинансировано
+  factorCompleted: Финансирование погашено
 
 frameOrder: ## TODO: rename to frameWizard
   title: Заявка на заключение рамочного договора

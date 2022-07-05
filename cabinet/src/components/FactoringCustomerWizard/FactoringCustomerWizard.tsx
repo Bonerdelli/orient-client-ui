@@ -5,15 +5,14 @@ import { Card, Steps, Grid, Skeleton } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
-import { OrderStatus } from 'orient-ui-library/library/models'
+import { FactoringStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import CustomerFactoringStepInfo from 'components/CustomerFactoringStepInfo'
 import CustomerFactoringSignDocuments from 'components/CustomerFactoringSignDocuments'
 
 import { CabinetMode } from 'library/models/cabinet'
-import { getCurrentFrameWizardStep } from 'library/api'
+import { getCurrentFactoringWizardStep } from 'library/api/factoringWizard'
 
 import './FactoringCustomerWizard.style.less'
 
@@ -29,7 +28,18 @@ export interface FactoringCustomerWizardPathParams {
   itemId?: string,
 }
 
-const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ companyId, backUrl }) => {
+export const FACTORING_CUSTOMER_COMPLETED_STATUSES = [
+  FactoringStatus.FACTOR_COMPLETED,
+  FactoringStatus.FACTOR_CANCEL,
+  FactoringStatus.FACTOR_CHARGED,
+  FactoringStatus.FACTOR_OPERATOR_REJECT,
+  FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
+]
+
+const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({
+  companyId,
+  backUrl,
+}) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
@@ -40,7 +50,8 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ compa
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
+  const [ completed, setCompleted ] = useState<boolean>(false)
 
   useEffect(() => {
     if (companyId && Number(itemId)) {
@@ -49,10 +60,15 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ compa
     }
   }, [companyId])
 
+  useEffect(() => {
+    if (orderStatus && FACTORING_CUSTOMER_COMPLETED_STATUSES.includes(orderStatus)) {
+      setCompleted(true)
+    }
+  }, [orderStatus])
+
   const loadCurrentStepData = async () => {
-    const result = await getCurrentFrameWizardStep({
+    const result = await getCurrentFactoringWizardStep({
       mode: CabinetMode.Customer,
-      type: FrameWizardType.Full,
       companyId: companyId as number,
       orderId: Number(itemId),
     })
@@ -80,16 +96,20 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ compa
           companyId={companyId}
           orderId={Number(itemId)}
           currentStep={currentStep}
+          orderStatus={orderStatus}
           setCurrentStep={setSelectedStep}
           sequenceStepNumber={1}
+          completed={completed}
         />
       case 2:
         return <CustomerFactoringSignDocuments
           companyId={companyId}
           currentStep={currentStep}
+          orderStatus={orderStatus}
           sequenceStepNumber={2}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId)}
+          completed={completed}
         />
       default:
         return <></>
@@ -106,7 +126,7 @@ const FactoringCustomerWizard: React.FC<FactoringCustomerWizardProps> = ({ compa
     <>
       <Card className="Wizard FactoringCustomerWizard">
         <WizardHeader
-          title={t('frameOrder.title')}
+          title={t('factoring.title')}
           backUrl={backUrl}
           statusTag={
             <OrderStatusTag

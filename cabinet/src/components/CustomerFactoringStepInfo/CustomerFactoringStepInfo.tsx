@@ -5,6 +5,7 @@ import { Button, Col, message, Row, Skeleton } from 'antd'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
+import { FactoringStatus } from 'orient-ui-library/library/models/order'
 
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
@@ -18,6 +19,8 @@ export interface CustomerFactoringStepInfoProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  orderStatus?: FactoringStatus
+  completed?: boolean,
 }
 
 const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
@@ -26,6 +29,7 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  completed,
 }) => {
   const { t } = useTranslation()
 
@@ -141,7 +145,7 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {renderStepContent()}
-      {renderActions()}
+      {!completed && renderActions()}
     </Div>
   )
 }
