@@ -23,6 +23,7 @@ export interface CustomerFactoringSignDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: FactoringStatus) => void
   orderStatus?: FactoringStatus,
   completed?: boolean,
 }
@@ -32,6 +33,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   orderId,
   setCurrentStep,
   sequenceStepNumber,
+  setOrderStatus,
   orderStatus,
   completed,
 }) => {
@@ -79,6 +81,8 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
+      setNextStepAllowed(false)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)

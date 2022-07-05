@@ -118,6 +118,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           companyId={company?.id as number}
           currentStep={currentStep}
           sequenceStepNumber={4}
+          setOrderStatus={setOrderStatus}
           setCurrentStep={setSelectedStep}
           orderId={Number(itemId) || orderId}
           orderStatus={orderStatus}

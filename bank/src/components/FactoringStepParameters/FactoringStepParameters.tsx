@@ -126,7 +126,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
         <Col span={12}>
           <OrderInfo
             orderId={orderId}
-            customerCompany={stepData?.customerCompany}
+            customerCompany={stepData?.clientCompany}
           />
         </Col>
       </Row>

@@ -24,6 +24,7 @@ export interface FactoringStepBankOffersProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: FactoringStatus) => void
   orderStatus: FactoringStatus
 }
 
@@ -32,6 +33,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   companyId,
   currentStep,
   sequenceStepNumber,
+  setOrderStatus,
   setCurrentStep,
   orderStatus,
 }) => {
@@ -48,6 +50,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
   const [ documentTypesGenerated, setDocumentTypesGenerated ] = useState<number[]>()
   const [ documentsGenerated, setDocumentsGenerated ] = useState<OrderDocument[] | null>()
+  const [ completed, setCompleted ] = useState<boolean>()
 
   useEffect(() => {
     loadStepData()
@@ -92,7 +95,9 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
+      setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
       setDataLoaded(true)
+      setCompleted(true)
     } else {
       setDataLoaded(false)
     }
@@ -180,7 +185,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
     )
   }
 
-  if (orderStatus !== FactoringStatus.FACTOR_CLIENT_SIGN) {
+  if (completed || orderStatus !== FactoringStatus.FACTOR_CLIENT_SIGN) {
     // TODO: revise l10ns
     return (
       <Result
