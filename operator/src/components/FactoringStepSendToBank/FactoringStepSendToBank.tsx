@@ -59,7 +59,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     if (result.success) {
       const response = result.data as OperatorFactoringWizardStep4ResponseDto
       setStepData(response.data.bank)
-      const failedStopFactors = response.data.bank.stopFactors?.filter(({ isOk }) => isOk) ?? []
+      const failedStopFactors = response.data.bank.stopFactors?.filter(({ isOk }) => !isOk) ?? []
       setFailedStopFactors(failedStopFactors)
       setDataLoaded(true)
     } else {
