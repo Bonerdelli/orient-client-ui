@@ -7,18 +7,18 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
-import { OrderStatus } from 'orient-ui-library/library/models/order'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FactoringStatus } from 'orient-ui-library/library/models/order'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 
 import './FactoringStepParameters.style.less'
+import { OperatorFactoringStep1Dto, OperatorFactoringWizardStep1ResponseDto } from 'library/models/factoringWizard'
 
 export interface FactoringStepParametersProps {
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
-  setOrderStatus: (status: OrderStatus) => void
+  setOrderStatus: (status: FactoringStatus) => void
 }
 
 const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
@@ -32,7 +32,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
 
-  const [ stepData, setStepData ] = useState<any>()
+  const [ stepData, setStepData ] = useState<OperatorFactoringStep1Dto>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -47,7 +47,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       orderId: orderId,
     })
     if (result.success) {
-      setStepData((result.data as FrameWizardStepResponse<any>).data)
+      setStepData((result.data as OperatorFactoringWizardStep1ResponseDto).data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -67,7 +67,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderStatus(OrderStatus.FRAME_OPERATOR_VERIFYING)
+      setOrderStatus(FactoringStatus.FACTOR_OPERATOR_VERIFY)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
@@ -124,6 +124,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
           <OrderInfo
             orderId={orderId}
             customerCompany={stepData?.customerCompany}
+            factoring={stepData?.factorOrder}
           />
         </Col>
       </Row>

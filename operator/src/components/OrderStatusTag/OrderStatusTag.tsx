@@ -1,12 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { Tag, Button } from 'antd'
+import { Button, Tag } from 'antd'
 import { ReloadOutlined } from '@ant-design/icons'
 
-import {
-  Order,
-  OrderStatus,
-  FactoringStatus,
-} from 'orient-ui-library/library/models/order'
+import { FactoringStatus, Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import './OrderStatusTag.style.less'
 
@@ -26,7 +22,7 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({
   const refreshButton = refreshAction ? (
     <Button
       className="OrderStatusTag__refreshButton"
-      icon={<ReloadOutlined />}
+      icon={<ReloadOutlined/>}
       onClick={refreshAction}
       type="link"
       size="small"
@@ -44,6 +40,7 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({
     case FactoringStatus.FACTOR_CLIENT_SIGN:
       return <Tag color="blue">{t('orderStatusTitles.clientSign')}{refreshButton}</Tag>
     case OrderStatus.FRAME_CLIENT_REWORK:
+    case FactoringStatus.FACTOR_CLIENT_REWORK:
       return <Tag color="blue">{t('orderStatusTitles.needsForRework')}{refreshButton}</Tag>
     case OrderStatus.FRAME_BANK_VERIFYING:
       return <Tag color="blue">{t('orderStatusTitles.bankVerify')}{refreshButton}</Tag>
