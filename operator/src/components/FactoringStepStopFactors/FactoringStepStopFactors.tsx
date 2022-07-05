@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Table, Button, Skeleton, Tag, message } from 'antd'
+import { Button, Col, message, Row, Skeleton, Table, Tag, Typography } from 'antd'
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 
@@ -12,9 +12,9 @@ import { formatDate } from 'orient-ui-library/library/helpers/date'
 import { StopFactor } from 'library/models/stopFactor'
 
 import {
+  factoringWizardSetStopFactor,
   getFactoringWizardStep,
   sendFactoringWizardStep,
-  factoringWizardSetStopFactor,
 } from 'library/api/factoringWizard'
 
 import './FactoringStepStopFactors.style.less'
@@ -89,6 +89,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
     setSubmitting(true)
     const result = await sendFactoringWizardStep({
       orderId,
+      step: sequenceStepNumber,
     }, {
       // NOTE: shouldn't be sent cause statuses switches immediately
       stopFactors,

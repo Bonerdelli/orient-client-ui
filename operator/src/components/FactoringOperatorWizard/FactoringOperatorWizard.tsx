@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Grid, Skeleton } from 'antd'
+import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { OrderStatus } from 'orient-ui-library/library/models/order'
+import { FactoringStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import FactoringStepParameters from 'components/FactoringStepParameters'
@@ -13,9 +13,8 @@ import FactoringStepDocuments from 'components/FactoringStepDocuments'
 import FactoringStepStopFactors from 'components/FactoringStepStopFactors'
 import FactoringStepSendToBank from 'components/FactoringStepSendToBank'
 
-import { getFactoringOrderWizard } from 'library/api/factoring'
-
 import './FactoringOperatorWizard.style.less'
+import { getFactoringOrderWizard } from 'library/api/factoringWizard'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid
@@ -39,7 +38,7 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
 
   useEffect(() => {
     setStepDataLoading(true)
@@ -50,15 +49,15 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
     if (selectedStep !== currentStep) {
       setSelectedStep(currentStep)
     }
-  }, [currentStep])
+  }, [ currentStep ])
 
   const loadCurrentStepData = async () => {
     const result = await getFactoringOrderWizard({
       orderId: Number(itemId) || orderId as number,
     })
     if (result.success) {
-      const step = Number((result.data as any).step)
-      const orderStatus = (result.data as any).orderStatus
+      const step = Number(result.data?.step)
+      const orderStatus = result.data?.orderStatus as FactoringStatus
       setOrderStatus(orderStatus)
       setCurrentStep(step)
       setSelectedStep(step)
@@ -76,16 +75,20 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
 
   const renderCurrentStep = () => {
     if (stepDataLoading) {
-      return <Skeleton active={true} />
+      return <Skeleton active={true}/>
     }
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
       currentStep: currentStep,
-      setCurrentStep: setCurrentStep,
+      setCurrentStep: setSelectedStep,
     }
     switch (selectedStep) {
       case 1:
-        return <FactoringStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
+        return <FactoringStepParameters
+          {...stepBaseProps}
+          sequenceStepNumber={1}
+          setOrderStatus={setOrderStatus}
+        />
       case 2:
         return <FactoringStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
@@ -99,7 +102,7 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -121,10 +124,10 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
-          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
-          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fifthStep.title')} />
+          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')}/>
+          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')}/>
+          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')}/>
+          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fifthStep.title')}/>
         </Steps>
       </Card>
       <Card className="FactoringOperatorWizard__step">

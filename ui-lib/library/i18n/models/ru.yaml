@@ -211,6 +211,19 @@ order:
     typeCode:
       title: Вид заявки
 
+factoring:
+  fields:
+    bankName:
+      title: Наименование Банка
+    amount:
+      title: Сумма заявки
+    days:
+      title: Срок, дней
+    contractNumber:
+      title: Номер контракта
+    purchaseNumber:
+      title: Номер закупки
+
 orderCondition:
   title: Условия договора
   fields:

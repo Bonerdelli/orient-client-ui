@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Form, Select, Typography } from 'antd'
 import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
-import { Dictionaries } from 'library/models/dictionaries'
+import { Dictionaries } from 'orient-ui-library/library/models/dictionaries'
 
 interface QuestionnaireGeneralFormFieldsProps {
   dictionaries: Dictionaries;

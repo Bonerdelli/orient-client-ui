@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Col, Form, Input, Row, Select, Typography } from 'antd'
 import React from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { Dictionaries } from 'library/models/dictionaries'
+import { Dictionaries } from 'orient-ui-library/library/models/dictionaries'
 import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
 import {
   defaultQuestionnaireFormState,

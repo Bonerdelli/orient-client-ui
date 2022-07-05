@@ -3,7 +3,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { useStoreRehydrated } from 'easy-peasy'
 import { Spin } from 'antd'
 
-import { healthCheck } from 'orient-ui-library/library/api/healthCheck'
+import { getDictionaries, healthCheck } from 'orient-ui-library/library/api'
+import { Dictionaries } from 'orient-ui-library/library/models'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import Div from 'orient-ui-library/components/Div'
 
@@ -13,8 +14,6 @@ import AppLayoutPublic from './AppLayoutPublic'
 import AppLayoutProtected from './AppLayoutProtected'
 
 import './AppLayout.style.less'
-import { getDictionaries } from 'library/api/dictionaries'
-import { Dictionaries } from 'library/models/dictionaries'
 
 
 const AppLayout = () => {

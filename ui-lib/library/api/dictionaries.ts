@@ -1,5 +1,5 @@
-import { ApiResponse, get } from 'orient-ui-library/library'
-import { Dictionaries } from 'library/models/dictionaries'
+import { Dictionaries } from '../models'
+import { ApiResponse, get } from '../helpers'
 
 export async function getDictionaries() {
   return await get<Dictionaries>('/dictionary/all')

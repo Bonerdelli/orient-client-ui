@@ -1,4 +1,4 @@
-import { CodeNameDictionary, IdValueDictionary } from 'library/models/dictionaries'
+import { CodeNameDictionary, IdValueDictionary } from 'orient-ui-library/library/models/dictionaries'
 
 export function convertDictionaryToSelectOptions(
   dictionary: (CodeNameDictionary | IdValueDictionary)[],

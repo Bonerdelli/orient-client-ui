@@ -1,5 +1,6 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
 import * as schema from 'orient-ui-library/library/api/schema'
+import { FactoringWizardStepResponse } from 'orient-ui-library/library'
 
 export type FactoringWizardDocumentStatusRequest = schema.components['schemas']['OrderDocumentStatusRequest']
 export type FactoringWizardStopFactorRequest = schema.components['schemas']['OrderStopFactorRequest']
@@ -26,13 +27,13 @@ export async function sendFactoringWizardStep(
 }
 
 /**
- * Get current step
+ * Get current wizard info
  */
-export async function getCurrentFactoringWizardStep(
+export async function getFactoringOrderWizard(
   params: FactoringWizardCommonParameters,
 ) {
   const { orderId } = params
-  return await get(`/operator/wizard/factor/${orderId}`)
+  return await get<FactoringWizardStepResponse<unknown>>(`/operator/wizard/factor/${orderId}`)
 }
 
 /**
@@ -54,7 +55,7 @@ export async function factoringWizardSetDocStatus(
   request: FactoringWizardDocumentStatusRequest,
 ) {
   const { orderId } = params
-  return await post(`/operator/wizard/frame/${orderId}/docStatus`, request)
+  return await post(`/operator/wizard/factor/${orderId}/docStatus`, request)
 }
 
 /**
@@ -65,5 +66,5 @@ export async function factoringWizardSetStopFactor(
   request: FactoringWizardStopFactorRequest,
 ) {
   const { orderId } = params
-  return await post(`/operator/wizard/frame/${orderId}/stopFactor`, request)
+  return await post(`/operator/wizard/factor/${orderId}/stopFactor`, request)
 }
