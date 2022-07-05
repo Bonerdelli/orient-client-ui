@@ -114,6 +114,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
       <Result
         icon={<CheckCircleFilled />}
         title={t('orderStepOfferAcceptance.accepted.title')}
+        subTitle={t('orderStepOfferAcceptance.accepted.desc')}
       />
     )
   }
