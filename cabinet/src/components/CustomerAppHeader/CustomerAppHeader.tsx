@@ -16,8 +16,8 @@ const CustomerAppHeader: React.FC<CustomerAppHeaderProps> = ({}) => {
   const user = useStoreState(state => state.user.current)
 
   const handleLogout = () => {
-    history.push('/')
     setLogout()
+    history.push('/')
   }
 
   return (

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, Result, message } from 'antd'
+import { ClockCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -23,6 +24,7 @@ export interface CustomerFactoringSignDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: FactoringStatus) => void
   orderStatus?: FactoringStatus,
   completed?: boolean,
 }
@@ -32,6 +34,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   orderId,
   setCurrentStep,
   sequenceStepNumber,
+  setOrderStatus,
   orderStatus,
   completed,
 }) => {
@@ -79,6 +82,8 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
+      setNextStepAllowed(false)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -169,6 +174,16 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning"/>
+    )
+  }
+
+  if (completed || orderStatus === FactoringStatus.FACTOR_BANK_SIGN) {
+    // TODO: revise l10ns
+    return (
+      <Result
+        icon={<ClockCircleFilled />}
+        title={t('orderStepBankOffer.statuses.waitingForBank.title')}
+      />
     )
   }
 

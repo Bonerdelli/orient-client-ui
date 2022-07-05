@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Typography, Skeleton, Spin, Row, Col, Button } from 'antd'
+import { Typography, Skeleton, Result, Spin, Row, Col, Button } from 'antd'
+import { ClockCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FactoringStatus } from 'orient-ui-library/library/models'
 
 import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 
@@ -22,6 +24,8 @@ export interface FactoringStepBankOffersProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: FactoringStatus) => void
+  orderStatus: FactoringStatus
 }
 
 const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
@@ -29,7 +33,9 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   companyId,
   currentStep,
   sequenceStepNumber,
+  setOrderStatus,
   setCurrentStep,
+  orderStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -44,6 +50,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
   const [ documentTypesGenerated, setDocumentTypesGenerated ] = useState<number[]>()
   const [ documentsGenerated, setDocumentsGenerated ] = useState<OrderDocument[] | null>()
+  const [ completed, setCompleted ] = useState<boolean>()
 
   useEffect(() => {
     loadStepData()
@@ -88,7 +95,9 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
+      setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
       setDataLoaded(true)
+      setCompleted(true)
     } else {
       setDataLoaded(false)
     }
@@ -173,6 +182,16 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="warning"/>
+    )
+  }
+
+  if (completed || orderStatus !== FactoringStatus.FACTOR_CLIENT_SIGN) {
+    // TODO: revise l10ns
+    return (
+      <Result
+        icon={<ClockCircleFilled />}
+        title={t('orderStepBankOffer.statuses.waitingForBank.title')}
+      />
     )
   }
 
