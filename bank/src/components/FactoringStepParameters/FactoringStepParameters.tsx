@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Button, Skeleton, message } from 'antd'
+import { Button, Col, message, Row, Skeleton } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
-
-import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
+import { BankFactoringWizardStep1Dto } from 'library/models/factoringWizard'
+import {
+  BankFactoringWizardStep1ResponseDto,
+  getFactoringWizardStep,
+  sendFactoringWizardStep,
+} from 'library/api/factoringWizard'
 
 import './FactoringStepParameters.style.less'
 
@@ -34,7 +37,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
 
-  const [ stepData, setStepData ] = useState<any>()
+  const [ stepData, setStepData ] = useState<BankFactoringWizardStep1Dto>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -50,7 +53,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as FrameWizardStepResponse<any>).data)
+      setStepData((result.data as BankFactoringWizardStep1ResponseDto).data)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -113,25 +116,37 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     </Button>
   )
 
-  const renderStepContent = () => (
-    <Div className="FactoringStepParameters">
-      <Row gutter={12}>
-        <Col span={12}>
-          <ClientInfo
-            company={stepData?.clientCompany}
-            companyHead={stepData?.clientCompanyFounder}
-            companyRequisites={stepData?.clientCompanyRequisites}
-          />
-        </Col>
-        <Col span={12}>
-          <OrderInfo
-            orderId={orderId}
-            customerCompany={stepData?.customerCompany}
-          />
-        </Col>
-      </Row>
-    </Div>
-  )
+  const renderStepContent = () => {
+    let customerCompanyData
+    if (stepData) {
+      customerCompanyData = {
+        inn: stepData?.customerInn,
+        shortName: stepData?.customerName,
+      }
+    }
+
+    return (
+      <Div className="FactoringStepParameters">
+        <Row gutter={12}>
+          <Col span={12}>
+            <ClientInfo
+              company={stepData?.clientCompany}
+              companyHead={stepData?.clientCompanyFounder}
+              companyRequisites={stepData?.clientCompanyRequisites}
+            />
+          </Col>
+          <Col span={12}>
+            <OrderInfo
+              orderId={orderId}
+              customerCompany={customerCompanyData}
+              factoring={stepData?.factorOrder}
+              conditions={stepData?.conditions}
+            />
+          </Col>
+        </Row>
+      </Div>
+    )
+  }
 
   if (!stepData && stepDataLoading) {
     return (
