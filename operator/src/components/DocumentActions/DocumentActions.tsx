@@ -15,7 +15,7 @@ export interface DocumentActionsProps {
   downloadHandler: (doc: Document) => Promise<boolean>
   approveHandler: (doc: Document) => Promise<boolean>
   rejectHandler: (doc: Document) => Promise<boolean>
-  onChange?: () => {}
+  onChange?: () => Promise<{}>
   loading?: boolean | null
 }
 
@@ -48,7 +48,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
         t('common.errors.requestError.title')
       )
     } else {
-      onChange && onChange()
+      onChange && await onChange()
     }
     setApproveInProccess(false)
   }
@@ -61,7 +61,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
         t('common.errors.requestError.title')
       )
     } else {
-      onChange && onChange()
+      onChange && await onChange()
     }
     setRejectInProccess(false)
   }

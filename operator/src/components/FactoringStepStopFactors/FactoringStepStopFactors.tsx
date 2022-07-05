@@ -133,7 +133,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
         t('common.errors.requestError.title'),
       )
     } else {
-      loadCurrentStepData()
+      await loadCurrentStepData()
     }
     setApproveInProccess({
       ...approveInProccess,
@@ -158,7 +158,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
         t('common.errors.requestError.title'),
       )
     } else {
-      loadCurrentStepData()
+      await loadCurrentStepData()
     }
     setRejectInProccess({
       ...rejectInProccess,

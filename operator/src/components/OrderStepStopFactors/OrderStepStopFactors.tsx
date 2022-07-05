@@ -132,7 +132,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
         t('common.errors.requestError.title'),
       )
     } else {
-      loadCurrentStepData()
+      await loadCurrentStepData()
     }
     setApproveInProccess({
       ...approveInProccess,
@@ -157,7 +157,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
         t('common.errors.requestError.title'),
       )
     } else {
-      loadCurrentStepData()
+      await loadCurrentStepData()
     }
     setRejectInProccess({
       ...rejectInProccess,
