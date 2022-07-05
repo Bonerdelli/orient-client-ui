@@ -22,6 +22,7 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  completed?: boolean
 }
 
 const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
@@ -30,6 +31,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
+  completed,
 }) => {
   const { t } = useTranslation()
 
@@ -65,6 +67,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     const updatedDocumentTypesGenerated: number[] = []
 
     currentDocuments
+      .filter((doc: OrderDocument) => Boolean(doc.info))
       .forEach((doc: OrderDocument) => {
         if (doc.isGenerated) {
           updatedDocumentTypesGenerated.push(doc.typeId)
@@ -112,6 +115,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     }
     setSubmitting(true)
     const result = await sendFactoringWizardStep({
+      step: sequenceStepNumber,
       bankId: bankId as number,
       orderId,
     }, {})
@@ -249,7 +253,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {!completed && renderActions()}
     </Div>
   )
 }

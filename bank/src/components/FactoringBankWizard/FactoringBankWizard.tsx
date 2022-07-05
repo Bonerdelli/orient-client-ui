@@ -5,7 +5,7 @@ import { Card, Steps, Grid, Skeleton } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
+import { FactoringStatus } from 'orient-ui-library/library/models/order'
 
 import OfferStatusTag from 'components/OfferStatusTag'
 import FactoringStepParameters from 'components/FactoringStepParameters'
@@ -31,6 +31,14 @@ export interface FactoringBankWizardPathParams {
   itemId?: string,
 }
 
+const FACTORING_BANK_COMPLETED_STATUSES = [
+  FactoringStatus.FACTOR_COMPLETED,
+  FactoringStatus.FACTOR_CANCEL,
+  FactoringStatus.FACTOR_CHARGED,
+  FactoringStatus.FACTOR_OPERATOR_REJECT,
+  FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
+]
+
 const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
@@ -39,11 +47,12 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
-  const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ offerStatus, setOfferStatus ] = useState<BankOfferStatus>()
+
   const [ bankId, setBankId ] = useState<number>()
+  const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
+  const [ completed, setCompleted ] = useState<boolean>()
 
   useEffect(() => {
     if (bankId) {
@@ -53,14 +62,11 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
   }, [bankId])
 
   useEffect(() => {
-    if (currentStep === 4 && (
-        offerStatus === BankOfferStatus.CustomerSign
-    )) {
-      // NOTE: show waiting for customer sign message
-      setSelectedStep(5)
-      setCurrentStep(5)
+    console.log('orderStatus', orderStatus)
+    if (orderStatus && FACTORING_BANK_COMPLETED_STATUSES.includes(orderStatus)) {
+      setCompleted(true)
     }
-  }, [currentStep, offerStatus])
+  }, [orderStatus])
 
   useEffect(() => {
     // TODO: load bank from be (when ready)
@@ -73,10 +79,9 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       bankId: MOCK_BANK_ID,
     })
     if (result.success) {
-      setCurrentStepData((result.data as any).data)
       const step = Number((result.data as any).step)
-      let offerStatus = (result.data as any).offerStatus
-      setOfferStatus(offerStatus)
+      let orderStatus = (result.data as any).orderStatus
+      setOrderStatus(orderStatus)
       setCurrentStep(step)
       setSelectedStep(step)
       setDataLoaded(true)
@@ -98,8 +103,9 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       bankId: MOCK_BANK_ID,
       orderId: Number(itemId) || orderId,
       oprderType: OrderWizardType.Factoring,
-      currentStep: currentStep,
       setCurrentStep: setSelectedStep,
+      currentStep,
+      completed,
     }
     switch (selectedStep) {
       case 1:
@@ -127,7 +133,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
           backUrl={backUrl}
           statusTag={
             <OfferStatusTag
-              statusCode={offerStatus}
+              statusCode={orderStatus}
               refreshAction={() => loadCurrentStepData()}
             />
           }
