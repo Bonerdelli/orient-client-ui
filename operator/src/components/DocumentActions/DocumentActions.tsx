@@ -4,6 +4,7 @@ import { Button, message } from 'antd'
 import { DownloadOutlined, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
+import { getControlColorByState } from 'orient-ui-library/library/helpers/control'
 
 import { Document, DocumentStatus } from 'library/models'
 
@@ -86,7 +87,9 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       title={t('common.actions.approve.title')}
       onClick={handleApprove}
       disabled={loading === true || rejectInProccess || document.status === DocumentStatus.Approved}
-      icon={<CheckCircleTwoTone twoToneColor={document.status !== DocumentStatus.Approved ? '#52c41a' : '#ccc' } />}
+      icon={<CheckCircleTwoTone twoToneColor={
+        getControlColorByState(document.status !== DocumentStatus.Approved ? true : null)
+      } />}
     />
   )
 
@@ -100,7 +103,9 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       title={t('common.actions.reject.title')}
       onClick={handleReject}
       disabled={loading === true || approveInProccess || document.status === DocumentStatus.NotApproved}
-      icon={<CloseCircleTwoTone twoToneColor={document.status !== DocumentStatus.NotApproved ? '#e83030' : '#ccc' } />}
+      icon={<CloseCircleTwoTone twoToneColor={
+        getControlColorByState(document.status !== DocumentStatus.NotApproved ? false : null)
+      } />}
     />
   )
 

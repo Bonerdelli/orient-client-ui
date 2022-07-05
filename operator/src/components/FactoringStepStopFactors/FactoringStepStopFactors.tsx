@@ -8,6 +8,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
+import { getControlColorByState } from 'orient-ui-library/library/helpers/control'
 
 import { StopFactor } from 'library/models/stopFactor'
 
@@ -254,7 +255,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       onClick={() => handleApprove(item)}
       loading={approveInProccess[item.stopFactorId]}
       disabled={stepDataLoading || rejectInProccess[item.stopFactorId] || item.isOk === true}
-      icon={<CheckCircleTwoTone twoToneColor={item.isOk !== true ? '#52c41a' : '#ccc'}/>}
+      icon={<CheckCircleTwoTone twoToneColor={getControlColorByState(item.isOk !== true ? true : null)}/>}
     />
   )
 
@@ -268,7 +269,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       onClick={() => handleReject(item)}
       loading={rejectInProccess[item.stopFactorId]}
       disabled={stepDataLoading || approveInProccess[item.stopFactorId] || item.isOk === false}
-      icon={<CloseCircleTwoTone twoToneColor={item.isOk !== false ? '#e83030' : '#ccc'}/>}
+      icon={<CloseCircleTwoTone twoToneColor={getControlColorByState(item.isOk !== false ? false : null)}/>}
     />
   )
 

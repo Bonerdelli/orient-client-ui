@@ -1,0 +1,7 @@
+###
+# Common theme variables (used on all portals)
+###
+
+control-color-danger: '#e83030'
+control-color-success: '#52c41a'
+control-color-inactive: '#ccc'

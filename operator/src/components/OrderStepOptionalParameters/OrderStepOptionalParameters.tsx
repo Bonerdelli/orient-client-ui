@@ -13,6 +13,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 
 import { OptionalParameter } from 'library/models/optionalParameter'
+import { getControlColorByState } from 'orient-ui-library/library/helpers/control'
 
 import {
   getFrameWizardStep,
@@ -140,7 +141,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
     </Button>
   )
 
-  const stopFactorColumns: ColumnsType<StopFactor> = [
+  const stopFactorColumns: ColumnsType<OptionalParameter> = [
     {
       key: 'stopFactorName',
       dataIndex: 'stopFactorName',
@@ -158,8 +159,6 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       key: 'isOk',
       dataIndex: 'isOk',
       title: '',
-      // TODO: move colors to constants
-      // render: (value) => value ? <CheckOutlined color="#52c41a" /> : <CloseOutlined color="#e83030" />,
       render: () => 'Неизвестно',
       align: 'center',
     },
@@ -189,7 +188,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       type="link"
       shape="circle"
       title={t('common.actions.approve.title')}
-      icon={<CheckCircleTwoTone twoToneColor="#52c41a"/>}
+      icon={<CheckCircleTwoTone twoToneColor={getControlColorByState(true)}/>}
     />
   )
 
@@ -200,7 +199,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       type="link"
       shape="circle"
       title={t('common.actions.reject.title')}
-      icon={<CloseCircleTwoTone twoToneColor="#e83030"/>}
+      icon={<CloseCircleTwoTone twoToneColor={getControlColorByState(false)}/>}
     />
   )
 
