@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Result, Typography, Button, Skeleton, message } from 'antd'
+import { Button, Col, message, Result, Row, Skeleton, Typography } from 'antd'
 import { ArrowLeftOutlined, ClockCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
@@ -14,6 +14,8 @@ import OrderDocumentsList from 'components/OrderDocumentsList'
 import { sendFrameWizardStep4 } from 'library/api/frameWizard'
 
 import './ClientOrderBankOfferInfo.style.less'
+import { useHistory } from 'react-router-dom'
+import { FACTORING_ORDER_ID_PARAM, OFFER_BANK_ID_PARAM } from 'library/constants'
 
 const { Title, Paragraph } = Typography
 
@@ -35,8 +37,10 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
   onSuccess,
 }) => {
   const { t } = useTranslation()
+  const history = useHistory()
+
   const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
-  const [ readyForApprove, setReadyForApprove ] = useState<boolean>()
+  const [ bankOfferStatus, setBankOfferStatus ] = useState<BankOfferStatus | null>(null)
   const [ submitting, setSubmitting ] = useState<boolean>()
   const [ bankId, setBankId ] = useState<number>()
 
@@ -50,9 +54,9 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
       }
     })
     setBankId(offer.bank.id)
-    setReadyForApprove(offer.offerStatus === BankOfferStatus.BankOfferSent)
+    setBankOfferStatus(offer.offerStatus)
     setDocumentTypes(updatedDocumentTypes)
-  }, [offer])
+  }, [ offer ])
 
   const handleReject = () => {
     onBack()
@@ -79,7 +83,7 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
     setSubmitting(false)
   }
 
-  const renderDocuments = () =>  (
+  const renderDocuments = () => (
     <OrderDocumentsList
       companyId={companyId}
       orderId={orderId as number}
@@ -91,28 +95,50 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
   const renderHasOfferContent = () => (
     <Div>
       <Div className="ClientOrderBankOfferInfo__section">
-        <OrderConditionView condition={offer.conditions} />
+        <OrderConditionView condition={offer.conditions}/>
       </Div>
       <Div className="ClientOrderBankOfferInfo__section">
         <Title level={5}>{t('orderStepBankOffer.sections.documentsForSign.title')}</Title>
         {renderDocuments()}
       </Div>
       <Div className="ClientOrderBankOfferInfo__section">
-        <Paragraph>{t('orderStepBankOffer.sections.confirmation.part1')}</Paragraph>
-        <Paragraph>{t('orderStepBankOffer.sections.confirmation.part2')}</Paragraph>
+        {bankOfferStatus === BankOfferStatus.BankOfferSent && <>
+          <Paragraph>{t('orderStepBankOffer.sections.confirmation.part1')}</Paragraph>
+          <Paragraph>{t('orderStepBankOffer.sections.confirmation.part2')}</Paragraph>
+        </>}
+        {bankOfferStatus === BankOfferStatus.Completed && <>
+          <Paragraph>{t('orderStepBankOffer.sections.completed')}</Paragraph>
+          <Paragraph>
+            {t('orderStepBankOffer.sections.readyForFactoring')}
+            <Button style={{ marginLeft: '24px' }}
+                    type="primary"
+                    onClick={() => history.push(
+                      `/factoring?${FACTORING_ORDER_ID_PARAM}=${orderId}&${OFFER_BANK_ID_PARAM}=${offer.bank.id}`,
+                    )}
+            >
+              {t('orderStepBankOffer.sections.createFactoring')}
+            </Button>
+          </Paragraph>
+        </>}
       </Div>
     </Div>
   )
 
   const renderOfferContent = () => {
-    if (readyForApprove) {
+    if (!bankOfferStatus) {
+      return <Skeleton active/>
+    }
+    const contentVisibleOfferStatuses = [ BankOfferStatus.BankOfferSent, BankOfferStatus.Completed ]
+    if (contentVisibleOfferStatuses.includes(bankOfferStatus)) {
       return renderHasOfferContent()
     }
+
+    const isOfferOnBankSide = bankOfferStatus !== BankOfferStatus.CustomerSign
     return (
       <Result
-        icon={<ClockCircleFilled />}
-        title={t('orderStepBankOffer.statuses.waitingForBank.title')}
-        subTitle={t('orderStepBankOffer.statuses.waitingForBank.desc')}
+        icon={<ClockCircleFilled/>}
+        title={t(`orderStepBankOffer.statuses.${isOfferOnBankSide ? 'waitingForBank' : 'waitingForCustomer'}.title`)}
+        subTitle={isOfferOnBankSide ? t('orderStepBankOffer.statuses.waitingForBank.desc') : null}
       />
     )
   }
@@ -153,14 +179,14 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
   )
 
   if (!orderId) {
-    return <Skeleton />
+    return <Skeleton/>
   }
 
   return (
     <Div className="ClientOrderBankOfferInfo">
       <Div className="ClientOrderBankOfferInfo__navigateBack">
         <Button
-          icon={<ArrowLeftOutlined />}
+          icon={<ArrowLeftOutlined/>}
           type="link"
           size="middle"
           onClick={onBack}
@@ -172,7 +198,7 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
         {t('orderStepBankOffer.title', { bankName: offer.bank.name })}
       </Title>
       {renderOfferContent()}
-      {readyForApprove && renderActions()}
+      {bankOfferStatus === BankOfferStatus.BankOfferSent && renderActions()}
     </Div>
   )
 }

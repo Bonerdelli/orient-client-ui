@@ -25,7 +25,8 @@ import { CabinetMode } from 'library/models/cabinet'
 import { EditOutlined } from '@ant-design/icons'
 import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
 import OrderCondition from 'orient-ui-library/components/OrderCondition'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
+import { FACTORING_ORDER_ID_PARAM, OFFER_BANK_ID_PARAM } from 'library/constants'
 
 const { Text, Title, Paragraph } = Typography
 
@@ -50,6 +51,10 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
 }) => {
   const { t } = useTranslation()
   const history = useHistory()
+  const { search } = useLocation()
+  const queryParams = new URLSearchParams(search)
+  const factoringOrderIdFromQueryParams = queryParams.get(FACTORING_ORDER_ID_PARAM)
+  const bankOfferIdFromQueryParams = queryParams.get(OFFER_BANK_ID_PARAM)
   const [ factoringParamsForm ] = Form.useForm<FactoringParamsForm>()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
@@ -134,6 +139,9 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       const options = orders.map(renderOrderOption)
       setOrderList(orders)
       setOrderOptions(options)
+      if (factoringOrderIdFromQueryParams) {
+        setSelectedOrderId(+factoringOrderIdFromQueryParams)
+      }
     } else {
       setDataLoaded(false)
     }
@@ -152,6 +160,9 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       }))
       setOfferList(offers)
       setOfferOptions(options)
+      if (bankOfferIdFromQueryParams) {
+        setSelectedOfferBankId(+bankOfferIdFromQueryParams)
+      }
     } else {
       message.error(t('factoringStepParameters.apiErrors.fetchOfferList'))
     }
