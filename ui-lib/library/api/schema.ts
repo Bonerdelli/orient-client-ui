@@ -133,6 +133,9 @@ export interface paths {
   '/client/company/{companyId}/wizard/frameSimple/{orderId}/cancel': {
     post: operations['cancel']
   }
+  '/client/company/{companyId}/wizard/frameSimple/{orderId}/4': {
+    post: operations['postStep4']
+  }
   '/client/company/{companyId}/wizard/frameSimple/{orderId}/3': {
     post: operations['postStep3_5']
   }
@@ -150,6 +153,9 @@ export interface paths {
   }
   '/client/company/{companyId}/wizard/frame/{orderId}/cancel': {
     post: operations['cancel_1']
+  }
+  '/client/company/{companyId}/wizard/frame/{orderId}/4': {
+    post: operations['postStep4_1']
   }
   '/client/company/{companyId}/wizard/frame/{orderId}/3': {
     post: operations['postStep3_6']
@@ -225,6 +231,9 @@ export interface paths {
   '/bank/{bankId}/wizard/frameSimple/{orderId}/reject': {
     post: operations['reject_4']
   }
+  '/bank/{bankId}/wizard/frameSimple/{orderId}/3': {
+    post: operations['postStep3_7']
+  }
   '/bank/{bankId}/wizard/frameSimple/{orderId}/2': {
     post: operations['postStep2_7']
   }
@@ -234,11 +243,14 @@ export interface paths {
   '/bank/{bankId}/wizard/frame/{orderId}/reject': {
     post: operations['reject_5']
   }
+  '/bank/{bankId}/wizard/frame/{orderId}/5': {
+    post: operations['postStep5']
+  }
   '/bank/{bankId}/wizard/frame/{orderId}/4': {
-    post: operations['postStep4']
+    post: operations['postStep4_2']
   }
   '/bank/{bankId}/wizard/frame/{orderId}/3': {
-    post: operations['postStep3_7']
+    post: operations['postStep3_8']
   }
   '/bank/{bankId}/wizard/frame/{orderId}/2': {
     post: operations['postStep2_8']
@@ -367,6 +379,9 @@ export interface paths {
   }
   '/client/company/{companyId}/order/{orderId}/document': {
     get: operations['getDocuments']
+  }
+  '/client/company/{companyId}/io': {
+    get: operations['withFounder']
   }
   '/client/company/{companyId}/founder/{founderId}': {
     get: operations['founder']
@@ -558,6 +573,8 @@ export interface components {
       payDelayAvg: number
       /** Format: int32 */
       payDelayMax: number
+      /** Format: int32 */
+      maxPossibleCredit: number
     }
     CompanyQuestionnaireBuyer: {
       name: string
@@ -635,6 +652,10 @@ export interface components {
     AttachFounderRequest: {
       /** Format: int64 */
       founderId: number
+    }
+    ClientFrameStep4ToRequest: {
+      /** Format: int64 */
+      bankId: number
     }
     ClientFactorStep1To2Request: {
       /** Format: int64 */
@@ -824,6 +845,17 @@ export interface components {
       site?: string
       email?: string
     }
+    BankFrameStep4To5Request: {
+      conditionCode: string
+      /** Format: double */
+      percentYear?: number
+      /** Format: double */
+      percentOverall?: number
+      /** Format: double */
+      percentDiscount?: number
+      /** Format: date */
+      startDate: string
+    }
     BankFrameStep3To4Request: {
       conditionCode: string
       /** Format: double */
@@ -864,6 +896,7 @@ export interface components {
       /** Format: int32 */
       step: number
       orderStatus: string
+      offerStatus?: string
       data: components['schemas']['WizardGetResponse']
     }
     OrderStatusGraphAxis: {
@@ -968,6 +1001,14 @@ export interface components {
     ServerResponseListOrderDocumentsResponse: {
       success: boolean
       data?: components['schemas']['OrderDocumentsResponse'][]
+    }
+    CompanyFounderResponse: {
+      company?: components['schemas']['JCompany']
+      founder?: components['schemas']['JCompanyFounder']
+    }
+    ServerResponseCompanyFounderResponse: {
+      success: boolean
+      data?: components['schemas']['CompanyFounderResponse']
     }
     ServerResponseListJCompanyFounder: {
       success: boolean
@@ -1811,6 +1852,27 @@ export interface operations {
       }
     }
   }
+  postStep4: {
+    parameters: {
+      path: {
+        companyId: number
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseWizardPostResponse']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ClientFrameStep4ToRequest']
+      }
+    }
+  }
   postStep3_5: {
     parameters: {
       path: {
@@ -1923,6 +1985,27 @@ export interface operations {
         content: {
           '*/*': components['schemas']['ServerResponseUnit']
         }
+      }
+    }
+  }
+  postStep4_1: {
+    parameters: {
+      path: {
+        companyId: number
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseWizardPostResponse']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ClientFrameStep4ToRequest']
       }
     }
   }
@@ -2449,6 +2532,22 @@ export interface operations {
       }
     }
   }
+  postStep3_7: {
+    parameters: {
+      path: {
+        bankId: number
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseWizardPostResponse']
+        }
+      }
+    }
+  }
   postStep2_7: {
     parameters: {
       path: {
@@ -2502,7 +2601,7 @@ export interface operations {
       }
     }
   }
-  postStep4: {
+  postStep5: {
     parameters: {
       path: {
         bankId: number
@@ -2518,7 +2617,28 @@ export interface operations {
       }
     }
   }
-  postStep3_7: {
+  postStep4_2: {
+    parameters: {
+      path: {
+        bankId: number
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseWizardPostResponse']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BankFrameStep4To5Request']
+      }
+    }
+  }
+  postStep3_8: {
     parameters: {
       path: {
         bankId: number
@@ -3231,6 +3351,21 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['ServerResponseListOrderDocumentsResponse']
+        }
+      }
+    }
+  }
+  withFounder: {
+    parameters: {
+      path: {
+        companyId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseCompanyFounderResponse']
         }
       }
     }

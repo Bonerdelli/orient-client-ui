@@ -1,14 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { Descriptions, Skeleton } from 'antd'
 import { CompanyDto } from 'orient-ui-library/library/models/proxy'
-import { FactoringOrderInfo } from '../../library'
+import { FactoringOrderInfo, OrderConditions, OrderConditionType } from '../../library'
+import { formatDate } from '../../library/helpers/date'
 
 const { Item: DescItem } = Descriptions
 
 export interface OrderInfoProps {
   orderId?: number
-  customerCompany?: CompanyDto
+  customerCompany?: Pick<CompanyDto, 'inn' | 'shortName'>
   factoring?: FactoringOrderInfo
+  conditions?: OrderConditions
   size?: 'middle' | 'small' | 'default'
 }
 
@@ -16,12 +18,63 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
   orderId,
   customerCompany,
   factoring,
+  conditions,
   size = 'small',
 }) => {
   const { t } = useTranslation()
 
   if (!orderId || !customerCompany) {
     return <Skeleton/>
+  }
+
+  const renderOrderConditions = () => {
+    // copypaste from OrderConditions.tsx
+    const renderConditionType = (type: OrderConditionType) => {
+      switch (type) {
+        case OrderConditionType.Comission:
+          return t('models.orderCondition.fields.conditionCode.options.comission')
+        case OrderConditionType.Discount:
+          return t('models.orderCondition.fields.conditionCode.options.discount')
+        default:
+          return ''
+      }
+    }
+
+    const renderFieldsByType = (type: OrderConditionType) => {
+      switch (type) {
+        case OrderConditionType.Comission:
+          return (
+            <>
+              <DescItem label={t('models.orderCondition.fields.percentOverall.title')}>
+                {conditions!.percentOverall}
+              </DescItem>
+              <DescItem label={t('models.orderCondition.fields.percentYear.title')}>
+                {conditions!.percentYear}
+              </DescItem>
+            </>
+          )
+        case OrderConditionType.Discount:
+          return (
+            <>
+              <DescItem label={t('models.orderCondition.fields.percentDiscount.title')}>
+                {conditions!.percentDiscount}
+              </DescItem>
+            </>
+          )
+        default:
+          return <></>
+      }
+    }
+
+    return (<>
+      <DescItem label={t('models.orderCondition.fields.conditionCode.title')}>
+        {renderConditionType(conditions!.conditionCode)}
+      </DescItem>
+      {renderFieldsByType(conditions!.conditionCode)}
+      <DescItem label={t('models.orderCondition.fields.startDate.title')}>
+        {formatDate(conditions!.startDate, { includeTime: false })}
+      </DescItem>
+    </>)
   }
 
   const renderFactoringInfo = () => (<>
@@ -59,6 +112,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
       <DescItem label={t('models.customer.fields.name.title')}>
         {customerCompany.shortName}
       </DescItem>
+      {conditions && renderOrderConditions()}
       {factoring && renderFactoringInfo()}
     </Descriptions>
   )
