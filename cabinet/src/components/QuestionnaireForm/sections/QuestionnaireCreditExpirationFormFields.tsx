@@ -17,10 +17,10 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
   const form = Form.useFormInstance<QuestionnaireFormData>()
   const [ hasTrials, setHasTrials ] = useState<boolean>(form.getFieldValue('hasTrials'))
   const [ expirationsState, setExpirationsState ] = useState<ExpirationsState>([
-    form.getFieldValue('creditExpirations')[0].isExpired,
-    form.getFieldValue('creditExpirations')[1].isExpired,
-    form.getFieldValue('creditExpirations')[2].isExpired,
-    form.getFieldValue('creditExpirations')[3].isExpired,
+    form.getFieldValue('creditExpirations')[0]?.isExpired,
+    form.getFieldValue('creditExpirations')[1]?.isExpired,
+    form.getFieldValue('creditExpirations')[2]?.isExpired,
+    form.getFieldValue('creditExpirations')[3]?.isExpired,
   ])
 
   const yesNoOptions = [

@@ -49,10 +49,10 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
               <Col span={12}>
                 <Form.Item
                   {...formItemLayout}
-                  label={t('questionnaire.easyFinansRelationships.memberName')}
-                  name={[ field.name, 'bankName' ]}
+                  label={t('questionnaire.easyFinansRelationships.memberName.label')}
+                  name={[ field.name, 'memberName' ]}
                 >
-                  <Input placeholder={t('')}
+                  <Input placeholder={t('questionnaire.easyFinansRelationships.memberName.placeholder')}
                          {...inputLayout} />
                 </Form.Item>
               </Col>
@@ -61,10 +61,10 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                 <Col span={12}>
                   <Form.Item
                     {...formItemLayout}
-                    label={t('questionnaire.easyFinansRelationships.relativeName')}
-                    name={[ field.name, 'bankName' ]}
+                    label={t('questionnaire.easyFinansRelationships.relativeName.label')}
+                    name={[ field.name, 'relativeName' ]}
                   >
-                    <Input placeholder={t('')}
+                    <Input placeholder={t('questionnaire.easyFinansRelationships.relativeName.placeholder')}
                            {...inputLayout} />
                   </Form.Item>
                 </Col>
@@ -72,10 +72,10 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                 <Col span={12}>
                   <Form.Item
                     {...formItemLayout}
-                    label={t('questionnaire.easyFinansRelationships.relation')}
-                    name={[ field.name, 'bankName' ]}
+                    label={t('questionnaire.easyFinansRelationships.relation.label')}
+                    name={[ field.name, 'relation' ]}
                   >
-                    <Input placeholder={t('')}
+                    <Input placeholder={t('questionnaire.easyFinansRelationships.relation.placeholder')}
                            {...inputLayout} />
                   </Form.Item>
                 </Col>

@@ -49,8 +49,10 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                   label={t('questionnaire.credits.bankName.label')}
                   name={[ field.name, 'bankName' ]}
                 >
-                  <Input placeholder={t('questionnaire.credits.bankName.placeholder')}
-                         {...inputLayout} />
+                  <Input
+                    placeholder={t('questionnaire.credits.bankName.placeholder')}
+                    {...inputLayout}
+                  />
                 </Form.Item>
               </Col>
 
@@ -61,7 +63,10 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                   label={t('questionnaire.credits.creditAmount.label')}
                   name={[ field.name, 'creditAmount' ]}
                 >
-                  <Input {...inputLayout} placeholder={t('questionnaire.credits.creditAmount.placeholder')}/>
+                  <Input
+                    {...inputLayout}
+                    placeholder={t('questionnaire.credits.creditAmount.placeholder')}
+                  />
                 </Form.Item>
               </Col>
 
@@ -72,7 +77,10 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                   label={t('questionnaire.credits.remainAmount.label')}
                   name={[ field.name, 'remainAmount' ]}
                 >
-                  <Input {...inputLayout} placeholder={'questionnaire.credits.remainAmount.placeholder'}/>
+                  <Input
+                    {...inputLayout}
+                    placeholder={t('questionnaire.credits.remainAmount.placeholder')}
+                  />
                 </Form.Item>
               </Col>
 
@@ -87,7 +95,7 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                   label={t('questionnaire.credits.creditDate')}
                   name={[ field.name, 'creditDate' ]}
                 >
-                  <DatePicker format={DATE_FORMAT} />
+                  <DatePicker format={DATE_FORMAT}/>
                 </Form.Item>
               </Col>
               <Col span={4}>

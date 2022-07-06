@@ -1,12 +1,6 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
-
-import { OrderDocument } from 'orient-ui-library/library/models/document'
-
-import {
-  CompanyFounderDto,
-  CompanyQuestionnaireDto,
-  CompanyRequisitesDto,
-} from 'orient-ui-library/library/models/proxy'
+import { FactoringWizardStepResponse } from 'orient-ui-library/library'
+import { BankFactoringWizardStep1Dto, BankFactoringWizardStep2Dto } from 'library/models/factoringWizard'
 
 interface FactoringWizardCommonParameters {
   bankId: number
@@ -18,13 +12,8 @@ export interface FactoringWizardStepParameters extends FactoringWizardCommonPara
   orderId: number
 }
 
-// TODO: ask be generate models for this
-export interface WizardStep2Data {
-  documents: OrderDocument[] | null
-  founder: CompanyFounderDto | null
-  requisites: CompanyRequisitesDto | null
-  questionnaire: CompanyQuestionnaireDto | null
-}
+export type BankFactoringWizardStep1ResponseDto = FactoringWizardStepResponse<BankFactoringWizardStep1Dto>
+export type BankFactoringWizardStep2ResponseDto = FactoringWizardStepResponse<BankFactoringWizardStep2Dto>
 
 // NOTE: some API wrappers for Client and Customer are combined
 const getBasePath = (bankId: number | bigint) => {

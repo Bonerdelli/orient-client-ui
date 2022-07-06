@@ -33,9 +33,12 @@ const QuestionnaireHoldingFormFields: React.FC = () => {
       <Form.Item {...formItemLayout}
                  key={name}
                  name={name}
-                 label={t(`questionnaire.holdings.${name}`)}
+                 label={t(`questionnaire.holdings.${name}.label`)}
       >
-        <Input {...inputLayout}/>
+        <Input
+          {...inputLayout}
+          placeholder={t(`questionnaire.holdings.${name}.placeholder`)}
+        />
       </Form.Item>)
     }
   </>)
