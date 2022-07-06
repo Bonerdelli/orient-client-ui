@@ -25,7 +25,7 @@ export interface FactoringStepBankOffersProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: FactoringStatus) => void
-  orderStatus: FactoringStatus
+  orderStatus?: FactoringStatus
 }
 
 const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({

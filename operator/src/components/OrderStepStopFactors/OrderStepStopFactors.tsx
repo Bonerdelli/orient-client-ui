@@ -8,6 +8,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
+import { getControlColorByState } from 'orient-ui-library/library/helpers/control'
 
 import { StopFactor } from 'library/models/stopFactor'
 
@@ -23,7 +24,7 @@ const { Title } = Typography
 
 export interface OrderStepStopFactorsProps {
   orderId?: number
-  currentStep: number
+  currentStep?: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
@@ -111,7 +112,11 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      sendNextStep()
+      if (currentStep <= sequenceStepNumber) {
+        sendNextStep()
+      } else {
+        setCurrentStep(sequenceStepNumber + 1)
+      }
     }
   }
 
@@ -132,7 +137,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
         t('common.errors.requestError.title'),
       )
     } else {
-      loadCurrentStepData()
+      await loadCurrentStepData()
     }
     setApproveInProccess({
       ...approveInProccess,
@@ -157,7 +162,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
         t('common.errors.requestError.title'),
       )
     } else {
-      loadCurrentStepData()
+      await loadCurrentStepData()
     }
     setRejectInProccess({
       ...rejectInProccess,
@@ -250,11 +255,12 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
       key="approve"
       type="link"
       shape="circle"
+      className="Control"
       title={t('common.actions.approve.title')}
       onClick={() => handleApprove(item)}
       loading={approveInProccess[item.stopFactorId]}
       disabled={stepDataLoading || rejectInProccess[item.stopFactorId] || item.isOk === true}
-      icon={<CheckCircleTwoTone twoToneColor={item.isOk !== true ? '#52c41a' : '#ccc'}/>}
+      icon={<CheckCircleTwoTone twoToneColor={getControlColorByState(item.isOk !== true ? true : null)}/>}
     />
   )
 
@@ -264,11 +270,12 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
       key="reject"
       type="link"
       shape="circle"
+      className="Control"
       title={t('common.actions.reject.title')}
       onClick={() => handleReject(item)}
       loading={rejectInProccess[item.stopFactorId]}
       disabled={stepDataLoading || approveInProccess[item.stopFactorId] || item.isOk === false}
-      icon={<CloseCircleTwoTone twoToneColor={item.isOk !== false ? '#e83030' : '#ccc'}/>}
+      icon={<CloseCircleTwoTone twoToneColor={getControlColorByState(item.isOk !== false ? false : null)}/>}
     />
   )
 

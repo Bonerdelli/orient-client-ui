@@ -75,7 +75,11 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      sendNextStep()
+      if (currentStep === sequenceStepNumber) {
+        sendNextStep()
+      } else {
+        setCurrentStep(sequenceStepNumber + 1)
+      }
     }
   }
 

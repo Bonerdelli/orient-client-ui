@@ -28,6 +28,7 @@ export interface OrderStepContractDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOfferStatus: (step: BankOfferStatus) => void
 }
 
 const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
@@ -36,6 +37,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   offerStatus,
   currentStep,
   setCurrentStep,
+  setOfferStatus,
   sequenceStepNumber,
 }) => {
   const { t } = useTranslation()
@@ -123,13 +125,14 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOfferStatus(BankOfferStatus.BankOfferSent)
       // NOTE: workaround requested by be, send next step after current
-      const result = await sendFrameWizardStep({
+      const nextStepResult = await sendFrameWizardStep({
         step: sequenceStepNumber + 1,
         bankId,
         orderId,
       }, undefined)
-      if (!result.success) {
+      if (!nextStepResult.success) {
         message.error(t('common.errors.requestError.title'))
         setNextStepAllowed(false)
       } else {

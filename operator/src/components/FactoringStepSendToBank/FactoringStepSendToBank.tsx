@@ -48,8 +48,17 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   useEffect(() => {
     if (orderStatus !== FactoringStatus.FACTOR_OPERATOR_VERIFY) {
       setCompleted(true)
+      setNextStepAllowed(false)
     }
   }, [ orderStatus ])
+
+  useEffect(() => {
+    if (currentStep >= sequenceStepNumber) {
+      setNextStepAllowed(false)
+    } else {
+      setNextStepAllowed(true)
+    }
+  }, [ currentStep ])
 
   const loadCurrentStepData = async () => {
     const result = await getFactoringWizardStep({
@@ -66,7 +75,6 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true)
   }
 
   const sendNextStep = async () => {

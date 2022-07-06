@@ -81,7 +81,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
       currentStep: currentStep,
-      setCurrentStep: setCurrentStep,
+      setCurrentStep: (step: number) => setSelectedStep(step),
     }
     switch (selectedStep) {
       case 1:

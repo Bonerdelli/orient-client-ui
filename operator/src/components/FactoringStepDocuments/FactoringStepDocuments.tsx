@@ -145,7 +145,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      if (currentStep === sequenceStepNumber) {
+      if (currentStep <= sequenceStepNumber) {
         sendNextStep()
       } else {
         setCurrentStep(sequenceStepNumber + 1)
