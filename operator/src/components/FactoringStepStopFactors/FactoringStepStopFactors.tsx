@@ -31,6 +31,7 @@ export interface FactoringStepStopFactorsProps {
 
 const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
   orderId,
+  currentStep,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
@@ -111,8 +112,10 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
   }
 
   const handleNextStep = () => {
-    if (isNextStepAllowed) {
+    if (currentStep <= sequenceStepNumber) {
       sendNextStep()
+    } else {
+      setCurrentStep(sequenceStepNumber + 1)
     }
   }
 

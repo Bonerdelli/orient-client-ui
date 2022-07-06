@@ -67,7 +67,7 @@ export async function sendFactoringWizardStep(
 ) {
   const { mode, companyId, orderId, step } = params
   const basePath = getBasePath(companyId, mode)
-  return await post(`${basePath}/${orderId}/${step}`, request, true)
+  return await post(`${basePath}/${orderId}/${step}`, request)
 }
 
 /**

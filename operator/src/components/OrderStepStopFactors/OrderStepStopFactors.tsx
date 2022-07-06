@@ -31,6 +31,7 @@ export interface OrderStepStopFactorsProps {
 
 const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
   orderId,
+  currentStep,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
@@ -111,7 +112,11 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      sendNextStep()
+      if (currentStep <= sequenceStepNumber) {
+        sendNextStep()
+      } else {
+        setCurrentStep(sequenceStepNumber + 1)
+      }
     }
   }
 

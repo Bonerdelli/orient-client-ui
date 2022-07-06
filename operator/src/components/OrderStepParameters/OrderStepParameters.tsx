@@ -73,8 +73,10 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   }
 
   const handleNextStep = () => {
-    if (isNextStepAllowed) {
+    if (currentStep <= sequenceStepNumber) {
       sendNextStep()
+    } else {
+      setCurrentStep(sequenceStepNumber + 1)
     }
   }
 

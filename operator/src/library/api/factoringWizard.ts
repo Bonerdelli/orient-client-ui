@@ -23,7 +23,7 @@ export async function sendFactoringWizardStep(
   request: unknown,
 ) {
   const { orderId, step } = params
-  return await post(`/operator/wizard/factor/${orderId}/${step}`, request, true)
+  return await post(`/operator/wizard/factor/${orderId}/${step}`, request)
 }
 
 /**
