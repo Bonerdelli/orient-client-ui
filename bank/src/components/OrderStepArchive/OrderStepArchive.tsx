@@ -17,18 +17,18 @@ import './OrderStepArchive.style.less'
 const { Title } = Typography
 
 export interface OrderDocumentsProps {
- bankId?: number | bigint
- orderId?: number
- currentStep: number
- sequenceStepNumber: number
- setCurrentStep: (step: number) => void
+  bankId?: number | bigint
+  orderId?: number
+  currentStep: number
+  sequenceStepNumber: number
+  setCurrentStep: (step: number) => void
 }
 
 const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
- bankId,
- orderId,
- currentStep,
- sequenceStepNumber,
+  bankId,
+  orderId,
+  currentStep,
+  sequenceStepNumber,
 }) => {
  const { t } = useTranslation()
 
