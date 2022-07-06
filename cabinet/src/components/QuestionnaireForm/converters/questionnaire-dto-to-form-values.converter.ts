@@ -16,11 +16,6 @@ export const convertQuestionnaireDtoToFormValues = (dto: CompanyQuestionnaireDto
   return {
     ...dataWithoutIds,
     // setting up empty data for correct form view
-    buyersTotalCount: dto.buyersTotalCount ?? 0,
-    buyersPayDelayCount: dto.buyersPayDelayCount ?? 0,
-    payDelayMin: dto.payDelayMin ?? 0,
-    payDelayAvg: dto.payDelayAvg ?? 0,
-    payDelayMax: dto.payDelayMax ?? 0,
     credits: dto.credits ?? defaultQuestionnaireFormState.credits,
     creditExpirations,
     buyers,

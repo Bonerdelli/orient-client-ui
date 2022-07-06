@@ -99,13 +99,27 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliers
       {renderRows('buyers')}
       <Form.Item name="buyersTotalCount"
                  {...buyersFieldsFormFieldsLayout}
-                 label={t('questionnaire.suppliersAndBuyers.buyersTotalCount')}>
-        <Input {...inputLayout}/>
+                 label={t('questionnaire.suppliersAndBuyers.buyersTotalCount.label')}>
+        <Input
+          {...inputLayout}
+          placeholder={t('questionnaire.suppliersAndBuyers.buyersTotalCount.placeholder')}
+        />
       </Form.Item>
       <Form.Item name="buyersPayDelayCount"
                  {...buyersFieldsFormFieldsLayout}
                  label={t('questionnaire.suppliersAndBuyers.buyersPayDelayCount')}>
-        <Input {...inputLayout}/>
+        <Input
+          {...inputLayout}
+          placeholder={t('questionnaire.suppliersAndBuyers.buyersPayDelayCount.placeholder')}
+        />
+      </Form.Item>
+      <Form.Item name="maxPossibleCredit"
+                 {...buyersFieldsFormFieldsLayout}
+                 label={t('questionnaire.suppliersAndBuyers.maxPossibleCredit.label')}>
+        <Input
+          {...inputLayout}
+          placeholder={t('questionnaire.suppliersAndBuyers.maxPossibleCredit.placeholder')}
+        />
       </Form.Item>
       <Form.Item required
                  labelAlign="left"
@@ -116,22 +130,31 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliers
         <Col span={6}>
           <Form.Item name="payDelayMin"
                      {...delayFieldsFormFieldsLayout}
-                     label={t('questionnaire.suppliersAndBuyers.payDelay.min')}>
-            <Input {...inputLayout}/>
+                     label={t('questionnaire.suppliersAndBuyers.payDelay.min.label')}>
+            <Input
+              {...inputLayout}
+              placeholder={t('questionnaire.suppliersAndBuyers.payDelay.min.placeholder')}
+            />
           </Form.Item>
         </Col>
         <Col span={6}>
           <Form.Item name="payDelayAvg"
                      {...delayFieldsFormFieldsLayout}
-                     label={t('questionnaire.suppliersAndBuyers.payDelay.avg')}>
-            <Input {...inputLayout}/>
+                     label={t('questionnaire.suppliersAndBuyers.payDelay.avg.label')}>
+            <Input
+              {...inputLayout}
+              placeholder={t('questionnaire.suppliersAndBuyers.payDelay.avg.placeholder')}
+            />
           </Form.Item>
         </Col>
         <Col span={6}>
           <Form.Item name="payDelayMax"
                      {...delayFieldsFormFieldsLayout}
-                     label={t('questionnaire.suppliersAndBuyers.payDelay.max')}>
-            <Input {...inputLayout}/>
+                     label={t('questionnaire.suppliersAndBuyers.payDelay.max.label')}>
+            <Input
+              {...inputLayout}
+              placeholder={t('questionnaire.suppliersAndBuyers.payDelay.max.placeholder')}
+            />
           </Form.Item>
         </Col>
       </Row>
