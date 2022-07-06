@@ -61,6 +61,16 @@ frameWizard:
   fifthStep:
     title: Результаты скоринга
 
+frameSimpleWizard:
+  title: Заявка на упрощенный рамочный договор
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Отправка в Банк
+
 orderStepParameters:
   title: Параметры заявки и клиента
 
@@ -71,9 +81,33 @@ orderStepDocuments:
     additionalDocs: Дополнительные документы
     companyHeadInfo: Данные о руководителе
     finStatements: Бухгалтерская отчетность (Форма 1)
+    orderParameters: Введите данные по заявке
   companyFounderInformation:
     title: Данные о руководителе
     check: Проверить
+  customerInformation:
+    title: Информация о выбранном Заказчике
+  orderParametersFormFields:
+    customer:
+      title: ИНН Заказчика
+      placeholder: Выберите ИНН Заказчика...
+    bank:
+      title: Банк
+      placeholder: Выберите банк...
+    conditionCode:
+      title: Условие договора
+      placeholder: Выберите условие договора...
+      options:
+        comission: Комиссия от суммы финансирования
+        discount: Дисконт от суммы финансирования
+    percentOverall:
+      title: Комиссия (единовременная)
+    percentYear:
+      title: Комиссия (% годовых)
+    percentDiscount:
+      title: Размер дисконта
+    startDate:
+      title: Дата начала действия
 
 orderStepStopFactors:
   title: Проверка на стоп-факторы

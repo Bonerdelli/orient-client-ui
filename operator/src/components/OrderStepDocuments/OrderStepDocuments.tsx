@@ -1,7 +1,21 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button, Col, message, Modal, Row, Skeleton, Spin, Typography } from 'antd'
+import {
+  message,
+  Button,
+  Col,
+  Modal,
+  Row,
+  Skeleton,
+  Spin,
+  Typography,
+  Form,
+  Input,
+  DatePicker,
+  Select,
+} from 'antd'
+
 import { SelectOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
@@ -10,7 +24,9 @@ import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { OrderConditions, OrderConditionType } from 'orient-ui-library/library/models/orderCondition'
 import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
+import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import { DocumentStatus } from 'library/models'
@@ -20,6 +36,8 @@ import { frameWizardSetDocStatus, getFrameWizardStep, sendFrameWizardStep2 } fro
 import './OrderStepDocuments.style.less'
 
 const { Title } = Typography
+const { useForm, Item: FormItem } = Form
+const { Option } = Select
 
 export interface OrderDocumentsProps {
   wizardType?: FrameWizardType
@@ -37,6 +55,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   setCurrentStep,
 }) => {
   const { t } = useTranslation()
+  const [ form ] = useForm()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(true)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
@@ -51,6 +70,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[]>()
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[] | null>()
+
+  const [ conditionCode, setConditionCode ] = useState<OrderConditionType>()
+  const [ initialData, setInitialData ] = useState<OrderConditions | null>()
+  const [ formDisabled, setFormDisabled ] = useState<boolean>(false)
 
   const [ clientCompanyFounder, setClientCompanyFounder ] = useState<CompanyFounderDto | null>(null)
   const [ companyFounderModalVisible, setCompanyFounderModalVisible ] = useState<boolean>(false)
@@ -230,13 +253,133 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Spin>
   )
 
+  const renderOrderParametersSection = () => (
+    <Div className="OrderStepDocuments__section">
+      <Title level={5}>{t('orderStepDocuments.sectionTitles.orderParameters')}</Title>
+      <Row>
+        <Col xs={24} lg={14}>
+          {renderOrderParameters()}
+        </Col>
+        <Col xs={24} lg={10}>
+          {renderCustomerInfo()}
+        </Col>
+      </Row>
+    </Div>
+  )
+
+  const renderOrderParameters = () => (
+    <Form
+      form={form}
+      initialValues={initialData || undefined}
+      labelWrap={true}
+    >
+      {renderOrderParametersFormInputs()}
+      {renderOrderConditionsFormInputs()}
+    </Form>
+  )
+
+  /**
+   * Order condition form for a simple frame order
+   */
+
+  const isComission = () => conditionCode === OrderConditionType.Comission
+  const isDiscount = () => conditionCode === OrderConditionType.Discount
+
+  const formItemProps = {
+    labelCol: { span: 10 },
+  }
+
+  const requiredRule = {
+    required: true,
+  }
+
+  const renderOrderParametersFormInputs = () => (<>
+    <FormItem {...formItemProps}
+              name="customer"
+              label={t('orderStepDocuments.orderParametersFormFields.customer.title')}>
+      <Select disabled={formDisabled}
+              placeholder={t('orderStepDocuments.orderParametersFormFields.customer.placeholder')}
+              onChange={setConditionCode}>
+
+      </Select>
+    </FormItem>
+    <FormItem {...formItemProps}
+              name="bank"
+              label={t('orderStepDocuments.orderParametersFormFields.bank.title')}>
+      <Select disabled={formDisabled}
+              placeholder={t('orderStepDocuments.orderParametersFormFields.bank.placeholder')}
+              onChange={setConditionCode}>
+
+      </Select>
+    </FormItem>
+  </>)
+
+  // TODO: make a shared component with bank/src/components/OrderStepContractParams maybe
+  const renderOrderConditionsFormInputs = () => (<>
+    <FormItem {...formItemProps}
+              name="conditionCode"
+              label={t('models.orderCondition.fields.conditionCode.title')}>
+      <Select disabled={formDisabled}
+              placeholder={t('models.orderCondition.fields.conditionCode.placeholder')}
+              onChange={setConditionCode}>
+        <Option value={OrderConditionType.Comission}>
+          {t('models.orderCondition.fields.conditionCode.options.comission')}
+        </Option>
+        <Option value={OrderConditionType.Discount}>
+          {t('models.orderCondition.fields.conditionCode.options.discount')}
+        </Option>
+      </Select>
+    </FormItem>
+    {isComission() &&
+      <FormItem {...formItemProps}
+                name="percentOverall"
+                label={t('models.orderCondition.fields.percentOverall.title')}
+                rules={[ requiredRule ]}>
+        <Input disabled={formDisabled} type="number" suffix="%"/>
+      </FormItem>
+    }
+    {isComission() &&
+      <FormItem {...formItemProps}
+                name="percentYear"
+                label={t('models.orderCondition.fields.percentYear.title')}
+                rules={[ requiredRule ]}>
+        <Input disabled={formDisabled} type="number" suffix="%"/>
+      </FormItem>
+    }
+    {isDiscount() &&
+      <FormItem {...formItemProps}
+                name="percentDiscount"
+                label={t('models.orderCondition.fields.percentDiscount.title')}
+                rules={[ requiredRule ]}>
+        <Input disabled={formDisabled} type="number" suffix="%"/>
+      </FormItem>
+    }
+    {(isComission() || isDiscount()) &&
+      <FormItem {...formItemProps}
+                name="startDate"
+                label={t('models.orderCondition.fields.startDate.title')}
+                rules={[ requiredRule ]}>
+        <DatePicker format={DATE_FORMAT} disabled={formDisabled}/>
+      </FormItem>
+    }
+  </>)
+
+  const renderCustomerInfo = () => (
+    <></>
+  )
+
+  /**
+   * Company Founder modal
+   */
 
   const openCompanyFounderModal = () => {
     setCompanyFounderModalVisible(true)
   }
+
   const closeCompanyFounderModal = () => {
     setCompanyFounderModalVisible(false)
   }
+
   const renderCompanyFounderSection = () => (
     <Div className="OrderStepDocuments__section">
       <Title level={5}>
@@ -279,6 +422,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       </Div>
       {documentsOptional !== null && renderOptionalDocumentsSection()}
       {renderCompanyFounderSection()}
+      {wizardType === FrameWizardType.Simple && renderOrderParametersSection()}
     </Div>
   )
 

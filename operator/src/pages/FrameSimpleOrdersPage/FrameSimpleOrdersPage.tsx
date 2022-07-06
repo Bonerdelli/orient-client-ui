@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout } from 'antd'
 
 import FrameSimpleOrdersList from 'components/FrameSimpleOrdersList'
-import FrameOperatorWizard from 'components/FrameOperatorWizard' // TODO: make an wizard
+import FrameSimpleOperatorWizard from 'components/FrameSimpleOperatorWizard'
 
 import './FrameSimpleOrdersPage.style.less'
 
@@ -24,7 +24,7 @@ const FrameSimpleOrdersPage = () => {
           {renderList()}
         </Route>
         <Route path={`${path}/:itemId`}>
-          <FrameOperatorWizard backUrl={url} />
+          <FrameSimpleOperatorWizard backUrl={url} />
         </Route>
       </Switch>
     </Layout>

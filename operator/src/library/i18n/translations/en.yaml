@@ -66,6 +66,16 @@ frameWizard:
   fifthStep:
     title: Результаты скоринга
 
+frameSimpleWizard:
+  title: Заявка на упрощенный рамочный договор
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Отправка в Банк
+
 orderStepParameters:
   title: Параметры заявки и клиента
 

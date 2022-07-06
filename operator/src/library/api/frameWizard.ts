@@ -41,7 +41,7 @@ export async function sendFrameWizardStep1(
 ) {
   const { orderId, type } = params
   const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'full'
-  return await post(`/operator/${wizard}/frame/${orderId}/1`, request)
+  return await post(`/operator/wizard/${wizard}/${orderId}/1`, request)
 }
 
 /**
@@ -53,7 +53,7 @@ export async function sendFrameWizardStep2(
 ) {
   const { orderId, type } = params
   const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'full'
-  return await post(`/operator/${wizard}/frame/${orderId}/2`, request)
+  return await post(`/operator/wizard/${wizard}/${orderId}/2`, request)
 }
 
 /**
@@ -96,7 +96,7 @@ export async function getFrameWizardStep(
 ) {
   const { orderId, step, type } = params
   const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'full'
-  return await get(`/operator/${wizard}/frame/${orderId}/${step}`)
+  return await get(`/operator/wizard/${wizard}/${orderId}/${step}`)
 }
 
 /**
@@ -119,7 +119,7 @@ export async function frameWizardSetDocStatus(
 ) {
   const { orderId, type } = params
   const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'full'
-  return await post(`/operator/${wizard}/frame/${orderId}/docStatus`, request)
+  return await post(`/operator/wizard/${wizard}/${orderId}/docStatus`, request)
 }
 
 /**

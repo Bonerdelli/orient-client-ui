@@ -72,7 +72,6 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
   const isFirstStepActive = (): boolean => true
   const isSecondStepActive = (): boolean => currentStep > 1
   const isThirdStepActive = (): boolean => currentStep > 2
-  const isFourthStepActive = (): boolean => currentStep > 3
 
   const renderCurrentStep = () => {
     if (stepDataLoading) {
@@ -92,11 +91,11 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
         />
       case 2:
         return <OrderStepDocuments {...stepBaseProps}
+          wizardType={FrameWizardType.Simple}
           sequenceStepNumber={2}
         />
       case 3:
         return <OrderStepSendToBank {...stepBaseProps}
-          wizardType={FrameWizardType.Simple}
           sequenceStepNumber={3}
         />
       default:
@@ -114,7 +113,7 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
     <>
       <Card className="Wizard FrameSimpleOperatorWizard">
         <WizardHeader
-          title={t('frameWizard.title')}
+          title={t('frameSimpleWizard.title')}
           backUrl={backUrl}
           statusTag={
             <OrderStatusTag
@@ -128,10 +127,9 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
-          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
-          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fifthStep.title')} />
+          <Step disabled={!isFirstStepActive()} title={t('frameSimpleWizard.firstStep.title')} />
+          <Step disabled={!isSecondStepActive()} title={t('frameSimpleWizard.secondStep.title')} />
+          <Step disabled={!isThirdStepActive()} title={t('frameSimpleWizard.thirdStep.title')} />
         </Steps>
       </Card>
       <Card className="FrameSimpleOperatorWizard__step">
