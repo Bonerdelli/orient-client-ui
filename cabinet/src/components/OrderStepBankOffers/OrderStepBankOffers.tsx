@@ -49,7 +49,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
 
   const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean | null>(null)
   const [ submitting, _setSubmitting ] = useState<boolean>()
 
   const [ offers, setOffers ] = useState<BankOffer[]>()

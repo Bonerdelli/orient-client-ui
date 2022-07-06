@@ -70,6 +70,13 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
     setStepDataLoading(false)
   }
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
       return <Skeleton active={true} />
@@ -80,7 +87,7 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
           companyId={companyId}
           orderId={Number(itemId)}
           currentStep={currentStep}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           sequenceStepNumber={1}
         />
       case 2:
@@ -88,7 +95,7 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           setOrderStatus={setOrderStatus}
           orderStatus={orderStatus}
           orderId={Number(itemId)}
