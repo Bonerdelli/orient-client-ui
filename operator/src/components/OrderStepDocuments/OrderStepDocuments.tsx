@@ -6,8 +6,11 @@ import { SelectOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
+import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import { DocumentStatus } from 'library/models'
@@ -15,12 +18,11 @@ import { DocumentStatus } from 'library/models'
 import { frameWizardSetDocStatus, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
-import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
-import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 
 const { Title } = Typography
 
 export interface OrderDocumentsProps {
+  wizardType?: FrameWizardType
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
@@ -28,6 +30,7 @@ export interface OrderDocumentsProps {
 }
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
+  wizardType = FrameWizardType.Full,
   orderId,
   currentStep,
   sequenceStepNumber,
@@ -91,6 +94,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       setDocumentsLoading(true)
     }
     const result = await getFrameWizardStep({
+      type: wizardType,
       step: sequenceStepNumber,
       orderId,
     })
@@ -119,6 +123,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         documentStatus: document.info?.documentStatus ?? DocumentStatus.NotApproved,
       }))
     const result = await sendFrameWizardStep2({
+      type: wizardType,
       orderId,
     }, {
       documentStatuses,
@@ -185,6 +190,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const changeDocStatus = async (documentId: number, status: DocumentStatus) => {
     const result = await frameWizardSetDocStatus({
+      type: wizardType,
       orderId,
     }, {
       documentId,

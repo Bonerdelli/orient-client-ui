@@ -109,6 +109,7 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
         loading={dataLoaded === null}
         dataSource={data?.data as unknown as Order[] || []}
         pagination={false}
+        rowKey="id"
       />
     </div>
   )

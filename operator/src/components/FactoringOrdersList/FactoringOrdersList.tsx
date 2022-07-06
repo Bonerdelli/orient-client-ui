@@ -112,6 +112,7 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
         dataSource={data?.data as unknown as Order[] || []}
         rowClassName={rowClassName}
         pagination={false}
+        rowKey="id"
       />
     </div>
   )

@@ -2,18 +2,25 @@ import { get, post } from 'orient-ui-library/library/helpers/api'
 import * as schema from 'orient-ui-library/library/api/schema'
 
 import { CompanyDto, CompanyFounderDto, CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 // export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
 export type FrameWizardRejectOrderRequest = schema.components['schemas']['RejectOrderDto']
 export type FrameWizardDocumentStatusRequest = schema.components['schemas']['OrderDocumentStatusRequest']
 export type FrameWizardStopFactorRequest = schema.components['schemas']['OrderStopFactorRequest']
 
-export interface FrameWizardCommonParameters {
+export interface FrameWizardParameters {
   orderId?: number
   step?: number
 }
 
-export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
+export interface FrameWizardsCommonParameters extends FrameWizardParameters {
+  type: FrameWizardType
+  orderId?: number
+  step?: number
+}
+
+export interface FrameWizardStepParameters extends FrameWizardParameters {
   orderId: number
 }
 
@@ -29,22 +36,24 @@ export interface FrameWizardStep1Response {
  * Send wizard step 1
  */
 export async function sendFrameWizardStep1(
-  params: FrameWizardStepParameters,
+  params: FrameWizardsCommonParameters,
   request: unknown,
 ) {
-  const { orderId } = params
-  return await post(`/operator/wizard/frame/${orderId}/1`, request)
+  const { orderId, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'full'
+  return await post(`/operator/${wizard}/frame/${orderId}/1`, request)
 }
 
 /**
  * Send wizard step 2
  */
 export async function sendFrameWizardStep2(
-  params: FrameWizardStepParameters,
+  params: FrameWizardsCommonParameters,
   request: unknown,
 ) {
-  const { orderId } = params
-  return await post(`/operator/wizard/frame/${orderId}/2`, request)
+  const { orderId, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'full'
+  return await post(`/operator/${wizard}/frame/${orderId}/2`, request)
 }
 
 /**
@@ -73,7 +82,7 @@ export async function sendFrameWizardStep4(
  * Get current step
  */
 export async function getCurrentFrameWizardStep(
-  params: FrameWizardCommonParameters,
+  params: FrameWizardParameters,
 ) {
   const { orderId } = params
   return await get(`/operator/wizard/frame/${orderId}`)
@@ -83,17 +92,18 @@ export async function getCurrentFrameWizardStep(
  * Get wizard step by number
  */
 export async function getFrameWizardStep(
-  params: FrameWizardCommonParameters,
+  params: FrameWizardsCommonParameters,
 ) {
-  const { orderId, step } = params
-  return await get(`/operator/wizard/frame/${orderId}/${step}`)
+  const { orderId, step, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'full'
+  return await get(`/operator/${wizard}/frame/${orderId}/${step}`)
 }
 
 /**
  * Reject order
  */
 export async function frameWizardReject(
-  params: FrameWizardCommonParameters,
+  params: FrameWizardParameters,
   request: FrameWizardRejectOrderRequest,
 ) {
   const { orderId, step } = params
@@ -104,18 +114,19 @@ export async function frameWizardReject(
  * Set document status (reject or approve)
  */
 export async function frameWizardSetDocStatus(
-  params: FrameWizardCommonParameters,
+  params: FrameWizardsCommonParameters,
   request: FrameWizardDocumentStatusRequest,
 ) {
-  const { orderId } = params
-  return await post(`/operator/wizard/frame/${orderId}/docStatus`, request)
+  const { orderId, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'full'
+  return await post(`/operator/${wizard}/frame/${orderId}/docStatus`, request)
 }
 
 /**
  * Set stop factor status (reject or approve)
  */
 export async function frameWizardSetStopFactor(
-  params: FrameWizardCommonParameters,
+  params: FrameWizardParameters,
   request: FrameWizardStopFactorRequest,
 ) {
   const { orderId } = params

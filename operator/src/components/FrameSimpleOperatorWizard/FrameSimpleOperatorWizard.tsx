@@ -6,12 +6,12 @@ import { Card, Steps, Grid, Skeleton } from 'antd'
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
-import OrderStepStopFactors from 'components/OrderStepStopFactors'
-import OrderStepScoringResults from 'components/OrderStepScoringResults'
+import OrderStepSendToBank from 'components/OrderStepSendToBank'
 
 import { getFrameSimpleOrderWizard } from 'library/api/frameSimpleOrder'
 
@@ -85,13 +85,20 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
+        return <OrderStepParameters {...stepBaseProps}
+          wizardType={FrameWizardType.Simple}
+          setOrderStatus={setOrderStatus}
+          sequenceStepNumber={1}
+        />
       case 2:
-        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
+        return <OrderStepDocuments {...stepBaseProps}
+          sequenceStepNumber={2}
+        />
       case 3:
-        return <OrderStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
-      case 4:
-        return <OrderStepScoringResults {...stepBaseProps} sequenceStepNumber={4}/>
+        return <OrderStepSendToBank {...stepBaseProps}
+          wizardType={FrameWizardType.Simple}
+          sequenceStepNumber={3}
+        />
       default:
         return <></>
     }

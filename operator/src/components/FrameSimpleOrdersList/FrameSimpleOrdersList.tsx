@@ -112,6 +112,7 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({}) => {
         dataSource={data?.data as unknown as Order[] || []}
         rowClassName={rowClassName}
         pagination={false}
+        rowKey="id"
       />
     </div>
   )

@@ -122,6 +122,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
           sequenceStepNumber={3}
           setCurrentStep={setSelectedStep}
           orderStatus={orderStatus}
+          setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
         />

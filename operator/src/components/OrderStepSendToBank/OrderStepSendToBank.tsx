@@ -1,41 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Col, message, Row, Skeleton } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import ClientInfo from 'orient-ui-library/components/ClientInfo'
-import OrderInfo from 'orient-ui-library/components/OrderInfo'
-
-import { OrderStatus } from 'orient-ui-library/library/models/order'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { FrameWizardStep1Response, getFrameWizardStep, sendFrameWizardStep1 } from 'library/api/frameWizard'
 
-import './OrderStepParameters.style.less'
+import {
+  getFrameWizardStep,
+  sendFrameWizardStep1, // NOTE: replace ep with correct one!
+} from 'library/api/frameWizard'
 
-export interface OrderStepParametersProps {
-  wizardType?: FrameWizardType
+import './OrderStepSendToBank.style.less'
+
+const { Title } = Typography
+
+export interface OrderStepSendToBankProps {
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
-  setOrderStatus: (status: OrderStatus) => void
 }
 
-const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
-  wizardType = FrameWizardType.Full,
+const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   orderId,
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
-  setOrderStatus,
 }) => {
   const { t } = useTranslation()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
+  const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<FrameWizardStep1Response>()
+  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -44,14 +42,20 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     loadCurrentStepData()
   }, [])
 
+  useEffect(() => {
+    if (currentStep > sequenceStepNumber) {
+      // NOTE: only for debugging
+      setNextStepAllowed(true)
+    }
+  }, [ currentStep, sequenceStepNumber ])
+
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
-      type: wizardType,
       step: sequenceStepNumber,
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as FrameWizardStepResponse<FrameWizardStep1Response>).data)
+      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -63,76 +67,83 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep1({
-      type: wizardType,
+    const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
       orderId,
     }, {})
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderStatus(OrderStatus.FRAME_OPERATOR_VERIFYING)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
   }
 
-  const handleNextStep = () => {
-    if (currentStep <= sequenceStepNumber) {
+  const handlePrevStep = () => {
+    if (isPrevStepAllowed) {
+      setCurrentStep(sequenceStepNumber - 1)
+    }
+  }
+
+  const handleStepSubmit = () => {
+    if (isNextStepAllowed) {
       sendNextStep()
-    } else {
-      setCurrentStep(sequenceStepNumber + 1)
+    }
+  }
+
+  const handleNextStep = () => {
+    if (isNextStepAllowed) {
+      sendNextStep()
     }
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
-      <Col flex={1}></Col>
+    <Row>
+      <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
         : renderSubmitButton()}</Col>
     </Row>
   )
 
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={() => setCurrentStep(sequenceStepNumber + 1)}
-      disabled={!isNextStepAllowed}
-    >
-      {t('common.actions.next.title')}
-    </Button>
-  )
-
   const renderSubmitButton = () => (
     <Button
       size="large"
       type="primary"
-      disabled={submitting}
-      onClick={handleNextStep}
+      onClick={handleStepSubmit}
+      disabled={!isNextStepAllowed || submitting}
+      loading={submitting}
     >
-      Взять на проверку
+      {t('common.actions.saveAndContinue.title')}
+    </Button>
+  )
+
+  const renderNextButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      onClick={handleNextStep}
+      disabled={!isNextStepAllowed || submitting}
+    >
+      {t('orderActions.saveAndContinue.title')}
+    </Button>
+  )
+
+  const renderPrevButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      onClick={handlePrevStep}
+      disabled={submitting}
+      loading={submitting}
+    >
+      {t('common.actions.back.title')}
     </Button>
   )
 
   const renderStepContent = () => (
-    <Div className="OrderStepParameters">
-      <Row gutter={12}>
-        <Col span={12}>
-          <ClientInfo
-            company={stepData?.clientCompany}
-            companyHead={stepData?.clientCompanyFounder}
-            companyRequisites={stepData?.clientCompanyRequisites}
-          />
-        </Col>
-        <Col span={12}>
-          <OrderInfo
-            orderId={orderId}
-            customerCompany={stepData?.customerCompany}
-          />
-        </Col>
-      </Row>
+    <Div className="OrderStepSendToBank">
+      <Title level={5}>{t('orderStepSendToBank.title')}</Title>
     </Div>
   )
 
@@ -156,4 +167,4 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   )
 }
 
-export default OrderStepParameters
+export default OrderStepSendToBank

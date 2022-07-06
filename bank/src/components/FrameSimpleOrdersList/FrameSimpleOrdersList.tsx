@@ -109,6 +109,7 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
         loading={dataLoaded === null}
         dataSource={data?.data as unknown as Order[] || []}
         pagination={false}
+        rowKey="id"
       />
     </div>
   )
