@@ -26,7 +26,7 @@ export const isAdmin = (user: User) => user.login === 'admin'
  * NOTE: roles not supported, so here is dirty checking by user login
  */
 
-export const isClient = (user: User) => isAdmin(user) || user.login === 'client'
-export const isCustomer = (user: User) => user.login === 'customer' // NOTE: Admin cannot pretend as Customer
-export const isOperator = (user: User) => isAdmin(user) || user.login === 'operator'
-export const isBank = (user: User) => isAdmin(user) || user.login === 'bank'
+export const isClient = (user: User) => isAdmin(user) || user.login.startsWith('client')
+export const isCustomer = (user: User) => user.login.startsWith('customer') // NOTE: Admin cannot be pretend as Customer
+export const isOperator = (user: User) => isAdmin(user) || user.login.startsWith('operator')
+export const isBank = (user: User) => isAdmin(user) || user.login.startsWith('bank')

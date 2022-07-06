@@ -16,8 +16,8 @@ const OperatorAppHeader: React.FC<OperatorAppHeaderProps> = ({}) => {
   const user = useStoreState(state => state.user.current)
 
   const handleLogout = () => {
-    history.push('/')
     setLogout()
+    history.push('/')
   }
 
   const renderMainAction = () => (
