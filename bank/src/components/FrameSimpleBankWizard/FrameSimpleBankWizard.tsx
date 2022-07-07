@@ -11,7 +11,7 @@ import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import OfferStatusTag from 'components/OfferStatusTag'
 import OrderStepParameters from 'components/OrderStepParameters'
 import OrderStepDocuments from 'components/OrderStepDocuments'
-import OrderStepContractParams from 'components/OrderStepContractParams' // NOTE: should be OrderStepCustomerSign
+import OrderStepCustomerSign from 'components/OrderStepCustomerSign'
 import OrderStepArchive from 'components/OrderStepArchive'
 
 import { OrderWizardType } from 'library/models'
@@ -122,8 +122,7 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
       case 2:
         return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
       case 3:
-        // NOTE: should be OrderStepCustomerSign
-        return <OrderStepContractParams {...stepBaseProps} sequenceStepNumber={3} />
+        return <OrderStepCustomerSign {...stepBaseProps} sequenceStepNumber={3} />
       case 4:
         return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={4} />
       default:
