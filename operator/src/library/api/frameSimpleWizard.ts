@@ -14,25 +14,14 @@ export interface FrameSimpleWizardStepParameters extends FrameSimpleWizardCommon
 }
 
 /**
- * Send wizard step 1
+ * Send N-th wizard step
  */
-export async function sendFrameSimpleWizardStep1(
-  params: FrameSimpleWizardStepParameters,
+export async function sendFrameSimpleWizardStep(
+  params: FrameSimpleWizardCommonParameters,
   request: unknown // NOTE: ask be to generate models
 ) {
-  const { orderId } = params
-  return await post(`/operator/wizard/frameSimple/${orderId}/1`, request)
-}
-
-/**
- * Send wizard step 2
- */
-export async function sendFrameSimpleWizardStep2(
-  params: FrameSimpleWizardStepParameters,
-  request: unknown // NOTE: ask be to generate models
-) {
-  const { orderId } = params
-  return await post(`/operator/wizard/frameSimple/${orderId}/2`, request)
+  const { orderId, step } = params
+  return await post(`/operator/wizard/frameSimple/${orderId}/${step}`, request)
 }
 
 /**

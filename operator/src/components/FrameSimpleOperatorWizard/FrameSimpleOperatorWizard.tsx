@@ -73,6 +73,13 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
   const isSecondStepActive = (): boolean => currentStep > 1
   const isThirdStepActive = (): boolean => currentStep > 2
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (stepDataLoading) {
       return <Skeleton active={true} />
@@ -80,7 +87,7 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
       currentStep: currentStep,
-      setCurrentStep: setCurrentStep,
+      setCurrentStep: handleStepChange,
     }
     switch (selectedStep) {
       case 1:
@@ -96,6 +103,7 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
         />
       case 3:
         return <OrderStepSendToBank {...stepBaseProps}
+          orderStatus={orderStatus}
           sequenceStepNumber={3}
         />
       default:

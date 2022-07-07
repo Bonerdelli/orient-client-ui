@@ -41,7 +41,7 @@ import { frameWizardSetDocStatus, getFrameWizardStep, sendFrameWizardStep2 } fro
 
 import './OrderStepDocumentsAndConditions.style.less'
 
-const { Title } = Typography
+const { Title, Text } = Typography
 const { useForm, Item: FormItem } = Form
 const { Option } = Select
 
@@ -51,6 +51,14 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+}
+
+const formItemProps = {
+  labelCol: { span: 10 },
+}
+
+const requiredRule = {
+  required: true,
 }
 
 const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
@@ -79,19 +87,34 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
 
   const [ banks, banksLoaded ] = useApi<GridResponse<BankDto> | null>(getAllBanks)
   const [ customers, customersLoaded ] = useApi<GridResponse<Customer> | null>(getAllCustomers)
+
+  const [ bankSelectItems, setBankSelectItems ] = useState<BankDto[]>([])
+  const [ customerSelectItems, setCustomerSelectItems ] = useState<Customer[]>([])
   const [ conditionCode, setConditionCode ] = useState<OrderConditionType>()
-  const [ initialData, setInitialData ] = useState<OrderConditions | null>()
+  const [ initialData, setInitialData ] = useState<OrderConditions | null>() // NOTE: be doesn't return current offer
   const [ formDisabled, setFormDisabled ] = useState<boolean>(false)
 
   const [ clientCompanyFounder, setClientCompanyFounder ] = useState<CompanyFounderDto | null>(null)
   const [ companyFounderModalVisible, setCompanyFounderModalVisible ] = useState<boolean>(false)
 
-  console.log('banks', banks)
-  console.log('customers', customers)
-
   useEffect(() => {
     loadStepData()
+    if (currentStep > sequenceStepNumber) {
+      setFormDisabled(true)
+    }
   }, [ currentStep ])
+
+  useEffect(() => {
+    setBankSelectItems(banks?.data ?? [])
+  }, [ banks ])
+
+  useEffect(() => {
+    setCustomerSelectItems(customers?.data ?? [])
+  }, [ customers ])
+
+  /**
+   * Load and parse step data
+   */
 
   useEffect(() => {
     if (!stepData) return
@@ -141,26 +164,21 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     setStepDataLoading(false)
   }
 
+  /**
+   * Step actions
+   */
+
   const sendNextStep = async () => {
     if (!orderId) {
       return
     }
+    const formData = form.getFieldsValue()
     setSubmitting(true)
-    // NOTE: shouldn't be sent cause statuses switches immediately
-    const documentStatuses = [
-      ...documentsOptional || [],
-      ...documents,
-    ]
-      .filter(document => document.info)
-      .map(document => ({
-        documentId: document.info?.documentId,
-        documentStatus: document.info?.documentStatus ?? DocumentStatus.NotApproved,
-      }))
     const result = await sendFrameWizardStep2({
       type: wizardType,
       orderId,
     }, {
-      documentStatuses,
+      ...formData,
     })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
@@ -178,12 +196,15 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   }
 
   const handleNextStep = () => {
+    console.log('handleNextStep', handleNextStep)
     if (isNextStepAllowed) {
-      if (currentStep <= sequenceStepNumber) {
-        sendNextStep()
-      } else {
-        setCurrentStep(sequenceStepNumber + 1)
-      }
+      setCurrentStep(sequenceStepNumber + 1)
+    }
+  }
+
+  const handleSubmit = () => {
+    if (isNextStepAllowed) {
+      sendNextStep()
     }
   }
 
@@ -206,7 +227,20 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
         size="large"
         type="primary"
         onClick={handleNextStep}
-        disabled={!isNextStepAllowed || submitting}
+        disabled={!isNextStepAllowed}
+      >
+        {t('orderActions.next.title')}
+      </Button>
+    )
+  }
+
+  const renderSubmitButton = () => {
+    return (
+      <Button
+        size="large"
+        type="primary"
+        htmlType="submit"
+        disabled={submitting || !isNextStepAllowed}
         loading={submitting}
       >
         {t('orderActions.next.title')}
@@ -218,9 +252,13 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     <Row className="FrameWizard__step__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
-      <Col>{renderNextButton()}</Col>
+      <Col>{formDisabled ? renderNextButton() : renderSubmitButton()}</Col>
     </Row>
   )
+
+  /**
+   * Order documents
+   */
 
   const changeDocStatus = async (documentId: number, status: DocumentStatus) => {
     const result = await frameWizardSetDocStatus({
@@ -269,24 +307,14 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
       <Title level={5}>{t('orderStepDocuments.sectionTitles.orderParameters')}</Title>
       <Row>
         <Col xs={24} lg={14}>
-          {renderOrderParameters()}
+          {renderOrderParametersFormInputs()}
+          {renderOrderConditionsFormInputs()}
         </Col>
         <Col xs={24} lg={10}>
           {renderCustomerInfo()}
         </Col>
       </Row>
     </Div>
-  )
-
-  const renderOrderParameters = () => (
-    <Form
-      form={form}
-      initialValues={initialData || undefined}
-      labelWrap={true}
-    >
-      {renderOrderParametersFormInputs()}
-      {renderOrderConditionsFormInputs()}
-    </Form>
   )
 
   /**
@@ -296,33 +324,34 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   const isComission = () => conditionCode === OrderConditionType.Comission
   const isDiscount = () => conditionCode === OrderConditionType.Discount
 
-  const formItemProps = {
-    labelCol: { span: 10 },
-  }
-
-  const requiredRule = {
-    required: true,
-  }
-
   const renderOrderParametersFormInputs = () => (<>
     <FormItem {...formItemProps}
-              name="customer"
+              name="customerId"
               label={t('orderStepDocuments.orderParametersFormFields.customer.title')}
               rules={[ requiredRule ]}>
       <Select disabled={formDisabled}
               placeholder={t('orderStepDocuments.orderParametersFormFields.customer.placeholder')}
-              onChange={setConditionCode}>
-
+              loading={banksLoaded === null}>
+        {customerSelectItems.map(item => (
+          <Option key={item.id} value={item.id}>
+            <Text>{item.inn}</Text>{' '}
+            <Text type="secondary" ellipsis={true}>{item.shortName}</Text>
+          </Option>
+        ))}
       </Select>
     </FormItem>
     <FormItem {...formItemProps}
-              name="bank"
+              name="bankId"
               label={t('orderStepDocuments.orderParametersFormFields.bank.title')}
               rules={[ requiredRule ]}>
       <Select disabled={formDisabled}
               placeholder={t('orderStepDocuments.orderParametersFormFields.bank.placeholder')}
-              onChange={setConditionCode}>
-
+              loading={customersLoaded === null}>
+        {bankSelectItems.map(item => (
+          <Option key={item.id} value={item.id}>
+            {item.name}
+          </Option>
+        ))}
       </Select>
     </FormItem>
   </>)
@@ -455,8 +484,15 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
 
   return (
     <Div className="FrameWizard__step__content">
-      {renderStepContent()}
-      {renderActions()}
+      <Form
+        form={form}
+        initialValues={initialData || undefined}
+        onFinish={handleSubmit}
+        labelWrap={true}
+      >
+        {renderStepContent()}
+        {renderActions()}
+      </Form>
     </Div>
   )
 }

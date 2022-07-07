@@ -1,23 +1,21 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Row, Col, Button, Skeleton, Result, message } from 'antd'
+import { InfoCircleFilled, CheckCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep1, // NOTE: replace ep with correct one!
-} from 'library/api/frameWizard'
+import { getFrameSimpleWizardStep, sendFrameSimpleWizardStep } from 'library/api/frameSimpleWizard'
 
 import './OrderStepSendToBank.style.less'
-
-const { Title } = Typography
 
 export interface OrderStepSendToBankProps {
   orderId?: number
   currentStep: number
+  orderStatus: OrderStatus,
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
@@ -25,6 +23,7 @@ export interface OrderStepSendToBankProps {
 const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   orderId,
   currentStep,
+  orderStatus,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
@@ -33,24 +32,33 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
-  const [ stepData, setStepData ] = useState<unknown>() // TODO: ask be to generate typings
+  const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
+  const [ bankName, setBankName ] = useState<string>()
+  const [ completed, setCompleted ] = useState<boolean>()
 
   useEffect(() => {
     loadCurrentStepData()
   }, [])
 
   useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      // NOTE: only for debugging
-      setNextStepAllowed(true)
+    setNextStepAllowed(currentStep === sequenceStepNumber)
+  }, [ currentStep ])
+
+  useEffect(() => {
+    setCompleted(orderStatus !== OrderStatus.FRAME_OPERATOR_VERIFYING)
+  }, [ orderStatus ])
+
+  useEffect(() => {
+    if (stepData?.bank?.bankName) {
+      setBankName(stepData.bank.bankName)
     }
-  }, [ currentStep, sequenceStepNumber ])
+  }, [ stepData ])
 
   const loadCurrentStepData = async () => {
-    const result = await getFrameWizardStep({
+    const result = await getFrameSimpleWizardStep({
       step: sequenceStepNumber,
       orderId,
     })
@@ -61,13 +69,13 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
-    setNextStepAllowed(true) // NOTE: only for debugging
   }
 
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep1({ // NOTE: replace ep with correct!
+    const result = await sendFrameSimpleWizardStep({
+      step: sequenceStepNumber,
       orderId,
     }, {})
     if (!result.success) {
@@ -85,48 +93,11 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
     }
   }
 
-  const handleStepSubmit = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
-
-  const handleNextStep = () => {
-    if (isNextStepAllowed) {
-      sendNextStep()
-    }
-  }
-
   const renderActions = () => (
     <Row>
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
+      <Col>{!completed && renderSubmitButton()}</Col>
     </Row>
-  )
-
-  const renderSubmitButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleStepSubmit}
-      disabled={!isNextStepAllowed || submitting}
-      loading={submitting}
-    >
-      {t('common.actions.saveAndContinue.title')}
-    </Button>
-  )
-
-  const renderNextButton = () => (
-    <Button
-      size="large"
-      type="primary"
-      onClick={handleNextStep}
-      disabled={!isNextStepAllowed || submitting}
-    >
-      {t('orderActions.saveAndContinue.title')}
-    </Button>
   )
 
   const renderPrevButton = () => (
@@ -134,16 +105,46 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
       size="large"
       type="primary"
       onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
     >
       {t('common.actions.back.title')}
     </Button>
   )
 
-  const renderStepContent = () => (
+  const renderSubmitButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      onClick={sendNextStep}
+      disabled={!isNextStepAllowed || submitting}
+      loading={submitting}
+    >
+      {t('orderStepSendToBank.actionButton.title')}
+    </Button>
+  )
+
+  const renderReadyForSendingContent = () => (
     <Div className="OrderStepSendToBank">
-      <Title level={5}>{t('orderStepSendToBank.title')}</Title>
+      <Result
+        icon={<InfoCircleFilled />}
+        title={t('orderStepSendToBank.readyForSending.title')}
+        subTitle={bankName ? t(
+          'orderStepSendToBank.readyForSending.desc',
+          { bankName },
+        ) : ' '}
+      />
+    </Div>
+  )
+
+  const renderOrderSentContent = () => (
+    <Div className="OrderStepSendToBank">
+      <Result
+        icon={<CheckCircleFilled />}
+        title={t('orderStepSendToBank.sent.title')}
+        subTitle={bankName ? t(
+          'orderStepSendToBank.sent.desc',
+          { bankName },
+        ) : ' '}
+      />
     </Div>
   )
 
@@ -161,7 +162,7 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
 
   return (
     <Div className="FrameWizard__step__content">
-      {renderStepContent()}
+      {!completed ? renderReadyForSendingContent() : renderOrderSentContent()}
       {renderActions()}
     </Div>
   )

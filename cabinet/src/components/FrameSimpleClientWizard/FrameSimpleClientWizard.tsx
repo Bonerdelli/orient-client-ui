@@ -87,6 +87,13 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
     setStepDataLoading(false)
   }
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
       return <Skeleton active={true} />
@@ -99,7 +106,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
           orderId={Number(itemId) || orderId}
           setOrderId={setOrderId}
           currentStep={currentStep}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           sequenceStepNumber={1}
           selectedCustomer={selectedCustomer}
           setSelectedCustomer={setSelectedCustomer}
@@ -110,7 +117,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
         />
@@ -120,7 +127,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={3}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           orderStatus={orderStatus}
           setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
