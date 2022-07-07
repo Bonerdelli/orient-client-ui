@@ -54,7 +54,7 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
   const loadCurrentStepData = async () => {
     const result = await getCurrentFrameWizardStep({
       mode: CabinetMode.Customer,
-      type: FrameWizardType.Full,
+      type: FrameWizardType.Simple,
       companyId: companyId as number,
       orderId: Number(itemId),
     })

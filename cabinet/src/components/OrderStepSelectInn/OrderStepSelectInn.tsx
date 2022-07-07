@@ -16,7 +16,7 @@ import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import './OrderStepSelectInn.style.less'
 
 const { Title, Text } = Typography
-c
+const { Item: DescItem } = Descriptions
 
 export interface OrderSelectInnProps {
   wizardType?: FrameWizardType

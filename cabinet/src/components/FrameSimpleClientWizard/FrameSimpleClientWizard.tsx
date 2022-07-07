@@ -137,11 +137,11 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
           setCurrentStep={handleStepChange}
           orderStatus={orderStatus}
           setOrderStatus={setOrderStatus}
-          orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
         />
       case 4:
-        <Result
+        // NOTE: WIP
+        return <Result
           icon={<CheckCircleFilled />}
           title={t('Заявка отправлена в Банк')}
         />
