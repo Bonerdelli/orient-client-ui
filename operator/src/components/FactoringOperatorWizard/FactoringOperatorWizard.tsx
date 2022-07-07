@@ -73,6 +73,13 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
   const isThirdStepActive = (): boolean => currentStep > 2
   const isFourthStepActive = (): boolean => currentStep > 3
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (stepDataLoading) {
       return <Skeleton active={true}/>
@@ -80,7 +87,7 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
       currentStep: currentStep,
-      setCurrentStep: setSelectedStep,
+      setCurrentStep: handleStepChange,
     }
     switch (selectedStep) {
       case 1:

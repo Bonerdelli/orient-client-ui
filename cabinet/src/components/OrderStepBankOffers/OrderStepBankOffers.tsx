@@ -23,6 +23,7 @@ export interface OrderStepBankOffersProps {
   companyId: number
   orderId?: number
   currentStep: number
+  currentStepData: any // TODO: ask be to generate typings
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: OrderStatus) => void
@@ -39,6 +40,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   wizardType = FrameWizardType.Full,
   companyId,
   orderId,
+  currentStepData,
   setCurrentStep,
   sequenceStepNumber,
   setOrderStatus,
@@ -49,7 +51,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
 
   const [ stepData, setStepData ] = useState<any>() // TODO: ask be to generate typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
-  const [ dataLoaded, setDataLoaded ] = useState<boolean>()
+  const [ dataLoaded, setDataLoaded ] = useState<boolean | null>(null)
   const [ submitting, _setSubmitting ] = useState<boolean>()
 
   const [ offers, setOffers ] = useState<BankOffer[]>()
@@ -65,6 +67,12 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
       setOffers(stepData.offers)
     }
   }, [ stepData ])
+
+  useEffect(() => {
+    if (currentStepData?.offers) {
+      setStepData(currentStepData)
+    }
+  }, [ currentStepData ])
 
   useEffect(() => {
     if (offers) {
@@ -87,7 +95,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
       orderId,
     })
     if (result.success) {
-      setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
+      setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate typings
       setOrderStatus((result.data as FrameWizardStepResponse<any>).orderStatus as OrderStatus)
     } else {
       setDataLoaded(false)

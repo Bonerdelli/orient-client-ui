@@ -24,6 +24,7 @@ export interface OrderDocumentsProps {
   bankId?: number | bigint
   orderId?: number
   offerStatus?: BankOfferStatus
+  setOfferStatus: (step: BankOfferStatus) => void
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -33,6 +34,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   bankId,
   orderId,
   offerStatus,
+  setOfferStatus,
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
@@ -133,6 +135,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOfferStatus(BankOfferStatus.BankOffer)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)

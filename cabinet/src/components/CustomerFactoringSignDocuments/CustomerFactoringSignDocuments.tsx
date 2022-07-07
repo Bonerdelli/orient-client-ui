@@ -57,7 +57,6 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     if (orderStatus &&
         !FACTORING_CUSTOMER_COMPLETED_STATUSES.includes(orderStatus) &&
         orderStatus !== FactoringStatus.FACTOR_BANK_SIGN) {
-      // NOTE: only for debugging
       setNextStepAllowed(true)
     }
   }, [ orderStatus ])
@@ -66,7 +65,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     const currentDocuments = stepData?.documents ?? []
     const updatedDocumentTypes: number[] = []
     currentDocuments.forEach((doc: OrderDocument) => {
-      if (doc.isGenerated && doc.info) {
+      if (doc.info) {
         updatedDocumentTypes.push(doc.typeId)
       }
     })
@@ -83,7 +82,6 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
       setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
-      setNextStepAllowed(false)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -103,6 +101,8 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
+    } else {
+      loadCurrentStepData()
     }
     setSubmitting(false)
   }

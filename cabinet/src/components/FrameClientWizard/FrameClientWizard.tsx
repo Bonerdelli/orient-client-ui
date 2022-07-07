@@ -43,7 +43,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
-  const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
+  const [ currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ orderId, setOrderId ] = useState<number>()
@@ -90,6 +90,13 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
     setStepDataLoading(false)
   }
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
       return <Skeleton active={true} />
@@ -101,7 +108,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
           orderId={Number(itemId) || orderId}
           setOrderId={setOrderId}
           currentStep={currentStep}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           sequenceStepNumber={1}
           selectedCustomer={selectedCustomer}
           setSelectedCustomer={setSelectedCustomer}
@@ -111,7 +118,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
         />
@@ -120,7 +127,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={3}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           orderStatus={orderStatus}
           setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
@@ -133,6 +140,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
           sequenceStepNumber={4}
           setOrderStatus={setOrderStatus}
           setCurrentStep={setSelectedStep}
+          currentStepData={currentStepData}
           orderId={Number(itemId) || orderId}
         />
       default:
