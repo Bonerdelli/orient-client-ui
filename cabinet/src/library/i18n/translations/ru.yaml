@@ -52,6 +52,7 @@ bankRequisitesPage:
     bankName: Название банка
     mfoNum: МФО
     account: Расчётный счет
+    action: Действие
   formSections:
     main:
       title: Банковские реквизиты

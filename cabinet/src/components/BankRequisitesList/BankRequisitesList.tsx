@@ -1,16 +1,15 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Popconfirm } from 'antd'
+import { Button, Popconfirm, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
-
-import { getCompanyRequisitesList, deleteCompanyRequisites } from 'library/api'
+import { deleteCompanyRequisites, getCompanyRequisitesList } from 'library/api'
 
 import './BankRequisitesList.style.less'
 
@@ -79,10 +78,11 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
       title: t('bankRequisitesPage.tableColumns.account'),
     },
     {
-      key: 'actions',
+      key: 'action',
       render: renderActions,
       align: 'right',
       width: 100,
+      title: t('bankRequisitesPage.tableColumns.actions'),
     },
   ]
 
