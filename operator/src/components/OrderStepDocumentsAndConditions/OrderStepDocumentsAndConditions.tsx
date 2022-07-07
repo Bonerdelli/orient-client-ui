@@ -14,6 +14,8 @@ import {
   Input,
   DatePicker,
   Select,
+  Card,
+  Descriptions,
 } from 'antd'
 
 import { SelectOutlined } from '@ant-design/icons'
@@ -43,6 +45,7 @@ import './OrderStepDocumentsAndConditions.style.less'
 
 const { Title, Text } = Typography
 const { useForm, Item: FormItem } = Form
+const { Item: DescItem } = Descriptions
 const { Option } = Select
 
 export interface OrderDocumentsProps {
@@ -87,6 +90,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
 
   const [ banks, banksLoaded ] = useApi<GridResponse<BankDto> | null>(getAllBanks)
   const [ customers, customersLoaded ] = useApi<GridResponse<Customer> | null>(getAllCustomers)
+  const [ customer, setCustomer ] = useState<Customer>()
 
   const [ bankSelectItems, setBankSelectItems ] = useState<BankDto[]>([])
   const [ customerSelectItems, setCustomerSelectItems ] = useState<Customer[]>([])
@@ -305,13 +309,13 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   const renderOrderParametersSection = () => (
     <Div className="OrderStepDocumentsAndConditions__section">
       <Title level={5}>{t('orderStepDocuments.sectionTitles.orderParameters')}</Title>
-      <Row>
+      <Row gutter={12}>
         <Col xs={24} lg={14}>
           {renderOrderParametersFormInputs()}
           {renderOrderConditionsFormInputs()}
         </Col>
         <Col xs={24} lg={10}>
-          {renderCustomerInfo()}
+          {customer && renderCustomerInfo()}
         </Col>
       </Row>
     </Div>
@@ -324,6 +328,11 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   const isComission = () => conditionCode === OrderConditionType.Comission
   const isDiscount = () => conditionCode === OrderConditionType.Discount
 
+  const updateSelectedCustomer = (id: number) => {
+    const selectedCustomer = customerSelectItems.find(item => item.id === id)
+    setCustomer(selectedCustomer)
+  }
+
   const renderOrderParametersFormInputs = () => (<>
     <FormItem {...formItemProps}
               name="customerId"
@@ -331,6 +340,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
               rules={[ requiredRule ]}>
       <Select disabled={formDisabled}
               placeholder={t('orderStepDocuments.orderParametersFormFields.customer.placeholder')}
+              onChange={updateSelectedCustomer}
               loading={banksLoaded === null}>
         {customerSelectItems.map(item => (
           <Option key={item.id} value={item.id}>
@@ -408,8 +418,17 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     }
   </>)
 
+  // TODO: make a component in ui-lib
   const renderCustomerInfo = () => (
-    <></>
+    <Card>
+      <Descriptions column={1}>
+        <DescItem label={t('models.customer.fields.inn.title')}>{customer?.inn}</DescItem>
+        <DescItem label={t('models.customer.fields.shortName.title')}>{customer?.shortName}</DescItem>
+        <DescItem label={t('models.customer.fields.chief.title')}>{customer?.chief}</DescItem>
+        <DescItem label={t('models.customer.fields.soato.title')}>{customer?.soato}</DescItem>
+        <DescItem label={t('models.customer.fields.address.title')}>{customer?.address}</DescItem>
+      </Descriptions>
+    </Card>
   )
 
   /**

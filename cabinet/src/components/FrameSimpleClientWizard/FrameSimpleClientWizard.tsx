@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Grid, Skeleton } from 'antd'
+import { Card, Steps, Result, Grid, Skeleton } from 'antd'
+import { CheckCircleFilled } from '@ant-design/icons'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -98,6 +99,12 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
     if (!companyId || stepDataLoading) {
       return <Skeleton active={true} />
     }
+    if (currentStep === 4) {
+      return <Result
+        icon={<CheckCircleFilled />}
+        title={t('Заявка отправлена в Банк')}
+      />
+    }
     switch (selectedStep) {
       case 1:
         return <OrderStepSelectInn
@@ -132,6 +139,11 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
           setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
           customerId={selectedCustomer?.id}
+        />
+      case 4:
+        <Result
+          icon={<CheckCircleFilled />}
+          title={t('Заявка отправлена в Банк')}
         />
       default:
         return <></>

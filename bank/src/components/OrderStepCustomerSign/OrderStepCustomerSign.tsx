@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, message } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, Result, message } from 'antd'
+import { ClockCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -108,9 +109,7 @@ const OrderStepCustomerSign: React.FC<OrderStepCustomerSignProps> = ({
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
+
     </Row>
   )
 
@@ -150,9 +149,10 @@ const OrderStepCustomerSign: React.FC<OrderStepCustomerSignProps> = ({
   )
 
   const renderStepContent = () => (
-    <Div className="OrderStepCustomerSign">
-      <Title level={5}>{t('OrderStepCustomerSign.title')}</Title>
-    </Div>
+    <Result className="OrderStepCustomerSign"
+      icon={<ClockCircleFilled />}
+      title={t('Ожидайте подписания')}
+    />
   )
 
   if (!stepData && stepDataLoading) {

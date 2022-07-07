@@ -2,22 +2,24 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
 
-import Div from 'orient-ui-library/components/Div'
-
 import { CheckCircleFilled, ClockCircleOutlined, ExclamationCircleOutlined, FormOutlined } from '@ant-design/icons'
 import { Button, Modal, Row, Skeleton, Table, Timeline } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 
+import Div from 'orient-ui-library/components/Div'
+import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+
 import './CompanyDataReadyStatuses.style.less'
 
 import { RETURN_URL_PARAM } from 'library/constants'
-import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
 import { getCompanyRequisitesList } from 'library/api'
 import { Key } from 'antd/lib/table/interface'
 
 const { Item: TimelineItem } = Timeline
 
 export interface CompanyDataReadyStatusesProps {
+  wizardType?: FrameWizardType
   companyDataStatus: Record<string, boolean | null>
   selectedRequisitesId?: number
   onSaveRequisites?: (requisites: CompanyRequisitesDto) => void
@@ -36,6 +38,7 @@ export const companyDataInitialStatus: Record<string, boolean | null> = {
 }
 
 const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
+  wizardType = FrameWizardType.Full,
   companyDataStatus,
   selectedRequisitesId,
   onSaveRequisites,
@@ -140,6 +143,18 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
     setCompanyRequisitesLoading(false)
   }
 
+  const renderQuestionnaire = () => (
+    <TimelineItem {...dotParams(companyDataStatus?.questionnaire ?? null)}>
+      {t('frameSteps.documents.companyData.questionnaire')}
+      <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
+               className="CompanyDataReadyStatuses__item__link">
+        <Button size="small" type="link" icon={<FormOutlined/>}>
+          {t(`common.actions.${companyDataStatus?.questionnaire ? 'check' : 'fill'}.title`)}
+        </Button>
+      </NavLink>
+    </TimelineItem>
+  )
+
   return (
     <Timeline className="CompanyDataReadyStatuses__item">
       <TimelineItem {...dotParams(companyDataStatus?.companyHead ?? null)}>
@@ -164,15 +179,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
         </Div>}
         {renderSelectBankRequisitesModal()}
       </TimelineItem>
-      <TimelineItem {...dotParams(companyDataStatus?.questionnaire ?? null)}>
-        {t('frameSteps.documents.companyData.questionnaire')}
-        <NavLink to={`/questionnaire?${RETURN_URL_PARAM}=${location.pathname}`}
-                 className="CompanyDataReadyStatuses__item__link">
-          <Button size="small" type="link" icon={<FormOutlined/>}>
-            {t(`common.actions.${companyDataStatus?.questionnaire ? 'check' : 'fill'}.title`)}
-          </Button>
-        </NavLink>
-      </TimelineItem>
+      {wizardType === FrameWizardType.Full && renderQuestionnaire()}
     </Timeline>
   )
 }

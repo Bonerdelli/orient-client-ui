@@ -72,7 +72,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const updatedCompanyStatus = {
       companyHead: Boolean(stepData?.founder),
       bankRequisites: Boolean(stepData?.requisites),
-      questionnaire: Boolean(stepData?.questionnaire),
+      questionnaire: wizardType === FrameWizardType.Simple || Boolean(stepData?.questionnaire),
     }
 
     const isCompanyDataReady = every(updatedCompanyStatus, Boolean)
@@ -261,6 +261,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <Div className="OrderStepDocuments__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
         <CompanyDataReadyStatuses
+          wizardType={wizardType}
           companyDataStatus={companyDataStatus}
           onSaveRequisites={handleSaveRequisites}
           selectedRequisitesId={stepData?.requisites?.id}
