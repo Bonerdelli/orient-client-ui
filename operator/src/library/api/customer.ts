@@ -5,13 +5,19 @@ import { Customer, GridResponse } from 'library/models' // TODO: move to ui-lib 
 import portalConfig from 'config/portal.yaml'
 
 const QUICK_SEARCH_MAX_ITEMS = portalConfig.dataDisplay.quickSearchMaxItems
+const MAX_LIST_ITEMS = 100
 
 export type CustomerGridRequest = schema.components['schemas']['CustomerGridRequest']
 export type CustomerGridResponse = ApiResponse<GridResponse<Customer>>
 
-export async function getCustomers(_: never, request: CustomerGridRequest) {
-  return await post<GridResponse>('/client/customer/list', request)
+export async function getAllCustomers(_: never) {
+  const request: CustomerGridRequest = {
+    limit: MAX_LIST_ITEMS,
+    page: 1,
+  }
+  return await post<GridResponse>('/operator/customer/list', request)
 }
+
 
 export interface SearchCustomersParams {
   inn?: string
@@ -23,5 +29,5 @@ export async function searchCustomers(params: SearchCustomersParams) {
     limit: QUICK_SEARCH_MAX_ITEMS,
     page: 1,
   }
-  return await post<GridResponse>('/client/customer/list', request)
+  return await post<GridResponse>('/operator/customer/list', request)
 }

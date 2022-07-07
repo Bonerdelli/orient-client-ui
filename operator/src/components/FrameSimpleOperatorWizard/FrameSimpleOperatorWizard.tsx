@@ -10,7 +10,7 @@ import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import OrderStepParameters from 'components/OrderStepParameters'
-import OrderStepDocuments from 'components/OrderStepDocuments'
+import OrderStepDocumentsAndConditions from 'components/OrderStepDocumentsAndConditions'
 import OrderStepSendToBank from 'components/OrderStepSendToBank'
 
 import { getFrameSimpleOrderWizard } from 'library/api/frameSimpleOrder'
@@ -90,7 +90,7 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
           sequenceStepNumber={1}
         />
       case 2:
-        return <OrderStepDocuments {...stepBaseProps}
+        return <OrderStepDocumentsAndConditions {...stepBaseProps}
           wizardType={FrameWizardType.Simple}
           sequenceStepNumber={2}
         />
