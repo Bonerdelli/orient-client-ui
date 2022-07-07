@@ -89,7 +89,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       setNextStepAllowed(false)
     } else {
       loadCurrentStepData()
-      // setCompleted(true)
+      setCompleted(true)
     }
     setSubmitting(false)
   }
