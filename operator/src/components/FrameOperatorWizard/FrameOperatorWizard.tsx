@@ -74,6 +74,13 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const isThirdStepActive = (): boolean => currentStep > 2
   const isFourthStepActive = (): boolean => currentStep > 3
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (stepDataLoading) {
       return <Skeleton active={true} />
@@ -81,7 +88,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
       currentStep: currentStep,
-      setCurrentStep: (step: number) => setSelectedStep(step),
+      setCurrentStep: handleStepChange,
     }
     switch (selectedStep) {
       case 1:

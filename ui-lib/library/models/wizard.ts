@@ -5,6 +5,7 @@ export enum FrameWizardType {
 
 export interface FrameWizardStepResponse<T = Record<string, unknown>> {
   orderStatus: string
+  offerStatus: string
   step: number
   data: T
 }
