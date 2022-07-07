@@ -78,11 +78,11 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
       title: t('bankRequisitesPage.tableColumns.account'),
     },
     {
-      key: 'action',
+      key: 'actions',
       render: renderActions,
       align: 'right',
       width: 100,
-      title: t('bankRequisitesPage.tableColumns.actions'),
+      title: t('bankRequisitesPage.tableColumns.action'),
     },
   ]
 
