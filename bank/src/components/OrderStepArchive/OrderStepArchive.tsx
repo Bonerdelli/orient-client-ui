@@ -7,6 +7,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
@@ -17,6 +18,7 @@ import './OrderStepArchive.style.less'
 const { Title } = Typography
 
 export interface OrderDocumentsProps {
+  wizardType?: FrameWizardType
   bankId?: number | bigint
   orderId?: number
   currentStep: number
@@ -25,6 +27,7 @@ export interface OrderDocumentsProps {
 }
 
 const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
+  wizardType = FrameWizardType.Full,
   bankId,
   orderId,
   currentStep,
@@ -68,6 +71,7 @@ const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
      setDocumentsLoading(true)
    }
    const result = await getFrameWizardStep({
+     type: wizardType,
      step: sequenceStepNumber,
      bankId,
      orderId,

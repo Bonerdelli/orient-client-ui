@@ -2,20 +2,21 @@ import { get, post } from 'orient-ui-library/library/helpers/api'
 import * as schema from 'orient-ui-library/library/api/schema'
 
 import { CompanyDto, CompanyFounderDto, CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 // export type WizardStep1To2Request = schema.components['schemas']['ClientFrameStep1To2Request']
 export type FrameWizardRejectOrderRequest = schema.components['schemas']['RejectOrderDto']
 export type FrameWizardDocumentStatusRequest = schema.components['schemas']['OrderDocumentStatusRequest']
 export type FrameWizardStopFactorRequest = schema.components['schemas']['OrderStopFactorRequest']
 
-export interface FrameWizardCommonParameters {
+export interface FrameWizardParameters {
   bankId?: number | bigint
   orderId?: number
   step?: number
 }
 
-export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
-  orderId: number
+export interface FrameWizardsCommonParameters extends FrameWizardParameters {
+  type?: FrameWizardType
 }
 
 // TODO: ask be to generate typings for this
@@ -30,29 +31,31 @@ export interface FrameWizardStep1Response {
  * Send wizard step 1
  */
 export async function sendFrameWizardStep1(
-  params: FrameWizardStepParameters,
+  params: FrameWizardsCommonParameters,
   request: unknown,
 ) {
-  const { bankId, orderId } = params
-  return await post(`/bank/${bankId}/wizard/frame/${orderId}/1`, request)
+  const { bankId, orderId, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'frame'
+  return await post(`/bank/${bankId}/wizard/${wizard}/${orderId}/1`, request)
 }
 
 /**
  * Send wizard step 2
  */
 export async function sendFrameWizardStep2(
-  params: FrameWizardStepParameters,
+  params: FrameWizardsCommonParameters,
   request: unknown,
 ) {
-  const { bankId, orderId } = params
-  return await post(`/bank/${bankId}/wizard/frame/${orderId}/2`, request)
+  const { bankId, orderId, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'frame'
+  return await post(`/bank/${bankId}/wizard/${wizard}/${orderId}/2`, request)
 }
 
 /**
  * Send wizard step 3
  */
 export async function sendFrameWizardStep3(
-  params: FrameWizardStepParameters,
+  params: FrameWizardParameters,
   request: unknown,
 ) {
   const { bankId, orderId } = params
@@ -63,7 +66,7 @@ export async function sendFrameWizardStep3(
  * Send wizard step 4
  */
 export async function sendFrameWizardStep4(
-  params: FrameWizardStepParameters,
+  params: FrameWizardParameters,
   request: unknown,
 ) {
   const { bankId, orderId } = params
@@ -74,29 +77,32 @@ export async function sendFrameWizardStep4(
  * Send wizard step
  */
 export async function sendFrameWizardStep(
-  params: FrameWizardStepParameters,
+  params: FrameWizardsCommonParameters,
   request: unknown
 ) {
-  const { bankId, orderId, step } = params
-  return await post(`/bank/${bankId}/wizard/frame/${orderId}/${step}`, request)
+  const { bankId, orderId, step, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'frame'
+  return await post(`/bank/${bankId}/wizard/${wizard}/${orderId}/${step}`, request)
 }
 
 /**
  * Get current step
  */
 export async function getCurrentFrameWizardStep(
-  params: FrameWizardCommonParameters,
+  params: FrameWizardsCommonParameters,
 ) {
-  const { bankId, orderId } = params
-  return await get(`/bank/${bankId}/wizard/frame/${orderId}`)
+  const { bankId, orderId, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'frame'
+  return await get(`/bank/${bankId}/wizard/${wizard}/${orderId}`)
 }
 
 /**
  * Get wizard step by number
  */
 export async function getFrameWizardStep(
-  params: FrameWizardCommonParameters,
+  params: FrameWizardsCommonParameters,
 ) {
-  const { bankId, orderId, step } = params
-  return await get(`/bank/${bankId}/wizard/frame/${orderId}/${step}`)
+  const { bankId, orderId, step, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'frame'
+  return await get(`/bank/${bankId}/wizard/${wizard}/${orderId}/${step}`)
 }

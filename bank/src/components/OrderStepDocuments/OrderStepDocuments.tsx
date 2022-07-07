@@ -7,6 +7,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
@@ -21,6 +22,7 @@ import './OrderStepDocuments.style.less'
 const { Title } = Typography
 
 export interface OrderDocumentsProps {
+  wizardType?: FrameWizardType
   bankId?: number | bigint
   orderId?: number
   offerStatus?: BankOfferStatus
@@ -31,6 +33,7 @@ export interface OrderDocumentsProps {
 }
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
+  wizardType = FrameWizardType.Full,
   bankId,
   orderId,
   offerStatus,
@@ -109,6 +112,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       setDocumentsLoading(true)
     }
     const result = await getFrameWizardStep({
+      type: wizardType,
       step: sequenceStepNumber,
       bankId,
       orderId,
@@ -128,6 +132,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     }
     setSubmitting(true)
     const result = await sendFrameWizardStep2({
+      type: wizardType,
       bankId,
       orderId,
     }, undefined)

@@ -7,13 +7,15 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
-
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+
 import { FrameWizardStep1Response, getFrameWizardStep, sendFrameWizardStep1 } from 'library/api/frameWizard'
 
 import './OrderStepParameters.style.less'
 
 export interface OrderStepParametersProps {
+  wizardType?: FrameWizardType
   bankId?: number
   orderId?: number
   offerStatus?: BankOfferStatus
@@ -24,6 +26,7 @@ export interface OrderStepParametersProps {
 }
 
 const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
+  wizardType = FrameWizardType.Full,
   bankId,
   orderId,
   offerStatus,
@@ -54,6 +57,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
+      type: wizardType,
       step: sequenceStepNumber,
       orderId,
       bankId,
@@ -72,6 +76,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     if (!orderId) return
     setSubmitting(true)
     const result = await sendFrameWizardStep1({
+      type: wizardType,
       bankId,
       orderId,
     }, {})

@@ -6,6 +6,7 @@ import { Card, Steps, Grid, Skeleton } from 'antd'
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
+import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import OfferStatusTag from 'components/OfferStatusTag'
 import OrderStepParameters from 'components/OrderStepParameters'
@@ -15,7 +16,7 @@ import OrderStepArchive from 'components/OrderStepArchive'
 
 import { OrderWizardType } from 'library/models'
 
-import { getFrameSimpleOrderWizard } from 'library/api/frameSimpleOrder'
+import { getCurrentFrameWizardStep } from 'library/api/frameWizard'
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FrameSimpleBankWizard.style.less'
@@ -69,7 +70,8 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
   }, [])
 
   const loadCurrentStepData = async () => {
-    const result = await getFrameSimpleOrderWizard({
+    const result = await getCurrentFrameWizardStep({
+      type: FrameWizardType.Simple,
       orderId: Number(itemId) || orderId as number,
       bankId: MOCK_BANK_ID,
     })
@@ -92,6 +94,14 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
   const isThirdStepActive = (): boolean => currentStep > 2
   const isFourthStepActive = (): boolean => currentStep > 3
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
+
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
       return <Skeleton active={true} />
@@ -99,9 +109,12 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
     const stepBaseProps = {
       bankId: MOCK_BANK_ID,
       orderId: Number(itemId) || orderId,
-      oprderType: OrderWizardType.FrameSimple,
+      wizardType: FrameWizardType.Simple,
+      oprderType: OrderWizardType.Frame,
       currentStep: currentStep,
-      setCurrentStep: setSelectedStep,
+      setCurrentStep: handleStepChange,
+      setOfferStatus,
+      offerStatus,
     }
     switch (selectedStep) {
       case 1:
