@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Grid, Skeleton } from 'antd'
+import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -59,13 +59,13 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [bankId])
+  }, [ bankId ])
 
   useEffect(() => {
     if (orderStatus && FACTORING_BANK_COMPLETED_STATUSES.includes(orderStatus)) {
       setCompleted(true)
     }
-  }, [orderStatus])
+  }, [ orderStatus ])
 
   useEffect(() => {
     // TODO: load bank from be (when ready)
@@ -96,23 +96,24 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
 
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
-      return <Skeleton active={true} />
+      return <Skeleton active={true}/>
     }
     const stepBaseProps = {
       bankId: MOCK_BANK_ID,
       orderId: Number(itemId) || orderId,
       oprderType: OrderWizardType.Factoring,
-      setCurrentStep: setSelectedStep,
+      setCurrentStep,
+      setSelectedStep,
       currentStep,
       completed,
     }
     switch (selectedStep) {
       case 1:
-        return <FactoringStepParameters {...stepBaseProps} sequenceStepNumber={1} />
+        return <FactoringStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
       case 2:
-        return <FactoringStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
+        return <FactoringStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
-        return <FactoringStepArchive {...stepBaseProps} sequenceStepNumber={3} />
+        return <FactoringStepArchive {...stepBaseProps} sequenceStepNumber={3}/>
       default:
         return <></>
     }
@@ -120,7 +121,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -142,9 +143,9 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('factoringWizard.firstStep.title')} />
-          <Step disabled={!isSecondStepActive()} title={t('factoringWizard.secondStep.title')} />
-          <Step disabled={!isThirdStepActive()} title={t('factoringWizard.thirdStep.title')} />
+          <Step disabled={!isFirstStepActive()} title={t('factoringWizard.firstStep.title')}/>
+          <Step disabled={!isSecondStepActive()} title={t('factoringWizard.secondStep.title')}/>
+          <Step disabled={!isThirdStepActive()} title={t('factoringWizard.thirdStep.title')}/>
         </Steps>
       </Card>
       <Card className="FrameWizard__step">

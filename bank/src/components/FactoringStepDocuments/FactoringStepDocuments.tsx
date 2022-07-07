@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Typography, Skeleton, Spin, Row, Col, Button, message } from 'antd'
+import { Button, Col, message, Row, Skeleton, Spin, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -21,7 +21,7 @@ export interface OrderDocumentsProps {
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
-  setCurrentStep: (step: number) => void
+  setSelectedStep: (step: number) => void
   completed?: boolean
 }
 
@@ -30,7 +30,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   orderId,
   currentStep,
   sequenceStepNumber,
-  setCurrentStep,
+  setSelectedStep,
   completed,
 }) => {
   const { t } = useTranslation()
@@ -123,14 +123,14 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setCurrentStep(sequenceStepNumber + 1)
+      setSelectedStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
   }
 
   const handlePrevStep = () => {
     if (isPrevStepAllowed) {
-      setCurrentStep(sequenceStepNumber - 1)
+      setSelectedStep(sequenceStepNumber - 1)
     }
   }
 
@@ -139,7 +139,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       if (currentStep === sequenceStepNumber) {
         sendNextStep()
       } else {
-        setCurrentStep(sequenceStepNumber + 1)
+        setSelectedStep(sequenceStepNumber + 1)
       }
     }
   }
