@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Checkbox, Col, Form, Grid, message, Row, Spin } from 'antd'
+import { Card, Checkbox, Col, Form, Grid, Input, message, Row, Spin } from 'antd'
 
 import { CompanyDto } from 'orient-ui-library/library/models/proxy'
 import { setCompanyFactAddresses, setCompanyShortName } from 'library/api'
@@ -13,20 +13,27 @@ import companyFormFields, {
   renderTextInputs,
 } from './CompanyForm.form'
 import './CompanyForm.style.less'
+import { convertCompanyDtoToFormValues } from 'components/CompanyForm/converters/dto-to-company-form-values.converter'
 
 const { useBreakpoint } = Grid
 
 export interface CompanyFormProps {
   company: CompanyDto,
+  companyFounderFullName?: string
 }
 
-const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
+interface CompanyFormValues extends Omit<CompanyDto, 'isMsp'> {
+  isMsp: string
+}
+
+const CompanyForm: React.FC<CompanyFormProps> = ({ company, companyFounderFullName }) => {
   const { t } = useTranslation()
   const breakPoint = useBreakpoint()
-  const [ form ] = Form.useForm<CompanyDto>()
+  const [ form ] = Form.useForm<CompanyFormValues>()
 
-  const [ isAddressesSame, setIsAddressesSame ] = useState<boolean>(form.getFieldValue('isAddressesSame'))
+  const [ isAddressesSame, setIsAddressesSame ] = useState<boolean>(company.isAddressesSame ?? false)
   const [ submitting, setSubmitting ] = useState<boolean>(false)
+  const initialFormValues = convertCompanyDtoToFormValues(company)
 
   const updateCompanyName = async (value: string) => {
     if (company) {
@@ -109,6 +116,9 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const renderFounder = () => (
     <Card title={t('companyPage.formSections.founder.title')}>
       {renderTextInputs(companyFormFields.founder)}
+      <Form.Item label={t('models.companyFounder.fields.lastName.title')}>
+        <Input value={companyFounderFullName} disabled/>
+      </Form.Item>
     </Card>
   )
 
@@ -119,7 +129,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company }) => {
   const renderContent = () => (
     <Form
       form={form}
-      initialValues={company}
+      initialValues={initialFormValues}
       onFinish={handleFormSubmit}
       className="CompanyForm"
       data-testid="CompanyForm"

@@ -1,6 +1,5 @@
 import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
 import * as schema from 'orient-ui-library/library/api/schema' // TODO: move to ui-lib after debugging
-
 import { CompanyContactsDto } from 'orient-ui-library/library/models/proxy'
 
 export type CompanyContactsSaveRequest = schema.components['schemas']['CompanyContactsSaveRequest']

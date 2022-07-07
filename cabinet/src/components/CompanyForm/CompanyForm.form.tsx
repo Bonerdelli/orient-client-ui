@@ -7,6 +7,7 @@ export type CompanyFormInputConfig = [
   isRequired: boolean,
   isEditable?: boolean,
   editableInline?: boolean,
+  isMultilineContent?: boolean,
 ]
 
 const formFields: Record<string, CompanyFormInputConfig[]> = {
@@ -14,13 +15,13 @@ const formFields: Record<string, CompanyFormInputConfig[]> = {
     [ 'company', 'fullName', false ],
     [ 'company', 'shortName', false, true, true ],
     [ 'company', 'inn', false ],
-    [ 'company', 'opf', false ],
+    [ 'company', 'opf', false, false, false, true ],
     // TODO: make a two-columns layout
     [ 'company', 'isMsp', false ],
     [ 'company', 'capital', false ],
     [ 'company', 'currencyCode', false ],
-    [ 'company', 'oked', false ],
-    [ 'company', 'soogu', false ],
+    [ 'company', 'oked', false, false, false, true ],
+    [ 'company', 'soogu', false, false, false, true ],
     [ 'company', 'state', false ],
   ],
   contacts: [
@@ -32,12 +33,11 @@ const formFields: Record<string, CompanyFormInputConfig[]> = {
     [ 'companyContact', 'addressFact', false, true, true ],
   ],
   regAuthority: [
-    [ 'company', 'regAuthority', false ],
+    [ 'company', 'regAuthority', false, false, false, true ],
     [ 'company', 'regDate', false ],
     [ 'company', 'regNumber', false ],
   ],
   founder: [
-    [ 'companyFounder', 'lastName', false ], // TODO: ask for compound field
     [ 'companyFounder', 'inn', false ],
   ],
 }
@@ -61,6 +61,7 @@ export const renderTextInput = (
   isRequired: boolean,
   isEditable = false,
   isEditableInline = false,
+  isMultilineContent = false,
 ) => (
   isEditableInline ?
     <FormTextItemEditable
@@ -75,6 +76,7 @@ export const renderTextInput = (
       field={field}
       isRequired={isRequired}
       isEditable={isEditable}
+      isMultilineContent={isMultilineContent}
     />
 )
 

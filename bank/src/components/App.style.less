@@ -33,10 +33,6 @@ h1, h2, h3, h4 {
   left: 50%;
 }
 
-.ant-table-row:hover .DataTable__ghostActions {
-  visibility: visible;
-}
-
 // Small helpers
 // TODO: move to ui-lib
 .relative {
@@ -47,10 +43,6 @@ h1, h2, h3, h4 {
  * Cross-component classes
  * TODO: move it somewhere
  */
-
-.DataTable__ghostActions {
-  visibility: hidden;
-}
 
 .Form__actions {
   padding-top: @padding-sm;
@@ -66,8 +58,10 @@ h1, h2, h3, h4 {
   > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
     color: @text-color;
   }
+
   .ant-steps-item-icon {
     border-color: @text-color;
+
     > .ant-steps-icon {
       color: @text-color;
     }

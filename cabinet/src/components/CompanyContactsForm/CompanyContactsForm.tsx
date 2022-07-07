@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Card, Form, Grid, Row, Col, Spin, Skeleton, Divider, Button } from 'antd'
+import { Button, Card, Col, Divider, Form, Grid, Row, Skeleton, Spin } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
 import { isUndefined } from 'lodash'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { CompanyContactsDto } from 'orient-ui-library/library/models/proxy'
-import { useApi, callApi } from 'library/helpers/api' // TODO: to ui-lib
-import { renderFormInputs, baseFormConfig } from 'library/helpers/form'
+import { callApi, useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { baseFormConfig, renderFormInputs } from 'library/helpers/form'
 import { getCompanyContacts, updateCompanyContacts } from 'library/api' // TODO: to ui-lib
-
 import formFields from './CompanyContactsForm.form'
 
 const { useBreakpoint } = Grid
@@ -33,9 +32,7 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
   )
 
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData ?? {})
-    }
+    setFormData(initialData ?? {})
   }, [ initialData ])
 
   const handleFormSubmit = async (data: CompanyContactsDto) => {
