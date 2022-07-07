@@ -15,7 +15,7 @@ export async function getAllCustomers(_: never) {
     limit: MAX_LIST_ITEMS,
     page: 1,
   }
-  return await post<GridResponse>('/operator/customer/list', request)
+  return await post<GridResponse<Customer>>('/operator/customer/list', request)
 }
 
 
@@ -29,5 +29,5 @@ export async function searchCustomers(params: SearchCustomersParams) {
     limit: QUICK_SEARCH_MAX_ITEMS,
     page: 1,
   }
-  return await post<GridResponse>('/operator/customer/list', request)
+  return await post<GridResponse<Customer>>('/operator/customer/list', request)
 }
