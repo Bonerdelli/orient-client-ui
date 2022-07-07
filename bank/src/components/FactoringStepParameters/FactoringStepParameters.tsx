@@ -21,7 +21,7 @@ export interface FactoringStepParametersProps {
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
-  setSelectedStep: (step: number) => void
+  setCurrentStep: (step: number) => void
   completed?: boolean
 }
 
@@ -29,7 +29,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   bankId,
   orderId,
   currentStep,
-  setSelectedStep,
+  setCurrentStep,
   sequenceStepNumber,
   completed,
 }) => {
@@ -74,7 +74,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setSelectedStep(sequenceStepNumber + 1)
+      setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
   }
@@ -98,7 +98,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     <Button
       size="large"
       type="primary"
-      onClick={() => setSelectedStep(sequenceStepNumber + 1)}
+      onClick={() => setCurrentStep(sequenceStepNumber + 1)}
       disabled={!isNextStepAllowed}
     >
       {t('common.actions.next.title')}

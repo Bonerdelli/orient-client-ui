@@ -97,6 +97,13 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const isFifthStepActive = (): boolean => currentStep > 4
   const isSixthStepActive = (): boolean => currentStep > 5
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
       return <Skeleton active={true} />
@@ -106,18 +113,19 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       orderId: Number(itemId) || orderId,
       oprderType: OrderWizardType.Frame,
       currentStep: currentStep,
-      setCurrentStep: setSelectedStep,
+      setCurrentStep: handleStepChange,
+      setOfferStatus,
       offerStatus,
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps} setOfferStatus={setOfferStatus} sequenceStepNumber={1} />
+        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1} />
       case 2:
         return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
       case 3:
         return <OrderStepContractParams {...stepBaseProps} sequenceStepNumber={3} />
       case 4:
-        return <OrderStepContractDocuments {...stepBaseProps} setOfferStatus={setOfferStatus} sequenceStepNumber={4} />
+        return <OrderStepContractDocuments {...stepBaseProps} sequenceStepNumber={4} />
       case 5:
         return <OrderStepOfferAcceptance {...stepBaseProps} sequenceStepNumber={5} />
       case 6:

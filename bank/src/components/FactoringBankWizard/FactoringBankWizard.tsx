@@ -94,6 +94,13 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
   const isSecondStepActive = (): boolean => currentStep > 1
   const isThirdStepActive = (): boolean => currentStep > 2
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
       return <Skeleton active={true}/>
@@ -102,8 +109,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       bankId: MOCK_BANK_ID,
       orderId: Number(itemId) || orderId,
       oprderType: OrderWizardType.Factoring,
-      setCurrentStep,
-      setSelectedStep,
+      setCurrentStep: handleStepChange,
       currentStep,
       completed,
     }

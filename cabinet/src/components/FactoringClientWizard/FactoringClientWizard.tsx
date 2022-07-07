@@ -80,6 +80,13 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
     setStepDataLoading(false)
   }
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
       return <Skeleton active={true}/>
@@ -90,7 +97,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           companyId={companyId}
           factoringOrderId={Number(itemId) || orderId}
           currentStep={currentStep}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           sequenceStepNumber={1}
           dictionaries={dicts}
         />
@@ -99,7 +106,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
         />
@@ -108,7 +115,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={3}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           orderStatus={orderStatus}
           setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
@@ -119,7 +126,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
           currentStep={currentStep}
           sequenceStepNumber={4}
           setOrderStatus={setOrderStatus}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           orderId={Number(itemId) || orderId}
           orderStatus={orderStatus}
         />

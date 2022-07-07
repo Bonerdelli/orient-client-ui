@@ -21,7 +21,7 @@ export interface OrderDocumentsProps {
   orderId?: number
   currentStep: number
   sequenceStepNumber: number
-  setSelectedStep: (step: number) => void
+  setCurrentStep: (step: number) => void
   completed?: boolean
 }
 
@@ -30,7 +30,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   orderId,
   currentStep,
   sequenceStepNumber,
-  setSelectedStep,
+  setCurrentStep,
   completed,
 }) => {
   const { t } = useTranslation()
@@ -123,14 +123,14 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setSelectedStep(sequenceStepNumber + 1)
+      setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
   }
 
   const handlePrevStep = () => {
     if (isPrevStepAllowed) {
-      setSelectedStep(sequenceStepNumber - 1)
+      setCurrentStep(sequenceStepNumber - 1)
     }
   }
 
@@ -139,7 +139,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       if (currentStep === sequenceStepNumber) {
         sendNextStep()
       } else {
-        setSelectedStep(sequenceStepNumber + 1)
+        setCurrentStep(sequenceStepNumber + 1)
       }
     }
   }

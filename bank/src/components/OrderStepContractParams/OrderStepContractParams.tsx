@@ -27,6 +27,7 @@ export interface OrderStepContractParamsProps {
   bankId?: number | bigint
   orderId?: number
   offerStatus?: BankOfferStatus
+  setOfferStatus: (step: BankOfferStatus) => void
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void

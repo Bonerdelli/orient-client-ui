@@ -71,12 +71,6 @@ const FactoringStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   }, [ isVerifying ])
 
   useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      setNextStepAllowed(true)
-    }
-  }, [ currentStep, sequenceStepNumber ])
-
-  useEffect(() => {
     const currentDocuments = stepData?.documents ?? []
     if (stepData && currentDocuments) {
       updateDocuments(currentDocuments)

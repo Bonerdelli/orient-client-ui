@@ -53,7 +53,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   }, [ orderStatus ])
 
   useEffect(() => {
-    if (currentStep >= sequenceStepNumber) {
+    if (currentStep > sequenceStepNumber) {
       setNextStepAllowed(false)
     } else {
       setNextStepAllowed(true)
