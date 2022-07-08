@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space } from 'antd'
+import { Table, Button, Space, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
@@ -79,11 +79,18 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
       render: (val) => formatDate(val, { includeTime: true }),
       align: 'center',
     },
+    // {
+    //   key: 'statusCode',
+    //   dataIndex: 'statusCode',
+    //   title: t('frameOrdersPage.tableColumnTitles.statusName'),
+    //   render: renderStatus,
+    //   align: 'center',
+    // },
     {
-      key: 'statusCode',
-      dataIndex: 'statusCode',
+      key: 'statusName',
+      dataIndex: 'statusName',
       title: t('frameOrdersPage.tableColumnTitles.statusName'),
-      render: renderStatus,
+      render: (val) => <Tag>{val}</Tag>,
       align: 'center',
     },
 

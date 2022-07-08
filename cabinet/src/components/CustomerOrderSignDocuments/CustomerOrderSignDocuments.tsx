@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Typography, Row, Col, Button, Result, Skeleton, List, Spin, message } from 'antd'
-import { InfoCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -10,16 +9,14 @@ import OrderInfo from 'orient-ui-library/components/OrderInfo'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { Bank } from 'library/models/bank' // TODO: to ui-lib
-
 import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 
-import { getFrameWizardStep, sendFrameWizardStep3 } from 'library/api'
+import { CabinetMode } from 'library/models/cabinet'
+import { getFrameWizardStep, sendFrameWizardStep } from 'library/api'
 
 import './CustomerOrderSignDocuments.style.less'
 
 const { Title } = Typography
-const { Item: ListItem } = List
 
 export interface OrderSignDocumentsProps {
   wizardType?: FrameWizardType
@@ -34,7 +31,7 @@ export interface OrderSignDocumentsProps {
 }
 
 const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
-  wizardType = FrameWizardType.Full,
+  wizardType = FrameWizardType.Simple,
   orderStatus,
   companyId,
   orderId,
@@ -52,22 +49,38 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   const [ stepData, setStepData ] = useState<any>() // TODO: ask be to make typings
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ completed, setCompleted ] = useState<>()
 
   const [ documentsLoading, setDocumentsLoading ] = useState<boolean>(true)
   const [ documentTypes, setDocumentTypes ] = useState<number[]>([])
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
+  const [ bankOffer, setBankOffer ] = useState<any>() // TODO: check why not BankOffer
+  const [ completed, setCompleted ] = useState<boolean>()
 
   useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
+    loadCurrentStepData()
+  }, [])
+
+  useEffect(() => {
+    if (currentStep <= sequenceStepNumber) {
       setNextStepAllowed(true)
     }
   }, [ currentStep, sequenceStepNumber ])
 
   useEffect(() => {
+    if (orderStatus === OrderStatus.FRAME_COMPLETED) {
+      setCompleted(true)
+    }
+  }, [ orderStatus ])
+
+  useEffect(() => {
     const currentDocuments = stepData?.documents ?? []
     if (stepData && currentDocuments) {
       updateDocuments(currentDocuments)
+    }
+    if (stepData?.bankOffers) {
+      // NOTE: take the first offer
+      // TODO: ask be to change response maybe?
+      setBankOffer(stepData.bankOffers[0]?.offer)
     }
   }, [ stepData ])
 
@@ -90,23 +103,28 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   const sendNextStep = async () => {
     if (!orderId) return
     setSubmitting(true)
-    const result = await sendFrameWizardStep3({
+    const result = await sendFrameWizardStep({
+      mode: CabinetMode.Customer,
       type: wizardType,
       step: sequenceStepNumber,
       companyId: companyId as number,
       orderId,
-    }, {})
+    }, {
+      bankId: bankOffer?.bankId,
+    })
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setCurrentStep(sequenceStepNumber + 1)
+      setOrderStatus(OrderStatus.FRAME_COMPLETED)
+      setCompleted(true)
     }
     setSubmitting(false)
   }
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
+      mode: CabinetMode.Customer,
       type: wizardType,
       companyId: companyId as number,
       step: sequenceStepNumber,
@@ -114,7 +132,6 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<any>).data)
-      setOrderStatus((result.data as FrameWizardStepResponse<any>).orderStatus as OrderStatus)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -196,11 +213,11 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   )
 
   const renderOffeSection = () => (
-    <Div className="CustomerOrderSignDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}></Title>
       <OrderInfo
         orderId={orderId}
-        conditions={stepData?.offer?.conditions}
+        conditions={bankOffer}
         customerCompany={stepData?.customerCompany}
       />
     </Div>
@@ -208,7 +225,7 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
   const renderStepContent = () => (
     <Div className="CustomerOrderSignDocuments">
-      <Div className="CustomerOrderSignDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('frameSteps.signDocuments.sectionTitles.signDocuments')}</Title>
         {renderDocuments()}
       </Div>
@@ -230,9 +247,9 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderStepActions()}
+      {!completed && renderStepActions()}
     </Div>
   )
 }
