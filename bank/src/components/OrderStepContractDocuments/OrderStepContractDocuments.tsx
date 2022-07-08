@@ -126,18 +126,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       setNextStepAllowed(false)
     } else {
       setOfferStatus(BankOfferStatus.BankOfferSent)
-      // NOTE: workaround requested by be, send next step after current
-      const nextStepResult = await sendFrameWizardStep({
-        step: sequenceStepNumber + 1,
-        bankId,
-        orderId,
-      }, undefined)
-      if (!nextStepResult.success) {
-        message.error(t('common.errors.requestError.title'))
-        setNextStepAllowed(false)
-      } else {
-        setCurrentStep(sequenceStepNumber + 1)
-      }
+      setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
   }

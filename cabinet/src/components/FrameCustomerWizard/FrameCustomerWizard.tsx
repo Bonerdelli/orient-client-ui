@@ -92,6 +92,7 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
         />
       case 2:
         return <CustomerOrderSignDocuments
+          wizardType={FrameWizardType.Full}
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}

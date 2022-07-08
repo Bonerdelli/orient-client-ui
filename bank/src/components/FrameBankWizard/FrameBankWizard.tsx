@@ -19,6 +19,7 @@ import OrderStepArchive from 'components/OrderStepArchive'
 import { OrderWizardType } from 'library/models'
 
 import { getFrameOrderWizard } from 'library/api/frameOrder'
+import { sendFrameWizardStep } from 'library/api/frameWizard'
 import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FrameBankWizard.style.less'
@@ -57,12 +58,18 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   }, [bankId])
 
   useEffect(() => {
-    if (currentStep === 4 && (
+    if (currentStep > 5 && (
         offerStatus === BankOfferStatus.CustomerSign
     )) {
       // NOTE: show waiting for customer sign message
       setSelectedStep(5)
       setCurrentStep(5)
+    }
+    if (currentStep === 4 && (
+        offerStatus === BankOfferStatus.Completed
+    )) {
+      // NOTE: workaround to show completed step
+      sendToArchive()
     }
   }, [currentStep, offerStatus])
 
@@ -70,6 +77,17 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     // TODO: load bank from be (when ready)
     setBankId(MOCK_BANK_ID)
   }, [])
+
+  // NOTE: workaround to show completed step
+  const sendToArchive = async () => {
+    await sendFrameWizardStep({
+      bankId: MOCK_BANK_ID,
+      orderId: Number(itemId) || orderId as number,
+      step: 4,
+    }, undefined)
+    setSelectedStep(5)
+    setCurrentStep(5)
+  }
 
   const loadCurrentStepData = async () => {
     const result = await getFrameOrderWizard({
