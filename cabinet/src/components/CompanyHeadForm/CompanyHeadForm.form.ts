@@ -2,7 +2,7 @@ import { FormInputShortConfig, FormInputType } from 'library/helpers/form'
 
 import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 
-const formFields: FormInputShortConfig<CompanyFounderDto>[] = [
+export const founderFields: FormInputShortConfig<CompanyFounderDto>[] = [
   [ 'lastName' ],
   [ 'firstName' ],
   [ 'secondName' ],
@@ -10,6 +10,13 @@ const formFields: FormInputShortConfig<CompanyFounderDto>[] = [
   [ 'ownership', FormInputType.Percent ],
   [ 'isIo', FormInputType.Switcher ],
   [ 'isAttorney', FormInputType.Switcher ],
+  [ 'phone' ],
+].map(item => ([
+  'companyFounder',
+  ...item,
+] as FormInputShortConfig<CompanyFounderDto>))
+
+const passportFields: FormInputShortConfig<CompanyFounderDto>[] = [
   [ 'passportType' ],
   [ 'passportSeries' ],
   [ 'passportNumber' ],
@@ -23,10 +30,17 @@ const formFields: FormInputShortConfig<CompanyFounderDto>[] = [
   [ 'passportValidDate', FormInputType.Date ],
   [ 'nationality' ],
   [ 'address' ],
-  [ 'phone' ],
 ].map(item => ([
   'companyFounder',
   ...item,
 ] as FormInputShortConfig<CompanyFounderDto>))
 
-export default formFields
+export const passportHeaderFieldNames = [ 'passportType', 'isMaleGender' ]
+export const passportFooterFieldNames = [ 'birthdate', 'birthplace', 'address' ]
+
+export const ruPassportFieldNames = [ 'passportSeries', 'passportNumber', 'passportIssueDate', 'passportIssuerCode', 'passportIssuerName' ]
+export const uzPassportFieldNames = [ 'passportSeries', 'passportNumber', 'passportIssueDate', 'passportValidDate', 'passportIssuerName', 'nationality' ]
+export const uzIdFieldNames = [ 'passportNumber', 'passportIssueDate', 'passportValidDate', 'passportIssuerName', 'nationality' ]
+
+export const getPassportFieldsConfig = (names: string[]) => passportFields.filter(([ _, name ]) => names.includes(name))
+

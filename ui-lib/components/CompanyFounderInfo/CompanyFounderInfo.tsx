@@ -3,6 +3,7 @@ import { Descriptions, Tabs } from 'antd'
 
 import { CompanyFounderDto } from 'library/models/proxy'
 import { PassportType } from '../../library'
+import { passportTypeTranslationsMap } from '../../library/constants/passport-type-translations'
 
 const { Item: DescItem } = Descriptions
 const { TabPane } = Tabs
@@ -19,11 +20,6 @@ const CompanyFounderInfo: React.FC<CompanyFounderInfoProps> = ({ companyFounder 
     bordered: true,
     column: 1,
     size: 'small' as any,
-  }
-  const passportTypeMap = {
-    [PassportType.Ru]: t('models.passportTypes.ru'),
-    [PassportType.Uz]: t('models.passportTypes.uz'),
-    [PassportType.Uz_Id]: t('models.passportTypes.uzId'),
   }
 
   const renderGeneralInfoFields = () => {
@@ -44,7 +40,7 @@ const CompanyFounderInfo: React.FC<CompanyFounderInfoProps> = ({ companyFounder 
   }
   const renderCommonPassportHeaderFields = () => (<>
     <DescItem label={t('models.companyFounder.fields.passportType.title')}>
-      {passportTypeMap[companyFounder.passportType as PassportType]}
+      {passportTypeTranslationsMap[companyFounder.passportType as PassportType]}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.isMaleGender.title')}>
       {t(`common.dataEntity.gender.${companyFounder.isMaleGender ? 'male' : 'female'}`)}
@@ -127,7 +123,7 @@ const CompanyFounderInfo: React.FC<CompanyFounderInfoProps> = ({ companyFounder 
       case PassportType.Uz_Id:
         return renderUzIdFields()
       default:
-        return `Unhandled passport type ${companyFounder.passportType}`
+        return <>Unhandled passport type: {companyFounder.passportType}</>
     }
   }
 
