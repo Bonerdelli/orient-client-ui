@@ -81,8 +81,8 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       const step = Number((result.data as any).step)
       let orderStatus = (result.data as any).orderStatus
       setOrderStatus(orderStatus)
+      setSelectedStep(step > 3 ? 3 : step) // NOTE: workaround to handle 'invisible' steps
       setCurrentStep(step)
-      setSelectedStep(step)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -110,6 +110,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       orderId: Number(itemId) || orderId,
       oprderType: OrderWizardType.Factoring,
       setCurrentStep: handleStepChange,
+      setOrderStatus,
       currentStep,
       completed,
     }

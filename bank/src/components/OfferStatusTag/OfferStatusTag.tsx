@@ -49,7 +49,6 @@ const OfferStatusTag: React.FC<OfferStatusTagProps> = ({ statusCode, refreshActi
     case OrderStatus.FRAME_CUSTOMER_SIGN:
       return <Tag color="blue">{t('offerStatusTitles.customerSign')}{refreshButton}</Tag>
     case BankOfferStatus.Completed:
-    case FactoringStatus.FACTOR_COMPLETED:
     case OrderStatus.FRAME_COMPLETED:
       return <Tag color="blue">{t('offerStatusTitles.completed')}</Tag>
     case FactoringStatus.FACTOR_WAIT_FOR_CHARGE:

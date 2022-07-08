@@ -7,13 +7,13 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FactoringStatus } from 'orient-ui-library/library'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 
 import './FactoringStepArchive.style.less'
-import { FactoringStatus } from 'orient-ui-library/library'
 
 const { Title } = Typography
 
@@ -23,6 +23,7 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: FactoringStatus) => void,
   completed?: boolean
 }
 
@@ -31,7 +32,7 @@ const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
   orderId,
   currentStep,
   sequenceStepNumber,
-  setCurrentStep,
+  setOrderStatus,
 }) => {
   const { t } = useTranslation()
 
@@ -92,13 +93,31 @@ const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
       return
     }
     setSubmitting(true)
+    let nextStepNumber: number
+    let nextStatus: FactoringStatus | null
+    switch (factoringStatus) {
+      case FactoringStatus.FACTOR_WAIT_FOR_CHARGE:
+        nextStepNumber = sequenceStepNumber
+        nextStatus = FactoringStatus.FACTOR_CHARGED
+        break
+      case FactoringStatus.FACTOR_CHARGED:
+        nextStepNumber = sequenceStepNumber // NOTE: for a some reason it's the same step
+        nextStatus = FactoringStatus.FACTOR_COMPLETED
+        break
+      case FactoringStatus.FACTOR_COMPLETED:
+      default:
+        nextStatus = null
+        nextStepNumber = 0
+        break
+    }
     const result = await sendFactoringWizardStep({
-      step: sequenceStepNumber,
+      step: nextStepNumber,
       bankId: bankId as number,
       orderId,
-    }, {})
+    }, undefined)
     if (result.success) {
-      setCurrentStep(currentStep + 1)
+      nextStatus && setFactoringStatus(nextStatus)
+      nextStatus && setOrderStatus(nextStatus)
       loadStepData()
     }
     setSubmitting(false)
@@ -126,9 +145,9 @@ const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
   const getNextButtonText = () => {
     switch (factoringStatus) {
       case FactoringStatus.FACTOR_WAIT_FOR_CHARGE:
-        return t('orderStepArchive.actions.supplierCharged')
+        return t('orderStepArchive.actions.supplierCharged.title')
       case FactoringStatus.FACTOR_CHARGED:
-        return t('orderStepArchive.actions.chargeExtinguished')
+        return t('orderStepArchive.actions.chargeExtinguished.title')
       default:
         return null
     }

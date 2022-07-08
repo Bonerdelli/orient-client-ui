@@ -7,6 +7,7 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FactoringStatus } from 'orient-ui-library/library'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
@@ -22,6 +23,7 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: FactoringStatus) => void,
   completed?: boolean
 }
 
@@ -31,6 +33,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
+  setOrderStatus,
   completed,
 }) => {
   const { t } = useTranslation()
@@ -102,6 +105,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
+      setOrderStatus(FactoringStatus.FACTOR_WAIT_FOR_CHARGE)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)

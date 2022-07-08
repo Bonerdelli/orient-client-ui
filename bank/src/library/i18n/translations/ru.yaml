@@ -94,8 +94,10 @@ orderStepArchive:
   title: Параметры заявки и клиента
   docsSectionTitle: Архив документов по заявке
   actions:
-    supplierCharged: Поставщик профинансирован
-    chargeExtinguished: Финансирование погашено
+    supplierCharged:
+      title: Поставщик профинансирован
+    chargeExtinguished:
+      title: Финансирование погашено
 
 orderActions:
   cancel:
