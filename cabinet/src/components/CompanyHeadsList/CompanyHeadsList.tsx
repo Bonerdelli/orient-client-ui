@@ -2,11 +2,9 @@ import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 import { remove } from 'lodash'
 
-import { Button, Popconfirm, Space, Table } from 'antd'
+import { Button, message, Popconfirm, Space, Table } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
-
-import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { CompanyHead } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
@@ -104,9 +102,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   ]
 
   if (dataLoaded === false) {
-    return (
-      <ErrorResultView centered status="error"/>
-    )
+    message.error(t('Ошибка получения данных о руководителях и учредителях'))
   }
 
   return (
@@ -115,7 +111,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
         bordered
         columns={columns}
         loading={dataLoaded === null}
-        dataSource={data || []}
+        dataSource={data ?? []}
         pagination={false}
       />
     </div>

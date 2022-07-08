@@ -155,7 +155,7 @@ companyFounder:
       title: Национальность
     address:
       title: Адрес регистрации
-    phone:
+    phoneNumber:
       title: Телефон
     passportSeriesAndNumber:
       title: Серия и номер
