@@ -104,6 +104,7 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
       case 3:
         return <OrderStepSendToBank {...stepBaseProps}
           orderStatus={orderStatus}
+          setOrderStatus={setOrderStatus}
           sequenceStepNumber={3}
         />
       default:

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, Button, Skeleton, Result, message } from 'antd'
-import { InfoCircleFilled, CheckCircleFilled } from '@ant-design/icons'
+import { InfoCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -14,8 +14,9 @@ import './OrderStepSendToBank.style.less'
 
 export interface OrderStepSendToBankProps {
   orderId?: number
+  orderStatus?: OrderStatus,
+  setOrderStatus: (status: OrderStatus) => void
   currentStep: number
-  orderStatus: OrderStatus,
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
 }
@@ -24,6 +25,7 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   orderId,
   currentStep,
   orderStatus,
+  setOrderStatus,
   setCurrentStep,
   sequenceStepNumber,
 }) => {
@@ -82,7 +84,7 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setCurrentStep(sequenceStepNumber + 1)
+      setOrderStatus(OrderStatus.FRAME_CLIENT_SIGN)
     }
     setSubmitting(false)
   }
@@ -138,7 +140,7 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   const renderOrderSentContent = () => (
     <Div className="OrderStepSendToBank">
       <Result
-        icon={<CheckCircleFilled />}
+        status="success"
         title={t('orderStepSendToBank.sent.title')}
         subTitle={bankName ? t(
           'orderStepSendToBank.sent.desc',
