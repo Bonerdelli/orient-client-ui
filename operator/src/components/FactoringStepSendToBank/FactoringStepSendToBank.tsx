@@ -144,6 +144,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     </Button>
   )
 
+  // TODO: support negative scenarious after DEMO
   const renderStopFactors = () => (
     <List
       size="small"
@@ -193,7 +194,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   return (
     <Div className="FrameWizard__step__content">
       {!completed ? renderReadyForSendingContent() : renderOrderSentContent()}
-      {!completed && Boolean(failedStopFactors?.length) && renderStopFactors()}
+      {/* !completed && Boolean(failedStopFactors?.length) && renderStopFactors() */}
       {!completed && renderActions()}
     </Div>
   )

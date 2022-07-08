@@ -65,6 +65,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
   useEffect(() => {
     if (stepData?.offers) {
       setOffers(stepData.offers)
+
     }
   }, [ stepData ])
 

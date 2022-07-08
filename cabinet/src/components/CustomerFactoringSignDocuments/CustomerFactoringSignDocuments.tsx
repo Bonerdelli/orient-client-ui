@@ -81,7 +81,6 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -97,11 +96,12 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       step: sequenceStepNumber,
       companyId,
       orderId,
-    }, {})
+    }, undefined)
     if (!result.success) {
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOrderStatus(FactoringStatus.FACTOR_BANK_SIGN)
       loadCurrentStepData()
     }
     setSubmitting(false)

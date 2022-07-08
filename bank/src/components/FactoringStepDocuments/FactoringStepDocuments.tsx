@@ -34,7 +34,6 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   sequenceStepNumber,
   setCurrentStep,
   setOrderStatus,
-  completed,
 }) => {
   const { t } = useTranslation()
 
@@ -257,7 +256,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {!completed && renderActions()}
+      {renderActions()}
     </Div>
   )
 }

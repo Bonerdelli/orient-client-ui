@@ -36,7 +36,6 @@ const FACTORING_BANK_COMPLETED_STATUSES = [
   FactoringStatus.FACTOR_CANCEL,
   FactoringStatus.FACTOR_CHARGED,
   FactoringStatus.FACTOR_OPERATOR_REJECT,
-  FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
 ]
 
 const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, backUrl }) => {

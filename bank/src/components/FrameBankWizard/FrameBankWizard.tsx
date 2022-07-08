@@ -65,7 +65,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       setSelectedStep(5)
       setCurrentStep(5)
     }
-    if (currentStep === 4 && (
+    if (currentStep === 5 && (
         offerStatus === BankOfferStatus.Completed
     )) {
       // NOTE: workaround to show completed step
@@ -83,10 +83,10 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     await sendFrameWizardStep({
       bankId: MOCK_BANK_ID,
       orderId: Number(itemId) || orderId as number,
-      step: 4,
+      step: 5,
     }, undefined)
-    setSelectedStep(5)
-    setCurrentStep(5)
+    setSelectedStep(6)
+    setCurrentStep(6)
   }
 
   const loadCurrentStepData = async () => {
