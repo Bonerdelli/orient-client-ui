@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { Descriptions, Skeleton } from 'antd'
+import { Typography, Descriptions, Skeleton } from 'antd'
 import { CompanyDto } from 'orient-ui-library/library/models/proxy'
 import { FactoringOrderInfo, OrderConditions, OrderConditionType } from '../../library'
 import { formatDate } from '../../library/helpers/date'
 
 const { Item: DescItem } = Descriptions
+const { Text } = Typography
 
 export interface OrderInfoProps {
   orderId?: number
@@ -46,10 +47,12 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
           return (
             <>
               <DescItem label={t('models.orderCondition.fields.percentOverall.title')}>
-                {conditions!.percentOverall}
+                <Text>{conditions!.percentOverall}</Text>
+                <Text>%</Text>
               </DescItem>
               <DescItem label={t('models.orderCondition.fields.percentYear.title')}>
-                {conditions!.percentYear}
+                <Text>{conditions!.percentYear}</Text>
+                <Text>%</Text>
               </DescItem>
             </>
           )
@@ -57,7 +60,8 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
           return (
             <>
               <DescItem label={t('models.orderCondition.fields.percentDiscount.title')}>
-                {conditions!.percentDiscount}
+                <Text>{conditions!.percentDiscount}</Text>
+                <Text>%</Text>
               </DescItem>
             </>
           )

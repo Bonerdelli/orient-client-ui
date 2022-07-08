@@ -140,7 +140,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOfferStatus(BankOfferStatus.BankOffer)
+      setOfferStatus(BankOfferStatus.CustomerSign)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
