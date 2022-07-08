@@ -140,6 +140,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
         <Col span={12}>
           <OrderInfo
             orderId={orderId}
+            conditions={stepData?.offer?.conditions}
             customerCompany={stepData?.customerCompany}
           />
         </Col>

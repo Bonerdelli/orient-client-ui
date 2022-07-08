@@ -53,7 +53,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
     </Space>
   )
 
-  const rowClassName = (item: any) => ( // TODO: fixme
+  const rowClassName = (item: Order) => (
     item.statusCode as BankOfferStatus === BankOfferStatus.BankWaitForVerify
       ? 'FrameOrdersList__row--new'
       : ''
@@ -92,7 +92,6 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
       render: renderStatus,
       align: 'center',
     },
-
     {
       key: 'actions',
       render: renderActions,

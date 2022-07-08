@@ -120,6 +120,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     setSubmitting(true)
     const result = await sendFrameWizardStep3({
       type: wizardType,
+      step: sequenceStepNumber,
       companyId: companyId as number,
       orderId,
     }, {})

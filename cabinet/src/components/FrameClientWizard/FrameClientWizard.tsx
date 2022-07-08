@@ -173,7 +173,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
           onChange={(step) => setSelectedStep(step + 1)}
         >
           <Step title={t('frameOrder.firstStep.title')} />
-          <Step disabled={!selectedCustomer && !currentStep} title={t('frameOrder.secondStep.title')} />
+          <Step disabled={currentStep < 2} title={t('frameOrder.secondStep.title')} />
           <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')} />
           <Step disabled={currentStep < 4} title={t('frameOrder.fourthStep.title')} />
         </Steps>

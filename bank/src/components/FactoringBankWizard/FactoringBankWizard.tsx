@@ -36,7 +36,6 @@ const FACTORING_BANK_COMPLETED_STATUSES = [
   FactoringStatus.FACTOR_CANCEL,
   FactoringStatus.FACTOR_CHARGED,
   FactoringStatus.FACTOR_OPERATOR_REJECT,
-  FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
 ]
 
 const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, backUrl }) => {
@@ -81,8 +80,8 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       const step = Number((result.data as any).step)
       let orderStatus = (result.data as any).orderStatus
       setOrderStatus(orderStatus)
+      setSelectedStep(step > 3 ? 3 : step) // NOTE: workaround to handle 'invisible' steps
       setCurrentStep(step)
-      setSelectedStep(step)
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -110,6 +109,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       orderId: Number(itemId) || orderId,
       oprderType: OrderWizardType.Factoring,
       setCurrentStep: handleStepChange,
+      setOrderStatus,
       currentStep,
       completed,
     }

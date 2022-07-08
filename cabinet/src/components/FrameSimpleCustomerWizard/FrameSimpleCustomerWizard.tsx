@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useParams } from 'react-router-dom'
-import { Typography, Card, Steps, Grid, Skeleton, Button } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useParams } from 'react-router-dom'
+import { Card, Steps, Grid, Skeleton } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -19,7 +18,6 @@ import { getCurrentFrameWizardStep } from 'library/api'
 import './FrameSimpleCustomerWizard.style.less'
 
 const { Step } = Steps
-const { Title } = Typography
 const { useBreakpoint } = Grid
 
 export interface FrameSimpleCustomerWizardProps {
@@ -72,6 +70,13 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
     setStepDataLoading(false)
   }
 
+  const handleStepChange = (step: number) => {
+    setSelectedStep(step)
+    if (currentStep < step) {
+      setCurrentStep(step)
+    }
+  }
+
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
       return <Skeleton active={true} />
@@ -83,7 +88,7 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
           companyId={companyId}
           orderId={Number(itemId)}
           currentStep={currentStep}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           sequenceStepNumber={1}
         />
       case 2:
@@ -93,25 +98,13 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
           currentStep={currentStep}
           orderStatus={orderStatus}
           sequenceStepNumber={2}
-          setCurrentStep={setSelectedStep}
+          setOrderStatus={setOrderStatus}
+          setCurrentStep={handleStepChange}
           orderId={Number(itemId)}
         />
       default:
         return <></>
     }
-  }
-
-  const renderTitle = () => {
-    const title = t('customerFrameOrder.title')
-    if (!backUrl) return title
-    return (
-      <>
-        <Link className="Wizard__navigateBack" to={backUrl}>
-          <Button icon={<ArrowLeftOutlined />} type="link" size="large"></Button>
-        </Link>
-        {title}
-      </>
-    )
   }
 
   if (dataLoaded === false) {
@@ -123,7 +116,16 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
   return (
     <>
       <Card className="Wizard FrameSimpleCustomerWizard">
-        <Title level={3}>{renderTitle()}</Title>
+        <WizardHeader
+          title={t('frameSimpleOrder.title')}
+          backUrl={backUrl}
+          statusTag={
+            <OrderStatusTag
+              statusCode={orderStatus}
+              refreshAction={() => loadCurrentStepData()}
+            />
+          }
+        />
         <Steps
           current={stepDataLoading ? undefined : selectedStep - 1}
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}

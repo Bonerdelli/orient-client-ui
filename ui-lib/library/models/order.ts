@@ -24,6 +24,7 @@ export enum OrderStatus {
   FRAME_CLIENT_REWORK = 'frame_client_rework',
   FRAME_CLIENT_SIGN = 'frame_client_sign',
   FRAME_BANK_VERIFYING = 'frame_bank_verify',
+  FRAME_BANK_SIGN = 'frame_bank_sign',
   FRAME_HAS_OFFER = 'frame_has_offer',
   FRAME_CUSTOMER_SIGN = 'frame_customer_sign',
   FRAME_COMPLETED = 'frame_completed',

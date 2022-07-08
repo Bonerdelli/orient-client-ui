@@ -88,6 +88,13 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
     <OrderStatusTag statusCode={statusCode} />
   )
 
+  const rowClassName = (item: Order) => (
+    mode === CabinetMode.Customer
+      && item.statusCode === OrderStatus.FRAME_CUSTOMER_SIGN
+        ? 'OrdersList__row--new'
+        : ''
+  )
+
   const columns: ColumnsType<Order> = [
     {
       key: 'number',
@@ -143,6 +150,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
         columns={columns}
         loading={dataLoaded === null}
         dataSource={data?.data as unknown as Order[] || []}
+        rowClassName={rowClassName}
         pagination={false}
         rowKey="id"
       />

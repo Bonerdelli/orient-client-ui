@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { Descriptions, Skeleton } from 'antd'
-import { CompanyDto } from 'orient-ui-library/library/models/proxy'
-import { FactoringOrderInfo, OrderConditions, OrderConditionType } from '../../library'
-import { formatDate } from '../../library/helpers/date'
+import { Typography, Descriptions, Skeleton } from 'antd'
+import { FactoringOrderInfo, OrderConditions, OrderConditionType } from 'library/models'
+import { CompanyDto } from 'library/models/proxy'
+import { formatDate } from 'library/helpers/date'
 
 const { Item: DescItem } = Descriptions
+const { Text } = Typography
 
 export interface OrderInfoProps {
   orderId?: number
@@ -12,6 +13,7 @@ export interface OrderInfoProps {
   factoring?: FactoringOrderInfo
   conditions?: OrderConditions
   size?: 'middle' | 'small' | 'default'
+  title?: string
 }
 
 const OrderInfo: React.FC<OrderInfoProps> = ({
@@ -20,10 +22,11 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
   factoring,
   conditions,
   size = 'small',
+  title,
 }) => {
   const { t } = useTranslation()
 
-  if (!orderId || !customerCompany) {
+  if (!orderId && !customerCompany && !conditions) {
     return <Skeleton/>
   }
 
@@ -46,10 +49,12 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
           return (
             <>
               <DescItem label={t('models.orderCondition.fields.percentOverall.title')}>
-                {conditions!.percentOverall}
+                <Text>{conditions!.percentOverall}</Text>
+                <Text>%</Text>
               </DescItem>
               <DescItem label={t('models.orderCondition.fields.percentYear.title')}>
-                {conditions!.percentYear}
+                <Text>{conditions!.percentYear}</Text>
+                <Text>%</Text>
               </DescItem>
             </>
           )
@@ -57,7 +62,8 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
           return (
             <>
               <DescItem label={t('models.orderCondition.fields.percentDiscount.title')}>
-                {conditions!.percentDiscount}
+                <Text>{conditions!.percentDiscount}</Text>
+                <Text>%</Text>
               </DescItem>
             </>
           )
@@ -76,6 +82,15 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
       </DescItem>
     </>)
   }
+
+  const renderCustomerCompany = () => (<>
+    <DescItem label={t('models.customer.fields.inn.title')}>
+      {customerCompany.inn}
+    </DescItem>
+    <DescItem label={t('models.customer.fields.name.title')}>
+      {customerCompany.shortName}
+    </DescItem>
+  </>)
 
   const renderFactoringInfo = () => (<>
     <DescItem label={t('models.factoring.fields.bankName.title')}>
@@ -98,7 +113,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
   return (
     <Descriptions
       size={size}
-      title={t('models.order.title')}
+      title={title ?? t('models.order.title')}
       className="OrderInfo"
       bordered
       column={1}
@@ -106,12 +121,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
       <DescItem label={t('models.order.fields.id.title')}>
         {orderId}
       </DescItem>
-      <DescItem label={t('models.customer.fields.inn.title')}>
-        {customerCompany.inn}
-      </DescItem>
-      <DescItem label={t('models.customer.fields.name.title')}>
-        {customerCompany.shortName}
-      </DescItem>
+      {customerCompany && renderCustomerCompany()}
       {conditions && renderOrderConditions()}
       {factoring && renderFactoringInfo()}
     </Descriptions>

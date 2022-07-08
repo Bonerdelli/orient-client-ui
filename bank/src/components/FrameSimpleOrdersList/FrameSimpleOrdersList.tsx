@@ -86,7 +86,6 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
       render: renderStatus,
       align: 'center',
     },
-
     {
       key: 'actions',
       render: renderActions,
