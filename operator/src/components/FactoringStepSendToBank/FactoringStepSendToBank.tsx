@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Col, List, message, Row, Skeleton, Typography } from 'antd'
+import { Button, Row, Col, List, Result, Skeleton, message } from 'antd'
+import { InfoCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -11,8 +12,6 @@ import './FactoringStepSendToBank.style.less'
 import { OperatorFactoringStep4Dto, OperatorFactoringWizardStep4ResponseDto } from 'library/models/factoringWizard'
 import { StopFactor } from 'library/models/stopFactor'
 import { FactoringStatus } from 'orient-ui-library/library'
-
-const { Title } = Typography
 
 export interface FactoringStepSendToBankProps {
   orderId?: number
@@ -39,6 +38,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
+  const [ bankName, setBankName ] = useState<string>()
   const [ completed, setCompleted ] = useState<boolean>()
 
   useEffect(() => {
@@ -51,6 +51,13 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       setNextStepAllowed(false)
     }
   }, [ orderStatus ])
+
+  useEffect(() => {
+    if (stepData?.bankName) {
+      setBankName(stepData.bankName)
+    }
+  }, [ stepData ])
+
 
   useEffect(() => {
     if (currentStep > sequenceStepNumber) {
@@ -145,15 +152,29 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     />
   )
 
-  const renderStepContent = () => (
-    <Div className="FactoringStepSendToBank">
-      <Title level={5}>
-        {t(
-          `factoringStepSendToBank.title.${completed ? 'sent' : 'readyForSending'}`,
-          { bankName: stepData?.bankName ?? '' },
+  const renderReadyForSendingContent = () => (
+    <Div className="OrderStepSendToBank">
+      <Result
+        icon={<InfoCircleFilled />}
+        title={t('orderStepSendToBank.readyForSending.title')}
+        subTitle={bankName && t(
+          'orderStepSendToBank.readyForSending.desc',
+          { bankName },
         )}
-      </Title>
-      {!completed && !!failedStopFactors?.length && renderStopFactors()}
+      />
+    </Div>
+  )
+
+  const renderOrderSentContent = () => (
+    <Div className="OrderStepSendToBank">
+      <Result
+        status="success"
+        title={t('orderStepSendToBank.sent.title')}
+        subTitle={bankName && t(
+          'orderStepSendToBank.sent.desc',
+          { bankName },
+        )}
+      />
     </Div>
   )
 
@@ -171,8 +192,9 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
 
   return (
     <Div className="FrameWizard__step__content">
-      {renderStepContent()}
-      {renderActions()}
+      {!completed ? renderReadyForSendingContent() : renderOrderSentContent()}
+      {!completed && Boolean(failedStopFactors?.length) && renderStopFactors()}
+      {!completed && renderActions()}
     </Div>
   )
 }

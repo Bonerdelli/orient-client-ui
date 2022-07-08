@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Result, Skeleton, List, Spin, message } from 'antd'
+import { Typography, Row, Col, Button, Skeleton, Spin, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
+import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
+import { BankDto } from 'orient-ui-library/library/models/proxy'
 
 import { CabinetMode } from 'library/models/cabinet'
 import { getFrameWizardStep, sendFrameWizardStep } from 'library/api'
@@ -54,6 +55,8 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   const [ documentTypes, setDocumentTypes ] = useState<number[]>([])
   const [ documents, setDocuments ] = useState<OrderDocument[]>([])
   const [ bankOffer, setBankOffer ] = useState<any>() // TODO: check why not BankOffer
+  const [ bank, setBank ] = useState<BankDto>()
+
   const [ completed, setCompleted ] = useState<boolean>()
 
   useEffect(() => {
@@ -81,6 +84,7 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
       // NOTE: take the first offer
       // TODO: ask be to change response maybe?
       setBankOffer(stepData.bankOffers[0]?.offer)
+      setBank(stepData.bankOffers[0]?.bank)
     }
   }, [ stepData ])
 
@@ -214,11 +218,11 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
   const renderOffeSection = () => (
     <Div className="WizardStep__section">
-      <Title level={5}></Title>
+      <Title level={5}>{bank?.name}</Title>
       <OrderInfo
+        title={t('frameSteps.signDocuments.sectionTitles.orderConditions')}
         orderId={orderId}
         conditions={bankOffer}
-        customerCompany={stepData?.customerCompany}
       />
     </Div>
   )
@@ -226,7 +230,10 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   const renderStepContent = () => (
     <Div className="CustomerOrderSignDocuments">
       <Div className="WizardStep__section">
-        <Title level={5}>{t('frameSteps.signDocuments.sectionTitles.signDocuments')}</Title>
+        <Title level={5}>{completed
+          ? t('frameSteps.signDocuments.sectionTitles.documentsArchive')
+          : t('frameSteps.signDocuments.sectionTitles.signDocuments')
+        }</Title>
         {renderDocuments()}
       </Div>
       {renderOffeSection()}

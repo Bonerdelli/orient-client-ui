@@ -88,7 +88,7 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
           companyId={companyId}
           orderId={Number(itemId)}
           currentStep={currentStep}
-          setCurrentStep={setSelectedStep}
+          setCurrentStep={handleStepChange}
           sequenceStepNumber={1}
         />
       case 2:
@@ -98,7 +98,8 @@ const FrameSimpleCustomerWizard: React.FC<FrameSimpleCustomerWizardProps> = ({ c
           currentStep={currentStep}
           orderStatus={orderStatus}
           sequenceStepNumber={2}
-          setCurrentStep={setSelectedStep}
+          setOrderStatus={setOrderStatus}
+          setCurrentStep={handleStepChange}
           orderId={Number(itemId)}
         />
       default:
