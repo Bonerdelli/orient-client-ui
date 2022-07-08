@@ -1,7 +1,22 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom'
-import { Button, Card, Col, Form, Grid, Radio, Row, Select, Skeleton, Spin, Switch, Tabs } from 'antd'
+import {
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Form,
+  Grid,
+  Input,
+  Radio,
+  Row,
+  Select,
+  Skeleton,
+  Spin,
+  Switch,
+  Tabs,
+} from 'antd'
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -11,6 +26,7 @@ import { callApi, useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { baseFormConfig, FormInputShortConfig, renderFormInput } from 'library/helpers/form'
 import { getCompanyHead, updateCompanyHead } from 'library/api' // TODO: to ui-lib
 import {
+  dateFieldNames,
   founderFields,
   getPassportFieldsConfig,
   passportFooterFieldNames,
@@ -23,10 +39,13 @@ import './CompanyHeadForm.style.less'
 import { RETURN_URL_PARAM } from 'library/constants'
 import { PassportType } from 'orient-ui-library/library'
 import { passportTypeTranslationsMap } from 'orient-ui-library/library/constants/passport-type-translations'
+import moment from 'moment'
+import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 
 const { useBreakpoint } = Grid
 const { Item: FormItem } = Form
 const { TabPane } = Tabs
+const { TextArea } = Input
 
 export interface CompanyHeadFormProps {
   companyId: number,
@@ -59,12 +78,19 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData)
+      const formData = { ...initialData }
+      dateFieldNames.forEach(key => {
+        const date = initialData[key]
+        formData[key] = date ? moment(date) : moment
+      })
+      setFormData(formData)
+      setSelectedPassportType(initialData.passportType as PassportType)
     }
   }, [ initialData ])
 
   const handleFormSubmit = async (data: CompanyFounderDto) => {
     setSubmitting(true)
+    dateFieldNames.forEach(key => data[key] = moment(data[key]).format('YYYY-MM-DD'))
     const updatedData = await callApi<CompanyFounderDto | null>(
       updateCompanyHead, {
         companyId,
@@ -167,7 +193,11 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
       switch (fieldProps.name) {
         case 'birthdate':
           return <FormItem {...fieldProps}>
-            <Switch/>
+            <DatePicker format={DATE_FORMAT}/>
+          </FormItem>
+        case 'address':
+          return <FormItem {...fieldProps}>
+            <TextArea autoSize/>
           </FormItem>
         default:
           return renderFormInput(config)
@@ -181,6 +211,15 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
         getPassportFieldsConfig(ruPassportFieldNames).map(config => {
           const fieldProps = getFormFieldProps(config)
           switch (fieldProps.name) {
+            case 'passportIssuerName':
+              fieldProps.label = t(`models.${config[0]}.fields.${config[1]}.titleRu`)
+              return <FormItem {...fieldProps}>
+                <TextArea autoSize/>
+              </FormItem>
+            case 'passportIssueDate':
+              return <FormItem {...fieldProps}>
+                <DatePicker format={DATE_FORMAT}/>
+              </FormItem>
             default:
               return renderFormInput(config)
           }
@@ -196,6 +235,15 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
         getPassportFieldsConfig(uzPassportFieldNames).map(config => {
           const fieldProps = getFormFieldProps(config)
           switch (fieldProps.name) {
+            case 'passportIssuerName':
+              return <FormItem {...fieldProps}>
+                <TextArea autoSize/>
+              </FormItem>
+            case 'passportIssueDate':
+            case 'passportValidDate':
+              return <FormItem {...fieldProps}>
+                <DatePicker format={DATE_FORMAT}/>
+              </FormItem>
             default:
               return renderFormInput(config)
           }
@@ -211,6 +259,15 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
         getPassportFieldsConfig(uzIdFieldNames).map(config => {
           const fieldProps = getFormFieldProps(config)
           switch (fieldProps.name) {
+            case 'passportIssuerName':
+              return <FormItem {...fieldProps}>
+                <TextArea autoSize/>
+              </FormItem>
+            case 'passportIssueDate':
+            case 'passportValidDate':
+              return <FormItem {...fieldProps}>
+                <DatePicker format={DATE_FORMAT}/>
+              </FormItem>
             default:
               return renderFormInput(config)
           }

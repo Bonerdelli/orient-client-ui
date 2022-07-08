@@ -44,3 +44,4 @@ export const uzIdFieldNames = [ 'passportNumber', 'passportIssueDate', 'passport
 
 export const getPassportFieldsConfig = (names: string[]) => passportFields.filter(([ _, name ]) => names.includes(name))
 
+export const dateFieldNames = [ 'birthdate', 'passportIssueDate', 'passportValidDate' ]
