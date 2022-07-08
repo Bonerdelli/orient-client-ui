@@ -10,7 +10,7 @@ export const founderFields: FormInputShortConfig<CompanyFounderDto>[] = [
   [ 'ownership', FormInputType.Percent ],
   [ 'isIo', FormInputType.Switcher ],
   [ 'isAttorney', FormInputType.Switcher ],
-  [ 'phone' ],
+  [ 'phoneNumber' ],
 ].map(item => ([
   'companyFounder',
   ...item,

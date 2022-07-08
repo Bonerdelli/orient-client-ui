@@ -94,9 +94,11 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
     const updatedData = await callApi<CompanyFounderDto | null>(
       updateCompanyHead, {
         companyId,
+      },
+      {
+        ...data,
         id: id ?? itemId,
       },
-      data,
     )
     if (updatedData) {
       setFormData(updatedData)
