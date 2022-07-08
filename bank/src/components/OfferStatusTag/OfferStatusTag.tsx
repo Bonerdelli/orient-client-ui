@@ -3,12 +3,12 @@ import { Tag, Button } from 'antd'
 import { ReloadOutlined } from '@ant-design/icons'
 
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
-import { FactoringStatus } from 'orient-ui-library/library/models/order'
+import { FactoringStatus, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import './OfferStatusTag.style.less'
 
 export interface OfferStatusTagProps {
-  statusCode?: BankOfferStatus | FactoringStatus,
+  statusCode?: BankOfferStatus | FactoringStatus | OrderStatus,
   refreshAction?: () => void
 }
 
@@ -37,6 +37,7 @@ const OfferStatusTag: React.FC<OfferStatusTagProps> = ({ statusCode, refreshActi
     // TODO: unify enum naming
     case BankOfferStatus.BankSign:
     case FactoringStatus.FACTOR_BANK_SIGN:
+    case OrderStatus.FRAME_BANK_SIGN:
       return <Tag color="green">{t('offerStatusTitles.bankSign')}{refreshButton}</Tag>
     case BankOfferStatus.BankOfferSent:
       return <Tag color="green">{t('offerStatusTitles.bankOfferSent')}{refreshButton}</Tag>
@@ -45,9 +46,11 @@ const OfferStatusTag: React.FC<OfferStatusTagProps> = ({ statusCode, refreshActi
     //   return <Tag color="blue">{t('offerStatusTitles.needsForRework')}{refreshButton}</Tag>
     case BankOfferStatus.CustomerSign:
     case FactoringStatus.FACTOR_CUSTOMER_SIGN:
+    case OrderStatus.FRAME_CUSTOMER_SIGN:
       return <Tag color="blue">{t('offerStatusTitles.customerSign')}{refreshButton}</Tag>
     case BankOfferStatus.Completed:
     case FactoringStatus.FACTOR_COMPLETED:
+    case OrderStatus.FRAME_COMPLETED:
       return <Tag color="blue">{t('offerStatusTitles.completed')}</Tag>
     case FactoringStatus.FACTOR_WAIT_FOR_CHARGE:
       return <Tag color="green">{t('offerStatusTitles.factorWaitForCharge')}</Tag>

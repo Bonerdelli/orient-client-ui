@@ -86,7 +86,6 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
       render: renderStatus,
       align: 'center',
     },
-
     {
       key: 'actions',
       render: renderActions,
