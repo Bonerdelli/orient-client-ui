@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Table, Space } from 'antd'
+import { Tag, Table, Space } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { isUndefined } from 'lodash'
 
@@ -11,10 +11,7 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { Document, DocumentStatus } from 'library/models'
 import { downloadOrderDocument } from 'library/api'
 
-
 import './OrderDocumentsToSignList.style.less'
-
-const { Text } = Typography
 
 export interface OrderDocumentsToSignListProps {
   companyId: number
@@ -60,11 +57,10 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
   const renderDocumentStatus = (status: DocumentStatus) => {
     switch (status) {
       case DocumentStatus.Signed:
-        return <Text>{t('common.documents.statuses.signed')}</Text>
-      case DocumentStatus.Unsigned:
-        return <Text>{t('common.documents.statuses.unsigned')}</Text>
+        return <Tag>{t('common.documents.statuses.signed')}</Tag>
       default:
-        return <></>
+      case DocumentStatus.Unsigned:
+        return <Tag>{t('common.documents.statuses.unsigned')}</Tag>
     }
   }
 

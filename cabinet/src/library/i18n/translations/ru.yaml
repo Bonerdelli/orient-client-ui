@@ -261,6 +261,8 @@ frameSteps:
       banksForSending: Заявка будет направлена в следующие Банки
       orderConditions: Параметры договора
       documentsArchive: Архив документов
+    bankStatus:
+      available: Доступна отправка
 
   bankOffers:
     bankList:

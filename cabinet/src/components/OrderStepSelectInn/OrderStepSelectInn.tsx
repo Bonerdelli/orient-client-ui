@@ -180,7 +180,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       <Div className="OrderStepSelectInn__customerInfo">
         <Title level={5}>{t('frameSteps.selectInn.customerInfo.title')}</Title>
         <Card>
-          <Descriptions column={1} title={customer.shortName} bordered>
+          <Descriptions column={1} title={customer.shortName}>
             <DescItem label={t('models.customer.fields.inn.title')}>{customer.inn}</DescItem>
             <DescItem label={t('models.customer.fields.shortName.title')}>{customer.shortName}</DescItem>
             <DescItem label={t('models.customer.fields.chief.title')}>{customer.chief}</DescItem>
