@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
-import { Button, Card, Col, Descriptions, message, Row, Select, Skeleton, Space, Typography } from 'antd'
+import { Button, Card, Row, Col, Descriptions, Select, Skeleton, Space, Typography, message } from 'antd'
 import { BaseOptionType } from 'antd/es/select'
 
 import Div from 'orient-ui-library/components/Div'
@@ -180,7 +180,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
       <Div className="OrderStepSelectInn__customerInfo">
         <Title level={5}>{t('frameSteps.selectInn.customerInfo.title')}</Title>
         <Card>
-          <Descriptions column={2} title={customer.shortName}>
+          <Descriptions column={1} title={customer.shortName} bordered>
             <DescItem label={t('models.customer.fields.inn.title')}>{customer.inn}</DescItem>
             <DescItem label={t('models.customer.fields.shortName.title')}>{customer.shortName}</DescItem>
             <DescItem label={t('models.customer.fields.chief.title')}>{customer.chief}</DescItem>
@@ -229,7 +229,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   )
 
   const renderInnSelector = () => (
-    <Col lg={12} xl={10}>
+    <>
       <Title level={5}>{t('frameSteps.selectInn.title')}</Title>
       <Select
         className="OrderStepSelectInn__select"
@@ -240,14 +240,16 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
         options={options}
       >
       </Select>
-    </Col>
+    </>
   )
 
   const renderStepContent = () => (
     <Div className="OrderStepSelectInn">
       <Row>
-        {!orderId && renderInnSelector()}
-        {renderCustomerInfo()}
+        <Col lg={14} xl={12}>
+          {!orderId && renderInnSelector()}
+          {renderCustomerInfo()}
+        </Col>
       </Row>
     </Div>
   )
