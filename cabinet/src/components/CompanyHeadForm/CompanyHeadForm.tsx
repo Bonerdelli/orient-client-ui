@@ -317,10 +317,15 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
               {...baseFormConfig(breakPoint)}
             >
               <Tabs defaultActiveKey="1">
-                <TabPane key="1" tab={t('models.companyFounder.tabs.generalInfo')}>
+                <TabPane key="1"
+                         tab={t('models.companyFounder.tabs.generalInfo')}
+                >
                   {renderFounderFormInputs()}
                 </TabPane>
-                <TabPane key="2" tab={t('models.companyFounder.tabs.passportInfo')}>
+                <TabPane key="2"
+                         tab={t('models.companyFounder.tabs.passportInfo')}
+                         forceRender
+                >
                   {renderPassportFields()}
                 </TabPane>
               </Tabs>
