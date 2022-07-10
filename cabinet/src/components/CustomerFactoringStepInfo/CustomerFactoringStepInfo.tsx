@@ -119,7 +119,7 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   const renderStepContent = () => (
     <Div className="CustomerFactoringStepInfo">
       <Row gutter={12}>
-        <Col span={18}>
+        <Col lg={12}>
           <ClientInfo
             company={stepData?.clientCompany}
             companyHead={stepData?.clientCompanyFounder}
