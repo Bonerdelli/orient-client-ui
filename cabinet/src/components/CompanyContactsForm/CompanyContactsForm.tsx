@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Card, Col, Divider, Form, Grid, Row, Skeleton, Spin } from 'antd'
 import { SaveOutlined } from '@ant-design/icons'
-import { isUndefined } from 'lodash'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { CompanyContactsDto } from 'orient-ui-library/library/models/proxy'
-import { callApi, useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { baseFormConfig, renderFormInputs } from 'library/helpers/form'
 import { getCompanyContacts, updateCompanyContacts } from 'library/api' // TODO: to ui-lib
 import formFields from './CompanyContactsForm.form'
@@ -20,31 +19,37 @@ export interface CompanyContactsFormProps {
   companyId: number,
 }
 
+type DataLoadingState = 'loading' | 'success' | 'error'
+
 const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) => {
   const { t } = useTranslation()
   const breakPoint = useBreakpoint()
 
-  const [ formData, setFormData ] = useState<Partial<CompanyContactsDto>>()
   const [ submitting, setSubmitting ] = useState<boolean>(false)
-  const [ initialData, dataLoaded ] = useApi<CompanyContactsDto | null>(
-    getCompanyContacts,
-    { companyId },
-  )
+  const [ formData, setFormData ] = useState<Partial<CompanyContactsDto>>()
+  const [ dataLoadingState, setDataLoadingState ] = useState<DataLoadingState>('loading')
 
   useEffect(() => {
-    setFormData(initialData ?? {})
-  }, [ initialData ])
+    loadFormData()
+  }, [ companyId ])
+
+  const loadFormData = async () => {
+    const result = await getCompanyContacts({ companyId })
+    if (result.success) {
+      setFormData(result.data)
+      setDataLoadingState('success')
+    } else {
+      setDataLoadingState('error')
+    }
+  }
 
   const handleFormSubmit = async (data: CompanyContactsDto) => {
     setSubmitting(true)
-    const updatedData = await callApi<CompanyContactsDto | null>(
+    await callApi<CompanyContactsDto | null>(
       updateCompanyContacts,
       { companyId },
       data,
     )
-    if (updatedData) {
-      setFormData(updatedData)
-    }
     setSubmitting(false)
   }
 
@@ -74,10 +79,10 @@ const CompanyContactsForm: React.FC<CompanyContactsFormProps> = ({ companyId }) 
   )
 
   const renderForm = () => {
-    if (isUndefined(formData)) {
-      return <Skeleton active={dataLoaded === null}/>
+    if (dataLoadingState === 'loading') {
+      return <Skeleton active/>
     }
-    if (dataLoaded === false) {
+    if (dataLoadingState === 'error') {
       return (
         <ErrorResultView centered status="error"/>
       )
