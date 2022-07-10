@@ -89,8 +89,9 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
     {
       key: 'actions',
       render: renderActions,
-      align: 'right',
-      width: 50,
+      title: t('common.dataEntity.actions'),
+      align: 'center',
+      width: 100,
     },
   ]
 

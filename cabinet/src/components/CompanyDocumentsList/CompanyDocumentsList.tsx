@@ -131,9 +131,10 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     },
     {
       key: 'actions',
-      width: 120,
       render: renderActions,
-      align: 'right',
+      title: t('common.dataEntity.actions'),
+      align: 'left',
+      width: 120,
     },
   ]
 

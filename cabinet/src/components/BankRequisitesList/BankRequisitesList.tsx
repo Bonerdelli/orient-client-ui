@@ -80,9 +80,9 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
     {
       key: 'actions',
       render: renderActions,
-      align: 'right',
+      title: t('common.dataEntity.actions'),
+      align: 'center',
       width: 100,
-      title: t('bankRequisitesPage.tableColumns.action'),
     },
   ]
 
@@ -95,7 +95,6 @@ const BankRequisitesList: React.FC<BankRequisitesListProps> = ({ companyId }) =>
   return (
     <div className="BankRequisitesList" data-testid="BankRequisitesList">
       <Table
-        bordered
         columns={columns}
         loading={dataLoaded === null}
         dataSource={data || []}
