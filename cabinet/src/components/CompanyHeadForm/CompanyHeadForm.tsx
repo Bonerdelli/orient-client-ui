@@ -146,6 +146,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
     key: `${config[0]}-${++uniqueId}`,
     name: config[1],
     label: t(`models.${config[0]}.fields.${config[1]}.title`),
+    required: true,
   })
   const renderFounderFormInputs = () => {
     return founderFields.map(config => {
