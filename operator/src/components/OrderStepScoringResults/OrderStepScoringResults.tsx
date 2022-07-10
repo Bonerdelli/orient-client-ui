@@ -209,7 +209,9 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     },
     {
       key: 'actions',
-      width: 120,
+      title: t('common.dataEntity.actions'),
+      align: 'left',
+      width: 100,
     },
   ]
 

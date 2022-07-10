@@ -103,7 +103,7 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
       key: 'actions',
       render: renderActions,
       title: t('common.dataEntity.actions'),
-      align: 'center',
+      align: 'left',
       width: 120,
     },
   ]

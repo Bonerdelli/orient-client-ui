@@ -233,7 +233,7 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       key: 'actions',
       render: (item) => renderStopFactorActions(item),
       title: t('common.dataEntity.actions'),
-      align: 'right',
+      align: 'left',
       width: 80,
     },
   ]

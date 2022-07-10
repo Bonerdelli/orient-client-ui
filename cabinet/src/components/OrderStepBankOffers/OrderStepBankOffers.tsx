@@ -176,7 +176,7 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
       key: 'actions',
       render: renderColumnActions,
       title: t('common.dataEntity.actions'),
-      align: 'center',
+      align: 'left',
       width: 100,
     },
   ]
