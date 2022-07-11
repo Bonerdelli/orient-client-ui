@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Row, Col, Button, Skeleton, Result } from 'antd'
-import { InfoCircleFilled, CheckCircleFilled } from '@ant-design/icons'
+import { ClockCircleFilled, CheckCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -92,7 +92,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   const renderStepContent = () => (
     <Div className="OrderStepOfferAcceptance">
       <Result
-        icon={<InfoCircleFilled/>}
+        icon={<ClockCircleFilled/>}
         title={t('orderStepOfferAcceptance.waitForAccept.title')}
         subTitle={t('orderStepOfferAcceptance.waitForAccept.desc')}
       />
@@ -102,7 +102,7 @@ const OrderStepOfferAcceptance: React.FC<BlankWizardStepProps> = ({
   if (isWaiting) {
     return (
       <Result
-        icon={<InfoCircleFilled/>}
+        icon={<ClockCircleFilled/>}
         title={t('orderStepOfferAcceptance.waitForAccept.title')}
         subTitle={t('orderStepOfferAcceptance.waitForAccept.desc')}
       />

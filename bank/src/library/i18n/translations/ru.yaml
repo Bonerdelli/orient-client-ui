@@ -78,6 +78,8 @@ orderStepContractParams:
 orderStepContractDocuments:
   title: Документы по сделке
   actions:
+    submit:
+      title: Подписать и отправить предложение
     back:
       title: Переформировать предложение
 

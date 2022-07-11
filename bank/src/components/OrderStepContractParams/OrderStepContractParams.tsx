@@ -130,8 +130,21 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{renderSubmitButton()}</Col>
+      <Col>{currentStep > sequenceStepNumber
+        ? renderNextButton()
+        : renderSubmitButton()}</Col>
     </Row>
+  )
+
+  const renderNextButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      onClick={() => setCurrentStep(sequenceStepNumber + 1)}
+      disabled={!isNextStepAllowed}
+    >
+      {t('common.actions.next.title')}
+    </Button>
   )
 
   const renderSubmitButton = () => (
@@ -270,6 +283,8 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
       <Form
         initialValues={initialData || undefined}
         onFinish={(data: any) => handleFormSubmit(data)}
+        labelCol={{ span: 10 }}
+        labelAlign="left"
         labelWrap={true}
       >
         {renderStepContent()}

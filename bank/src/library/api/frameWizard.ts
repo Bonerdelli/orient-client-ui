@@ -23,7 +23,7 @@ export interface FrameWizardsCommonParameters extends FrameWizardParameters {
 export interface FrameWizardStep1Response {
   clientCompany: CompanyDto
   customerCompany: CompanyDto
-  clientCompanyFounder: CompanyFounderDto
+  clientCompanyChief: CompanyFounderDto
   clientCompanyRequisites: CompanyRequisitesDto
 }
 
