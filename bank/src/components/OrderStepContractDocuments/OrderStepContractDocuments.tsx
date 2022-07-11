@@ -145,13 +145,13 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
 
   const handleNextStep = () => {
     if (isNextStepAllowed) {
-      sendNextStep()
+      setCurrentStep(sequenceStepNumber + 1)
     }
   }
 
   const renderActions = () => (
     <Row className="WizardStep__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
+      <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
         : renderSubmitButton()}</Col>
@@ -166,7 +166,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       disabled={!isNextStepAllowed || submitting}
       loading={submitting}
     >
-      {t('common.actions.saveAndContinue.title')}
+      {t('orderStepContractDocuments.actions.submit.title')}
     </Button>
   )
 
@@ -177,7 +177,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       onClick={handleNextStep}
       disabled={!isNextStepAllowed || submitting}
     >
-      {t('orderActions.saveAndContinue.title')}
+      {t('common.actions.next.title')}
     </Button>
   )
 
