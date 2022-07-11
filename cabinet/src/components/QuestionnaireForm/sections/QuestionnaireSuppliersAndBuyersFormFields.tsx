@@ -107,7 +107,7 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliers
       </Form.Item>
       <Form.Item name="buyersPayDelayCount"
                  {...buyersFieldsFormFieldsLayout}
-                 label={t('questionnaire.suppliersAndBuyers.buyersPayDelayCount')}>
+                 label={t('questionnaire.suppliersAndBuyers.buyersPayDelayCount.label')}>
         <Input
           {...inputLayout}
           placeholder={t('questionnaire.suppliersAndBuyers.buyersPayDelayCount.placeholder')}
