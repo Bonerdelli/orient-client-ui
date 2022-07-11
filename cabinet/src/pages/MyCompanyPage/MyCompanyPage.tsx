@@ -35,7 +35,7 @@ const MyCompanyPage = () => {
         message.error('У компании отсутсвует учредитель')
       } else {
         const { firstName, lastName, secondName } = io
-        setCompanyHeadName(`${firstName} ${lastName} ${secondName}`)
+        setCompanyHeadName(`${lastName} ${firstName} ${secondName}`)
       }
     } else {
       message.error('Ошибка получения информации об учредителе компании')

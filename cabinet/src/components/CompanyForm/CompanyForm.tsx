@@ -115,10 +115,10 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, companyFounderFullNa
   )
   const renderFounder = () => (
     <Card title={t('companyPage.formSections.founder.title')}>
-      {renderTextInputs(companyFormFields.founder)}
       <Form.Item label={t('models.companyFounder.fields.lastName.title')}>
         <Input value={companyFounderFullName} disabled/>
       </Form.Item>
+      {renderTextInputs(companyFormFields.founder)}
     </Card>
   )
 
