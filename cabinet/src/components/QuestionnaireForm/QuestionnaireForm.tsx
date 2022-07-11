@@ -1,12 +1,10 @@
 import './QuestionnaireForm.style.less'
-import { useApi } from 'library/helpers/api'
 import { getQuestionnaire, sendQuestionnaire } from 'library/api/questionnaire'
 import QuestionnaireGeneralFormFields from './sections/QuestionnaireGeneralInfoFormFields'
-import { Button, Form, message, Row, Skeleton } from 'antd'
+import { Button, Form, Row, Skeleton } from 'antd'
 import { QuestionnaireFormData } from './models/questionnaire-form.interface'
 import QuestionnaireHoldingFormFields from './sections/QuestionnaireHoldingFormFields'
 import QuestionnaireCreditFormFields from './sections/QuestionnaireCreditFormFields'
-import { convertQuestionnaireDtoToFormValues } from './converters/questionnaire-dto-to-form-values.converter'
 import QuestionnaireCreditExpirationsFormFields from './sections/QuestionnaireCreditExpirationFormFields'
 import QuestionnaireSuppliersAndBuyersFormFields from './sections/QuestionnaireSuppliersAndBuyersFormFields'
 import QuestionnaireEasyFinansRelationshipsFormFields from './sections/QuestionnaireEasyFinansRelationshipsFormFields'
@@ -17,8 +15,11 @@ import {
 import { useStoreState } from 'library/store'
 import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
+import {
+  convertQuestionnaireDtoToFormValues,
+} from 'components/QuestionnaireForm/converters/questionnaire-dto-to-form-values.converter'
 
 interface QuestionnaireFormProps {
   companyId: string,
@@ -27,18 +28,30 @@ interface QuestionnaireFormProps {
 
 const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, returnUrl }) => {
   const { t } = useTranslation()
-  const [ form ] = Form.useForm<QuestionnaireFormData>()
-  const [ data, isDataLoaded ] = useApi<CompanyQuestionnaireDto>(getQuestionnaire, companyId)
   const dictionaries = useStoreState(state => state.dictionary.list)
+  const [ form ] = Form.useForm<QuestionnaireFormData>()
+  const [ isQuestionnaireLoading, setIsQuestionnaireLoading ] = useState<boolean>(true)
+  const [ questionnaireDto, setQuestionnaireDto ] = useState<CompanyQuestionnaireDto | null>(null)
   const [ saveInProcess, setSaveInProcess ] = useState<boolean>(false)
-  const initialValues = convertQuestionnaireDtoToFormValues(data)
+  useEffect(() => {
+    fetchQuestionnaire()
+  }, [])
 
-  if (!isDataLoaded || !dictionaries || !initialValues) {
+  const fetchQuestionnaire = async () => {
+    const result = await getQuestionnaire(companyId)
+    if (result.success) {
+      setQuestionnaireDto(result.data as CompanyQuestionnaireDto)
+    }
+    setIsQuestionnaireLoading(false)
+  }
+
+  if (isQuestionnaireLoading || !dictionaries) {
     return (
       <Skeleton active/>
     )
   }
 
+  const initialValues = convertQuestionnaireDtoToFormValues(questionnaireDto)
   const formSettings = {
     form,
     labelCol: { span: 6 },
@@ -51,18 +64,8 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
   const saveQuestionnaire = async (formValue: QuestionnaireFormData) => {
     const dto: CompanyQuestionnaireDto = convertQuestionnaireFormToDto(formValue)
     setSaveInProcess(true)
-    const res = await sendQuestionnaire(companyId, dto)
+    await sendQuestionnaire(companyId, dto)
     setSaveInProcess(false)
-    // я думаю это временная обработка ошибки
-    if (!res.success) {
-      const field = (res as any).data[0]?.field
-      const defaultMessage = (res as any).data[0]?.defaultMessage
-      message.error(field && defaultMessage
-        ? `${field} ${defaultMessage}`
-        : 'Ошибка при сохранении анкеты')
-    } else {
-      message.success('Анкета успешно сохранена')
-    }
   }
 
   return (

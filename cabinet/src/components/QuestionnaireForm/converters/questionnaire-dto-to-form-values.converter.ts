@@ -2,9 +2,9 @@ import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
 import { defaultQuestionnaireFormState } from '../constants/default-questionnaire-form-state.const'
 import { CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
 
-export const convertQuestionnaireDtoToFormValues = (dto: CompanyQuestionnaireDto | null): QuestionnaireFormData | null => {
+export const convertQuestionnaireDtoToFormValues = (dto: CompanyQuestionnaireDto | null): QuestionnaireFormData => {
   if (!dto) {
-    return null
+    return defaultQuestionnaireFormState
   }
 
   const { id, companyId, ...dataWithoutIds } = dto
@@ -23,5 +23,6 @@ export const convertQuestionnaireDtoToFormValues = (dto: CompanyQuestionnaireDto
     trials: dto.trials ?? defaultQuestionnaireFormState.trials,
     easyFinanceIndividuals: dto.easyFinanceIndividuals ?? defaultQuestionnaireFormState.easyFinanceIndividuals,
     easyFinanceLegals: dto.easyFinanceLegals ?? defaultQuestionnaireFormState.easyFinanceLegals,
+
   }
 }

@@ -57,7 +57,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                 </Form.Item>
               </Col>
 
-              {name === 'easyFinanceLegals' && <>
+              {name === 'easyFinanceIndividuals' && <>
                 <Col span={12}>
                   <Form.Item
                     {...formItemLayout}
@@ -87,7 +87,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                 </Form.Item>
               </Col>}
             </Row>
-            <Divider/>
+            <Divider style={{ marginTop: 0 }}/>
           </React.Fragment>
         ))}
 

@@ -47,4 +47,5 @@ export const defaultQuestionnaireFormState: QuestionnaireFormData = {
   payDelayMin: 0,
   payDelayAvg: 0,
   payDelayMax: 0,
+  maxPossibleCredit: 0,
 }
