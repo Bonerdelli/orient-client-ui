@@ -146,6 +146,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
     key: `${config[0]}-${++uniqueId}`,
     name: config[1],
     label: t(`models.${config[0]}.fields.${config[1]}.title`),
+    required: true,
   })
   const renderFounderFormInputs = () => {
     return founderFields.map(config => {
@@ -317,10 +318,15 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
               {...baseFormConfig(breakPoint)}
             >
               <Tabs defaultActiveKey="1">
-                <TabPane key="1" tab={t('models.companyFounder.tabs.generalInfo')}>
+                <TabPane key="1"
+                         tab={t('models.companyFounder.tabs.generalInfo')}
+                >
                   {renderFounderFormInputs()}
                 </TabPane>
-                <TabPane key="2" tab={t('models.companyFounder.tabs.passportInfo')}>
+                <TabPane key="2"
+                         tab={t('models.companyFounder.tabs.passportInfo')}
+                         forceRender
+                >
                   {renderPassportFields()}
                 </TabPane>
               </Tabs>
