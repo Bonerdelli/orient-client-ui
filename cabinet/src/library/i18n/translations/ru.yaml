@@ -161,7 +161,7 @@ factoringStepParameters:
     placeholder: Выберите номер заявки...
     customer: Заказчик
   customerInfoFromOrder:
-    title: 'Информация о Заказчике из выбранной заявки:'
+    title: 'Информация о Заказчике:'
     head: 'Руководитель:'
     address: 'Адрес:'
   selectBank:

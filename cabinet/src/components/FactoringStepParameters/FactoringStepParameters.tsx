@@ -384,9 +384,11 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
             {selectedOrderId !== null && renderCustomerInfo()}
           </Col>
         </Row>
-        <Div className="FactoringStepParameters__row">
-          {selectedOfferBankId && <OrderCondition condition={conditions} size="small"/>}
-        </Div>
+        <Row className="FactoringStepParameters__row" gutter={24}>
+          <Col span={12}>
+            {selectedOfferBankId && <OrderCondition condition={conditions} size="small"/>}
+          </Col>
+        </Row>
         {selectedOfferBankId && renderFactoringOrderParams()}
       </Div>
     </>)
