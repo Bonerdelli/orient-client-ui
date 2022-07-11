@@ -14,7 +14,7 @@ customer:
   title: Заказчик
   fields:
     inn:
-      title: Инн Заказчика
+      title: ИНН Заказчика
     name:
       title: Наименование Заказчика
     shortName:

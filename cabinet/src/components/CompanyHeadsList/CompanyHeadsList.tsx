@@ -97,7 +97,9 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
     {
       key: 'actions',
       render: renderActions,
-      align: 'right',
+      title: t('common.dataEntity.actions'),
+      align: 'center',
+      width: 100,
     },
   ]
 

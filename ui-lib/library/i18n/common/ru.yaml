@@ -25,6 +25,7 @@ forms:
       placeholder: Введите пароль
 
 dataEntity:
+  actions: Действие
   feedback:
     updateError:
       title: Ошибка обновления данных

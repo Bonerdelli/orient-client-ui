@@ -91,7 +91,7 @@ const ClientInfo: React.FC<ClientInfoProps> = ({ company, companyHead, companyRe
       <DescItem label={t('models.company.fields.chief.title')}>
         {companyHead?.lastName}{' '}
         {companyHead?.firstName}{' '}
-        {companyHead?.middleName}
+        {companyHead?.secondName}
       </DescItem>
       {companyRequisites && <DescItem label={t('models.company.fields.bankRequisites.title')}>
         <Button size="small"

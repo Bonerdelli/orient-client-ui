@@ -164,9 +164,10 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
     },
     {
       key: 'actions',
-      width: 120,
       render: () => renderStopFactorActions(),
-      align: 'right',
+      title: t('common.dataEntity.actions'),
+      align: 'left',
+      width: 120,
     },
   ]
 

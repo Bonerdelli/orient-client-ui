@@ -86,8 +86,9 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
     {
       key: 'actions',
       render: renderActions,
-      align: 'right',
-      width: 50,
+      title: t('common.dataEntity.actions'),
+      align: 'left',
+      width: 100,
     },
   ]
 

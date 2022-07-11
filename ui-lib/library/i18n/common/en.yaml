@@ -25,6 +25,7 @@ forms:
       placeholder: Please type password
 
 dataEntity:
+  actions: Action
   feedback:
     updateError:
       title: Error updating data
