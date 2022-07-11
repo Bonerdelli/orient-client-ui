@@ -12,7 +12,7 @@ export type CompanyFormInputConfig = [
 
 const formFields: Record<string, CompanyFormInputConfig[]> = {
   main: [
-    [ 'company', 'fullName', false ],
+    [ 'company', 'fullName', false, false, false, true ],
     [ 'company', 'shortName', false, true, true ],
     [ 'company', 'inn', false ],
     [ 'company', 'opf', false, false, false, true ],
@@ -27,8 +27,8 @@ const formFields: Record<string, CompanyFormInputConfig[]> = {
   contacts: [
     [ 'companyContact', 'email', false ],
     [ 'companyContact', 'phones', false ],
-    [ 'companyContact', 'soato', false ],
-    [ 'companyContact', 'address', false ],
+    [ 'companyContact', 'soato', false, false, false, true ],
+    [ 'companyContact', 'address', false, false, false, true ],
     [ 'companyContact', 'soatoFact', false, true, true ],
     [ 'companyContact', 'addressFact', false, true, true ],
   ],
