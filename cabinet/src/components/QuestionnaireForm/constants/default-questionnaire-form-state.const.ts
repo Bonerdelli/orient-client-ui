@@ -31,10 +31,10 @@ export const defaultQuestionnaireFormState: QuestionnaireFormData = {
     result: '',
   } ],
   suppliers: [
-    { name: '', term: '', paymentFormId: 1 }, // TODO: Replace with enum
+    { name: 'Я дефолтный поставщик', term: '', paymentFormId: 1 }, // TODO: Replace with enum
   ],
   buyers: [
-    { name: '', term: '', paymentFormId: 1 }, // TODO: Replace with enum
+    { name: 'Я дефолтный покупатель', term: '', paymentFormId: 1 }, // TODO: Replace with enum
   ],
   hasEasyFinansIndividuals: false,
   easyFinanceIndividuals: [
@@ -47,4 +47,5 @@ export const defaultQuestionnaireFormState: QuestionnaireFormData = {
   payDelayMin: 0,
   payDelayAvg: 0,
   payDelayMax: 0,
+  maxPossibleCredit: 0,
 }
