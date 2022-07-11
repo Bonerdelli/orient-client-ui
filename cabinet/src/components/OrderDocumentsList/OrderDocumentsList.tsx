@@ -135,7 +135,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       key: 'actions',
       render: renderActions,
       title: t('common.dataEntity.actions'),
-      align: 'lrft',
+      align: 'left',
       width: 100,
     },
   ]
