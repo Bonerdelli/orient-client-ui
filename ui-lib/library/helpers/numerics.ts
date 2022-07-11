@@ -35,16 +35,24 @@ export const formatNumber = (
   }).format(value)
 }
 
+export interface FormatCurrencyOptions {
+  fractionDigits?: number
+  padFractionPart?: boolean
+  currency?: string
+}
+
+
 /**
  * Helper function to format currencies
  * TODO: add i18n support (take locale from user prefserences)
  */
 export const formatCurrency = (
   value: string | number,
-  fractionDigits = 2,
-  padFractionPart = false,
+  options?: FormatCurrencyOptions,
 ) =>
   new Intl.NumberFormat('ru-RU', { // TODO: add locale support
-    minimumFractionDigits: padFractionPart ? fractionDigits : 0,
-    maximumFractionDigits: fractionDigits,
+    style: options?.currency ? 'currency' : undefined,
+    minimumFractionDigits: options?.padFractionPart ? options?.fractionDigits : 0,
+    maximumFractionDigits: options?.fractionDigits ?? 2,
+    currency: options?.currency,
   }).format(isNumber(value) ? value : parseFloat(value))
