@@ -4,8 +4,9 @@ import { Button, Col, message, Row, Skeleton } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import { FactoringStatus } from 'orient-ui-library/library/models/order'
+import ClientInfo from 'orient-ui-library/components/ClientInfo'
+import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
@@ -124,6 +125,13 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
             company={stepData?.clientCompany}
             companyHead={stepData?.clientCompanyFounder}
             companyRequisites={stepData?.clientCompanyRequisites}
+          />
+        </Col>
+        <Col lg={12}>
+          <OrderInfo
+            orderId={orderId}
+            factoring={stepData?.factorOrder}
+            conditions={stepData?.conditions}
           />
         </Col>
       </Row>

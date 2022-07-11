@@ -16,7 +16,7 @@ export const API_URL = process.env.API_PROXIED_PATH
   ? `${process.env.API_PROXIED_PATH}/${process.env.API_VERSION}`
   : `${process.env.API_URL}/${process.env.API_VERSION}`
 
-export const REQUEST_TIMEOUT = 5000 // in milliseconds
+export const REQUEST_TIMEOUT = 15000 // in milliseconds
 
 axios.defaults.timeout = REQUEST_TIMEOUT
 
