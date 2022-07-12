@@ -178,6 +178,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     },
   ]
 
+  // NOTE: no negative scenarious for Demo
   const renderCancelButton = () => {
     return (
       <Button
@@ -191,7 +192,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     )
   }
 
-  // NOTE: doesn't work yet
+  // NOTE: no negative scenarious for Demo
   const renderRejectButton = () => (
     <Button
       danger
@@ -231,7 +232,6 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
   const renderStepActions = () => (
     <Row className="FrameWizard__step__actions">
-      <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
@@ -241,7 +241,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
   const renderWaitActions = () => (
     <Row className="FrameWizard__step__actions">
-      <Col>{renderRejectButton()}</Col>
+      <Col></Col>
     </Row>
   )
 

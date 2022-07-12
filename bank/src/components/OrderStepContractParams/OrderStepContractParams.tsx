@@ -182,7 +182,8 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   const hidePayer = true // NOTE: be doesn't support this
 
   const formItemProps = {
-    labelCol: { span: 12 },
+    labelCol: { span: 14 },
+    wrapperCol: { span: 10 },
   }
 
   const requiredRule = {
@@ -259,7 +260,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
     <Div className="OrderStepContractParams">
       <Title level={5}>{t('orderStepContractParams.title')}</Title>
       <Row>
-        <Col lg={14} xl={12}>
+        <Col lg={12} xl={10}>
           {renderFormInputs()}
         </Col>
       </Row>
@@ -283,7 +284,6 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
       <Form
         initialValues={initialData || undefined}
         onFinish={(data: any) => handleFormSubmit(data)}
-        labelCol={{ span: 10 }}
         labelAlign="left"
         labelWrap={true}
       >
