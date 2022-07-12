@@ -203,6 +203,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <OrderDocumentsList
         orderId={orderId as number}
         types={documentTypes || []}
+        checkSignedFn={document => document.info?.clientSigned === true}
         current={documents}
       />
     </Spin>
@@ -220,6 +221,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <OrderDocumentsList
         orderId={orderId as number}
         types={documentTypesOptional as number[]}
+        checkSignedFn={document => document.info?.clientSigned === true}
         current={documentsOptional as OrderDocument[]}
       />
     </Spin>
@@ -237,6 +239,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <OrderDocumentsList
         orderId={orderId as number}
         types={documentTypesGenerated as number[]}
+        checkSignedFn={document => document.info?.clientSigned === true}
         current={documentsGenerated as OrderDocument[]}
       />
     </Spin>

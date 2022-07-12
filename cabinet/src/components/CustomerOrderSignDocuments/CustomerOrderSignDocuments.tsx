@@ -31,6 +31,13 @@ export interface OrderSignDocumentsProps {
   setOrderStatus: (status: OrderStatus) => void
 }
 
+
+const DOCUMENTS_TO_SHOW = [
+  9, // Рамочный договор
+  11, // Анкета дебитора
+  17, // Индивидуальные условия
+]
+
 const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   wizardType = FrameWizardType.Simple,
   orderStatus,
@@ -93,6 +100,7 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     const updatedDocumentTypes: number[] = []
 
     documents
+      .filter((doc: OrderDocument) => DOCUMENTS_TO_SHOW.includes(doc.typeId))
       .filter((doc: OrderDocument) => Boolean(doc.info))
       .forEach((doc: OrderDocument) => {
         updatedDocumentTypes.push(doc.typeId)
@@ -211,6 +219,7 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
         orderId={orderId as number}
         types={documentTypes}
         current={documents}
+        checkSignedFn={document => document.info?.customerSigned === true}
         onChange={loadCurrentStepData}
       />
     </Spin>

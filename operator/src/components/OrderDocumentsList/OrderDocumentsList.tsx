@@ -116,15 +116,15 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       dataIndex: 'status',
       title: t('common.documents.fields.status.title'),
       render: renderDocumentStatus,
-      width: 120,
+      width: 100,
       align: 'center',
     },
     {
       key: 'actions',
       render: renderActions,
       title: t('common.dataEntity.actions'),
-      align: 'left',
-      width: 120,
+      align: 'right',
+      width: 80,
     },
   ]
 

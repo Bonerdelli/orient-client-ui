@@ -9,8 +9,7 @@ import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/ban
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 
-
-import OrderDocumentsList from 'components/OrderDocumentsList'
+import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 import { sendFrameWizardStep4 } from 'library/api/frameWizard'
 
 import './ClientOrderBankOfferInfo.style.less'
@@ -84,11 +83,12 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
   }
 
   const renderDocuments = () => (
-    <OrderDocumentsList
+    <OrderDocumentsToSignList
       companyId={companyId}
       orderId={orderId as number}
       types={documentTypes || []}
       current={offer.documents || []}
+      checkSignedFn={document => document.info?.clientSigned === true}
     />
   )
 

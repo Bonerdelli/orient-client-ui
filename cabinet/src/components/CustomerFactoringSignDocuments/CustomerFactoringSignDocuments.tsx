@@ -12,7 +12,7 @@ import { FactoringStatus } from 'orient-ui-library/library/models/order'
 import { CabinetMode } from 'library/models/cabinet'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 import { FACTORING_CUSTOMER_COMPLETED_STATUSES } from 'components/FactoringCustomerWizard'
-import OrderDocumentsList from 'components/OrderDocumentsList'
+import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 
 import './CustomerFactoringSignDocuments.style.less'
 
@@ -72,6 +72,8 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     setDocumentTypes(updatedDocumentTypes)
   }, [ stepData ])
 
+  const isWaitingForBank = orderStatus === FactoringStatus.FACTOR_BANK_SIGN
+
   const loadCurrentStepData = async () => {
     const result = await getFactoringWizardStep({
       mode: CabinetMode.Customer,
@@ -118,10 +120,11 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       sendNextStep()
     }
   }
+
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{renderSubmitButton()}</Col>
+      <Col>{!isWaitingForBank && renderSubmitButton()}</Col>
     </Row>
   )
 
@@ -150,11 +153,12 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   )
 
   const renderDocuments = () =>  (
-    <OrderDocumentsList
+    <OrderDocumentsToSignList
       companyId={companyId}
       orderId={orderId as number}
       types={documentTypes || []}
       current={stepData?.documents || []}
+      checkSignedFn={document => document.info?.customerSigned === true}
     />
   )
 
@@ -163,6 +167,13 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       <Title level={5}>{t('customerOrderStepDocuments.sections.documentsForSign.title')}</Title>
       {renderDocuments()}
     </Div>
+  )
+
+  const renderWaitMessage = () => (
+    <Result
+      icon={<ClockCircleFilled />}
+      title={t('orderStepBankOffer.statuses.waitingForBank.title')}
+    />
   )
 
   if (!stepData && stepDataLoading) {
@@ -177,18 +188,9 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     )
   }
 
-  if (completed || orderStatus === FactoringStatus.FACTOR_BANK_SIGN) {
-    // TODO: revise l10ns
-    return (
-      <Result
-        icon={<ClockCircleFilled />}
-        title={t('orderStepBankOffer.statuses.waitingForBank.title')}
-      />
-    )
-  }
-
   return (
     <Div className="WizardStep__content">
+      {isWaitingForBank && renderWaitMessage()}
       {renderStepContent()}
       {!completed && renderActions()}
     </Div>

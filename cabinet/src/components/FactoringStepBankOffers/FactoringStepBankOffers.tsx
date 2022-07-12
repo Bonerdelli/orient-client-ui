@@ -137,6 +137,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
         companyId={companyId as number}
         orderId={orderId as number}
         types={documentTypes || []}
+        checkSignedFn={document => document.info?.clientSigned === true}
         current={documents}
       />
     </Spin>
@@ -155,6 +156,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
         companyId={companyId as number}
         orderId={orderId as number}
         types={documentTypesGenerated as number[]}
+        checkSignedFn={document => document.info?.clientSigned === true}
         current={documentsGenerated as OrderDocument[]}
       />
     </Spin>

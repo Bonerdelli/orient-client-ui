@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Col, Form, Input, message, Row, Select, Skeleton, Space, Spin, Typography } from 'antd'
+import { Button, Col, Form, Input, Descriptions, Row, Select, Skeleton, Space, Spin, Typography, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -28,7 +28,8 @@ import OrderCondition from 'orient-ui-library/components/OrderCondition'
 import { useHistory, useLocation } from 'react-router-dom'
 import { FACTORING_ORDER_ID_PARAM, OFFER_BANK_ID_PARAM } from 'library/constants'
 
-const { Text, Title, Paragraph } = Typography
+const { Text, Paragraph } = Typography
+const { Item: DescItem } = Descriptions
 
 export interface FactoringStepParametersProps {
   companyId: number
@@ -221,7 +222,9 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     label: (<Space>
       <Text>{order.id}</Text>
       <Text type="secondary">
-        {t('factoringStepParameters.frameOrderNumber.customer')} {order.customer.inn}
+        {t('factoringStepParameters.frameOrderNumber.customer')}{' '}{order.customer.inn}
+        {' '}–{' '}
+        {order.customer.shortName}
       </Text>
     </Space>),
   })
@@ -274,15 +277,12 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     if (!customer) return (<></>)
 
     return (
-      <Space direction="vertical">
-        <Title level={5}>
-          {t('factoringStepParameters.customerInfoFromOrder.title')}
-        </Title>
-        <Text>{customer.shortName}</Text>
-        <Text>{t('factoringStepParameters.customerInfoFromOrder.head')} {customer.chief}</Text>
-        <Text>{customer.soato}</Text>
-        <Text>{t('factoringStepParameters.customerInfoFromOrder.address')} {customer.address}</Text>
-      </Space>
+      <Descriptions column={1} title={t('factoringStepParameters.customerInfoFromOrder.title')}>
+        <DescItem>{customer.shortName}</DescItem>
+        <DescItem label={t('models.customer.fields.chief.title')}>{customer.chief}</DescItem>
+        <DescItem label={t('models.customer.fields.address.title')}>{customer.address}</DescItem>
+        <DescItem label={t('models.customer.fields.soato.title')}>{customer.soato}</DescItem>
+      </Descriptions>
     )
   }
 
@@ -384,10 +384,14 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
             {selectedOrderId !== null && renderCustomerInfo()}
           </Col>
         </Row>
-        <Div className="FactoringStepParameters__row">
-          {selectedOfferBankId && <OrderCondition condition={conditions} size="small"/>}
-        </Div>
-        {selectedOfferBankId && renderFactoringOrderParams()}
+        <Row className="FactoringStepParameters__row" gutter={24}>
+          <Col span={12}>
+            {selectedOfferBankId && <OrderCondition condition={conditions} size="small"/>}
+          </Col>
+          <Col span={24} className="FactoringStepParameters__conditionsForm">
+            {selectedOfferBankId && renderFactoringOrderParams()}
+          </Col>
+        </Row>
       </Div>
     </>)
   }
