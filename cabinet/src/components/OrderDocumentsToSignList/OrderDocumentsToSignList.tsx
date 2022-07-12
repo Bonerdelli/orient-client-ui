@@ -98,13 +98,14 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
       title: t('common.documents.fields.status.title'),
       render: renderDocumentStatus,
       align: 'center',
+      width: 100,
     },
     {
       key: 'actions',
       render: renderActions,
       title: t('common.dataEntity.actions'),
-      align: 'left',
-      width: 120,
+      align: 'right',
+      width: 80,
     },
   ]
 

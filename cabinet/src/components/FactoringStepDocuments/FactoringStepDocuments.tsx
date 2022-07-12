@@ -9,7 +9,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FactoringStatus } from 'orient-ui-library/library/models/order'
 
-import OrderDocumentsList from 'components/OrderDocumentsList' // NOTE: вроде как можно не разделять с Рамочным
+import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList' // NOTE: вроде как можно не разделять с Рамочным
 import {
   FactoringWizardStep2Dto,
   FactoringWizardStep2ResponseDto,
@@ -191,7 +191,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
-      <OrderDocumentsList
+      <OrderDocumentsToSignList
         companyId={companyId as number}
         orderId={orderId as number}
         types={documentTypes}
@@ -210,7 +210,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const renderOptionalDocuments = () => (
     <Spin spinning={documentsLoading}>
-      <OrderDocumentsList
+      <OrderDocumentsToSignList
         companyId={companyId as number}
         orderId={orderId as number}
         types={documentTypesOptional || []}

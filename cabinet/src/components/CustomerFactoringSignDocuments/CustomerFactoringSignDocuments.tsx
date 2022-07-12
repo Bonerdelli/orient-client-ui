@@ -12,7 +12,7 @@ import { FactoringStatus } from 'orient-ui-library/library/models/order'
 import { CabinetMode } from 'library/models/cabinet'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 import { FACTORING_CUSTOMER_COMPLETED_STATUSES } from 'components/FactoringCustomerWizard'
-import OrderDocumentsList from 'components/OrderDocumentsList'
+import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 
 import './CustomerFactoringSignDocuments.style.less'
 
@@ -150,7 +150,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   )
 
   const renderDocuments = () =>  (
-    <OrderDocumentsList
+    <OrderDocumentsToSignList
       companyId={companyId}
       orderId={orderId as number}
       types={documentTypes || []}

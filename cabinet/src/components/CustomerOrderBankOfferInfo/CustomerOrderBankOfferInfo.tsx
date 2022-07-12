@@ -11,7 +11,7 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { BankDto } from 'orient-ui-library/library/models/proxy'
 
-import OrderDocumentsList from 'components/OrderDocumentsList'
+import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 import { sendFrameWizardStep } from 'library/api/frameWizard'
 import { CabinetMode } from 'library/models/cabinet'
 
@@ -90,7 +90,7 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
   }
 
   const renderDocuments = () =>  (
-    <OrderDocumentsList
+    <OrderDocumentsToSignList
       companyId={companyId}
       orderId={orderId as number}
       types={documentTypes || []}
