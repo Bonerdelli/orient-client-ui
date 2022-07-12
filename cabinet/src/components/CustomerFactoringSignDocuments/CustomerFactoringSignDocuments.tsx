@@ -155,7 +155,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       orderId={orderId as number}
       types={documentTypes || []}
       current={stepData?.documents || []}
-      isSignedCheckFn={document => document.info?.customerSigned === true}
+      checkSignedFn={document => document.info?.customerSigned === true}
     />
   )
 

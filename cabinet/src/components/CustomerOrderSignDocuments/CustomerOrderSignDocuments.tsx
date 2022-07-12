@@ -211,6 +211,7 @@ const CustomerOrderSignDocuments: React.FC<OrderSignDocumentsProps> = ({
         orderId={orderId as number}
         types={documentTypes}
         current={documents}
+        checkSignedFn={document => document.info?.customerSigned === true}
         onChange={loadCurrentStepData}
       />
     </Spin>

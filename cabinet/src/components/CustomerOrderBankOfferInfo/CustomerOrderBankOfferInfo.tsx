@@ -94,6 +94,7 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
       companyId={companyId}
       orderId={orderId as number}
       types={documentTypes || []}
+      checkSignedFn={document => document.info?.customerSigned === true}
       current={documents || []}
     />
   )

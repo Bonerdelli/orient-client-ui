@@ -260,6 +260,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
         orderId={orderId as number}
         types={documentTypes}
         current={documents}
+        checkSignedFn={document => document.info?.clientSigned === true}
         onChange={loadCurrentStepData}
       />
     </Spin>

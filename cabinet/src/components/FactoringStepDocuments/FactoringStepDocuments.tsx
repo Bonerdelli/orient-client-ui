@@ -215,6 +215,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
         orderId={orderId as number}
         types={documentTypesOptional || []}
         current={documentsOptional}
+        checkSignedFn={document => document.info?.clientSigned === true}
         onChange={loadCurrentStepData}
       />
     </Spin>
