@@ -101,7 +101,12 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
       case 3:
         return <FactoringStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
       case 4:
-        return <FactoringStepSendToBank {...stepBaseProps} sequenceStepNumber={4} orderStatus={orderStatus!}/>
+        return <FactoringStepSendToBank
+          {...stepBaseProps}
+          sequenceStepNumber={4}
+          orderStatus={orderStatus}
+          setOrderStatus={setOrderStatus}
+        />
       default:
         return <></>
     }

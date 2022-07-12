@@ -18,7 +18,8 @@ export interface FactoringStepSendToBankProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
-  orderStatus: FactoringStatus
+  setOrderStatus: (status: FactoringStatus) => void
+  orderStatus?: FactoringStatus
 }
 
 const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
@@ -26,6 +27,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  setOrderStatus,
   orderStatus,
 }) => {
   const { t } = useTranslation()
@@ -95,6 +97,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOrderStatus(FactoringStatus.FACTOR_CUSTOMER_SIGN)
       loadCurrentStepData()
       setCompleted(true)
     }
