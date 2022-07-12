@@ -31,6 +31,11 @@ export interface OrderStepContractDocumentsProps {
   setOfferStatus: (step: BankOfferStatus) => void
 }
 
+const DOCUMENTS_TO_SHOW = [
+  9, // Рамочный договор
+  17, // Индивидуальные условия
+]
+
 const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   bankId,
   orderId,
@@ -78,12 +83,14 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     const updatedDocuments: OrderDocument[] = []
     const updatedDocumentTypes: number[] = []
 
-    currentDocuments.forEach((doc: OrderDocument) => {
-      if (doc.isGenerated && doc.info) {
-        updatedDocumentTypes.push(doc.typeId)
-        updatedDocuments.push(doc)
-      }
-    })
+    currentDocuments
+      .filter((doc: OrderDocument) => DOCUMENTS_TO_SHOW.includes(doc.typeId))
+      .forEach((doc: OrderDocument) => {
+        if (doc.info) {
+          updatedDocumentTypes.push(doc.typeId)
+          updatedDocuments.push(doc)
+        }
+      })
 
     setDocuments(updatedDocuments)
     setDocumentTypes(updatedDocumentTypes)
