@@ -5,7 +5,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import OrderConditionView from 'orient-ui-library/components/OrderCondition'
-import { BankOffer } from 'orient-ui-library/library/models/bankOffer'
+import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
@@ -25,9 +25,6 @@ export interface CustomerOrderBankOfferInfoProps {
   orderId?: number
   stepNumber: number
   offer: BankOffer
-  orderStatus: OrderStatus
-  documents: OrderDocument[]
-  bank: BankDto
   onBack: () => void
   onSuccess: () => void
 }
@@ -38,31 +35,34 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
   orderId,
   stepNumber,
   offer,
-  bank,
-  orderStatus,
-  documents,
   onBack,
   onSuccess,
 }) => {
   const { t } = useTranslation()
-  const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
   const [ readyForApprove, setReadyForApprove ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
   const [ bankId, setBankId ] = useState<number>()
 
+  const [ documentTypes, setDocumentTypes ] = useState<number[] | null>(null)
+  const [ bankOfferStatus, setBankOfferStatus ] = useState<BankOfferStatus | null>(null)
+
   useEffect(() => {
-    if (!offer || !bank) return
-    const currentDocuments = documents ?? []
+    if (!offer) return
+    const currentDocuments = offer?.documents ?? []
     const updatedDocumentTypes: number[] = []
     currentDocuments.forEach((doc: OrderDocument) => {
       if (doc.isGenerated && doc.info) {
         updatedDocumentTypes.push(doc.typeId)
       }
     })
-    setBankId(bank.id)
-    setReadyForApprove(orderStatus === OrderStatus.FRAME_CUSTOMER_SIGN)
+    setBankId(offer.bank.id)
+    setBankOfferStatus(offer.offerStatus)
     setDocumentTypes(updatedDocumentTypes)
-  }, [orderStatus, offer, bank, documents])
+  }, [ offer ])
+
+  useEffect(() => {
+    setReadyForApprove(bankOfferStatus === BankOfferStatus.CustomerSign)
+  }, [bankOfferStatus])
 
   const handleAccept = async () => {
     if (!orderId || !companyId || !bankId) {
@@ -95,7 +95,7 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
       orderId={orderId as number}
       types={documentTypes || []}
       checkSignedFn={document => document.info?.customerSigned === true}
-      current={documents || []}
+      current={offer.documents || []}
     />
   )
 
@@ -147,7 +147,7 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
         </Button>
       </Div>
       <Title level={4}>
-        {t('orderStepBankOffer.title', { bankName: bank?.name })}
+        {/*t('orderStepBankOffer.title', { bankName: bank?.name })*/}
       </Title>
       {renderOfferContent()}
       {readyForApprove && renderActions()}
