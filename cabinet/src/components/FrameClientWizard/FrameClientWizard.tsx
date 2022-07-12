@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Grid, Skeleton } from 'antd'
+import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -57,18 +57,18 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [companyId])
+  }, [ companyId ])
 
   useEffect(() => {
     if (currentStep === 2 && (
-        orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
-        orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+      orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
+      orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
     )) {
       // NOTE: show waiting for verify message
       setSelectedStep(3)
       setCurrentStep(3)
     }
-  }, [currentStep, orderStatus])
+  }, [ currentStep, orderStatus ])
 
   const loadCurrentStepData = async () => {
     const result = await getCurrentFrameWizardStep({
@@ -99,7 +99,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
 
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
-      return <Skeleton active={true} />
+      return <Skeleton active={true}/>
     }
     switch (selectedStep) {
       case 1:
@@ -121,6 +121,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
           setCurrentStep={handleStepChange}
           setOrderStatus={setOrderStatus}
           orderId={Number(itemId) || orderId}
+          orderStatus={orderStatus}
         />
       case 3:
         return <OrderStepSignDocuments
@@ -150,7 +151,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -172,10 +173,10 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step title={t('frameOrder.firstStep.title')} />
-          <Step disabled={currentStep < 2} title={t('frameOrder.secondStep.title')} />
-          <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')} />
-          <Step disabled={currentStep < 4} title={t('frameOrder.fourthStep.title')} />
+          <Step title={t('frameOrder.firstStep.title')}/>
+          <Step disabled={currentStep < 2} title={t('frameOrder.secondStep.title')}/>
+          <Step disabled={currentStep < 3} title={t('frameOrder.thirdStep.title')}/>
+          <Step disabled={currentStep < 4} title={t('frameOrder.fourthStep.title')}/>
         </Steps>
       </Card>
       <Card className="Wizard__step">
