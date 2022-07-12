@@ -72,6 +72,8 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     setDocumentTypes(updatedDocumentTypes)
   }, [ stepData ])
 
+  const isWaitingForBank = orderStatus === FactoringStatus.FACTOR_BANK_SIGN
+
   const loadCurrentStepData = async () => {
     const result = await getFactoringWizardStep({
       mode: CabinetMode.Customer,
@@ -118,10 +120,11 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       sendNextStep()
     }
   }
+
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{renderSubmitButton()}</Col>
+      <Col>{!isWaitingForBank && renderSubmitButton()}</Col>
     </Row>
   )
 
@@ -166,6 +169,13 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     </Div>
   )
 
+  const renderWaitMessage = () => (
+    <Result
+      icon={<ClockCircleFilled />}
+      title={t('orderStepBankOffer.statuses.waitingForBank.title')}
+    />
+  )
+
   if (!stepData && stepDataLoading) {
     return (
       <Skeleton active={true}/>
@@ -178,18 +188,9 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     )
   }
 
-  if (orderStatus === FactoringStatus.FACTOR_BANK_SIGN) {
-    // TODO: revise l10ns
-    return (
-      <Result
-        icon={<ClockCircleFilled />}
-        title={t('orderStepBankOffer.statuses.waitingForBank.title')}
-      />
-    )
-  }
-
   return (
     <Div className="WizardStep__content">
+      {isWaitingForBank && renderWaitMessage()}
       {renderStepContent()}
       {!completed && renderActions()}
     </Div>
