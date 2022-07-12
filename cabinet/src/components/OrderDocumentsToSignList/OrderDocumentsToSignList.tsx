@@ -18,11 +18,12 @@ export interface OrderDocumentsToSignListProps {
   orderId: number
   types: number[]
   current?: OrderDocument[]
+  isSignedCheckFn?: (document: OrderDocument) => boolean,
   onChange?: () => {}
 }
 
 const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props) => {
-  const { companyId, orderId, types, current, onChange } = props
+  const { companyId, orderId, types, current, onChange, isSignedCheckFn } = props
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
@@ -54,14 +55,21 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
     }
   }
 
-  const renderDocumentStatus = (status: DocumentStatus) => {
-    switch (status) {
-      case DocumentStatus.Signed:
-        return <Tag>{t('common.documents.statuses.signed')}</Tag>
-      default:
-      case DocumentStatus.Unsigned:
-        return <Tag>{t('common.documents.statuses.unsigned')}</Tag>
+  const isSignedFn = (status?: DocumentStatus) => status === DocumentStatus.Signed
+
+  const renderDocumentStatus = (document: Document) => {
+    let isSigned: boolean
+    if (isSignedCheckFn) {
+      const orderDocument = current?.find(item => item.typeId === document.type)
+      console.log('orderDocument', orderDocument)
+      isSigned = orderDocument ? isSignedCheckFn(orderDocument) : false
+    } else {
+      isSigned = isSignedFn(document.status as DocumentStatus)
     }
+    if (isSigned) {
+      return <Tag>{t('common.documents.statuses.signed')}</Tag>
+    }
+    return <Tag>{t('common.documents.statuses.unsigned')}</Tag>
   }
 
   const handleItemDownload = async (item: Document) => {
@@ -96,7 +104,7 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
       key: 'status',
       dataIndex: 'status',
       title: t('common.documents.fields.status.title'),
-      render: renderDocumentStatus,
+      render: (_, item) => renderDocumentStatus(item),
       align: 'center',
       width: 100,
     },

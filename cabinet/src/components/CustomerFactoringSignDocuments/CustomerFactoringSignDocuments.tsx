@@ -155,6 +155,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       orderId={orderId as number}
       types={documentTypes || []}
       current={stepData?.documents || []}
+      isSignedCheckFn={document => document.info?.customerSigned === true}
     />
   )
 
@@ -177,7 +178,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     )
   }
 
-  if (completed || orderStatus === FactoringStatus.FACTOR_BANK_SIGN) {
+  if (orderStatus === FactoringStatus.FACTOR_BANK_SIGN) {
     // TODO: revise l10ns
     return (
       <Result
