@@ -17,10 +17,11 @@ export interface OrderDocumentsListProps {
   orderId: number
   types: number[]
   current?: OrderDocument[]
+  checkSignedFn?: (document: OrderDocument) => boolean,
 }
 
 const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
-  const { orderId, types, current } = props
+  const { orderId, types, current, checkSignedFn } = props
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
@@ -64,17 +65,18 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
     return result
   }
 
-  const renderDocumentStatus = (status: DocumentStatus) => {
-    switch (status) {
-      case DocumentStatus.Signed:
-        return <Tag color="green">{t('common.documents.statuses.signed')}</Tag>
-      case DocumentStatus.Unsigned:
-        return <Tag color="red">{t('common.documents.statuses.unsigned')}</Tag>
-      case DocumentStatus.NotUploaded:
-        return <Tag>{t('common.documents.statuses.notUploaded')}</Tag>
-      default:
-        return <></>
+  const renderDocumentStatus = (document: Document) => {
+    let isSigned: boolean
+    const orderDocument = current?.find(item => item.typeId === document.type)
+    if (checkSignedFn) {
+      isSigned = orderDocument ? checkSignedFn(orderDocument) : false
+    } else {
+      isSigned = orderDocument?.info?.bankSigned ?? false
     }
+    if (isSigned) {
+      return <Tag>{t('common.documents.statuses.signed')}</Tag>
+    }
+    return <Tag>{t('common.documents.statuses.unsigned')}</Tag>
   }
 
   const renderActions = (_val: unknown, item: Document) => (
@@ -103,7 +105,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       key: 'status',
       dataIndex: 'status',
       title: t('common.documents.fields.status.title'),
-      render: renderDocumentStatus,
+      render: (_, item) => renderDocumentStatus(item),
       align: 'center',
       width: 100,
     },

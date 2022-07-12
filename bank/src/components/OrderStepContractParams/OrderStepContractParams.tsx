@@ -191,7 +191,10 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   }
 
   const renderFormInputs = () => (<>
-    <FormItem name="conditionCode">
+    <FormItem
+      name="conditionCode"
+      rules={[ requiredRule ]}
+    >
       <Select disabled={formDisabled} placeholder={t('models.orderCondition.fields.conditionCode.placeholder')}
               onChange={setConditionCode}>
         <Option
