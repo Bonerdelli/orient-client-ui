@@ -19,6 +19,13 @@ import './CustomerOrderBankOfferInfo.style.less'
 
 const { Title } = Typography
 
+// NOTE: workaround as be send all order documents
+const DOCUMENTS_TO_SHOW = [
+  9, // Рамочный договор
+  11, // Анкета дебитора
+  17, // Индивидуальные условия
+]
+
 export interface CustomerOrderBankOfferInfoProps {
   wizardType?: FrameWizardType
   companyId: number
@@ -54,11 +61,13 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
     if (!offer || !bank) return
     const currentDocuments = documents ?? []
     const updatedDocumentTypes: number[] = []
-    currentDocuments.forEach((doc: OrderDocument) => {
-      if (doc.isGenerated && doc.info) {
-        updatedDocumentTypes.push(doc.typeId)
-      }
-    })
+    currentDocuments
+      .filter((doc: OrderDocument) => DOCUMENTS_TO_SHOW.includes(doc.typeId))
+      .forEach((doc: OrderDocument) => {
+        if (doc.isGenerated && doc.info) {
+          updatedDocumentTypes.push(doc.typeId)
+        }
+      })
     setBankId(bank.id)
     setReadyForApprove(orderStatus === OrderStatus.FRAME_CUSTOMER_SIGN)
     setDocumentTypes(updatedDocumentTypes)
