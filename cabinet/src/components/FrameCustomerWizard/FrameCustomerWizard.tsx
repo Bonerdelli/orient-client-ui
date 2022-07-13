@@ -10,7 +10,7 @@ import { OrderStatus } from 'orient-ui-library/library/models'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import CustomerOrderStepInfo from 'components/CustomerOrderStepInfo'
-import CustomerOrderStepBankOffers from 'components/CustomerOrderStepBankOffers'
+import CustomerOrderSignDocuments from 'components/CustomerOrderSignDocuments'
 
 import { CabinetMode } from 'library/models/cabinet'
 import { getCurrentFrameWizardStep } from 'library/api'
@@ -37,7 +37,7 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
-  const [ currentStepData, setCurrentStepData ] = useState<unknown>()
+  const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
@@ -91,14 +91,14 @@ const FrameCustomerWizard: React.FC<FrameCustomerWizardProps> = ({ companyId, ba
           sequenceStepNumber={1}
         />
       case 2:
-        return <CustomerOrderStepBankOffers
+        return <CustomerOrderSignDocuments
           wizardType={FrameWizardType.Full}
           companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={2}
-          currentStepData={currentStepData}
           setCurrentStep={handleStepChange}
           setOrderStatus={setOrderStatus}
+          orderStatus={orderStatus}
           orderId={Number(itemId)}
         />
       default:
