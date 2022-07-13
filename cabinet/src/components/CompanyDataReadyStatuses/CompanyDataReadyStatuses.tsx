@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
 
 import { CheckCircleFilled, ClockCircleOutlined, ExclamationCircleOutlined, FormOutlined } from '@ant-design/icons'
-import { Button, Modal, Row, Skeleton, Table, Timeline } from 'antd'
+import { Button, Modal, Row, Table, Timeline } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
@@ -13,8 +13,8 @@ import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import './CompanyDataReadyStatuses.style.less'
 
 import { RETURN_URL_PARAM } from 'library/constants'
-import { getCompanyRequisitesList } from 'library/api'
 import { Key } from 'antd/lib/table/interface'
+import { isUndefined } from 'lodash'
 
 const { Item: TimelineItem } = Timeline
 
@@ -24,10 +24,10 @@ export interface CompanyDataReadyStatusesProps {
   selectedRequisitesId?: number
   onSaveRequisites?: (requisites: CompanyRequisitesDto) => void
   founderId?: number
-  companyId?: number
+  requisitesList: BankRequisitesTableData[]
 }
 
-interface BankRequisitesTableData extends CompanyRequisitesDto {
+export interface BankRequisitesTableData extends CompanyRequisitesDto {
   key: number
 }
 
@@ -43,15 +43,23 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
   selectedRequisitesId,
   onSaveRequisites,
   founderId,
-  companyId,
+  requisitesList,
 }) => {
   const { t } = useTranslation()
   const location = useLocation()
 
   const [ bankRequisitesModalVisible, setBankRequisitesModalVisible ] = useState<boolean>(false)
-  const [ requisitesList, setRequisitesList ] = useState<CompanyRequisitesDto[]>([])
-  const [ companyRequisitesLoading, setCompanyRequisitesLoading ] = useState<boolean>(false)
   const [ selectedRowKeys, setSelectedRowKeys ] = useState<Key[]>([])
+
+  useEffect(() => {
+    if (requisitesList.length === 1) {
+      setSelectedRowKeys([ requisitesList[0].id! ])
+    }
+
+    if (requisitesList.length > 1 && !isUndefined(selectedRequisitesId)) {
+      setSelectedRowKeys([ selectedRequisitesId ])
+    }
+  }, [ requisitesList ])
 
   const dotParams = (ready: boolean | null) => ({
     dot: ready === true
@@ -78,7 +86,7 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
     ]
     const handleSaveBankRequisites = () => {
       const selectedReqId = selectedRowKeys[0]
-      const requisites = requisitesList.find(({ id }) => id === selectedReqId)
+      const requisites = requisitesList?.find(({ id }) => id === selectedReqId)
       if (requisites) {
         const { key, ...rest } = requisites
         onSaveRequisites?.(rest)
@@ -110,37 +118,24 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
           </Button>
         }
       >
-        {companyRequisitesLoading && <Skeleton active/>}
-        {!companyRequisitesLoading &&
-          <Table
-            rowSelection={{
-              type: 'radio',
-              onChange: (keys) => {
-                setSelectedRowKeys(keys)
-              },
-              selectedRowKeys: selectedRowKeys,
-            }}
-            pagination={false}
-            columns={columns}
-            dataSource={requisitesList}
-          />
-        }
+        <Table
+          rowSelection={{
+            type: 'radio',
+            onChange: (keys) => {
+              setSelectedRowKeys(keys)
+            },
+            selectedRowKeys,
+          }}
+          pagination={false}
+          columns={columns}
+          dataSource={requisitesList}
+        />
       </Modal>
     )
   }
 
   const openRequisitesModal = async () => {
     setBankRequisitesModalVisible(true)
-    setCompanyRequisitesLoading(true)
-    const res = await getCompanyRequisitesList({ companyId: companyId! })
-    if (res.success) {
-      const list = res.data?.map(requisites => ({ ...requisites, key: requisites.id! })) ?? []
-      setRequisitesList(list)
-      if (selectedRequisitesId) {
-        setSelectedRowKeys([ selectedRequisitesId ])
-      }
-    }
-    setCompanyRequisitesLoading(false)
   }
 
   const renderQuestionnaire = () => (
@@ -168,15 +163,15 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
       </TimelineItem>
       <TimelineItem {...dotParams(companyDataStatus?.bankRequisites ?? null)}>
         {t('frameSteps.documents.companyData.bankRequisites')}
-        {selectedRequisitesId && <Div className="CompanyDataReadyStatuses__item__link">
+        <Div className="CompanyDataReadyStatuses__item__link">
           <Button size="small"
                   type="link"
                   onClick={openRequisitesModal}
                   icon={<FormOutlined/>}
           >
-            {t(`frameSteps.documents.fillDataButton.${companyDataStatus?.bankRequisites ? 'choose' : 'fill'}`)}
+            {t(`frameSteps.documents.fillDataButton.${requisitesList?.length === 0 ? 'fill' : 'choose'}`)}
           </Button>
-        </Div>}
+        </Div>
         {renderSelectBankRequisitesModal()}
       </TimelineItem>
       {wizardType === FrameWizardType.Full && renderQuestionnaire()}
