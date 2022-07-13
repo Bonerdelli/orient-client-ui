@@ -15,6 +15,7 @@ typography-title-margin-top: 1.2em
 ###
 
 primary-color: '#379f67'
+label-required-color: '#379f67'
 
 # TODO: make some of this styles common
 side-navigation-width: 300 # NOTE: default is 200 # TODO: universalize optionCase and units
