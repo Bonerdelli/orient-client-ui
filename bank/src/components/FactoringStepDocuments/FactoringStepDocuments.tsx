@@ -170,7 +170,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
         disabled={!isNextStepAllowed || submitting}
         loading={submitting}
       >
-        {t('orderActions.next.title')}
+        {t(currentStep === sequenceStepNumber ? 'common.actions.sign.title' : 'orderActions.next.title')}
       </Button>
     )
   }

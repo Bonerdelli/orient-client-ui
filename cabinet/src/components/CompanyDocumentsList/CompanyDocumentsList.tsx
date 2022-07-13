@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Space, Table, Typography } from 'antd'
+import { Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 
 import { getEndpointUrl } from 'orient-ui-library/library'
@@ -20,8 +20,6 @@ import {
 } from 'library/api'
 
 import './CompanyDocumentsList.style.less'
-
-const { Text } = Typography
 
 export interface CompanyDocumentsListProps {
   compact?: boolean
@@ -89,15 +87,15 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   const renderDocumentStatus = (status: DocumentStatus) => {
     switch (status) {
       case DocumentStatus.Uploaded:
-        return <Text>{t('common.documents.statuses.uploaded')}</Text>
+        return <Tag>{t('common.documents.statuses.uploaded')}</Tag>
       case DocumentStatus.NotUploaded:
-        return <Text>{t('common.documents.statuses.notUploaded')}</Text>
+        return <Tag>{t('common.documents.statuses.notUploaded')}</Tag>
       case DocumentStatus.UploadingError:
-        return <Text>{t('common.documents.statuses.uploadingError')}</Text>
+        return <Tag color="red">{t('common.documents.statuses.uploadingError')}</Tag>
       case DocumentStatus.Signed:
-        return <Text>{t('common.documents.statuses.signed')}</Text>
+        return <Tag>{t('common.documents.statuses.signed')}</Tag>
       case DocumentStatus.Unsigned:
-        return <Text>{t('common.documents.statuses.unsigned')}</Text>
+        return <Tag>{t('common.documents.statuses.unsigned')}</Tag>
     }
   }
 
@@ -134,7 +132,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
       render: renderActions,
       title: t('common.dataEntity.actions'),
       align: 'left',
-      width: 120,
+      width: 100,
     },
   ]
 

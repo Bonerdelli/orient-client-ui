@@ -3,6 +3,7 @@ import { Typography, Descriptions, Skeleton } from 'antd'
 import { FactoringOrderInfo, OrderConditions, OrderConditionType } from 'library/models'
 import { CompanyDto } from 'library/models/proxy'
 import { formatDate } from 'library/helpers/date'
+import { formatCurrency } from 'library/helpers/numerics'
 
 const { Item: DescItem } = Descriptions
 const { Text } = Typography
@@ -97,7 +98,9 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
       {factoring!.bankName}
     </DescItem>
     <DescItem label={t('models.factoring.fields.amount.title')}>
-      {factoring!.amount} {factoring!.currencyCode}
+      {formatCurrency(factoring!.amount, {
+        currency: factoring!.currencyCode,
+      })}
     </DescItem>
     <DescItem label={t('models.factoring.fields.days.title')}>
       {factoring!.days}
