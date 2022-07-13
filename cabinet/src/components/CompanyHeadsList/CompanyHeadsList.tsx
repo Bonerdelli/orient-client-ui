@@ -9,10 +9,10 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { CompanyHead } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { renderBinaryCell, renderNumericCell } from 'library/helpers/table' // TODO: to ui-lib
-import { useStoreState } from 'library/store'
 import { deleteCompanyHead, getCompanyHeads } from 'library/api'
 
 import './CompanyHeadsList.style.less'
+import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 
 export interface CompanyHeadsListProps {
   companyId: number
@@ -22,12 +22,7 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
-  const company = useStoreState(state => state.company.current)
-  const [ data, dataLoaded, reloadData ] = useApi<CompanyHead[]>(getCompanyHeads, { companyId })
-
-  const handleEdit = (item: CompanyHead) => {
-    // console.log('handleEdit', item) // TODO: why?? Look for missed changes
-  }
+  const [ data, dataLoaded, reloadData ] = useApi<CompanyFounderDto[] | null>(getCompanyHeads, { companyId })
 
   const handleDelete = async (item: CompanyHead) => {
     if (data) {
@@ -45,7 +40,6 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
           type="link"
           shape="circle"
           title={t('common.actions.edit.title')}
-          onClick={() => handleEdit(item)}
           icon={<EditOutlined/>}
         />
       </Link>
@@ -74,8 +68,8 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
       render: (_, item: CompanyHead) => ([ item.lastName, item.firstName, item.secondName ].filter(Boolean).join(' ')),
     },
     {
-      key: 'isExecutive',
-      dataIndex: 'isExecutive',
+      key: 'isIo',
+      dataIndex: 'isIo',
       title: t('headsPage.tableColumns.isExecutive'),
       render: renderBinaryCell,
       align: 'center',

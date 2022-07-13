@@ -1,5 +1,5 @@
-import { CompanyFounderDto as CompanyHeadApiModel } from 'orient-ui-library/library/models/proxy'
+import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 
-export interface CompanyHead extends CompanyHeadApiModel {
+export interface CompanyHead extends CompanyFounderDto {
   fullName: string
 }

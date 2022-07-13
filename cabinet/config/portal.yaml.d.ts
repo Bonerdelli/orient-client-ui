@@ -17,6 +17,7 @@ declare const portalDataDisplayConfig: {
 
 declare const portalDataEntryConfig: {
   accountNumberLength: number
+
 }
 
 declare const portalRolesConfig: {
