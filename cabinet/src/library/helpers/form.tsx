@@ -12,7 +12,7 @@ import FormItemWrapper from 'orient-ui-library/components/FormItemWrapper'
 import portalConfig from 'config/portal.yaml'
 
 const ACCOUNT_NUMBER_LENGTH = portalConfig.dataEntry.accountNumberLength
-const INN_NUMBER_LENGTH = 9 // TODO: use config portalConfig.dataEntry.innNumberLength
+const INN_NUMBER_LENGTH = 12 // TODO: use config portalConfig.dataEntry.innNumberLength
 
 export enum FormInputType {
   'Text',
@@ -71,7 +71,7 @@ const renderFormInputField = (type: FormInputType, isEditable: boolean) => {
       return <Input disabled={!isEditable} type="number"/>
     }
     case FormInputType.Percent: {
-      return <Input disabled={!isEditable} suffix='%'/>
+      return <Input disabled={!isEditable} suffix="%"/>
     }
     case FormInputType.AccountNumber: {
       return <Input disabled={!isEditable} maxLength={ACCOUNT_NUMBER_LENGTH}/>
@@ -137,13 +137,13 @@ export function renderFormInput<T = unknown>(
     //   type: 'integer'
     // })
     rules.push({
-      pattern: /^\d*$/
+      pattern: /^\d*$/,
     })
   }
 
   if (type === FormInputType.AccountNumber) {
     rules.push({
-      len: ACCOUNT_NUMBER_LENGTH
+      len: ACCOUNT_NUMBER_LENGTH,
     })
   }
 

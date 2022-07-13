@@ -4,6 +4,7 @@ import { Descriptions, Tabs } from 'antd'
 import { CompanyFounderDto } from 'library/models/proxy'
 import { PassportType } from '../../library'
 import { passportTypeTranslationsMap } from '../../library/constants/passport-type-translations'
+import { formatDate } from '../../library/helpers/date'
 
 const { Item: DescItem } = Descriptions
 const { TabPane } = Tabs
@@ -48,7 +49,7 @@ const CompanyFounderInfo: React.FC<CompanyFounderInfoProps> = ({ companyFounder 
   </>)
   const renderCommonPassportFooterFields = () => (<>
     <DescItem label={t('models.companyFounder.fields.birthdate.title')}>
-      {companyFounder.birthdate}
+      {formatDate(companyFounder.birthdate)}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.birthplace.title')}>
       {companyFounder.birthplace}
@@ -63,7 +64,7 @@ const CompanyFounderInfo: React.FC<CompanyFounderInfoProps> = ({ companyFounder 
       {`${companyFounder.passportSeries} ${companyFounder.passportNumber}`}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.passportIssueDate.title')}>
-      {companyFounder.passportIssueDate}
+      {formatDate(companyFounder.passportIssueDate)}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.passportIssuerCode.title')}>
       {companyFounder.passportIssuerCode}
@@ -79,10 +80,10 @@ const CompanyFounderInfo: React.FC<CompanyFounderInfoProps> = ({ companyFounder 
       {`${companyFounder.passportSeries} ${companyFounder.passportNumber}`}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.passportIssueDate.title')}>
-      {companyFounder.passportIssueDate}
+      {formatDate(companyFounder.passportIssueDate)}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.passportValidDate.title')}>
-      {companyFounder.passportValidDate}
+      {formatDate(companyFounder.passportValidDate)}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.passportIssuerName.title')}>
       {companyFounder.passportIssuerName}
@@ -98,10 +99,10 @@ const CompanyFounderInfo: React.FC<CompanyFounderInfoProps> = ({ companyFounder 
       {companyFounder.passportNumber}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.passportIssueDate.title')}>
-      {companyFounder.passportIssueDate}
+      {formatDate(companyFounder.passportIssueDate)}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.passportValidDate.title')}>
-      {companyFounder.passportValidDate}
+      {formatDate(companyFounder.passportValidDate)}
     </DescItem>
     <DescItem label={t('models.companyFounder.fields.passportIssuerName.title')}>
       {companyFounder.passportIssuerName}

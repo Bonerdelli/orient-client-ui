@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Result, Grid, Skeleton } from 'antd'
+import { Card, Grid, Result, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -54,18 +54,18 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [companyId])
+  }, [ companyId ])
 
   useEffect(() => {
     if (currentStep === 2 && (
-        orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
-        orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+      orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING ||
+      orderStatus === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
     )) {
       // NOTE: show waiting for verify message
       setSelectedStep(3)
       setCurrentStep(3)
     }
-  }, [currentStep, orderStatus])
+  }, [ currentStep, orderStatus ])
 
   const loadCurrentStepData = async () => {
     const result = await getCurrentFrameWizardStep({
@@ -96,7 +96,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
 
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
-      return <Skeleton active={true} />
+      return <Skeleton active={true}/>
     }
     switch (selectedStep) {
       case 1:
@@ -119,6 +119,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
           sequenceStepNumber={2}
           setCurrentStep={handleStepChange}
           setOrderStatus={setOrderStatus}
+          orderStatus={orderStatus}
           orderId={Number(itemId) || orderId}
         />
       case 3:
@@ -145,7 +146,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -167,10 +168,10 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step title={t('frameSimpleOrder.firstStep.title')} />
-          <Step disabled={!selectedCustomer && !currentStep} title={t('frameSimpleOrder.secondStep.title')} />
-          <Step disabled={currentStep < 3} title={t('frameSimpleOrder.thirdStep.title')} />
-          <Step disabled={currentStep < 4} title={t('frameSimpleOrder.fourthStep.title')} />
+          <Step title={t('frameSimpleOrder.firstStep.title')}/>
+          <Step disabled={!selectedCustomer && !currentStep} title={t('frameSimpleOrder.secondStep.title')}/>
+          <Step disabled={currentStep < 3} title={t('frameSimpleOrder.thirdStep.title')}/>
+          <Step disabled={currentStep < 4} title={t('frameSimpleOrder.fourthStep.title')}/>
         </Steps>
       </Card>
       <Card className="Wizard__step">

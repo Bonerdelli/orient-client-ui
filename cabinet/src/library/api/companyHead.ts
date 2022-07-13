@@ -9,7 +9,7 @@ export interface CompanyHeadsParams {
 }
 
 export async function getCompanyHeads(params: CompanyHeadsParams) {
-  return await get<CompanyFounderDto[]>(`/client/company/${params.companyId}/founder`)
+  return await get<CompanyFounderDto[] | null>(`/client/company/${params.companyId}/founder`)
 }
 
 export interface CompanyHeadItemParams {

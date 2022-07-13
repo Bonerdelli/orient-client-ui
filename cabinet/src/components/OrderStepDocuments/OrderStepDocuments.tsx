@@ -8,14 +8,23 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { FrameWizardType, FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import CompanyDataReadyStatuses from 'components/CompanyDataReadyStatuses'
-import { companyDataInitialStatus } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
+import {
+  BankRequisitesTableData,
+  companyDataInitialStatus,
+} from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
 
-import { getFrameWizardStep, saveRequisitesToOrder, sendFrameWizardStep2, WizardStep2Data } from 'library/api'
+import {
+  getCompanyRequisitesList,
+  getFrameWizardStep,
+  saveRequisitesToOrder,
+  sendFrameWizardStep2,
+  WizardStep2Data,
+} from 'library/api'
 
 import './OrderStepDocuments.style.less'
 import { CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
@@ -31,7 +40,10 @@ export interface OrderDocumentsProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: OrderStatus) => void
+  orderStatus?: OrderStatus
 }
+
+const requisitesStateStorageKey = 'or-draftOrderRequisitesState'
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
@@ -41,13 +53,14 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   sequenceStepNumber,
   setCurrentStep,
   setOrderStatus,
+  orderStatus,
 }) => {
   const { t } = useTranslation()
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
 
   const [ stepData, setStepData ] = useState<WizardStep2Data>()
-  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
+  const [ stepDataLoading, setStepDataLoading ] = useState<boolean>(true)
   const [ companyDataStatus, setCompanyDataStatus ] = useState({ ...companyDataInitialStatus })
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ submitting, setSubmitting ] = useState<boolean>()
@@ -58,8 +71,14 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   const [ documentTypesOptional, setDocumentTypesOptional ] = useState<number[] | null>(null)
   const [ documentsOptional, setDocumentsOptional ] = useState<OrderDocument[]>([])
 
+  const [ requisitesList, setRequisitesList ] = useState<BankRequisitesTableData[]>([])
+  const [ selectedRequisitesId, setSelectedRequisitesId ] = useState<number | undefined>()
+
   useEffect(() => {
     loadCurrentStepData()
+    if (orderStatus === OrderStatus.FRAME_DRAFT) {
+      loadCompanyBankRequisites()
+    }
   }, [])
 
   useEffect(() => {
@@ -69,9 +88,29 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       isAllDocumentsReady = updateCurrentDocuments(currentDocuments)
     }
 
+
+    let bankRequisitesState
+    if (orderStatus === OrderStatus.FRAME_DRAFT) {
+      const storedValue = localStorage.getItem(requisitesStateStorageKey)
+      if (storedValue !== null) {
+        const { orderId: storedOrderId, requisitesId } = JSON.parse(storedValue)
+        if (orderId === storedOrderId) {
+          bankRequisitesState = true
+          setSelectedRequisitesId(requisitesId)
+        } else {
+          localStorage.removeItem(requisitesStateStorageKey)
+        }
+      } else {
+        bankRequisitesState = false
+      }
+    } else {
+      bankRequisitesState = Boolean(stepData?.requisites)
+      setSelectedRequisitesId(stepData?.requisites?.id)
+    }
+
     const updatedCompanyStatus = {
       companyHead: Boolean(stepData?.founder),
-      bankRequisites: Boolean(stepData?.requisites),
+      bankRequisites: bankRequisitesState,
       questionnaire: wizardType === FrameWizardType.Simple || Boolean(stepData?.questionnaire),
     }
 
@@ -127,6 +166,16 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       setDataLoaded(false)
     }
     setStepDataLoading(false)
+  }
+
+  const loadCompanyBankRequisites = async () => {
+    if (!companyId) return
+
+    const res = await getCompanyRequisitesList({ companyId })
+    if (res.success) {
+      const list = res.data?.map(requisites => ({ ...requisites, key: requisites.id! })) ?? []
+      setRequisitesList(list)
+    }
   }
 
   const sendNextStep = async () => {
@@ -238,14 +287,25 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Spin>
   )
 
-  const handleSaveRequisites = (requisites: CompanyRequisitesDto) => {
-    saveRequisitesToOrder({
+  const handleSaveRequisites = async (requisites: CompanyRequisitesDto) => {
+    const res = await saveRequisitesToOrder({
       mode: CabinetMode.Client,
       type: wizardType,
       orderId: orderId!,
       companyId: companyId!,
       requisitesId: requisites.id!,
     })
+    if (res.success) {
+      setSelectedRequisitesId(requisites.id)
+      setCompanyDataStatus({
+        ...companyDataStatus,
+        bankRequisites: true,
+      })
+      if (orderStatus === OrderStatus.FRAME_DRAFT) {
+        const strValue = JSON.stringify({ orderId, requisitesId: requisites.id! })
+        localStorage.setItem(requisitesStateStorageKey, strValue)
+      }
+    }
   }
 
   const renderStepContent = () => (
@@ -264,9 +324,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
           wizardType={wizardType}
           companyDataStatus={companyDataStatus}
           onSaveRequisites={handleSaveRequisites}
-          selectedRequisitesId={stepData?.requisites?.id}
+          selectedRequisitesId={selectedRequisitesId}
           founderId={stepData?.founder?.id}
-          companyId={companyId}
+          requisitesList={requisitesList}
         />
       </Div>
     </Div>
