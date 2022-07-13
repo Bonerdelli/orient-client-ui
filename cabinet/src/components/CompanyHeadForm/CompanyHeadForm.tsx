@@ -19,16 +19,15 @@ import {
 } from 'antd'
 import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons'
 
-import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-
 import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
-import { callApi, useApi } from 'library/helpers/api' // TODO: to ui-lib
+import { callApi } from 'library/helpers/api' // TODO: to ui-lib
 import { baseFormConfig, FormInputShortConfig, renderFormInput } from 'library/helpers/form'
 import { getCompanyHead, updateCompanyHead } from 'library/api' // TODO: to ui-lib
 import {
   dateFieldNames,
   founderFields,
   getPassportFieldsConfig,
+  initialHeadFormValues,
   passportFooterFieldNames,
   passportHeaderFieldNames,
   ruPassportFieldNames,
@@ -41,6 +40,7 @@ import { PassportType } from 'orient-ui-library/library'
 import { passportTypeTranslationsMap } from 'orient-ui-library/library/constants/passport-type-translations'
 import moment from 'moment'
 import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
+import { isNull, isUndefined } from 'lodash'
 
 const { useBreakpoint } = Grid
 const { Item: FormItem } = Form
@@ -50,14 +50,13 @@ const { TextArea } = Input
 export interface CompanyHeadFormProps {
   companyId: number,
   backUrl?: string
-  id?: number,
 }
 
 export interface CompanyHeadPathParams {
   itemId?: string,
 }
 
-const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, id }) => {
+const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId }) => {
   const { t } = useTranslation()
   const { itemId } = useParams<CompanyHeadPathParams>()
   const breakPoint = useBreakpoint()
@@ -69,36 +68,41 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
   const [ formData, setFormData ] = useState<CompanyFounderDto | null>(null)
   const [ selectedPassportType, setSelectedPassportType ] = useState<PassportType | null>(null)
   const [ submitting, setSubmitting ] = useState<boolean>(false)
-  const [ initialData, dataLoaded ] = useApi<CompanyFounderDto | null>(
-    getCompanyHead, {
-      companyId,
-      id: id ?? itemId,
-    },
-  )
+  const [ founderDataLoading, setFounderDataLoading ] = useState<boolean>(false)
 
   useEffect(() => {
-    if (initialData) {
-      const formData = { ...initialData }
+    if (itemId === 'add' || isNull(itemId) || isUndefined(itemId)) return
+    fetchFounder()
+  }, [])
+
+  const fetchFounder = async () => {
+    setFounderDataLoading(true)
+
+    const res = await getCompanyHead({ companyId, id: +itemId! })
+    if (res.success) {
+      const formData = { ...res.data }
       dateFieldNames.forEach(key => {
-        const date = initialData[key]
-        formData[key] = date ? moment(date) : moment
+        const date = formData[key]
+        formData[key] = date ? moment(date) : moment()
       })
       setFormData(formData)
-      setSelectedPassportType(initialData.passportType as PassportType)
+      setSelectedPassportType(formData.passportType as PassportType)
     }
-  }, [ initialData ])
+
+    setFounderDataLoading(false)
+  }
 
   const handleFormSubmit = async (data: CompanyFounderDto) => {
     setSubmitting(true)
     dateFieldNames.forEach(key => data[key] = moment(data[key]).format('YYYY-MM-DD'))
+    if (itemId !== 'add') {
+      data.id = +itemId!
+    }
     const updatedData = await callApi<CompanyFounderDto | null>(
       updateCompanyHead, {
         companyId,
       },
-      {
-        ...data,
-        id: id ?? itemId,
-      },
+      data,
     )
     if (updatedData) {
       setFormData(updatedData)
@@ -167,7 +171,8 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
   }
 
   const renderCommonPassportHeaderFields = () => {
-    const [ passportTypeProps, genderProps ] = getPassportFieldsConfig(passportHeaderFieldNames).map(getFormFieldProps)
+    const [ passportTypeProps, genderProps ] = getPassportFieldsConfig(passportHeaderFieldNames)
+      .map(getFormFieldProps)
     const genderOptions = [
       { label: t('common.dataEntity.gender.male'), value: true },
       { label: t('common.dataEntity.gender.female'), value: false },
@@ -185,7 +190,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
           onChange={setSelectedPassportType}
         />
       </FormItem>
-      <FormItem {...genderProps}>
+      <FormItem {...genderProps} shouldUpdate>
         <Radio.Group options={genderOptions}/>
       </FormItem>
     </>)
@@ -292,13 +297,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
     }
   }
 
-  if (dataLoaded === false) {
-    return (
-      <ErrorResultView centered status="error"/>
-    )
-  }
-
-  if (!formData) {
+  if (founderDataLoading) {
     return <Card>
       <Skeleton active/>
     </Card>
@@ -311,7 +310,7 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId, i
           <Card title={renderCardTitle()}>
             <Form
               form={headForm}
-              initialValues={formData!}
+              initialValues={formData ?? initialHeadFormValues}
               onFinish={(data: CompanyFounderDto) => handleFormSubmit(data)}
               className="CompanyHeadForm"
               data-testid="CompanyHeadForm"
