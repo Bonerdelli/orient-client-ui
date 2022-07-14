@@ -296,6 +296,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       requisitesId: requisites.id!,
     })
     if (res.success) {
+      loadCurrentStepData()
       setSelectedRequisitesId(requisites.id)
       setCompanyDataStatus({
         ...companyDataStatus,

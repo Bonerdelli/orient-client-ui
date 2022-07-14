@@ -22,6 +22,8 @@ frameOrdersPage:
     clientName: Наименование Поставщика
     updatedAt: Дата и время статуса
     statusName: Статус
+    amount: Сумма
+    days: Срок
 
 frameWizard:
   # TODO: translate me
@@ -121,7 +123,7 @@ offerStatusTitles:
   bankViewed: Просмотрена
   bankVerify: Проверка
   bankOffer: Формирование предложения
-  bankSign: Формирование документов
+  bankSign: Требует подписи
   bankOfferSent: Отправлено предложение
   needsForRework: На доработке
   customerSign: Требует подписи Заказчика

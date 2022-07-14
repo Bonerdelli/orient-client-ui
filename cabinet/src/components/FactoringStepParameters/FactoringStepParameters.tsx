@@ -191,6 +191,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     setSubmitting(true)
     createFactoringOrder({ ...values, orderId: selectedOrderId!, bankId: selectedOfferBankId! })
   }
+
   const sendNextStep = async () => {
     if (factoringOrderId === undefined) {
       factoringParamsForm.submit()
@@ -237,6 +238,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
           <Button
             size="large"
             type="primary"
+            htmlType="submit"
             onClick={handleNextStep}
             loading={submitting}
             disabled={!isNextStepAllowed}
@@ -277,7 +279,12 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     if (!customer) return (<></>)
 
     return (
-      <Descriptions column={1} title={t('factoringStepParameters.customerInfoFromOrder.title')}>
+      <Descriptions
+        size="small"
+        column={1}
+        className="FactoringStepParameters__customerInfo"
+        title={t('factoringStepParameters.customerInfoFromOrder.title')}
+      >
         <DescItem>{customer.shortName}</DescItem>
         <DescItem label={t('models.customer.fields.chief.title')}>{customer.chief}</DescItem>
         <DescItem label={t('models.customer.fields.address.title')}>{customer.address}</DescItem>
@@ -304,6 +311,9 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       suffix: <EditOutlined/>,
       disabled: !!factoringOrderId,
     }
+    const requiredRule = {
+      required: true,
+    }
 
     const currencyOptions = dictionaries && convertDictionaryToSelectOptions(dictionaries.currency)
 
@@ -316,7 +326,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
         <Row gutter={16} wrap>
           <Col sm={24} md={12}>
             <Form.Item name="amount"
-                       required
+                       rules={[ requiredRule ]}
                        label={t('factoringStepParameters.form.amount.title')}>
               <Input {...inputLayout}
                      type={'number'}
@@ -325,7 +335,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
           </Col>
           <Col sm={24} md={12}>
             <Form.Item name="currencyCode"
-                       required
+                       rules={[ requiredRule ]}
                        label={t('factoringStepParameters.form.currencyCode.title')}>
               <Select placeholder={t('factoringStepParameters.form.currencyCode.placeholder')}
                       disabled={!!factoringOrderId}
@@ -334,7 +344,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
           </Col>
           <Col sm={24} md={12}>
             <Form.Item name="days"
-                       required
+                       rules={[ requiredRule ]}
                        label={t('factoringStepParameters.form.days.title')}>
               <Input {...inputLayout}
                      type={'number'}

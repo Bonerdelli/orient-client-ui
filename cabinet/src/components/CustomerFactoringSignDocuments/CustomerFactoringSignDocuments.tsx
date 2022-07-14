@@ -145,8 +145,6 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       size="large"
       type="primary"
       onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
     >
       {t('common.actions.back.title')}
     </Button>
@@ -164,7 +162,10 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
 
   const renderStepContent = () => (
     <Div className="CustomerFactoringSignDocuments">
-      <Title level={5}>{t('customerOrderStepDocuments.sections.documentsForSign.title')}</Title>
+      <Title level={5}>{orderStatus === FactoringStatus.FACTOR_CUSTOMER_SIGN
+        ? t('customerOrderStepDocuments.sections.documentsForSign.title')
+        : t('customerOrderStepDocuments.sections.documentsList.title')}
+      </Title>
       {renderDocuments()}
     </Div>
   )

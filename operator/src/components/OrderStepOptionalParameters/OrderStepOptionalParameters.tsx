@@ -134,8 +134,6 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
       size="large"
       type="primary"
       onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
     >
       {t('common.actions.back.title')}
     </Button>

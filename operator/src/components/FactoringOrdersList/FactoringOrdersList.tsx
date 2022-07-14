@@ -12,6 +12,7 @@ import OrderStatusTag from 'components/OrderStatusTag'
 import { GridResponse } from 'library/models'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { formatDate } from 'orient-ui-library/library/helpers/date'
+import { formatCurrency } from 'orient-ui-library/library/helpers/numerics'
 
 import { getFactoringOrdersList } from 'library/api/factoring'
 
@@ -68,6 +69,21 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({}) => {
       dataIndex: 'clientName',
       title: t('frameOrdersPage.tableColumnTitles.clientName'),
       align: 'left',
+    },
+    {
+      key: 'amount',
+      dataIndex: 'amount',
+      title: t('frameOrdersPage.tableColumnTitles.amount'),
+      render: (val, item) => val ? formatCurrency(val, {
+        currency: item.currencyCode || undefined,
+      }) : '',
+      align: 'right',
+    },
+    {
+      key: 'days',
+      dataIndex: 'days',
+      title: t('frameOrdersPage.tableColumnTitles.days'),
+      align: 'center',
     },
     {
       key: 'updatedAt', // TODO: is it status updated time?
