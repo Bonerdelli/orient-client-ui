@@ -147,12 +147,15 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
     if (!bankOfferStatus) {
       return <Skeleton active/>
     }
-    if (bankOfferStatus === BankOfferStatus.BankOfferSent) {
+    if (bankOfferStatus === BankOfferStatus.BankSign
+        || bankOfferStatus === BankOfferStatus.BankVerify
+        || bankOfferStatus === BankOfferStatus.BankWaitForVerify
+        || bankOfferStatus === BankOfferStatus.BankViewed) {
       return renderWaitMessage()
     }
     return (
       <>
-        {bankOfferStatus !== BankOfferStatus.Completed && renderWaitMessage()}
+        {bankOfferStatus === BankOfferStatus.CustomerSign && renderWaitMessage()}
         {renderHasOfferContent()}
       </>
     )
