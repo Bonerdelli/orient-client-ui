@@ -303,12 +303,14 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
       size={'middle'}
       className="OrderStepSignDocuments__listData"
       columns={banksTableColumns}
-      dataSource={[stepData?.bank] ?? []}
+      dataSource={stepData?.banks || [stepData?.bank] || []}
       pagination={false}
       showHeader={false}
       rowKey="bankId"
     />
   )
+
+  console.log('baaank', stepData?.bank)
 
   const renderStepContent = () => (
     <Div className="OrderStepSignDocuments">
