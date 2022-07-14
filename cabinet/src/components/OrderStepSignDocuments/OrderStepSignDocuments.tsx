@@ -174,8 +174,14 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
       dataIndex: 'status',
       // NOTE: no status retrieved from be, for teh future
       render: () => <Tag color="green">{t('frameSteps.signDocuments.bankStatus.available')}</Tag>,
-      align: 'right',
+      align: 'center',
+      width: 100,
     },
+    {
+      key: 'actions',
+      align: 'right',
+      width: 80,
+    }
   ]
 
   // NOTE: no negative scenarious for Demo
@@ -297,7 +303,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
       size={'middle'}
       className="OrderStepSignDocuments__listData"
       columns={banksTableColumns}
-      dataSource={stepData?.banks ?? []}
+      dataSource={[stepData?.bank] ?? []}
       pagination={false}
       showHeader={false}
       rowKey="bankId"
