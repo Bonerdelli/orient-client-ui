@@ -36,6 +36,8 @@ frameOrdersPage:
     clientName: Наименование Поставщика
     updatedAt: Дата и время статуса
     statusName: Статус
+    amount: Сумма
+    days: Срок
 
 orderStatusTitles:
   waitForVerify: Wait for Verify

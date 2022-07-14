@@ -22,6 +22,8 @@ frameOrdersPage:
     clientName: Наименование Поставщика
     updatedAt: Дата и время статуса
     statusName: Статус
+    amount: Сумма
+    days: Срок
 
 frameWizard:
   # TODO: translate me
