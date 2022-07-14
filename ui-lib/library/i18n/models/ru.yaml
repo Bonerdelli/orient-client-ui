@@ -114,7 +114,7 @@ companyFounder:
     passportInfo: Паспортные данные
   fields:
     lastName:
-      title: Руководитель # sorry.
+      title: Фамилия
     firstName:
       title: Имя
     secondName:
