@@ -74,6 +74,8 @@ orderStepDocuments:
 
 orderStepContractParams:
   title: Параметры договора
+  actionButton:
+    title: Сформировать предложение
   sectionTitles:
     documents: Документы по сделке
 

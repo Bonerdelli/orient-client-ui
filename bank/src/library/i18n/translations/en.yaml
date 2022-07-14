@@ -123,7 +123,7 @@ offerStatusTitles:
   bankViewed: Просмотрена
   bankVerify: Проверка
   bankOffer: Формирование предложения
-  bankSign: Формирование документов
+  bankSign: Требует подписи
   bankOfferSent: Отправлено предложение
   needsForRework: На доработке
   customerSign: Требует подписи Заказчика

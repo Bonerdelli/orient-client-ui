@@ -20,7 +20,7 @@ import {
 import './OrderStepContractParams.style.less'
 
 const { Title } = Typography
-const { Item: FormItem } = Form
+const { useForm, Item: FormItem } = Form
 const { Option } = Select
 
 export interface OrderStepContractParamsProps {
@@ -39,9 +39,11 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   offerStatus,
   currentStep,
   setCurrentStep,
+  setOfferStatus,
   sequenceStepNumber,
 }) => {
   const { t } = useTranslation()
+  const [ form ] = useForm()
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
@@ -116,6 +118,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
+      setOfferStatus(BankOfferStatus.BankSign)
       setCurrentStep(sequenceStepNumber + 1)
     }
     setSubmitting(false)
@@ -155,7 +158,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
       disabled={!isNextStepAllowed || submitting}
       loading={submitting}
     >
-      {t('common.actions.saveAndContinue.title')}
+      {t('orderStepContractParams.actionButton.title')}
     </Button>
   )
 
@@ -285,6 +288,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   return (
     <Div className="WizardStep__content">
       <Form
+        form={form}
         initialValues={initialData || undefined}
         onFinish={(data: any) => handleFormSubmit(data)}
         labelAlign="left"

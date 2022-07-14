@@ -104,7 +104,6 @@ const CompanyHeadsList: React.FC<CompanyHeadsListProps> = ({ companyId }) => {
   return (
     <div className="CompanyHeadsList" data-testid="CompanyHeadsList">
       <Table
-        bordered
         columns={columns}
         loading={dataLoaded === null}
         dataSource={data ?? []}

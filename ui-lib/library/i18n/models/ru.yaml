@@ -114,13 +114,13 @@ companyFounder:
     passportInfo: Паспортные данные
   fields:
     lastName:
-      title: Фамилия
+      title: Руководитель # sorry.
     firstName:
       title: Имя
     secondName:
       title: Отчество
     inn:
-      title: ИНН
+      title: ИНН руководителя
     ownership:
       title: Доля
     isIo:

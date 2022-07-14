@@ -175,7 +175,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
       // NOTE: no status retrieved from be, for teh future
       render: () => <Tag color="green">{t('frameSteps.signDocuments.bankStatus.available')}</Tag>,
       align: 'center',
-      width: 100,
+      width: 160,
     },
     {
       key: 'actions',
