@@ -724,7 +724,7 @@ export interface components {
       lastName: string
       firstName: string
       secondName?: string
-      inn: string
+      inn?: string
       /** Format: double */
       ownership: number
       isIo: boolean
