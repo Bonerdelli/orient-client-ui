@@ -310,8 +310,6 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
     />
   )
 
-  console.log('baaank', stepData?.bank)
-
   const renderStepContent = () => (
     <Div className="OrderStepSignDocuments">
       <Div className="OrderStepSignDocuments__section">
