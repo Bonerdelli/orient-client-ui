@@ -211,7 +211,7 @@ frameSteps:
       desc: Когда хотя бы один из Банков сделает предложение, статус изменится на «Есть предложение»
 
 orderStepBankOffer:
-  title: Карточка Банка «{{bankName}}»
+  title: Карточка Банка «{{-bankName}}»
   statuses:
     waitingForCustomer:
       title: Ожидайте подписи Заказчика
