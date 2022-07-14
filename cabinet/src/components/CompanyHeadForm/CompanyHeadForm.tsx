@@ -68,25 +68,26 @@ const CompanyHeadForm: React.FC<CompanyHeadFormProps> = ({ backUrl, companyId })
   const [ formData, setFormData ] = useState<CompanyFounderDto | null>(null)
   const [ selectedPassportType, setSelectedPassportType ] = useState<PassportType | null>(null)
   const [ submitting, setSubmitting ] = useState<boolean>(false)
-  const [ founderDataLoading, setFounderDataLoading ] = useState<boolean>(false)
+  const [ founderDataLoading, setFounderDataLoading ] = useState<boolean>(true)
 
   useEffect(() => {
-    if (itemId === 'add' || isNull(itemId) || isUndefined(itemId)) return
+    if (itemId === 'add' || isNull(itemId) || isUndefined(itemId)) {
+      setFounderDataLoading(false)
+      return
+    }
     fetchFounder()
   }, [])
 
   const fetchFounder = async () => {
-    setFounderDataLoading(true)
-
     const res = await getCompanyHead({ companyId, id: +itemId! })
     if (res.success) {
-      const formData = { ...res.data }
+      const initData = { ...res.data }
       dateFieldNames.forEach(key => {
-        const date = formData[key]
-        formData[key] = date ? moment(date) : moment()
+        const date = initData[key]
+        initData[key] = date ? moment(date) : moment()
       })
-      setFormData(formData)
-      setSelectedPassportType(formData.passportType as PassportType)
+      setFormData(initData)
+      setSelectedPassportType(initData.passportType as PassportType)
     }
 
     setFounderDataLoading(false)
