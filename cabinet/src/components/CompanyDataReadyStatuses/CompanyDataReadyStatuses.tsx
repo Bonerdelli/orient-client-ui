@@ -126,9 +126,19 @@ const CompanyDataReadyStatuses: React.FC<CompanyDataReadyStatusesProps> = ({
             },
             selectedRowKeys,
           }}
+          onRow={item => ({
+            onClick: () => {
+              if (item.key && !selectedRowKeys.includes(item.key)) {
+                setSelectedRowKeys([
+                  item.key,
+                ])
+              }
+            }
+          })}
           pagination={false}
           columns={columns}
           dataSource={requisitesList}
+          rowKey="id"
         />
       </Modal>
     )
