@@ -19,7 +19,7 @@ const MyCompanyPage = () => {
   const { t } = useTranslation()
   const company = useStoreState(state => state.company.current)
 
-  const [ companyHeadName, setCompanyHeadName ] = useState<string | null>(null)
+  const [ companyHeadName, setCompanyHeadName ] = useState<string>()
 
   useEffect(() => {
     if (company) {
@@ -42,7 +42,7 @@ const MyCompanyPage = () => {
     }
   }
 
-  if (!company || !companyHeadName) {
+  if (!company) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large"/>
