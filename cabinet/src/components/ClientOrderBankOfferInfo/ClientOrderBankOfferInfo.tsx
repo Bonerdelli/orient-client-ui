@@ -18,6 +18,12 @@ import { FACTORING_ORDER_ID_PARAM, OFFER_BANK_ID_PARAM } from 'library/constants
 
 const { Title, Paragraph } = Typography
 
+
+const DOCUMENTS_TO_SHOW = [
+  9, // Рамочный договор
+  17, // Индивидуальные условия
+]
+
 export interface ClientOrderBankOfferInfoProps {
   wizardType?: FrameWizardType
   companyId: number
@@ -47,11 +53,13 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
     if (!offer) return
     const currentDocuments = offer?.documents ?? []
     const updatedDocumentTypes: number[] = []
-    currentDocuments.forEach((doc: OrderDocument) => {
-      if (doc.isGenerated && doc.info) {
-        updatedDocumentTypes.push(doc.typeId)
-      }
-    })
+    currentDocuments
+      .filter((doc: OrderDocument) => DOCUMENTS_TO_SHOW.includes(doc.typeId))
+      .forEach((doc: OrderDocument) => {
+        if (doc.isGenerated && doc.info) {
+          updatedDocumentTypes.push(doc.typeId)
+        }
+      })
     setBankId(offer.bank.id)
     setBankOfferStatus(offer.offerStatus)
     setDocumentTypes(updatedDocumentTypes)
@@ -124,15 +132,7 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
     </Div>
   )
 
-  const renderOfferContent = () => {
-    if (!bankOfferStatus) {
-      return <Skeleton active/>
-    }
-    const contentVisibleOfferStatuses = [ BankOfferStatus.BankOfferSent, BankOfferStatus.Completed ]
-    if (contentVisibleOfferStatuses.includes(bankOfferStatus)) {
-      return renderHasOfferContent()
-    }
-
+  const renderWaitMessage = () => {
     const isOfferOnBankSide = bankOfferStatus !== BankOfferStatus.CustomerSign
     return (
       <Result
@@ -140,6 +140,24 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
         title={t(`orderStepBankOffer.statuses.${isOfferOnBankSide ? 'waitingForBank' : 'waitingForCustomer'}.title`)}
         subTitle={isOfferOnBankSide ? t('orderStepBankOffer.statuses.waitingForBank.desc') : null}
       />
+    )
+  }
+
+  const renderOfferContent = () => {
+    if (!bankOfferStatus) {
+      return <Skeleton active/>
+    }
+    if (bankOfferStatus === BankOfferStatus.BankSign
+        || bankOfferStatus === BankOfferStatus.BankVerify
+        || bankOfferStatus === BankOfferStatus.BankWaitForVerify
+        || bankOfferStatus === BankOfferStatus.BankViewed) {
+      return renderWaitMessage()
+    }
+    return (
+      <>
+        {bankOfferStatus === BankOfferStatus.CustomerSign && renderWaitMessage()}
+        {renderHasOfferContent()}
+      </>
     )
   }
 

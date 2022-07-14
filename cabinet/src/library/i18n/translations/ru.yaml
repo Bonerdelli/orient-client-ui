@@ -36,6 +36,11 @@ companyPage:
     additionalContacts:
       title: Дополнительные контакты
       description: Вы можете указать контактные данные в дополнение к тем, что указаны на владке «Общие сведения»
+  formFields:
+    lastName:
+      title: Руководитель
+    inn:
+      title: ИНН руководителя
 
 headsPage:
   tableColumns:
@@ -97,6 +102,7 @@ orderStatusTitles:
   needsForRework: Требует доработки
   clientSign: Требует подписи
   bankVerify: В Банке
+  bankSign: Требует подписи Банка
   hasOffer: Есть предложение
   customerSign: Требует подписи Заказчика
   completed: Договор заключен
@@ -109,7 +115,7 @@ orderStatusTitles:
 orderStatusCustomerTitles:
   customerSign: Требует подписи
   completed: Договор заключен
-  bankVerify: В Банке
+  bankVerify: Требует подписи Банка
   factorWaitForCharge: Ожидает финансирования
   factorCharged: Профинансировано
   factorCompleted: Финансирование погашено
@@ -305,6 +311,8 @@ orderStepBankOffer:
 customerOrderStepDocuments:
   title: Подписание документов
   sections:
+    documentsList:
+      title: Список документов
     documentsForSign:
       title: Список документов для подписания
     selectBank:

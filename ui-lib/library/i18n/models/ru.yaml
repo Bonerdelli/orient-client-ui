@@ -120,7 +120,7 @@ companyFounder:
     secondName:
       title: Отчество
     inn:
-      title: ИНН
+      title: ИНН руководителя
     ownership:
       title: Доля
     isIo:

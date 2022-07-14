@@ -195,7 +195,6 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       type="primary"
       onClick={handlePrevStep}
       disabled={true}
-      loading={submitting}
     >
       {t('orderStepContractDocuments.actions.back.title')}
     </Button>
@@ -213,9 +212,11 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
 
   const renderStepContent = () => (
     <Div className="OrderStepContractDocuments">
-      <Div className="WizardStep__section">
-        <OrderCondition condition={orderConditions}/>
-      </Div>
+      <Row className="WizardStep__section">
+        <Col lg={12}>
+          <OrderCondition condition={orderConditions}/>
+        </Col>
+      </Row>
       <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepContractDocuments.title')}</Title>
         {renderDocuments()}

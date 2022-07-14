@@ -9,6 +9,7 @@ export interface Order {
   currencyCode: string | null
   currencyName: string | null
   typeCode: OrderWizardType
+  days?: number
 }
 
 export enum OrderWizardType {

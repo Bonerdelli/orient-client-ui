@@ -97,7 +97,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       message.error(t('common.errors.requestError.title'))
       setNextStepAllowed(false)
     } else {
-      setOrderStatus(FactoringStatus.FACTOR_CUSTOMER_SIGN)
+      setOrderStatus(FactoringStatus.FACTOR_CLIENT_SIGN)
       loadCurrentStepData()
       setCompleted(true)
     }
@@ -140,8 +140,6 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       size="large"
       type="primary"
       onClick={handlePrevStep}
-      disabled={submitting}
-      loading={submitting}
     >
       {t('common.actions.back.title')}
     </Button>

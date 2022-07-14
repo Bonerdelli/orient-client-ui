@@ -6,9 +6,10 @@ import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { Order } from 'orient-ui-library/library/models/order'
+import { FactoringStatus, Order } from 'orient-ui-library/library/models/order'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
+import { formatCurrency } from 'orient-ui-library/library/helpers/numerics'
 
 import OfferStatusTag from 'components/OfferStatusTag'
 import { GridResponse } from 'library/models'
@@ -73,6 +74,21 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
       align: 'left',
     },
     {
+      key: 'amount',
+      dataIndex: 'amount',
+      title: t('frameOrdersPage.tableColumnTitles.amount'),
+      render: (val, item) => val ? formatCurrency(val, {
+        currency: item.currencyCode || undefined,
+      }) : '',
+      align: 'right',
+    },
+    {
+      key: 'days',
+      dataIndex: 'days',
+      title: t('frameOrdersPage.tableColumnTitles.days'),
+      align: 'center',
+    },
+    {
       key: 'updatedAt',
       dataIndex: 'updatedAt',
       title: t('frameOrdersPage.tableColumnTitles.updatedAt'),
@@ -95,6 +111,12 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
     },
   ]
 
+  const rowClassName = (record: Order) => (
+    record.statusCode === FactoringStatus.FACTOR_BANK_SIGN
+      ? 'FactoringOrdersList__row--new'
+      : ''
+  )
+
   if (dataLoaded === false) {
     return (
       <ErrorResultView centered status="error" />
@@ -104,10 +126,12 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
   return (
     <div className="FactoringOrdersList" data-testid="FactoringOrdersList">
       <Table
+        bordered
         size="middle"
         columns={columns}
         loading={dataLoaded === null}
         dataSource={data?.data as unknown as Order[] || []}
+        rowClassName={rowClassName}
         pagination={false}
         rowKey="id"
       />

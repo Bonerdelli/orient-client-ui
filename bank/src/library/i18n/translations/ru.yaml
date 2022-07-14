@@ -20,6 +20,8 @@ frameOrdersPage:
     clientName: Наименование Поставщика
     updatedAt: Дата и время статуса
     statusName: Статус
+    amount: Сумма
+    days: Срок
 
 frameWizard:
   title: Заявка на рамочный договор
@@ -72,6 +74,8 @@ orderStepDocuments:
 
 orderStepContractParams:
   title: Параметры договора
+  actionButton:
+    title: Сформировать предложение
   sectionTitles:
     documents: Документы по сделке
 

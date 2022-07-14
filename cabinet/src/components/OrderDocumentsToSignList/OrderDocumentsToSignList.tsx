@@ -105,7 +105,7 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
       title: t('common.documents.fields.status.title'),
       render: (_, item) => renderDocumentStatus(item),
       align: 'center',
-      width: 100,
+      width: 160,
     },
     {
       key: 'actions',
