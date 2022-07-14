@@ -110,9 +110,11 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
 
   const renderOfferContent = () => (
     <Div>
-      <Div className="CustomerOrderBankOfferInfo__section">
-        <OrderConditionView condition={offer} />
-      </Div>
+      <Row className="CustomerOrderBankOfferInfo__section">
+        <Col span={24} xl={12}>
+          <OrderConditionView condition={offer} />
+        </Col>
+      </Row>
       <Div className="CustomerOrderBankOfferInfo__section">
         <Title level={5}>{t('orderStepBankOffer.sections.documentsForSign.title')}</Title>
         {renderDocuments()}
@@ -128,7 +130,7 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
       disabled={submitting}
       loading={submitting}
     >
-      {t('orderStepBankOffer.actions.accept.title')}
+      {t('common.actions.sign.title')}
     </Button>
   )
 

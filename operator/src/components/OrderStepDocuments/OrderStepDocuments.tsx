@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
 
 import {
   message,
@@ -78,7 +79,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     const updatedDocumentTypes: number[] = []
     const updatedDocumentTypesOptional: number[] = []
 
-    currentDocuments
+    sortBy(currentDocuments, ['typeId'])
       .filter((doc: OrderDocument) => !(doc.isGenerated && !doc.info))
       .forEach((doc: OrderDocument) => {
         if (doc.isRequired) {
