@@ -19,7 +19,7 @@ const MyCompanyPage = () => {
   const { t } = useTranslation()
   const company = useStoreState(state => state.company.current)
 
-  const [ companyHeadName, setCompanyHeadName ] = useState<string>()
+  const [ companyHead, setCompanyHead ] = useState<CompanyFounderDto>()
 
   useEffect(() => {
     if (company) {
@@ -34,8 +34,7 @@ const MyCompanyPage = () => {
       if (!io) {
         message.error('У компании отсутсвует учредитель')
       } else {
-        const { firstName, lastName, secondName } = io
-        setCompanyHeadName(`${lastName} ${firstName} ${secondName}`)
+        setCompanyHead(io)
       }
     } else {
       message.error('Ошибка получения информации об учредителе компании')
@@ -54,7 +53,7 @@ const MyCompanyPage = () => {
     <Layout className="MyCompanyPage" data-testid="MyCompanyPage">
       <Tabs className="MyCompanyPage__tabNavigation">
         <TabPane tab={t('companyPage.tabs.mainInfo.title')} key="main-info">
-          <CompanyForm company={company} companyFounderFullName={companyHeadName}/>
+          <CompanyForm company={company} companyHead={companyHead}/>
         </TabPane>
         <TabPane tab={t('companyPage.tabs.contacts.title')} key="contacts">
           <CompanyContactsForm companyId={company.id as number}/>
