@@ -195,7 +195,6 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
       type="primary"
       onClick={handlePrevStep}
       disabled={true}
-      loading={submitting}
     >
       {t('orderStepContractDocuments.actions.back.title')}
     </Button>
