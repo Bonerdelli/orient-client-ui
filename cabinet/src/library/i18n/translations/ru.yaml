@@ -36,6 +36,11 @@ companyPage:
     additionalContacts:
       title: Дополнительные контакты
       description: Вы можете указать контактные данные в дополнение к тем, что указаны на владке «Общие сведения»
+  formFields:
+    lastName:
+      title: Руководитель
+    inn:
+      title: ИНН руководителя
 
 headsPage:
   tableColumns:
