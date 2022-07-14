@@ -187,7 +187,17 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
     )
   }
 
-  if (completed || orderStatus !== FactoringStatus.FACTOR_CLIENT_SIGN) {
+  if (orderStatus === FactoringStatus.FACTOR_CUSTOMER_SIGN) {
+    // TODO: revise l10ns
+    return (
+      <Result
+        icon={<ClockCircleFilled />}
+        title={t('orderStepBankOffer.statuses.waitingForCustomer.title')}
+      />
+    )
+  }
+
+  if (orderStatus === FactoringStatus.FACTOR_BANK_SIGN) {
     // TODO: revise l10ns
     return (
       <Result

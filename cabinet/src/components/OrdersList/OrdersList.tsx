@@ -8,6 +8,7 @@ import { EyeOutlined } from '@ant-design/icons'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 import { Order, OrderStatus, OrderWizardType } from 'orient-ui-library/library/models/order'
+import { FactoringStatus } from 'orient-ui-library/library/models/order'
 import { isCustomer } from 'orient-ui-library/library/helpers/roles'
 import { formatCurrency } from 'orient-ui-library/library/helpers/numerics'
 
@@ -91,7 +92,8 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
 
   const rowClassName = (item: Order) => (
     mode === CabinetMode.Customer
-      && item.statusCode === OrderStatus.FRAME_CUSTOMER_SIGN
+      && (item.statusCode === OrderStatus.FRAME_CUSTOMER_SIGN
+        || item.statusCode === FactoringStatus.FACTOR_CUSTOMER_SIGN)
         ? 'OrdersList__row--new'
         : ''
   )
@@ -122,7 +124,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
       dataIndex: 'amount',
       title: t('models.order.fields.amount.title'),
       render: (val, item) => val ? formatCurrency(val, {
-        currency: item.currencyCode,
+        currency: item.currencyCode || undefined,
       }) : ''
     },
     {
