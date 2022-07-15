@@ -5,7 +5,7 @@ dayjs.extend(relativeTime)
 
 // TODO: move this to portal config
 export const DATE_FORMAT = 'DD.MM.YYYY'
-export const DATE_TIME_FORMAT = 'DD.MM.YYYY hh:mm'
+export const DATE_TIME_FORMAT = 'DD.MM.YYYY HH:mm'
 export const DATE_FORMAT_LOCALIZED = 'LL'
 export const DATE_TIME_FORMAT_LOCALIZED = 'LLL'
 
