@@ -18,10 +18,12 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
   const { t } = useTranslation()
   const history = useHistory()
   const { setLogout } = useStoreActions(actions => actions.user)
+  const { setCompany } = useStoreActions(actions => actions.company)
   const user = useStoreState(state => state.user.current)
 
   const handleLogout = () => {
     setLogout()
+    setCompany(undefined)
     history.push('/')
   }
 

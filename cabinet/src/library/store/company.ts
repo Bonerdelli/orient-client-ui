@@ -8,7 +8,7 @@ import { CompanyDto } from 'orient-ui-library/library/models/proxy'
 
 export interface CompanyStoreModel {
   current?: CompanyDto | undefined
-  setCompany: Action<CompanyStoreModel, CompanyDto>
+  setCompany: Action<CompanyStoreModel, CompanyDto | undefined>
 }
 
 export const companyStoreModel: CompanyStoreModel = {
