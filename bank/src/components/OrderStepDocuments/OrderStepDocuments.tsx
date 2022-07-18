@@ -11,6 +11,7 @@ import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
+import FakeCheckList from 'components/FakeCheckList'
 
 import {
   getFrameWizardStep,
@@ -256,6 +257,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       </Div>
       {documentsOptional !== null && renderOptionalDocumentsSection()}
       {documentsGenerated !== null && renderGeneratedDocumentsSection()}
+      <Div className="WizardStep__section">
+        <Title level={5}>{t('orderStepDocuments.sectionTitles.checkList')}</Title>
+        <FakeCheckList />
+      </Div>
     </Div>
   )
 

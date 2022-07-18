@@ -10,6 +10,7 @@ import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard
 import { FactoringStatus } from 'orient-ui-library/library'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
+import FakeCheckList from 'components/FakeCheckList'
 
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 
@@ -238,6 +239,10 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       </Div>
       {documentsOptional !== null && renderOptionalDocumentsSection()}
       {documentsGenerated !== null && renderGeneratedDocumentsSection()}
+      <Div className="WizardStep__section">
+        <Title level={5}>{t('orderStepDocuments.sectionTitles.checkList')}</Title>
+        <FakeCheckList />
+      </Div>
     </Div>
   )
 
