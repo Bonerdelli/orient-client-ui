@@ -44,8 +44,6 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     loadCurrentStepData()
   }, [])
 
-  console.log('wizardType', wizardType)
-
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
       type: wizardType,

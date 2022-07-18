@@ -102,9 +102,11 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
 
   const renderHasOfferContent = () => (
     <Div>
-      <Div className="ClientOrderBankOfferInfo__section">
-        <OrderConditionView condition={offer.conditions}/>
-      </Div>
+      <Row className="ClientOrderBankOfferInfo__section">
+        <Col span={24} xl={12}>
+          <OrderConditionView condition={offer.conditions}/>
+        </Col>
+      </Row>
       <Div className="ClientOrderBankOfferInfo__section">
         <Title level={5}>{t('orderStepBankOffer.sections.documentsForSign.title')}</Title>
         {renderDocuments()}

@@ -213,7 +213,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   const renderStepContent = () => (
     <Div className="OrderStepContractDocuments">
       <Row className="WizardStep__section">
-        <Col lg={12}>
+        <Col span={24} xl={12}>
           <OrderCondition condition={orderConditions}/>
         </Col>
       </Row>

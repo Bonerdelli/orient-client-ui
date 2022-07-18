@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
 
 import { Button, Col, message, Modal, Row, Skeleton, Spin, Typography } from 'antd'
 import { SelectOutlined } from '@ant-design/icons'
@@ -69,7 +70,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     const updatedDocumentTypes: number[] = []
     const updatedDocumentTypesOptional: number[] = []
 
-    currentDocuments
+    sortBy(currentDocuments, ['typeId'])
       .filter((doc: OrderDocument) => !(doc.isGenerated && !doc.info))
       .forEach((doc: OrderDocument) => {
         if (doc.isRequired) {

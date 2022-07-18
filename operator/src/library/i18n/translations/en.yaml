@@ -110,17 +110,17 @@ orderStepOptionalParameters:
   title: Дополнительные параметры
 
 orderStepSendToBank:
-  readyForSending: Заявка будет направлена в Банк «{{bankName}}»
+  readyForSending: Заявка будет направлена в Банк «{{-bankName}}»
   sent:
     title: Заявка отправлена
-    desc: Заявка направлена в Банк «{{bankName}}»
+    desc: Заявка направлена в Банк «{{-bankName}}»
 
 factoringStepSendToBank:
   title:
-    readyForSending: Заявка будет направлена в Банк «{{bankName}}»
-    sent: Заявка направлена в Банк «{{bankName}}»
+    readyForSending: Заявка будет направлена в Банк «{{-bankName}}»
+    sent: Заявка направлена в Банк «{{-bankName}}»
   negativeStopFactors: 'По заявке сработали стоп-факторы:'
-  notRecommendedBank: Не рекомендуется направлять заявку в Банк «{{bankName}}»
+  notRecommendedBank: Не рекомендуется направлять заявку в Банк «{{-bankName}}»
 
 orderActions:
   cancel:

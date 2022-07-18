@@ -87,7 +87,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
   const renderDocumentStatus = (status: DocumentStatus) => {
     switch (status) {
       case DocumentStatus.Uploaded:
-        return <Tag>{t('common.documents.statuses.uploaded')}</Tag>
+        return <Tag color="green">{t('common.documents.statuses.uploaded')}</Tag>
       case DocumentStatus.NotUploaded:
         return <Tag>{t('common.documents.statuses.notUploaded')}</Tag>
       case DocumentStatus.UploadingError:

@@ -126,7 +126,6 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
   return (
     <div className="FactoringOrdersList" data-testid="FactoringOrdersList">
       <Table
-        bordered
         size="middle"
         columns={columns}
         loading={dataLoaded === null}

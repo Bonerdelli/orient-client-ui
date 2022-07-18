@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card, Checkbox, Col, Form, Grid, Input, message, Row, Spin } from 'antd'
 
-import { CompanyDto } from 'orient-ui-library/library/models/proxy'
+import { CompanyDto, CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 import { setCompanyFactAddresses, setCompanyShortName } from 'library/api'
 import { twoColumnFormConfig } from 'library/helpers/form'
 
@@ -19,21 +19,29 @@ const { useBreakpoint } = Grid
 
 export interface CompanyFormProps {
   company: CompanyDto,
-  companyFounderFullName?: string
+  companyHead?: CompanyFounderDto,
 }
 
 interface CompanyFormValues extends Omit<CompanyDto, 'isMsp'> {
   isMsp: string
 }
 
-const CompanyForm: React.FC<CompanyFormProps> = ({ company, companyFounderFullName }) => {
+const CompanyForm: React.FC<CompanyFormProps> = ({ company, companyHead }) => {
   const { t } = useTranslation()
   const breakPoint = useBreakpoint()
   const [ form ] = Form.useForm<CompanyFormValues>()
 
+  const [ companyHeadName, setCompanyHeadName ] = useState<string>()
   const [ isAddressesSame, setIsAddressesSame ] = useState<boolean>(company.isAddressesSame ?? false)
   const [ submitting, setSubmitting ] = useState<boolean>(false)
   const initialFormValues = convertCompanyDtoToFormValues(company)
+
+  useEffect(() => {
+    if (companyHead) {
+      const { firstName, lastName, secondName } = companyHead
+      setCompanyHeadName(`${lastName} ${firstName} ${secondName}`)
+    }
+  }, [ companyHead ])
 
   const updateCompanyName = async (value: string) => {
     if (company) {
@@ -116,9 +124,11 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ company, companyFounderFullNa
   const renderFounder = () => (
     <Card title={t('companyPage.formSections.founder.title')}>
       <Form.Item label={t('companyPage.formFields.lastName.title')}>
-        <Input value={companyFounderFullName} disabled/>
+        <Input value={companyHeadName} disabled/>
       </Form.Item>
-      {renderTextInputs(companyFormFields.founder)}
+      <Form.Item label={t('companyPage.formFields.inn.title')}>
+        <Input value={companyHead?.inn} disabled/>
+      </Form.Item>
     </Card>
   )
 
