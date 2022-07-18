@@ -125,7 +125,7 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
       disabled={submitting}
       loading={submitting}
     >
-      {t('orderStepBankOffer.actions.accept.title')}
+      {t('common.actions.sign.title')}
     </Button>
   )
 

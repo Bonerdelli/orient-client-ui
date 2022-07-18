@@ -276,7 +276,7 @@ frameSteps:
       desc: Когда хотя бы один из Банков сделает предложение, статус изменится на «Есть предложение»
 
 orderStepBankOffer:
-  title: Карточка Банка «{{bankName}}»
+  title: Карточка Банка «{{-bankName}}»
   actions:
     reject:
       title: Отказаться от предложения
