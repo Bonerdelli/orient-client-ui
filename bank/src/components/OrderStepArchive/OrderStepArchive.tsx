@@ -85,10 +85,29 @@ const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
    setStepDataLoading(false)
  }
 
+  const checkSignedFn = (document: OrderDocument) => {
+    if (!document.info) {
+      return false
+    }
+    const {
+      needClientSign,
+      needBankSign,
+      needCustomerSign,
+      clientSigned,
+      bankSigned,
+      customerSigned,
+    } = document.info
+    const statusClient = needClientSign ? Boolean(clientSigned) : true
+    const statusBank = needBankSign ? Boolean(bankSigned) : true
+    const statusCustomer = needCustomerSign ? Boolean(customerSigned) : true
+    return statusClient && statusBank && statusCustomer
+  }
+
  const renderDocuments = () =>  (
    <Spin spinning={documentsLoading}>
      <OrderDocumentsList
        orderId={orderId as number}
+       checkSignedFn={checkSignedFn}
        types={documentTypes || []}
        current={documents}
      />
