@@ -107,9 +107,9 @@ orderStepDocuments:
     percentYear:
       title: Комиссия (% годовых)
     percentDiscount:
-      title: Размер дисконта
+      title: Размер дисконта (%)
     startDate:
-      title: Дата начала действия
+      title: Дата договора
 
 orderStepStopFactors:
   title: Проверка на стоп-факторы
