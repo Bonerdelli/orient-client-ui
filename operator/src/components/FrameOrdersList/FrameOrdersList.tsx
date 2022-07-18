@@ -107,6 +107,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
   return (
     <div className="FrameOrdersList" data-testid="FrameOrdersList">
       <Table
+        bordered
         size="middle"
         columns={columns}
         loading={dataLoaded === null}

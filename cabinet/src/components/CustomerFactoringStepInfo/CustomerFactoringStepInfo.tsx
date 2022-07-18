@@ -131,7 +131,6 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
           <OrderInfo
             orderId={orderId}
             factoring={stepData?.factorOrder}
-            conditions={stepData?.conditions}
           />
         </Col>
       </Row>
