@@ -107,6 +107,7 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({}) => {
   return (
     <div className="FrameSimpleOrdersList" data-testid="FrameSimpleOrdersList">
       <Table
+        bordered
         size="middle"
         columns={columns}
         loading={dataLoaded === null}

@@ -125,7 +125,8 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
       title: t('models.order.fields.amount.title'),
       render: (val, item) => val ? formatCurrency(val, {
         currency: item.currencyCode || undefined,
-      }) : ''
+      }) : '',
+      align: 'right',
     },
     {
       key: 'statusCode',
@@ -153,6 +154,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
   return (
     <div className="OrdersList" data-testid="OrdersList">
       <Table
+        bordered
         size="middle"
         columns={columns}
         loading={dataLoaded === null}

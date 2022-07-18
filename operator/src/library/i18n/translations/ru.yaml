@@ -33,7 +33,7 @@ frameOrdersPage:
     updatedAt: Дата и время статуса
     statusName: Статус
     amount: Сумма
-    days: Срок, дней
+    days: Срок отсрочки, дней
 
 orderStatusTitles:
   waitForVerify: Ожидает проверки
@@ -107,9 +107,9 @@ orderStepDocuments:
     percentYear:
       title: Комиссия (% годовых)
     percentDiscount:
-      title: Размер дисконта
+      title: Размер дисконта (%)
     startDate:
-      title: Дата начала действия
+      title: Дата договора
 
 orderStepStopFactors:
   title: Проверка на стоп-факторы

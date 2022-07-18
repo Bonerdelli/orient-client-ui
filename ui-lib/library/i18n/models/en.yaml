@@ -205,6 +205,6 @@ orderCondition:
     percentYear:
       title: Cтавка (% годовых)
     percentDiscount:
-      title: Размер дисконта
+      title: Размер дисконта (%)
     startDate:
-      title: Дата начала действия
+      title: Дата договора
