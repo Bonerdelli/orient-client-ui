@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Form, Input, Button, Space, Typography } from 'antd'
+import { Button, Form, Input, Space, Typography } from 'antd'
 
-import { AuthResult, auth } from 'library/api/auth'
+import { auth, AuthResult } from 'library/api/auth'
 
 import './LoginForm.style.less'
 
@@ -67,10 +67,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       requiredMark={false}
-      initialValues={{
-        login: DEFAULT_USERNAME,
-        password: DEFAULT_PASSWORD,
-      }}
+      // initialValues={{
+      //   login: DEFAULT_USERNAME,
+      //   password: DEFAULT_PASSWORD,
+      // }}
       colon={false}
       size="large"
       onFinish={handleSubmit}
@@ -79,23 +79,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       <FormItem
         label={t('common.forms.authenticate.login.label')}
         name="login"
-        rules={[{
+        rules={[ {
           required: true,
           message: t('common.forms.authenticate.login.validation.required'),
-        }]}
+        } ]}
       >
-        <Input disabled={completed} />
+        <Input disabled={completed}/>
       </FormItem>
 
       <FormItem
         label={t('common.forms.authenticate.password.label')}
         name="password"
-        rules={[{
+        rules={[ {
           required: true,
           message: t('common.forms.authenticate.password.validation.required'),
-        }]}
+        } ]}
       >
-        <Password disabled={completed} />
+        <Password disabled={completed}/>
       </FormItem>
 
       <FormItem wrapperCol={{

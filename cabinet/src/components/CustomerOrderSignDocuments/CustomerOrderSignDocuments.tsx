@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Typography, Row, Col, Button, Skeleton, Table, Space, Tag } from 'antd'
+import { Button, Col, Row, Skeleton, Space, Table, Tag, Typography } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
@@ -20,9 +20,7 @@ import {
   companyDataInitialStatus,
 } from 'components/CompanyDataReadyStatuses/CompanyDataReadyStatuses'
 
-import {
-  getCompanyRequisitesList,
-} from 'library/api'
+import { getCompanyRequisitesList } from 'library/api'
 
 import { CabinetMode } from 'library/models/cabinet'
 import { getFrameWizardStep } from 'library/api/frameWizard'
@@ -245,6 +243,7 @@ const CustomerOrderSignDocuments: React.FC<CustomerOrderSignDocumentsProps> = ({
   if (selectedOffer) {
     return (
       <CustomerOrderBankOfferInfo
+        wizardType={wizardType}
         offer={selectedOffer.offer}
         bank={selectedOffer.bank}
         stepNumber={sequenceStepNumber}
