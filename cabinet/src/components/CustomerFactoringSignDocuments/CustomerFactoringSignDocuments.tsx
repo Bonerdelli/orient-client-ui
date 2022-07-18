@@ -65,7 +65,7 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
     const currentDocuments = stepData?.documents ?? []
     const updatedDocumentTypes: number[] = []
     currentDocuments.forEach((doc: OrderDocument) => {
-      if (doc.info) {
+      if (doc.info && !doc.isGenerated) {
         updatedDocumentTypes.push(doc.typeId)
       }
     })

@@ -4,7 +4,7 @@ import { Row, Col, Typography, Button, Skeleton, message } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
-import OrderConditionView from 'orient-ui-library/components/OrderCondition'
+// import OrderConditionView from 'orient-ui-library/components/OrderCondition'
 import { BankOffer } from 'orient-ui-library/library/models/bankOffer'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
@@ -23,7 +23,6 @@ const { Title } = Typography
 const DOCUMENTS_TO_SHOW = [
   9, // Рамочный договор
   11, // Анкета дебитора
-  17, // Индивидуальные условия
 ]
 
 export interface CustomerOrderBankOfferInfoProps {
@@ -64,10 +63,11 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
     currentDocuments
       .filter((doc: OrderDocument) => DOCUMENTS_TO_SHOW.includes(doc.typeId))
       .forEach((doc: OrderDocument) => {
-        if (doc.isGenerated && doc.info) {
+        if (doc.info) {
           updatedDocumentTypes.push(doc.typeId)
         }
       })
+
     setBankId(bank.id)
     setReadyForApprove(orderStatus === OrderStatus.FRAME_CUSTOMER_SIGN)
     setDocumentTypes(updatedDocumentTypes)
@@ -110,9 +110,6 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
 
   const renderOfferContent = () => (
     <Div>
-      <Div className="CustomerOrderBankOfferInfo__section">
-        <OrderConditionView condition={offer} />
-      </Div>
       <Div className="CustomerOrderBankOfferInfo__section">
         <Title level={5}>{t('orderStepBankOffer.sections.documentsForSign.title')}</Title>
         {renderDocuments()}
