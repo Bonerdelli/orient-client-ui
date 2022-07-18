@@ -23,7 +23,7 @@ frameOrdersPage:
     updatedAt: Дата и время статуса
     statusName: Статус
     amount: Сумма
-    days: Срок
+    days: Срок отсрочки, дней
 
 frameWizard:
   # TODO: translate me
