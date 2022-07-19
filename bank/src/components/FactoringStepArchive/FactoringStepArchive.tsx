@@ -123,10 +123,18 @@ const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
     setSubmitting(false)
   }
 
+  const checkSignedFn = (orderDocument: OrderDocument) => {
+    if (orderDocument.typeId === 15) {
+      return true
+    }
+    return orderDocument?.info?.bankSigned ?? false
+  }
+
   const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
+        checkSignedFn={checkSignedFn}
         types={documentTypes || []}
         current={documents}
       />

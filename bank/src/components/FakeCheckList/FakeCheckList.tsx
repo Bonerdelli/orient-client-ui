@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next'
 import { Row, Col, Typography, List, Checkbox } from 'antd'
 
 import './FakeCheckList.style.less'
@@ -6,7 +5,7 @@ import './FakeCheckList.style.less'
 const { Text } = Typography
 
 export interface FakeCheckListProps {
-
+  defaultChecked?: boolean
 }
 
 const checkListData = [
@@ -15,8 +14,7 @@ const checkListData = [
   'Параметр 3',
 ];
 
-const FakeCheckList: React.FC<FakeCheckListProps> = ({}) => {
-  const { t } = useTranslation()
+const FakeCheckList: React.FC<FakeCheckListProps> = ({ defaultChecked }) => {
   return (
     <Row>
       <Col lg={12}>
@@ -25,7 +23,7 @@ const FakeCheckList: React.FC<FakeCheckListProps> = ({}) => {
           dataSource={checkListData}
           renderItem={item => (
             <List.Item>
-              <Checkbox><Text>{item}</Text></Checkbox>
+              <Checkbox defaultChecked={defaultChecked ?? false}><Text>{item}</Text></Checkbox>
             </List.Item>
           )}
         />

@@ -1,5 +1,4 @@
 import { Spin, Layout } from 'antd'
-import { range } from 'lodash'
 
 import Div from 'orient-ui-library/components/Div'
 
@@ -8,9 +7,7 @@ import CompanyDocumentsList from 'components/CompanyDocumentsList'
 
 import './DocumentsPage.style.less'
 
-// NOTE: show documents with types 1..8
-// TODO: FIXME look in db, there is no augmentable types
-const DOC_TYPES_TO_SHOW = range(1, 8)
+const DOC_TYPES_TO_SHOW = [1, 2, 3, 6, 7]
 
 const DocumentsPage = () => {
   const company = useStoreState(state => state.company.current)

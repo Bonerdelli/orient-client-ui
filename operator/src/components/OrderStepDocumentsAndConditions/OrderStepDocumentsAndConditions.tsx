@@ -310,11 +310,11 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     <Div className="OrderStepDocumentsAndConditions__section">
       <Title level={5}>{t('orderStepDocuments.sectionTitles.orderParameters')}</Title>
       <Row gutter={12}>
-        <Col xs={24} lg={14}>
+        <Col xs={24} lg={12}>
           {renderOrderParametersFormInputs()}
           {renderOrderConditionsFormInputs()}
         </Col>
-        <Col xs={24} lg={10}>
+        <Col xs={24} lg={12}>
           {customer && renderCustomerInfo()}
         </Col>
       </Row>
@@ -420,7 +420,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
 
   // TODO: make a component in ui-lib
   const renderCustomerInfo = () => (
-    <Card>
+    <Card className="OrderStepDocumentsAndConditions__customerInfo">
       <Descriptions column={1}>
         <DescItem label={t('models.customer.fields.inn.title')}>{customer?.inn}</DescItem>
         <DescItem label={t('models.customer.fields.shortName.title')}>{customer?.shortName}</DescItem>
@@ -507,6 +507,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
         form={form}
         initialValues={initialData || undefined}
         onFinish={handleSubmit}
+        labelAlign="left"
         labelWrap={true}
       >
         {renderStepContent()}

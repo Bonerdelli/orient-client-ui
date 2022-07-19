@@ -49,6 +49,9 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({
     case OrderStatus.FRAME_CUSTOMER_SIGN:
     case FactoringStatus.FACTOR_CUSTOMER_SIGN:
       return <Tag color="blue">{t('orderStatusTitles.customerSign')}{refreshButton}</Tag>
+    case FactoringStatus.FACTOR_BANK_SIGN:
+    case OrderStatus.FRAME_BANK_SIGN:
+      return <Tag color="blue">{t('orderStatusTitles.bankSign')}{refreshButton}</Tag>
     case OrderStatus.FRAME_COMPLETED:
     case FactoringStatus.FACTOR_COMPLETED:
       return <Tag color="blue">{t('orderStatusTitles.completed')}</Tag>
