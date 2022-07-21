@@ -16,6 +16,7 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({
   statusCode,
   refreshAction,
   item,
+  ...rest
 }) => {
   const { t } = useTranslation()
 
@@ -32,37 +33,37 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({
   switch (statusCode) {
     case OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY:
     case FactoringStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY:
-      return <Tag color="green">{t('orderStatusTitles.waitForVerify')}{refreshButton}</Tag>
+      return <Tag color="green" {...rest}>{t('orderStatusTitles.waitForVerify')}{refreshButton}</Tag>
     case OrderStatus.FRAME_OPERATOR_VERIFYING:
     case FactoringStatus.FACTOR_OPERATOR_VERIFY:
-      return <Tag color="green">{t('orderStatusTitles.verifying')}{refreshButton}</Tag>
+      return <Tag color="green" {...rest}>{t('orderStatusTitles.verifying')}{refreshButton}</Tag>
     case OrderStatus.FRAME_CLIENT_SIGN:
     case FactoringStatus.FACTOR_CLIENT_SIGN:
-      return <Tag color="blue">{t('orderStatusTitles.clientSign')}{refreshButton}</Tag>
+      return <Tag color="blue" {...rest}>{t('orderStatusTitles.clientSign')}{refreshButton}</Tag>
     case OrderStatus.FRAME_CLIENT_REWORK:
     case FactoringStatus.FACTOR_CLIENT_REWORK:
-      return <Tag color="blue">{t('orderStatusTitles.needsForRework')}{refreshButton}</Tag>
+      return <Tag color="blue" {...rest}>{t('orderStatusTitles.needsForRework')}{refreshButton}</Tag>
     case OrderStatus.FRAME_BANK_VERIFYING:
-      return <Tag color="blue">{t('orderStatusTitles.bankVerify')}{refreshButton}</Tag>
+      return <Tag color="blue" {...rest}>{t('orderStatusTitles.bankVerify')}{refreshButton}</Tag>
     case OrderStatus.FRAME_HAS_OFFER:
-      return <Tag color="blue">{t('orderStatusTitles.hasOffer')}{refreshButton}</Tag>
+      return <Tag color="blue" {...rest}>{t('orderStatusTitles.hasOffer')}{refreshButton}</Tag>
     case OrderStatus.FRAME_CUSTOMER_SIGN:
     case FactoringStatus.FACTOR_CUSTOMER_SIGN:
-      return <Tag color="blue">{t('orderStatusTitles.customerSign')}{refreshButton}</Tag>
+      return <Tag color="blue" {...rest}>{t('orderStatusTitles.customerSign')}{refreshButton}</Tag>
     case FactoringStatus.FACTOR_BANK_SIGN:
     case OrderStatus.FRAME_BANK_SIGN:
-      return <Tag color="blue">{t('orderStatusTitles.bankSign')}{refreshButton}</Tag>
+      return <Tag color="blue" {...rest}>{t('orderStatusTitles.bankSign')}{refreshButton}</Tag>
     case OrderStatus.FRAME_COMPLETED:
     case FactoringStatus.FACTOR_COMPLETED:
-      return <Tag color="blue">{t('orderStatusTitles.completed')}</Tag>
+      return <Tag color="blue" {...rest}>{t('orderStatusTitles.completed')}</Tag>
     case OrderStatus.FRAME_CANCEL:
     case FactoringStatus.FACTOR_CANCEL:
       return <Tag>{t('orderStatusTitles.cancel')}</Tag>
     case OrderStatus.FRAME_OPERATOR_REJECT:
     case FactoringStatus.FACTOR_OPERATOR_REJECT:
-      return <Tag color="red">{t('orderStatusTitles.operatorReject')}</Tag>
+      return <Tag color="red" {...rest}>{t('orderStatusTitles.operatorReject')}</Tag>
     default:
-      return <Tag>{item?.statusName}</Tag>
+      return <Tag {...rest}>{item?.statusName}</Tag>
   }
 }
 
