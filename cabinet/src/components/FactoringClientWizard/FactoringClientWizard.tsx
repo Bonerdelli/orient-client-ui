@@ -36,15 +36,14 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FactoringClientWizardPathParams>()
-  const company = useStoreState(state => state.company.current)
   const dicts = useStoreState(state => state.dictionary.list)
+  const companyId = useStoreState(state => state.company.companyId)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
   const [ _currentStepData, setCurrentStepData ] = useState<unknown>()
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
-  const [ companyId, setCompanyId ] = useState<number>()
   const [ orderId, _setOrderId ] = useState<number>()
   const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
 
@@ -54,12 +53,6 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
       loadCurrentStepData()
     }
   }, [ companyId ])
-
-  useEffect(() => {
-    if (company) {
-      setCompanyId(company.id)
-    }
-  }, [ company ])
 
   const loadCurrentStepData = async () => {
     const result = await getCurrentFactoringWizardStep({
@@ -122,7 +115,7 @@ const FactoringClientWizard: React.FC<FactoringClientWizardProps> = ({ backUrl }
         />
       case 4:
         return <FactoringStepBankOffers
-          companyId={company?.id as number}
+          companyId={companyId as number}
           currentStep={currentStep}
           sequenceStepNumber={4}
           setOrderStatus={setOrderStatus}

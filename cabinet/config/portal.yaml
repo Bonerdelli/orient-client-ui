@@ -13,14 +13,20 @@ dataEntry:
 
 sections:
   company: /my-company
+  requests: /my-requests
+  customerRequests: /customer-requests
   heads: /company-heads
   bankDetails: /bank-details
   documents: /documents
   questionnaire: /questionnaire
-  requests: /requests
 
 roles:
   pages:
+    requests:
+      - client
+    customerRequests:
+      - customer
     all:
       - admin
-      - operator
+      - client
+      - customer

@@ -109,6 +109,11 @@ export const ClientRoutes = () => (
       roles={portalConfig.roles.pages.all}
     />
     <PrivateRoute
+      path={portalConfig.sections.customerRequests}
+      component={OrdersCustomerPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
       path={FRAME_ORDER_PATH}
       component={FrameClientWizardPage}
       roles={portalConfig.roles.pages.all}
@@ -141,6 +146,11 @@ export const CustomerRoutes = () => (
     {commonRoutes}
     <PrivateRoute
       path={portalConfig.sections.requests}
+      component={OrdersClientPage}
+      roles={portalConfig.roles.pages.all}
+    />
+    <PrivateRoute
+      path={portalConfig.sections.customerRequests}
       component={OrdersCustomerPage}
       roles={portalConfig.roles.pages.all}
     />

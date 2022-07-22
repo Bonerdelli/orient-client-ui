@@ -11,11 +11,11 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 const QuestionnairePage = () => {
   const { Title } = Typography
   const { t } = useTranslation()
-  const company = useStoreState(state => state.company.current)
   const { search } = useLocation()
+  const companyId = useStoreState(state => state.company.companyId)
   const returnUrl = new URLSearchParams(search).get(RETURN_URL_PARAM)
 
-  if (!company) {
+  if (!companyId) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large"/>
@@ -39,7 +39,7 @@ const QuestionnairePage = () => {
       </>}
       >
 
-        <QuestionnaireForm companyId={String(company.id)}
+        <QuestionnaireForm companyId={String(companyId)}
                            returnUrl={returnUrl}/>
       </Card>
     </Layout>

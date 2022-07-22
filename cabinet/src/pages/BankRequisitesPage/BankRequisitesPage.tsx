@@ -18,9 +18,9 @@ const BankRequisitesPage = () => {
   const { t } = useTranslation()
   const { path, url } = useRouteMatch()
 
-  const company = useStoreState(state => state.company.current)
+  const companyId = useStoreState(state => state.company.companyId)
 
-  if (!company) {
+  if (!companyId) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large" />
@@ -30,7 +30,7 @@ const BankRequisitesPage = () => {
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <BankRequisitesList companyId={company.id as number} />
+      <BankRequisitesList companyId={companyId} />
       <Link to={`${url}/add`}>
         <Button icon={<PlusOutlined />} type="link" size="large">{t('common.actions.add.title')}</Button>
       </Link>
@@ -44,10 +44,10 @@ const BankRequisitesPage = () => {
           {renderList()}
         </Route>
         <Route path={`${path}/add`}>
-          <BankRequisitesAddForm backUrl={url} companyId={company.id as number} />
+          <BankRequisitesAddForm backUrl={url} companyId={companyId} />
         </Route>
         <Route path={`${path}/:itemId`}>
-          <BankRequisitesEditForm backUrl={url} companyId={company.id as number} />
+          <BankRequisitesEditForm backUrl={url} companyId={companyId} />
         </Route>
       </Switch>
     </Layout>

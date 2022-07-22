@@ -17,7 +17,7 @@ import OrderStepArchive from 'components/OrderStepArchive'
 import { OrderWizardType } from 'library/models'
 
 import { getCurrentFrameWizardStep, sendFrameWizardStep } from 'library/api/frameWizard'
-import { MOCK_BANK_ID } from 'library/mock/bank'
+import { useStoreState } from 'library/store'
 
 import './FrameSimpleBankWizard.style.less'
 
@@ -36,6 +36,7 @@ export interface FrameSimpleBankWizardPathParams {
 const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, backUrl }) => {
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
+  const bankId = useStoreState(state => state.bank.bankId)
 
   const { itemId } = useParams<FrameSimpleBankWizardPathParams>()
 
@@ -45,7 +46,6 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ offerStatus, setOfferStatus ] = useState<BankOfferStatus>()
-  const [ bankId, setBankId ] = useState<number>()
 
   useEffect(() => {
     if (bankId) {
@@ -63,11 +63,6 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
     }
   }, [currentStep, offerStatus])
 
-  useEffect(() => {
-    // TODO: load bank from be (when ready)
-    setBankId(MOCK_BANK_ID)
-  }, [])
-
   // NOTE: workaround to show completed step
   const sendToArchive = async () => {
     await sendFrameWizardStep({
@@ -84,7 +79,7 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
     const result = await getCurrentFrameWizardStep({
       type: FrameWizardType.Simple,
       orderId: Number(itemId) || orderId as number,
-      bankId: MOCK_BANK_ID,
+      bankId: bankId as number,
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
@@ -118,7 +113,7 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
       return <Skeleton active={true} />
     }
     const stepBaseProps = {
-      bankId: MOCK_BANK_ID,
+      bankId: bankId as number,
       orderId: Number(itemId) || orderId,
       wizardType: FrameWizardType.Simple,
       oprderType: OrderWizardType.Frame,

@@ -17,10 +17,9 @@ import OrderStepOfferAcceptance from 'components/OrderStepOfferAcceptance'
 import OrderStepArchive from 'components/OrderStepArchive'
 
 import { OrderWizardType } from 'library/models'
-
 import { getFrameOrderWizard } from 'library/api/frameOrder'
 import { sendFrameWizardStep } from 'library/api/frameWizard'
-import { MOCK_BANK_ID } from 'library/mock/bank'
+import { useStoreState } from 'library/store'
 
 import './FrameBankWizard.style.less'
 
@@ -40,6 +39,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
+  const bankId = useStoreState(state => state.bank.bankId)
   const { itemId } = useParams<FrameBankWizardPathParams>()
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
@@ -48,7 +48,6 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ offerStatus, setOfferStatus ] = useState<BankOfferStatus>()
-  const [ bankId, setBankId ] = useState<number>()
 
   useEffect(() => {
     if (bankId) {
@@ -73,15 +72,10 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
     }
   }, [currentStep, offerStatus])
 
-  useEffect(() => {
-    // TODO: load bank from be (when ready)
-    setBankId(MOCK_BANK_ID)
-  }, [])
-
   // NOTE: workaround to show completed step
   const sendToArchive = async () => {
     await sendFrameWizardStep({
-      bankId: MOCK_BANK_ID,
+      bankId: bankId as number,
       orderId: Number(itemId) || orderId as number,
       step: 5,
     }, undefined)
@@ -92,7 +86,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const loadCurrentStepData = async () => {
     const result = await getFrameOrderWizard({
       orderId: Number(itemId) || orderId as number,
-      bankId: MOCK_BANK_ID,
+      bankId: bankId as number,
     })
     if (result.success) {
       setCurrentStepData((result.data as any).data)
@@ -127,7 +121,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       return <Skeleton active={true} />
     }
     const stepBaseProps = {
-      bankId: MOCK_BANK_ID,
+      bankId: bankId as number,
       orderId: Number(itemId) || orderId,
       oprderType: OrderWizardType.Frame,
       currentStep: currentStep,

@@ -8,8 +8,7 @@ import CompanyDocumentsList from 'components/CompanyDocumentsList'
 import './DocumentsPage.style.less'
 
 const DocumentsPage = () => {
-  const company = useStoreState(state => state.company.current)
-  const companyId = company?.id as number
+  const companyId = useStoreState(state => state.company.companyId)
   if (!companyId) {
     return (
       <Div className="AppLayout__loaderWrap">

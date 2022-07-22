@@ -15,7 +15,6 @@ import OrderStepSignDocuments from 'components/OrderStepSignDocuments'
 import OrderStepBankOffers from 'components/OrderStepBankOffers'
 
 import { Customer } from 'library/models'
-import { useStoreState } from 'library/store'
 
 import { getCurrentFrameWizardStep } from 'library/api'
 
@@ -39,7 +38,6 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FrameClientWizardPathParams>()
-  const company = useStoreState(state => state.company.current)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(1)
   const [ currentStep, setCurrentStep ] = useState<number>(1)
@@ -136,7 +134,7 @@ const FrameClientWizard: React.FC<FrameClientWizardProps> = ({ companyId, backUr
         />
       case 4:
         return <OrderStepBankOffers
-          companyId={company?.id as number}
+          companyId={companyId}
           currentStep={currentStep}
           sequenceStepNumber={4}
           setOrderStatus={setOrderStatus}
