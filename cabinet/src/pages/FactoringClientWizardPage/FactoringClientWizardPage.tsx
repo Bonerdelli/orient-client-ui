@@ -8,9 +8,9 @@ import './FactoringClientWizardPage.style.less'
 
 const FactoringClientWizardPage = () => {
 
-  const company = useStoreState(state => state.company.current)
+  const companyId = useStoreState(state => state.company.companyId)
 
-  if (!company) {
+  if (!companyId) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large" />

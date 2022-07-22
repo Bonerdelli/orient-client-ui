@@ -17,9 +17,9 @@ const CompanyHeadsPage = () => {
   const { t } = useTranslation()
   const { path, url } = useRouteMatch()
 
-  const company = useStoreState(state => state.company.current)
+  const companyId = useStoreState(state => state.company.companyId)
 
-  if (!company) {
+  if (!companyId) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large"/>
@@ -29,7 +29,7 @@ const CompanyHeadsPage = () => {
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <CompanyHeadsList companyId={company.id as number}/>
+      <CompanyHeadsList companyId={companyId}/>
       <Link to={`${url}/add`}>
         <Button icon={<PlusOutlined/>} type="link" size="large">{t('common.actions.add.title')}</Button>
       </Link>
@@ -43,7 +43,7 @@ const CompanyHeadsPage = () => {
           {renderList()}
         </Route>
         <Route path={`${path}/:itemId`}>
-          <CompanyHeadForm backUrl={url} companyId={company.id as number}/>
+          <CompanyHeadForm backUrl={url} companyId={companyId}/>
         </Route>
       </Switch>
     </Layout>

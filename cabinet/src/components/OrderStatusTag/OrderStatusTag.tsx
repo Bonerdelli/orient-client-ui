@@ -1,6 +1,6 @@
-import { isCustomer } from 'orient-ui-library/library/helpers/roles'
 import { FactoringStatus, Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
+import { isCustomer } from 'library/helpers/user'
 import { useStoreState } from 'library/store'
 import './OrderStatusTag.style.less'
 

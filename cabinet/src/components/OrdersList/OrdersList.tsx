@@ -9,9 +9,9 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 import { Order, OrderStatus, OrderWizardType } from 'orient-ui-library/library/models/order'
 import { FactoringStatus } from 'orient-ui-library/library/models/order'
-import { isCustomer } from 'orient-ui-library/library/helpers/roles'
 import { formatCurrency } from 'orient-ui-library/library/helpers/numerics'
 
+import { isCustomer } from 'library/helpers/user'
 import { CabinetMode } from 'library/models/cabinet'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompanyOrdersList } from 'library/api'
