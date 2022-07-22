@@ -25,7 +25,6 @@ roles:
     requests:
       - client
     customerRequests:
-      - client
       - customer
     all:
       - admin
