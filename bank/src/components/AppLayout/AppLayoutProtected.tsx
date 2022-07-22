@@ -16,6 +16,7 @@ const { Sider, Content } = Layout
 
 const AppLayoutProtected = () => {
   const user = useStoreState(state => state.user.current)
+  const bankId = useStoreState(state => state.bank.bankId)
   const { setLogout } = useStoreActions(actions => actions.user)
   const history = useHistory()
 
@@ -24,7 +25,7 @@ const AppLayoutProtected = () => {
     history.push('/')
   }
 
-  if (!isBank(user)) {
+  if (!isBank(user) || !bankId) {
     return (
       <ErrorResultView
         centered
