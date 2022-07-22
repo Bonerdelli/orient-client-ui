@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
+
 import { Typography, Row, Col, Button, Skeleton, Result, message } from 'antd'
 import { ClockCircleFilled } from '@ant-design/icons'
 
@@ -64,11 +66,12 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
   useEffect(() => {
     const currentDocuments = stepData?.documents ?? []
     const updatedDocumentTypes: number[] = []
-    currentDocuments.forEach((doc: OrderDocument) => {
-      if (doc.info && !doc.isGenerated) {
-        updatedDocumentTypes.push(doc.typeId)
-      }
-    })
+    sortBy(currentDocuments, 'priority')
+      .forEach((doc: OrderDocument) => {
+        if (doc.info && !doc.isGenerated) {
+          updatedDocumentTypes.push(doc.typeId)
+        }
+      })
     setDocumentTypes(updatedDocumentTypes)
   }, [ stepData ])
 

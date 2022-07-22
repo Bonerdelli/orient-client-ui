@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
 
 import { Button, Col, message, Row, Skeleton, Spin, Typography } from 'antd'
 
@@ -72,7 +73,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     const updatedDocumentTypes: number[] = []
     const updatedDocumentTypesOptional: number[] = []
 
-    documents
+    sortBy(documents, 'priority')
       .filter((doc: OrderDocument) => !doc.isGenerated)
       .forEach((doc: OrderDocument) => {
         if (doc.isRequired) {

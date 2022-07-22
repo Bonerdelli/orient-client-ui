@@ -130,7 +130,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     const updatedDocumentTypes: number[] = []
     const updatedDocumentTypesOptional: number[] = []
 
-    sortBy(currentDocuments, ['typeId'])
+    sortBy(currentDocuments, 'priority')
       .filter((doc: OrderDocument) => !(doc.isGenerated && !doc.info))
       .forEach((doc: OrderDocument) => {
         if (doc.isRequired) {

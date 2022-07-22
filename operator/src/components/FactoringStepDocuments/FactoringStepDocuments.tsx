@@ -70,7 +70,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     const updatedDocumentTypes: number[] = []
     const updatedDocumentTypesOptional: number[] = []
 
-    sortBy(currentDocuments, ['typeId'])
+    sortBy(currentDocuments, 'priority')
       .filter((doc: OrderDocument) => !(doc.isGenerated && !doc.info))
       .forEach((doc: OrderDocument) => {
         if (doc.isRequired) {
