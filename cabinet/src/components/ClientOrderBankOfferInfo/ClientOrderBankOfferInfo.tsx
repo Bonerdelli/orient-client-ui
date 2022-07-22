@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
+
 import { Button, Col, message, Result, Row, Skeleton, Typography } from 'antd'
 import { ArrowLeftOutlined, ClockCircleFilled } from '@ant-design/icons'
 
@@ -53,7 +55,7 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
     if (!offer) return
     const currentDocuments = offer?.documents ?? []
     const updatedDocumentTypes: number[] = []
-    currentDocuments
+    sortBy(currentDocuments, 'priority')
       .filter((doc: OrderDocument) => DOCUMENTS_TO_SHOW.includes(doc.typeId))
       .forEach((doc: OrderDocument) => {
         if (doc.isGenerated && doc.info) {

@@ -11,15 +11,13 @@ import Div from 'orient-ui-library/components/Div'
 import { Document, DocumentStatus } from 'library/models'
 import { downloadOrderDocument } from 'library/api/orderDocument'
 
-import './OrderDocumentsList.style.less'
-
-export interface OrderDocumentsListProps {
+export interface OrderSignedDocumentsListProps {
   orderId: number
   types: number[]
   current?: OrderDocument[]
 }
 
-const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
+const OrderSignedDocumentsList: React.FC<OrderSignedDocumentsListProps> = (props) => {
   const { orderId, types, current } = props
   const { t } = useTranslation()
 
@@ -131,4 +129,4 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
   )
 }
 
-export default OrderDocumentsList
+export default OrderSignedDocumentsList

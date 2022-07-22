@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
 
 import { Typography, Skeleton, Result, Spin, Row, Col, Button } from 'antd'
 import { ClockCircleFilled } from '@ant-design/icons'
@@ -65,7 +66,7 @@ const FactoringStepBankOffers: React.FC<FactoringStepBankOffersProps> = ({
     const updatedDocumentTypes: number[] = []
     const updatedDocumentTypesGenerated: number[] = []
 
-    currentDocuments
+    sortBy(currentDocuments, 'priority')
       .forEach((doc: OrderDocument) => {
         if (doc.isGenerated) {
           updatedDocumentTypesGenerated.push(doc.typeId)

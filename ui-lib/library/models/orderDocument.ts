@@ -5,5 +5,6 @@ export interface OrderDocument {
   typeName: string
   isGenerated: boolean
   isRequired: boolean
+  priority?: number
   info?: schema.components['schemas']['Info']
 }

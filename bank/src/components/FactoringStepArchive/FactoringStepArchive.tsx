@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
 
 import { Button, Col, Row, Skeleton, Spin, Typography } from 'antd'
 
@@ -56,7 +57,7 @@ const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
     const updatedDocuments: OrderDocument[] = []
     const updatedDocumentTypes: number[] = []
 
-    currentDocuments
+    sortBy(currentDocuments, 'priority')
       .filter((doc: OrderDocument) => Boolean(doc.info))
       .forEach((doc: OrderDocument) => {
         updatedDocumentTypes.push(doc.typeId)

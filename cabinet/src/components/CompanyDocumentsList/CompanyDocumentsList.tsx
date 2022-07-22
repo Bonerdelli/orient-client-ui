@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
+
 import { Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 
@@ -43,7 +45,7 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     if (companyDocuments === null) {
       return
     }
-    const updatedItems =companyDocuments
+    const updatedItems = sortBy(companyDocuments, 'priority')
       .filter(document => types ? types.includes(document.typeId) : true)
       .map(document => {
         return composeDocument(document.typeId, document)
