@@ -40,6 +40,7 @@ orderStatusTitles:
   verifying: Проверка
   clientSign: Требует подписи Клиента
   bankVerify: В Банке
+  bankSign: Требует подписи Банка
   needsForRework: На доработке
   hasOffer: Есть предложение
   customerSign: Требует подписи Заказчика

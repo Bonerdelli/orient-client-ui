@@ -259,7 +259,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       {documentsGenerated !== null && renderGeneratedDocumentsSection()}
       <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepDocuments.sectionTitles.checkList')}</Title>
-        <FakeCheckList />
+        <FakeCheckList defaultChecked={currentStep > sequenceStepNumber} />
       </Div>
     </Div>
   )
