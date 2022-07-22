@@ -8,6 +8,7 @@ import { Dictionaries } from 'orient-ui-library/library/models'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import Div from 'orient-ui-library/components/Div'
 
+import { User } from 'library/models/user'
 import { useStoreActions, useStoreState } from 'library/store'
 
 import AppLayoutPublic from './AppLayoutPublic'
@@ -21,6 +22,7 @@ const AppLayout = () => {
   const rehydrated = useStoreRehydrated()
   const user = useStoreState(state => state.user.current)
   const auth = useStoreState(state => state.user.currentAuth)
+  const { setCompanyId } = useStoreActions(state => state.company)
 
   const [ loading, setLoading ] = useState<boolean>(true)
   const [ apiError, setApiError ] = useState<string | null>(null)
@@ -47,6 +49,12 @@ const AppLayout = () => {
   useEffect(() => {
     initialize()
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      setCompanyId((user as User).companyId)
+    }
+  }, [user])
 
   if (apiError) {
     return (

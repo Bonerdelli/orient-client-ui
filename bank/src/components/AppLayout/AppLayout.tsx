@@ -23,8 +23,8 @@ const AppLayout = () => {
   const auth = useStoreState(state => state.user.currentAuth)
   const { setBankId } = useStoreActions(state => state.bank)
 
-  const [loading, setLoading] = useState<boolean>(true)
-  const [apiError, setApiError] = useState<string | null>(null)
+  const [ loading, setLoading ] = useState<boolean>(true)
+  const [ apiError, setApiError ] = useState<string | null>(null)
 
   const loadHealthStatus = async () => {
     const healthStatus = await healthCheck()

@@ -16,9 +16,9 @@ import './OrdersCustomerPage.style.less'
 const OrdersCustomerPage = () => {
   const { path, url } = useRouteMatch()
 
-  const company = useStoreState(state => state.company.current)
+  const companyId = useStoreState(state => state.company.companyId)
 
-  if (!company) {
+  if (!companyId) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large" />
@@ -28,7 +28,7 @@ const OrdersCustomerPage = () => {
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <OrdersList companyId={company.id as number} />
+      <OrdersList companyId={companyId} />
     </Space>
   )
 
@@ -39,13 +39,13 @@ const OrdersCustomerPage = () => {
           {renderList()}
         </Route>
         <Route path={`${path}/frame/:itemId`}>
-          <FrameCustomerWizard backUrl={url} companyId={company.id as number} />
+          <FrameCustomerWizard backUrl={url} companyId={companyId} />
         </Route>
         <Route path={`${path}/frame-simple/:itemId`}>
-          <FrameSimpleCustomerWizard backUrl={url} companyId={company.id as number} />
+          <FrameSimpleCustomerWizard backUrl={url} companyId={companyId} />
         </Route>
         <Route path={`${path}/factoring/:itemId`}>
-          <FactoringCustomerWizard backUrl={url} companyId={company.id as number} />
+          <FactoringCustomerWizard backUrl={url} companyId={companyId} />
         </Route>
       </Switch>
     </Layout>

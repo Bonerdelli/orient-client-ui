@@ -5,7 +5,6 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import themeConfig from 'config/theme.yaml'
 
-import CompanyWrapper from 'components/CompanyWrapper'
 import ClientAppHeader from 'components/ClientAppHeader'
 import CustomerAppHeader from 'components/CustomerAppHeader'
 import SideMenu from 'components/SideMenu'
@@ -18,6 +17,7 @@ const { Sider, Content } = Layout
 
 const AppLayoutProtected = () => {
   const user = useStoreState(state => state.user.current)
+  const companyId = useStoreState(state => state.company.companyId)
   const { setLogout } = useStoreActions(actions => actions.user)
   const history = useHistory()
 
@@ -26,7 +26,7 @@ const AppLayoutProtected = () => {
     history.push('/')
   }
 
-  if (!isCustomer(user) && !isClient(user)) {
+  if ((!isCustomer(user) && !isClient(user)) || !companyId) {
     return (
       <ErrorResultView
         centered
@@ -54,9 +54,7 @@ const AppLayoutProtected = () => {
           <SideMenu />
         </Sider>
         <Content className="AppLayout__content">
-          <CompanyWrapper>
-            {isCustomer(user) ? <CustomerRoutes /> : <ClientRoutes />}
-          </CompanyWrapper>
+          {isCustomer(user) ? <CustomerRoutes /> : <ClientRoutes />}
         </Content>
       </Layout>
     </Layout>
