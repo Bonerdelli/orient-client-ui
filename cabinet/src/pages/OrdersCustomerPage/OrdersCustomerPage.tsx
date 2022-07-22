@@ -2,14 +2,14 @@
 import { Switch, Route, useRouteMatch } from 'react-router-dom'
 import { Space, Layout, Spin } from 'antd'
 
-import { useStoreState } from 'library/store'
-
 import Div from 'orient-ui-library/components/Div'
-
 import OrdersList from 'components/OrdersList'
 import FrameCustomerWizard from 'components/FrameCustomerWizard'
 import FrameSimpleCustomerWizard from 'components/FrameSimpleCustomerWizard'
 import FactoringCustomerWizard from 'components/FactoringCustomerWizard'
+
+import { useStoreState } from 'library/store'
+import { CabinetMode } from 'library/models/cabinet'
 
 import './OrdersCustomerPage.style.less'
 
@@ -28,7 +28,7 @@ const OrdersCustomerPage = () => {
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <OrdersList companyId={companyId} />
+      <OrdersList companyId={companyId} mode={CabinetMode.Customer} />
     </Space>
   )
 
