@@ -1,5 +1,5 @@
 import { Action, action } from 'easy-peasy'
-import { User, JwtToken, JwtTokenPayload } from 'orient-ui-library'
+import { User, JwtToken, JwtTokenPayload } from 'library/models'
 import jwtDecode from 'jwt-decode'
 
 export interface UserStoreModel {

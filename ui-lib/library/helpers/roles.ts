@@ -12,21 +12,5 @@ export const hasAccess = (
   return userRoles.some(role => accessRoles.includes(role))
 }
 
-
-/**
- * Checks if user has administrative privilegies with full access
- * NOTE: roles not supported, so here is dirty checking by user login
- */
-
-// TODO: switch to login when be ready
-export const isAdmin = (user: User) => user.login === 'admin'
-
-/**
- * Checks if user has corresponding privilegies
- * NOTE: roles not supported, so here is dirty checking by user login
- */
-
-export const isClient = (user: User) => isAdmin(user) || user.login.startsWith('client')
-export const isCustomer = (user: User) => user.login.startsWith('customer') // NOTE: Admin cannot be pretend as Customer
 export const isOperator = (user: User) => isAdmin(user) || user.login.startsWith('operator')
 export const isBank = (user: User) => isAdmin(user) || user.login.startsWith('bank')

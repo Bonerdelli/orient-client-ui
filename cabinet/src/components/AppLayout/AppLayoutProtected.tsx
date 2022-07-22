@@ -1,7 +1,6 @@
 import { Layout } from 'antd'
 import { useHistory } from 'react-router-dom'
 
-import { isCustomer, isClient } from 'orient-ui-library/library/helpers/roles'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import themeConfig from 'config/theme.yaml'
@@ -13,6 +12,7 @@ import SideMenu from 'components/SideMenu'
 
 import { ClientRoutes, CustomerRoutes } from 'library/routes'
 import { useStoreState, useStoreActions } from 'library/store'
+import { isCustomer, isClient } from 'library/helpers/user'
 
 const { Sider, Content } = Layout
 
