@@ -4,10 +4,9 @@ export enum DocumentStatus {
   Unsigned = 'unsigned',
 }
 
-// TODO: move to ui-lib?
 export interface Document {
   id?: number | bigint // NOTE: no identifier for docs that haven't been uploaded
-  type: number // keyof typeof DOCUMENT_TYPE
+  type: number
   title?: string
   fileName?: string
   status: DocumentStatus
