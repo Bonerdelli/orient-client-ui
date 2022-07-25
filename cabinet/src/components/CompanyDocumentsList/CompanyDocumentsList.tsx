@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
+
 import { Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 
@@ -8,7 +10,7 @@ import { getEndpointUrl } from 'orient-ui-library/library'
 import Div from 'orient-ui-library/components/Div'
 import DocumentActions from 'components/DocumentActions'
 
-import { Document, DOCUMENT_TYPE, DocumentStatus } from 'library/models'
+import { Document, DocumentStatus } from 'library/models'
 import { CompanyDocumentDto } from 'orient-ui-library/library/models/proxy'
 import { useApi } from 'library/helpers/api'
 
@@ -24,7 +26,7 @@ import './CompanyDocumentsList.style.less'
 export interface CompanyDocumentsListProps {
   compact?: boolean
   companyId: number
-  types: number[]
+  types?: number[]
 }
 
 const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
@@ -43,24 +45,26 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
     if (companyDocuments === null) {
       return
     }
-    const updatedItems = types.map(typeId => {
-      const existsDoc = companyDocuments?.find((datum) => datum.typeId === typeId)
-      return composeDocument(typeId, existsDoc)
-    })
+    const updatedItems = sortBy(companyDocuments, 'priority')
+      .filter(document => types ? types.includes(document.typeId) : true)
+      .map(document => {
+        return composeDocument(document.typeId, document)
+      })
     setItems(updatedItems)
   }, [ types, documentsLoaded, companyDocuments ])
 
-  const composeDocument = (typeId: number, document?: CompanyDocumentDto): Document => {
-    if (!document?.info) {
+  const composeDocument = (typeId: number, document: CompanyDocumentDto): Document => {
+    if (!document?.info && document?.type) {
       return {
         type: typeId,
+        name: document.type,
         status: DocumentStatus.NotUploaded,
       }
     }
     return {
       type: typeId,
-      name: document.type, // NOTE: this is cyrillic doc name, eg. Устав компании
-      id: document.info.documentId,
+      name: document.type,
+      id: document.info?.documentId,
       status: DocumentStatus.Uploaded,
     }
   }
@@ -114,11 +118,10 @@ const CompanyDocumentsList: React.FC<CompanyDocumentsListProps> = (props) => {
 
   const columns: ColumnsType<unknown> = [
     {
-      key: 'type',
-      dataIndex: 'type',
+      key: 'name',
+      dataIndex: 'name',
       width: 'auto',
       title: t('common.documents.fields.type.title'),
-      render: (value) => DOCUMENT_TYPE[value],
     },
     {
       key: 'status',

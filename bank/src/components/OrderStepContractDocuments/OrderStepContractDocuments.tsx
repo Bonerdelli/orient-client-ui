@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { sortBy } from 'lodash'
+
 import { Typography, Row, Col, Button, Skeleton, Spin, message } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
@@ -83,7 +85,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     const updatedDocuments: OrderDocument[] = []
     const updatedDocumentTypes: number[] = []
 
-    currentDocuments
+    sortBy(currentDocuments, 'priority')
       .filter((doc: OrderDocument) => DOCUMENTS_TO_SHOW.includes(doc.typeId))
       .forEach((doc: OrderDocument) => {
         if (doc.info) {

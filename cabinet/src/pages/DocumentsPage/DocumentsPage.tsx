@@ -7,8 +7,6 @@ import CompanyDocumentsList from 'components/CompanyDocumentsList'
 
 import './DocumentsPage.style.less'
 
-const DOC_TYPES_TO_SHOW = [1, 2, 3, 6, 7]
-
 const DocumentsPage = () => {
   const companyId = useStoreState(state => state.company.companyId)
   if (!companyId) {
@@ -20,7 +18,7 @@ const DocumentsPage = () => {
   }
   return (
     <Layout className="DocumentsPage" data-testid="DocumentsPage">
-      <CompanyDocumentsList companyId={companyId} types={DOC_TYPES_TO_SHOW} />
+      <CompanyDocumentsList companyId={companyId} />
     </Layout>
   )
 }
