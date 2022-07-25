@@ -20,6 +20,7 @@ const QuestionnairePage = () => {
 
   const companyId = useStoreState(state => state.company.companyId)
   const dictionaries = useStoreState(state => state.dictionary.list)
+  const user = useStoreState(state => state.user.current)
 
   const [ isQuestionnaireLoading, setIsQuestionnaireLoading ] = useState<boolean>(true)
   const [ questionnaireDto, setQuestionnaireDto ] = useState<CompanyQuestionnaireDto | null>(null)
@@ -31,7 +32,7 @@ const QuestionnairePage = () => {
   }, [ companyId ])
 
   const fetchQuestionnaire = async () => {
-    const result = await getQuestionnaire(companyId!)
+    const result = await getQuestionnaire({ companyId: companyId!, user })
     if (result.success) {
       setQuestionnaireDto(result.data as CompanyQuestionnaireDto)
     }
@@ -39,7 +40,7 @@ const QuestionnairePage = () => {
   }
 
   const onSave = async (dto: CompanyQuestionnaireDto) => {
-    await sendQuestionnaire(companyId!, dto)
+    await sendQuestionnaire({ companyId: companyId!, user, dto })
   }
 
   if (!companyId) {

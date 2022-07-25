@@ -88,6 +88,9 @@ orderStepDocuments:
   companyFounderInformation:
     title: Данные о руководителе
     check: Проверить
+  companyQuestionnaire:
+    title: Анкета компании
+    check: Проверить
   customerInformation:
     title: Информация о выбранном Заказчике
   orderParametersFormFields:

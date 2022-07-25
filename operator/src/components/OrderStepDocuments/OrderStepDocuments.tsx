@@ -2,16 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { sortBy } from 'lodash'
 
-import {
-  message,
-  Button,
-  Col,
-  Modal,
-  Row,
-  Skeleton,
-  Spin,
-  Typography,
-} from 'antd'
+import { Button, Col, Drawer, message, Modal, Row, Skeleton, Spin, Typography } from 'antd'
 
 import { SelectOutlined } from '@ant-design/icons'
 
@@ -19,9 +10,8 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
-import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { CompanyFounderDto, CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import { DocumentStatus } from 'library/models'
@@ -29,6 +19,8 @@ import { DocumentStatus } from 'library/models'
 import { frameWizardSetDocStatus, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
+import { useStoreState } from 'library/store'
+import QuestionnaireForm from 'orient-ui-library/components/QuestionnaireForm'
 
 const { Title } = Typography
 
@@ -48,6 +40,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   setCurrentStep,
 }) => {
   const { t } = useTranslation()
+  const dictionaries = useStoreState(state => state.dictionary.list)
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(true)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
@@ -65,6 +58,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
 
   const [ clientCompanyFounder, setClientCompanyFounder ] = useState<CompanyFounderDto | null>(null)
   const [ companyFounderModalVisible, setCompanyFounderModalVisible ] = useState<boolean>(false)
+
+  const [ clientCompanyQuestionnaire, setClientCompanyQuestionnaire ] = useState<CompanyQuestionnaireDto | null>(null)
+  const [ companyQuestionnaireModalVisible, setCompanyQuestionnaireModalVisible ] = useState<boolean>(false)
 
   useEffect(() => {
     loadStepData()
@@ -92,6 +88,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       })
 
     setClientCompanyFounder(stepData?.clientCompanyFounder)
+    setClientCompanyQuestionnaire(stepData?.clientCompanyQuestionnaire)
     setDocuments(updatedDocuments)
     setDocumentTypes(updatedDocumentTypes)
     setDocumentTypesOptional(updatedDocumentTypesOptional)
@@ -275,12 +272,39 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         footer={
           <Button type="primary"
                   onClick={closeCompanyFounderModal}>
-            {t('models.bankRequisites.close')}
+            {t('models.companyFounderInformation.close')}
           </Button>
         }
       >
         <CompanyFounderInfo companyFounder={clientCompanyFounder}/>
       </Modal>
+    </Div>
+  )
+
+  const renderCompanyQuestionnaireSection = () => (
+    <Div className="OrderStepDocuments__section">
+      <Title level={5}>
+        {t('orderStepDocuments.companyQuestionnaire.title')}
+        <Button size="small"
+                type="link"
+                disabled={!dictionaries}
+                icon={<SelectOutlined/>}
+                onClick={() => setCompanyQuestionnaireModalVisible(true)}
+        >
+          {t('orderStepDocuments.companyQuestionnaire.check')}
+        </Button>
+      </Title>
+      <Drawer
+        width="75VW"
+        visible={companyQuestionnaireModalVisible}
+        title={t('orderStepDocuments.companyQuestionnaire.title')}
+        onClose={() => setCompanyQuestionnaireModalVisible(false)}
+      >
+        <QuestionnaireForm questionnaireDto={clientCompanyQuestionnaire}
+                           dictionaries={dictionaries!}
+                           isEditable={false}
+        />
+      </Drawer>
     </Div>
   )
 
@@ -295,6 +319,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       </Div>
       {documentsOptional !== null && renderOptionalDocumentsSection()}
       {renderCompanyFounderSection()}
+      {renderCompanyQuestionnaireSection()}
     </Div>
   )
 

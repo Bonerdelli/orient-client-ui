@@ -6,7 +6,7 @@ export enum UserType {
   Bank = 'Bank',
 }
 
-export interface User {​
+export interface User {
   userId: number
   userType?: UserType
   name: string

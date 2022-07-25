@@ -52,9 +52,15 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
     setSaveInProcess(false)
   }
 
+  let classNames = 'QuestionnaireForm'
+  if (!isEditable) {
+    classNames += ' QuestionnaireForm_readonly'
+  }
+
   return (
     <Form {...formSettings}
           onFinish={saveQuestionnaire}
+          className={classNames}
     >
       <QuestionnaireGeneralFormFields
         isEditable={isEditable}

@@ -1,3 +1,29 @@
 .QuestionnaireForm {
+  &_readonly {
+    .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+      color: inherit;
+      background: inherit;
+    }
 
+    .ant-radio-checked.ant-radio-disabled {
+      .ant-radio-inner {
+        border-color: @primary-color !important;
+
+        &:after {
+          background-color: @primary-color;
+        }
+      }
+
+      & + span {
+        color: inherit;
+      }
+    }
+
+    .ant-input[disabled],
+    .ant-input-disabled {
+      color: initial;
+      background-color: initial;
+      border-color: initial;
+    }
+  }
 }
