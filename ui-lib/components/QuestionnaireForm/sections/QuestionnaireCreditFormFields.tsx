@@ -3,10 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Col, DatePicker, Divider, Form, Input, Radio, Row, Typography } from 'antd'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 
-import { QuestionnaireFormData } from 'components/QuestionnaireForm/models/questionnaire-form.interface'
-import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
+import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
+import { DATE_FORMAT } from '../../../library/helpers/date'
 
-const QuestionnaireCreditFormFields: React.FC = () => {
+interface QuestionnaireCreditFormFieldsProps {
+  isEditable: boolean
+}
+
+const QuestionnaireCreditFormFields: React.FC<QuestionnaireCreditFormFieldsProps> = ({
+  isEditable,
+}) => {
   const { t } = useTranslation()
   const { Title } = Typography
   const form = Form.useFormInstance<QuestionnaireFormData>()
@@ -27,6 +33,7 @@ const QuestionnaireCreditFormFields: React.FC = () => {
   }
   const inputLayout = {
     suffix: <EditOutlined/>,
+    disabled: !isEditable,
   }
 
   const onBelongsToHoldingsChange = () => {
@@ -85,7 +92,7 @@ const QuestionnaireCreditFormFields: React.FC = () => {
               </Col>
 
               <Col span={1}>
-                {index > 0 && <MinusCircleOutlined onClick={() => remove(field.name)}/>}
+                {index > 0 && isEditable && <MinusCircleOutlined onClick={() => remove(field.name)}/>}
               </Col>
               {/* wrap here */}
               <Col span={7}>
@@ -95,7 +102,8 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                   label={t('questionnaire.credits.creditDate')}
                   name={[ field.name, 'creditDate' ]}
                 >
-                  <DatePicker format={DATE_FORMAT}/>
+                  <DatePicker format={DATE_FORMAT}
+                              disabled={!isEditable}/>
                 </Form.Item>
               </Col>
               <Col span={4}>
@@ -106,7 +114,9 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                   valuePropName="checked"
                   name={[ field.name, 'isExpired' ]}
                 >
-                  <Checkbox>{t('questionnaire.credits.isExpired')}</Checkbox>
+                  <Checkbox disabled={!isEditable}>
+                    {t('questionnaire.credits.isExpired')}
+                  </Checkbox>
                 </Form.Item>
               </Col>
             </Row>
@@ -114,14 +124,14 @@ const QuestionnaireCreditFormFields: React.FC = () => {
           </React.Fragment>
         ))}
 
-        <Form.Item>
+        {isEditable && <Form.Item>
           <Button onClick={() => add()}
                   type="primary"
                   icon={<PlusOutlined/>}
           >
             {t('questionnaire.common.add')}
           </Button>
-        </Form.Item>
+        </Form.Item>}
       </>)}
     </Form.List>
   )
@@ -137,7 +147,8 @@ const QuestionnaireCreditFormFields: React.FC = () => {
                  label={t('questionnaire.credits.hasCredits')}
       >
         <Radio.Group onChange={onBelongsToHoldingsChange}
-                     options={hasCreditOptions}/>
+                     options={hasCreditOptions}
+                     disabled={!isEditable}/>
       </Form.Item>
       {isCreditFieldsVisible && renderCreditRows()}
     </>

@@ -1,14 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { Form, Select, Typography } from 'antd'
-import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
-import { Dictionaries } from 'orient-ui-library/library/models/dictionaries'
+import { Dictionaries } from '../../../library'
+import { convertDictionaryToSelectOptions } from '../../../library/converters/dictionary-to-select-options.converter'
 
 interface QuestionnaireGeneralFormFieldsProps {
   dictionaries: Dictionaries;
+  isEditable: boolean;
 }
 
 const QuestionnaireGeneralFormFields: React.FC<QuestionnaireGeneralFormFieldsProps> = ({
   dictionaries,
+  isEditable,
 }) => {
   const { t } = useTranslation()
   const { Title } = Typography
@@ -29,6 +31,7 @@ const QuestionnaireGeneralFormFields: React.FC<QuestionnaireGeneralFormFieldsPro
         <Select
           placeholder={t('questionnaire.generalInfo.averageEmployeesCount.placeholder')}
           options={convertDictionaryToSelectOptions(dictionaries.employeeCount)}
+          disabled={!isEditable}
         />
       </Form.Item>
       <Form.Item {...formItemLayout}
@@ -38,6 +41,7 @@ const QuestionnaireGeneralFormFields: React.FC<QuestionnaireGeneralFormFieldsPro
         <Select
           placeholder={t('questionnaire.generalInfo.taxSystem.placeholder')}
           options={convertDictionaryToSelectOptions(dictionaries.taxationSystem)}
+          disabled={!isEditable}
         />
       </Form.Item>
     </>

@@ -2,9 +2,15 @@ import { useTranslation } from 'react-i18next'
 import { Button, Col, Divider, Form, Input, Radio, Row, Typography } from 'antd'
 import React, { useState } from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { QuestionnaireFormData } from 'components/QuestionnaireForm/models/questionnaire-form.interface'
+import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
 
-const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
+interface QuestionnaireEasyFinansRelationshipsFormFields {
+  isEditable: boolean
+}
+
+const QuestionnaireEasyFinansRelationshipsFormFields: React.FC<QuestionnaireEasyFinansRelationshipsFormFields> = ({
+  isEditable,
+}) => {
   const { t } = useTranslation()
   const { Title } = Typography
   const form = Form.useFormInstance<QuestionnaireFormData>()
@@ -28,6 +34,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
   }
   const inputLayout = {
     suffix: <EditOutlined/>,
+    disabled: !isEditable,
   }
   const yesNoOptions = [
     { label: t('questionnaire.common.yes'), value: true },
@@ -81,7 +88,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                 </Col>
               </>}
 
-              {index > 0 && <Col span={1}>
+              {index > 0 && isEditable && <Col span={1}>
                 <Form.Item>
                   <MinusCircleOutlined onClick={() => remove(field.name)}/>
                 </Form.Item>
@@ -91,14 +98,14 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
           </React.Fragment>
         ))}
 
-        <Form.Item>
+        {isEditable && <Form.Item>
           <Button onClick={() => add()}
                   type="primary"
                   icon={<PlusOutlined/>}
           >
             {t('questionnaire.common.add')}
           </Button>
-        </Form.Item>
+        </Form.Item>}
       </>)}
     </Form.List>
   )
@@ -113,6 +120,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                  label={t('questionnaire.easyFinansRelationships.hasEasyFinansIndividuals')}
       >
         <Radio.Group onChange={onHasIndividualsChange}
+                     disabled={!isEditable}
                      options={yesNoOptions}/>
       </Form.Item>
       {isIndividualRowsVisible && renderRows('easyFinanceIndividuals')}
@@ -121,6 +129,7 @@ const QuestionnaireEasyFinansRelationshipsFormFields: React.FC = () => {
                  label={t('questionnaire.easyFinansRelationships.hasEasyFinansLegals')}
       >
         <Radio.Group onChange={onHasLegalsChange}
+                     disabled={!isEditable}
                      options={yesNoOptions}/>
       </Form.Item>
       {isLegalRowsVisible && renderRows('easyFinanceLegals')}
