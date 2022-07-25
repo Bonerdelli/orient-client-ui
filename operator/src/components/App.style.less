@@ -51,21 +51,26 @@ h1, h2, h3, h4 {
 
 .OrderList__filter {
   margin-bottom: @margin-sm;
+
   .ant-select-selector {
-    padding-top: @padding-xs;
-    padding-bottom: @padding-xs;
+    padding-top: calc(@padding-xs * .6);
+    padding-bottom: calc(@padding-xs * .6);
     padding-left: @padding-sm;
+    background-color: @table-body-sort-bg;
     font-size: 1.1em;
     border: none;
   }
+
   .ant-select-selection-placeholder {
     left: @padding-sm;
     font-size: 1.1em;
   }
+
   .ant-select-selection-overflow-item {
     .ant-tag {
       margin-bottom: 4px;
     }
+
     &:first-child {
       .ant-select-selection-search {
         position: relative;

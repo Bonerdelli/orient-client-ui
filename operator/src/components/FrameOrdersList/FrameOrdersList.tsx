@@ -17,6 +17,7 @@ import { formatDate } from 'orient-ui-library/library/helpers/date'
 
 import { getFrameOrdersList } from 'library/api/frameOrder'
 
+import portalConfig from 'config/portal.yaml'
 import './FrameOrdersList.style.less'
 
 const { Option } = Select
@@ -34,25 +35,21 @@ export enum FrameOrderStatusFilter {
   Cancel = OrderStatus.FRAME_CANCEL,
 }
 
-export interface FrameOrdersListProps {
-
-}
-
-const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
+const FrameOrdersList: React.FC = () => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
   const [ page, setPage ] = useState<number>(1)
-  const [ onPage, setOnPage ] = useState<number>()
+  const [ onPage, setOnPage ] = useState<number>(portalConfig.dataDisplay.listItemsOnPage)
   const [ itemsTotal, setItemsTotal ] = useState<number>()
-  const [ listData, setListData ] = useState<GridResponse<Order[]>>()
+  const [ listData, setListData ] = useState<Order[]>()
   const [ loaded, setLoaded ] = useState<boolean | null>(null)
 
   const [ selectedStatuses, setSelectedStatuses ] = useState<BaseOptionType[]>([])
-  const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
+  // const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
 
   useEffect(() => {
-    setLoaded(false)
+    setLoaded(null)
     loadData()
   }, [ page, onPage, selectedStatuses ])
 
@@ -62,10 +59,10 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
       limit: onPage,
       page,
     }
-    const data = await getFrameOrdersList(request)
-    if (data && data.success) {
-      setItemsTotal((data as unknown as GridResponse).total)
-      setListData(data as unknown as GridResponse<Order[]>)
+    const result = await getFrameOrdersList(null, request)
+    if (result && result.success) {
+      setItemsTotal((result.data as unknown as GridResponse).total)
+      setListData((result.data as unknown as GridResponse<Order>).data)
       setLoaded(true)
     } else {
       setLoaded(false)
@@ -115,6 +112,8 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     },
   ]
 
+  /*
+   * NOTE: doesn't work, looks like bug in Table
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
       // datum => selectedStatuses.findIndex(selStatus => selStatus.value === datum.value)  // for labelInValue
@@ -122,6 +121,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     )
     setFilterAvailableOptions(filteredOptions)
   }, [ selectedStatuses ])
+  */
 
   const renderActions = (_val: unknown, item: Order) => (
     <Space size="small">
@@ -236,7 +236,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
         size="middle"
         allowClear
       >
-        {statusFilterAvailableOptions.map(item => (
+        {statusFilterOptions.map(item => (
           <Option key={item.value} value={item.value} label={item.label}>
             <OrderStatusTag statusCode={item.value as OrderStatus} />
           </Option>
@@ -247,12 +247,14 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
         size="middle"
         columns={columns}
         loading={loaded === null}
-        dataSource={listData?.data as unknown as Order[] || []}
+        dataSource={listData ?? []}
         rowClassName={rowClassName}
         pagination={{
+          size: "default",
           current: page,
           pageSize: onPage,
           total: itemsTotal,
+          showSizeChanger: false,
           onChange: (current, size) => {
             setPage(current)
             setOnPage(size)
