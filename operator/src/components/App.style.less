@@ -54,12 +54,24 @@ h1, h2, h3, h4 {
   .ant-select-selector {
     padding-top: @padding-xs;
     padding-bottom: @padding-xs;
-    // padding-left: @padding-sm;
+    padding-left: @padding-sm;
+    font-size: 1.1em;
     border: none;
   }
   .ant-select-selection-placeholder {
     left: @padding-sm;
     font-size: 1.1em;
+  }
+  .ant-select-selection-overflow-item {
+    .ant-tag {
+      margin-bottom: 4px;
+    }
+    &:first-child {
+      .ant-select-selection-search {
+        position: relative;
+        left: -(@margin-sm - 4px);
+      }
+    }
   }
 }
 

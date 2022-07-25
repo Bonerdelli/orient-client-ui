@@ -98,10 +98,10 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
 
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
+      // datum => selectedStatuses.findIndex(selStatus => selStatus.value === datum.value)  // for labelInValue
       datum => !selectedStatuses.includes(datum.value)
     )
     setFilterAvailableOptions(filteredOptions)
-    console.log('statusFilterAvailableOptions', statusFilterAvailableOptions)
     console.log('selectedStatuses', selectedStatuses)
   }, [ selectedStatuses ])
 
@@ -193,6 +193,16 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     )
   }
 
+  const setSelectedStatusOptions = (options: BaseOptionType[]) => {
+    const selected = options.filter(option =>
+      statusFilterOptions.findIndex(filterOpt => filterOpt.value === option)
+    !== -1)
+    setSelectedStatuses(selected)
+  }
+
+  const statusOptionsFilter = (inputValue: string, option: BaseOptionType) =>
+    (option?.label?.toLocaleString().toLowerCase().indexOf(inputValue.toLowerCase()) ?? true) !== -1
+
   return (
     <div className="FrameOrdersList" data-testid="FrameOrdersList">
       <Select
@@ -202,13 +212,14 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
         placeholder={t('common.filter.fieldPlaceholders.status')}
         tagRender={selectedStatusTagRender}
         value={selectedStatuses}
-        defaultValue={[]}
-        onChange={setSelectedStatuses}
+        onChange={setSelectedStatusOptions}
+        filterOption={statusOptionsFilter}
+        labelInValue={false}
         size="middle"
         allowClear
       >
         {statusFilterAvailableOptions.map(item => (
-          <Option key={item.value} value={item.value}>
+          <Option key={item.value} value={item.value} label={item.label}>
             <OrderStatusTag statusCode={item.value as OrderStatus} />
           </Option>
         ))}
