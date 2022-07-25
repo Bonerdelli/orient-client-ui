@@ -41,6 +41,8 @@ dataEntity:
 
 filter:
   title: Фильтровать
+  clear:
+    orders: Все заявки
   fieldPlaceholders:
     status: Выберите статус
 

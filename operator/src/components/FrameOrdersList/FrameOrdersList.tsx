@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
 import { Table, Button, Space, Select } from 'antd'
-import { ReloadOutlined } from '@ant-design/icons'
+import { ReloadOutlined, ClearOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import type { BaseOptionType } from 'rc-select/lib/Select';
@@ -37,6 +37,10 @@ export enum FrameOrderStatusFilter {
   Cancel = OrderStatus.FRAME_CANCEL,
 }
 
+const defaultStatusFilter = [
+  FrameOrderStatusFilter.OperatorWaitForVerify
+]
+
 const FrameOrdersList: React.FC = () => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
@@ -47,7 +51,7 @@ const FrameOrdersList: React.FC = () => {
   const [ listData, setListData ] = useState<Order[]>()
   const [ loaded, setLoaded ] = useState<boolean | null>(null)
 
-  const [ selectedStatuses, setSelectedStatuses ] = useState<BaseOptionType[]>([])
+  const [ selectedStatuses, setSelectedStatuses ] = useState<FrameOrderStatusFilter[]>(defaultStatusFilter)
   const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
 
   useEffect(() => {
@@ -69,6 +73,11 @@ const FrameOrdersList: React.FC = () => {
     } else {
       setLoaded(false)
     }
+  }
+
+  const clearFilter = () => {
+    setSelectedStatuses([])
+    setPage(1)
   }
 
   const statusFilterOptions: BaseOptionType[] = [
@@ -210,7 +219,7 @@ const FrameOrdersList: React.FC = () => {
     )
   }
 
-  const setSelectedStatusOptions = (options: BaseOptionType[]) => {
+  const setSelectedStatusOptions = (options: FrameOrderStatusFilter[]) => {
     const selected = options.filter(option =>
       statusFilterOptions.findIndex(filterOpt => filterOpt.value === option)
     !== -1)
@@ -231,8 +240,8 @@ const FrameOrdersList: React.FC = () => {
         onChange={setSelectedStatusOptions}
         filterOption={statusOptionsFilter}
         labelInValue={false}
+        allowClear={false}
         size="middle"
-        allowClear
       >
         {statusFilterAvailableOptions.map(item => (
           <Option key={item.value} value={item.value} label={item.label}>
@@ -240,6 +249,16 @@ const FrameOrdersList: React.FC = () => {
           </Option>
         ))}
       </Select>
+      <Button
+        size="large"
+        type="link"
+        className="AppHeader__actions__button"
+        icon={<ClearOutlined />}
+        disabled={!selectedStatuses.length}
+        onClick={clearFilter}
+      >
+        {t('common.filter.clear.orders')}
+      </Button>
       <Button
         size="large"
         type="link"
