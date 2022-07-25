@@ -13,7 +13,6 @@ import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import { GridResponse } from 'library/models'
-import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 
 import { getFrameOrdersList } from 'library/api/frameOrder'
@@ -43,12 +42,35 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
-  const [
-    data,
-    dataLoaded,
-  ] = useApi<GridResponse<Order[]>>(
-    getFrameOrdersList, {},
-  )
+  const [ page, setPage ] = useState<number>(1)
+  const [ onPage, setOnPage ] = useState<number>()
+  const [ itemsTotal, setItemsTotal ] = useState<number>()
+  const [ listData, setListData ] = useState<GridResponse<Order[]>>()
+  const [ loaded, setLoaded ] = useState<boolean | null>(null)
+
+  const [ selectedStatuses, setSelectedStatuses ] = useState<BaseOptionType[]>([])
+  const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
+
+  useEffect(() => {
+    setLoaded(false)
+    loadData()
+  }, [ page, onPage, selectedStatuses ])
+
+  const loadData = async () => {
+    const request = {
+      statuses: selectedStatuses,
+      limit: onPage,
+      page,
+    }
+    const data = await getFrameOrdersList(request)
+    if (data && data.success) {
+      setItemsTotal((data as unknown as GridResponse).total)
+      setListData(data as unknown as GridResponse<Order[]>)
+      setLoaded(true)
+    } else {
+      setLoaded(false)
+    }
+  }
 
   const statusFilterOptions: BaseOptionType[] = [
     {
@@ -93,16 +115,12 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     },
   ]
 
-  const [ selectedStatuses, setSelectedStatuses ] = useState<BaseOptionType[]>([])
-  const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
-
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
       // datum => selectedStatuses.findIndex(selStatus => selStatus.value === datum.value)  // for labelInValue
       datum => !selectedStatuses.includes(datum.value)
     )
     setFilterAvailableOptions(filteredOptions)
-    console.log('selectedStatuses', selectedStatuses)
   }, [ selectedStatuses ])
 
   const renderActions = (_val: unknown, item: Order) => (
@@ -129,7 +147,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
       : ''
   )
 
-  if (dataLoaded === false) {
+  if (loaded === false) {
     return (
       <ErrorResultView centered status="error" />
     )
@@ -228,10 +246,18 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
         bordered
         size="middle"
         columns={columns}
-        loading={dataLoaded === null}
-        dataSource={data?.data as unknown as Order[] || []}
+        loading={loaded === null}
+        dataSource={listData?.data as unknown as Order[] || []}
         rowClassName={rowClassName}
-        pagination={false}
+        pagination={{
+          current: page,
+          pageSize: onPage,
+          total: itemsTotal,
+          onChange: (current, size) => {
+            setPage(current)
+            setOnPage(size)
+          }
+        }}
         rowKey="id"
       />
     </div>
