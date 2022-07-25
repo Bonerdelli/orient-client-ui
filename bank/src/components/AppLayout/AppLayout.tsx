@@ -7,7 +7,8 @@ import { healthCheck } from 'orient-ui-library/library/api/healthCheck'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import Div from 'orient-ui-library/components/Div'
 
-import { useStoreState } from 'library/store'
+import { User } from 'library/models/user'
+import { useStoreState, useStoreActions } from 'library/store'
 
 import AppLayoutPublic from './AppLayoutPublic'
 import AppLayoutProtected from './AppLayoutProtected'
@@ -20,9 +21,10 @@ const AppLayout = () => {
   const rehydrated = useStoreRehydrated()
   const user = useStoreState(state => state.user.current)
   const auth = useStoreState(state => state.user.currentAuth)
+  const { setBankId } = useStoreActions(state => state.bank)
 
-  const [loading, setLoading] = useState<boolean>(true)
-  const [apiError, setApiError] = useState<string | null>(null)
+  const [ loading, setLoading ] = useState<boolean>(true)
+  const [ apiError, setApiError ] = useState<string | null>(null)
 
   const loadHealthStatus = async () => {
     const healthStatus = await healthCheck()
@@ -40,6 +42,12 @@ const AppLayout = () => {
   useEffect(() => {
     initialize()
   }, [])
+
+  useEffect(() => {
+    if (user) {
+      setBankId((user as User).bankId)
+    }
+  }, [user])
 
   if (apiError) {
     return (

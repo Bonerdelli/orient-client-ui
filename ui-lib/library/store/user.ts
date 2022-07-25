@@ -1,5 +1,5 @@
 import { Action, action } from 'easy-peasy'
-import { User, JwtToken, JwtTokenPayload } from 'orient-ui-library'
+import { User, JwtToken, JwtTokenPayload } from 'library/models'
 import jwtDecode from 'jwt-decode'
 
 export interface UserStoreModel {
@@ -14,6 +14,7 @@ export const userStoreModel: UserStoreModel = {
   setAuth: action((state, payload) => {
     const jwtPayload = jwtDecode(payload?.accessToken) as JwtTokenPayload
     const userInfo = JSON.parse(jwtPayload.sub) as User
+    console.log('userInfo', userInfo)
     state.currentAuth = payload
     state.current = userInfo
   }),

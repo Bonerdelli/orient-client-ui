@@ -4,17 +4,18 @@ import { Space, Layout } from 'antd'
 
 import FrameSimpleOrdersList from 'components/FrameSimpleOrdersList'
 import FrameSimpleBankWizard from 'components/FrameSimpleBankWizard'
-import { MOCK_BANK_ID } from 'library/mock/bank'
+import { useStoreState } from 'library/store'
 
 import './FrameSimpleOrdersPage.style.less'
 
 const FrameSimpleOrdersPage = () => {
 
   const { path, url } = useRouteMatch()
+  const bankId = useStoreState(state => state.bank.bankId)
 
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <FrameSimpleOrdersList bankId={MOCK_BANK_ID} />
+      <FrameSimpleOrdersList bankId={bankId as number} />
     </Space>
   )
 

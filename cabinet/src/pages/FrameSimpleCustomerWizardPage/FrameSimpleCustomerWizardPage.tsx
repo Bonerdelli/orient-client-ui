@@ -8,9 +8,9 @@ import './FrameSimpleCustomerWizardPage.style.less'
 
 const FrameSimpleCustomerWizardPage = () => {
 
-  const company = useStoreState(state => state.company.current)
+  const companyId = useStoreState(state => state.company.companyId)
 
-  if (!company) {
+  if (!companyId) {
     return (
       <Div className="AppLayout__loaderWrap">
         <Spin size="large" />
@@ -20,7 +20,7 @@ const FrameSimpleCustomerWizardPage = () => {
 
   return (
     <div className="FrameSimpleCustomerWizardPage" data-testid="FrameSimpleCustomerWizardPage">
-      <FrameSimpleCustomerWizard companyId={company.id as number} />
+      <FrameSimpleCustomerWizard companyId={companyId as number} />
     </div>
   )
 }

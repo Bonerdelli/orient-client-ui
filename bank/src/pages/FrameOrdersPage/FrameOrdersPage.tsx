@@ -4,7 +4,7 @@ import { Space, Layout } from 'antd'
 
 import FrameOrdersList from 'components/FrameOrdersList'
 import FrameBankWizard from 'components/FrameBankWizard' // TODO: add wizard
-import { MOCK_BANK_ID } from 'library/mock/bank'
+import { useStoreState } from 'library/store'
 
 import './FrameOrdersPage.style.less'
 
@@ -12,9 +12,11 @@ const FrameOrdersPage = () => {
 
   const { path, url } = useRouteMatch()
 
+  const bankId = useStoreState(state => state.bank.bankId)
+
   const renderList = (): JSX.Element => (
     <Space direction="vertical" size="middle">
-      <FrameOrdersList bankId={MOCK_BANK_ID} />
+      <FrameOrdersList bankId={bankId as number} />
     </Space>
   )
 

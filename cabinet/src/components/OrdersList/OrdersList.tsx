@@ -9,13 +9,11 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 import { Order, OrderStatus, OrderWizardType } from 'orient-ui-library/library/models/order'
 import { FactoringStatus } from 'orient-ui-library/library/models/order'
-import { isCustomer } from 'orient-ui-library/library/helpers/roles'
 import { formatCurrency } from 'orient-ui-library/library/helpers/numerics'
 
 import { CabinetMode } from 'library/models/cabinet'
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getCompanyOrdersList } from 'library/api'
-import { useStoreState } from 'library/store'
 import { GridResponse } from 'library/models' // TODO: to ui-lib
 
 import OrderStatusTag from 'components/OrderStatusTag'
@@ -24,14 +22,12 @@ import './OrdersList.style.less'
 
 export interface OrdersListProps {
   companyId: number
+  mode?: CabinetMode
 }
 
-const OrdersList: React.FC<OrdersListProps> = ({ companyId }) => {
+const OrdersList: React.FC<OrdersListProps> = ({ companyId, mode }) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
-
-  const user = useStoreState(state => state.user.current)
-  const mode = isCustomer(user) ? CabinetMode.Customer : CabinetMode.Client
 
   const [
     data,

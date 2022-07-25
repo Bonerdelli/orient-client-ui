@@ -1,7 +1,6 @@
 import { Layout } from 'antd'
 import { useHistory } from 'react-router-dom'
 
-import { isBank } from 'orient-ui-library/library/helpers/roles'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
 import themeConfig from 'config/theme.yaml'
@@ -11,11 +10,13 @@ import SideMenu from 'components/SideMenu'
 
 import { ProtectedRoutes } from 'library/routes'
 import { useStoreState, useStoreActions } from 'library/store'
+import { isBank } from 'library/helpers/user'
 
 const { Sider, Content } = Layout
 
 const AppLayoutProtected = () => {
   const user = useStoreState(state => state.user.current)
+  const bankId = useStoreState(state => state.bank.bankId)
   const { setLogout } = useStoreActions(actions => actions.user)
   const history = useHistory()
 
@@ -24,7 +25,7 @@ const AppLayoutProtected = () => {
     history.push('/')
   }
 
-  if (!isBank(user)) {
+  if (!isBank(user) || !bankId) {
     return (
       <ErrorResultView
         centered

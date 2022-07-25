@@ -14,8 +14,8 @@ import FactoringStepArchive from 'components/FactoringStepArchive'
 
 import { OrderWizardType } from 'library/models'
 
+import { useStoreState } from 'library/store'
 import { getFactoringOrderWizard } from 'library/api/factoringOrder'
-import { MOCK_BANK_ID } from 'library/mock/bank'
 
 import './FactoringBankWizard.style.less'
 
@@ -42,6 +42,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
+  const bankId = useStoreState(state => state.bank.bankId)
   const { itemId } = useParams<FactoringBankWizardPathParams>()
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
@@ -49,7 +50,6 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
 
-  const [ bankId, setBankId ] = useState<number>()
   const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
   const [ completed, setCompleted ] = useState<boolean>()
 
@@ -66,15 +66,10 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
     }
   }, [ orderStatus ])
 
-  useEffect(() => {
-    // TODO: load bank from be (when ready)
-    setBankId(MOCK_BANK_ID)
-  }, [])
-
   const loadCurrentStepData = async () => {
     const result = await getFactoringOrderWizard({
       orderId: Number(itemId) || orderId as number,
-      bankId: MOCK_BANK_ID,
+      bankId: bankId as number,
     })
     if (result.success) {
       const step = Number((result.data as any).step)
@@ -105,7 +100,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       return <Skeleton active={true}/>
     }
     const stepBaseProps = {
-      bankId: MOCK_BANK_ID,
+      bankId: bankId as number,
       orderId: Number(itemId) || orderId,
       oprderType: OrderWizardType.Factoring,
       setCurrentStep: handleStepChange,

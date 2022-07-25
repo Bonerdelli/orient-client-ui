@@ -5,7 +5,7 @@ import { axiosMiddleware } from 'orient-ui-library/library/helpers/api'
 import { UserStoreModel, userStoreModel } from 'orient-ui-library/library/store/user'
 import { BankStoreModel, bankStoreModel } from './bank'
 
-export const STORAGE_KEY_VERSION = 1
+export const STORAGE_KEY_VERSION = 1.1
 
 export interface AppStoreModel {
   user: UserStoreModel
