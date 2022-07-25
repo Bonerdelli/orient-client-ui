@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Tag } from 'antd'
+import { Button, Tag, TagProps } from 'antd'
 import { ReloadOutlined } from '@ant-design/icons'
 
 import { FactoringStatus, Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
 import './OrderStatusTag.style.less'
 
-export interface OrderStatusTagProps {
+export interface OrderStatusTagProps extends TagProps {
   statusCode?: OrderStatus | FactoringStatus,
   refreshAction?: () => void
   item?: Order,

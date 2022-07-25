@@ -50,7 +50,17 @@ h1, h2, h3, h4 {
 }
 
 .OrderList__filter {
-  margin-bottom: @margin-lg;
+  margin-bottom: @margin-sm;
+  .ant-select-selector {
+    padding-top: @padding-xs;
+    padding-bottom: @padding-xs;
+    // padding-left: @padding-sm;
+    border: none;
+  }
+  .ant-select-selection-placeholder {
+    left: @padding-sm;
+    font-size: 1.1em;
+  }
 }
 
 /**

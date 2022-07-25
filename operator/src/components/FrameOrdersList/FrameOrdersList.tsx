@@ -5,6 +5,7 @@ import { Link, useRouteMatch } from 'react-router-dom'
 import { Table, Button, Space, Select } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
+import type { BaseOptionType } from 'rc-select/lib/Select';
 import { EyeOutlined } from '@ant-design/icons'
 
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -34,19 +35,6 @@ export enum FrameOrderStatusFilter {
   Cancel = OrderStatus.FRAME_CANCEL,
 }
 
-const statusFilterOptions = [
-  FrameOrderStatusFilter.OperatorWaitForVerify,
-  FrameOrderStatusFilter.OperatorVerify,
-  FrameOrderStatusFilter.ClientRework,
-  FrameOrderStatusFilter.ClientSign,
-  FrameOrderStatusFilter.BankVerify,
-  FrameOrderStatusFilter.HasOffer,
-  FrameOrderStatusFilter.CustomerSign,
-  FrameOrderStatusFilter.Completed,
-  FrameOrderStatusFilter.OperatorReject,
-  FrameOrderStatusFilter.Cancel,
-]
-
 export interface FrameOrdersListProps {
 
 }
@@ -62,15 +50,60 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     getFrameOrdersList, {},
   )
 
-  const [ selectedStatuses, setSelectedStatuses ] = useState<FrameOrderStatusFilter[]>([])
+  const statusFilterOptions: BaseOptionType[] = [
+    {
+      label: t('orderStatusTitles.waitForVerify'),
+      value: FrameOrderStatusFilter.OperatorWaitForVerify,
+    },
+    {
+      label: t('orderStatusTitles.verifying'),
+      value: FrameOrderStatusFilter.OperatorVerify,
+    },
+    {
+      label: t('orderStatusTitles.needsForRework'),
+      value: FrameOrderStatusFilter.ClientRework,
+    },
+    {
+      label: t('orderStatusTitles.clientSign'),
+      value: FrameOrderStatusFilter.ClientSign,
+    },
+    {
+      label: t('orderStatusTitles.bankVerify'),
+      value: FrameOrderStatusFilter.BankVerify,
+    },
+    {
+      label: t('orderStatusTitles.hasOffer'),
+      value: FrameOrderStatusFilter.HasOffer,
+    },
+    {
+      label: t('orderStatusTitles.customerSign'),
+      value: FrameOrderStatusFilter.CustomerSign,
+    },
+    {
+      label: t('orderStatusTitles.completed'),
+      value: FrameOrderStatusFilter.Completed,
+    },
+    {
+      label: t('orderStatusTitles.operatorReject'),
+      value: FrameOrderStatusFilter.OperatorReject,
+    },
+    {
+      label: t('orderStatusTitles.cancel'),
+      value: FrameOrderStatusFilter.Cancel,
+    },
+  ]
+
+  const [ selectedStatuses, setSelectedStatuses ] = useState<BaseOptionType[]>([])
+  const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
 
   useEffect(() => {
+    const filteredOptions = statusFilterOptions.filter(
+      datum => !selectedStatuses.includes(datum.value)
+    )
+    setFilterAvailableOptions(filteredOptions)
+    console.log('statusFilterAvailableOptions', statusFilterAvailableOptions)
     console.log('selectedStatuses', selectedStatuses)
   }, [ selectedStatuses ])
-
-  const filteredOptions = statusFilterOptions.filter(
-    datum => !selectedStatuses.includes(datum)
-  )
 
   const renderActions = (_val: unknown, item: Order) => (
     <Space size="small">
@@ -89,6 +122,18 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
   const renderStatus = (statusCode: OrderStatus, item: Order) => (
     <OrderStatusTag statusCode={statusCode} item={item} />
   )
+
+  const rowClassName = (record: Order) => (
+    record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
+      ? 'FrameOrdersList__row--new'
+      : ''
+  )
+
+  if (dataLoaded === false) {
+    return (
+      <ErrorResultView centered status="error" />
+    )
+  }
 
   const columns: ColumnsType<Order> = [
     {
@@ -132,18 +177,6 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     },
   ]
 
-  const rowClassName = (record: Order) => (
-    record.statusCode === OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY
-      ? 'FrameOrdersList__row--new'
-      : ''
-  )
-
-  if (dataLoaded === false) {
-    return (
-      <ErrorResultView centered status="error" />
-    )
-  }
-
   const selectedStatusTagRender = (props: CustomTagProps) => {
     const { value, closable, onClose } = props
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
@@ -164,18 +197,19 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({}) => {
     <div className="FrameOrdersList" data-testid="FrameOrdersList">
       <Select
         mode="tags"
-        size="large"
         className="OrderList__filter"
+        style={{ width: '100%' }}
         placeholder={t('common.filter.fieldPlaceholders.status')}
         tagRender={selectedStatusTagRender}
         value={selectedStatuses}
         defaultValue={[]}
         onChange={setSelectedStatuses}
-        style={{ width: '100%' }}
+        size="middle"
+        allowClear
       >
-        {filteredOptions.map(item => (
-          <Option key={item} value={item}>
-            <OrderStatusTag statusCode={item as OrderStatus} />
+        {statusFilterAvailableOptions.map(item => (
+          <Option key={item.value} value={item.value}>
+            <OrderStatusTag statusCode={item.value as OrderStatus} />
           </Option>
         ))}
       </Select>
