@@ -50,13 +50,32 @@ h1, h2, h3, h4 {
 }
 
 .OrderList__filter {
-  margin-bottom: @margin-sm;
 
-  .ant-select-selector {
+  display: flex;
+  align-items: center;
+  margin-bottom: @margin-sm;
+  width: 100%;
+
+  &__item--grow {
+    flex-grow: 1;
+  }
+}
+
+
+/**
+ * Ant overriding
+ * TODO: move to ui-lib
+ */
+
+.OrderList__filter {
+
+  @filter-clear-icon: 16px;
+
+  .ant-select .ant-select-selector {
     padding-top: calc(@padding-xs * .6);
     padding-bottom: calc(@padding-xs * .6);
     padding-left: @padding-sm;
-    background-color: @table-body-sort-bg;
+    background-color: fade(@component-background, 85%);
     font-size: 1.1em;
     border: none;
   }
@@ -64,6 +83,13 @@ h1, h2, h3, h4 {
   .ant-select-selection-placeholder {
     left: @padding-sm;
     font-size: 1.1em;
+  }
+
+  .ant-select-clear {
+    width: @filter-clear-icon;
+    height: @filter-clear-icon;
+    font-size: @filter-clear-icon;
+    margin-top: -8px;
   }
 
   .ant-select-selection-overflow-item {
@@ -79,11 +105,6 @@ h1, h2, h3, h4 {
     }
   }
 }
-
-/**
- * Ant overriding
- * TODO: move to ui-lib
- */
 
 .ant-steps-item-wait:not(.ant-steps-item-disabled) {
   > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {

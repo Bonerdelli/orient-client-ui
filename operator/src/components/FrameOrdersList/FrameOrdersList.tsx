@@ -3,11 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
 import { Table, Button, Space, Select } from 'antd'
+import { ReloadOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
 import type { BaseOptionType } from 'rc-select/lib/Select';
 import { EyeOutlined } from '@ant-design/icons'
 
+import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { Order, OrderStatus } from 'orient-ui-library/library/models/order'
 
@@ -46,7 +48,7 @@ const FrameOrdersList: React.FC = () => {
   const [ loaded, setLoaded ] = useState<boolean | null>(null)
 
   const [ selectedStatuses, setSelectedStatuses ] = useState<BaseOptionType[]>([])
-  // const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
+  const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
 
   useEffect(() => {
     setLoaded(null)
@@ -112,8 +114,6 @@ const FrameOrdersList: React.FC = () => {
     },
   ]
 
-  /*
-   * NOTE: doesn't work, looks like bug in Table
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
       // datum => selectedStatuses.findIndex(selStatus => selStatus.value === datum.value)  // for labelInValue
@@ -121,7 +121,6 @@ const FrameOrdersList: React.FC = () => {
     )
     setFilterAvailableOptions(filteredOptions)
   }, [ selectedStatuses ])
-  */
 
   const renderActions = (_val: unknown, item: Order) => (
     <Space size="small">
@@ -221,12 +220,11 @@ const FrameOrdersList: React.FC = () => {
   const statusOptionsFilter = (inputValue: string, option: BaseOptionType) =>
     (option?.label?.toLocaleString().toLowerCase().indexOf(inputValue.toLowerCase()) ?? true) !== -1
 
-  return (
-    <div className="FrameOrdersList" data-testid="FrameOrdersList">
+  const renderFilters = () => (
+    <Div className="OrderList__filter">
       <Select
         mode="tags"
-        className="OrderList__filter"
-        style={{ width: '100%' }}
+        className="OrderList__filter__item--grow"
         placeholder={t('common.filter.fieldPlaceholders.status')}
         tagRender={selectedStatusTagRender}
         value={selectedStatuses}
@@ -236,12 +234,30 @@ const FrameOrdersList: React.FC = () => {
         size="middle"
         allowClear
       >
-        {statusFilterOptions.map(item => (
+        {statusFilterAvailableOptions.map(item => (
           <Option key={item.value} value={item.value} label={item.label}>
             <OrderStatusTag statusCode={item.value as OrderStatus} />
           </Option>
         ))}
       </Select>
+      <Button
+        size="large"
+        type="link"
+        className="AppHeader__actions__button"
+        icon={<ReloadOutlined />}
+        onClick={() => {
+          setLoaded(null)
+          loadData()
+        }}
+      >
+        {t('common.actions.refresh.title')}
+      </Button>
+    </Div>
+  )
+
+  return (
+    <Div className="FrameOrdersList" data-testid="FrameOrdersList">
+      {renderFilters()}
       <Table
         bordered
         size="middle"
@@ -262,7 +278,7 @@ const FrameOrdersList: React.FC = () => {
         }}
         rowKey="id"
       />
-    </div>
+    </Div>
   )
 }
 
