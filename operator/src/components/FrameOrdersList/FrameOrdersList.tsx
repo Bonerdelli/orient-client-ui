@@ -129,6 +129,7 @@ const FrameOrdersList: React.FC = () => {
       datum => !selectedStatuses.includes(datum.value)
     )
     setFilterAvailableOptions(filteredOptions)
+    setPage(1)
   }, [ selectedStatuses ])
 
   const renderActions = (_val: unknown, item: Order) => (
@@ -252,17 +253,17 @@ const FrameOrdersList: React.FC = () => {
       <Button
         size="large"
         type="link"
-        className="AppHeader__actions__button"
+        className="OrderList__filter__action"
         icon={<ClearOutlined />}
         disabled={!selectedStatuses.length}
         onClick={clearFilter}
       >
-        {t('common.filter.clear.orders')}
+        {t('common.filter.actionTitles.clear')}
       </Button>
       <Button
         size="large"
         type="link"
-        className="AppHeader__actions__button"
+        className="OrderList__filter__action"
         icon={<ReloadOutlined />}
         onClick={() => {
           setLoaded(null)
@@ -290,6 +291,7 @@ const FrameOrdersList: React.FC = () => {
           pageSize: onPage,
           total: itemsTotal,
           showSizeChanger: false,
+          hideOnSinglePage: true,
           onChange: (current, size) => {
             setPage(current)
             setOnPage(size)
