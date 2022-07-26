@@ -36,6 +36,14 @@ dataEntity:
     yes: Yes
     no: No
 
+filter:
+  title: Filter
+  actionTitles:
+    clear: Clear filter
+  fieldPlaceholders:
+    status: Select the Status
+
+
 actions:
   add:
     title: Add

@@ -39,6 +39,13 @@ dataEntity:
     male: Мужской
     female: Женский
 
+filter:
+  title: Фильтровать
+  actionTitles:
+    clear: Сбросить фильтр
+  fieldPlaceholders:
+    status: Выберите статус
+
 actions:
   add:
     title: Добавить

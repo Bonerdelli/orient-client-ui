@@ -1,0 +1,42 @@
+// @import 'antd/dist/antd.less'; // DEBUG: uncomment for debug with lib sources
+@import '../vars.less';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+#root > .ant-alert-error {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+  // TODO: fix antd theme overriding
+  font-weight: 500 !important;
+}
+
+/**
+ * Common component styles
+ */
+
+.App__loader {
+  position: absolute;
+  margin-left: -16px;
+  top: 45%;
+  left: 50%;
+}
+
+.Form__actions {
+  padding-top: @padding-sm;
+  text-align: right;
+}
