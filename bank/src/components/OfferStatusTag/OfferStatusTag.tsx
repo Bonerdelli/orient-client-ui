@@ -38,6 +38,8 @@ const OfferStatusTag: React.FC<OfferStatusTagProps> = ({
       return <Tag color="green" {...rest}>{t('offerStatusTitles.bankVerify')}{refreshButton}</Tag>
     case BankOfferStatus.BankOffer:
       return <Tag color="green" {...rest}>{t('offerStatusTitles.bankOffer')}{refreshButton}</Tag>
+    case BankOfferStatus.ClientRework:
+      return <Tag color="green" {...rest}>{t('offerStatusTitles.clientRework')}{refreshButton}</Tag>
     // TODO: unify enum naming
     case BankOfferStatus.BankSign:
     case FactoringStatus.FACTOR_BANK_SIGN:
@@ -55,15 +57,18 @@ const OfferStatusTag: React.FC<OfferStatusTagProps> = ({
     case BankOfferStatus.Completed:
     case OrderStatus.FRAME_COMPLETED:
       return <Tag color="blue" {...rest}>{t('offerStatusTitles.completed')}</Tag>
-    case OrderStatus.FRAME_BANK_REJECT:
-    case FactoringStatus.FACTOR_BANK_REJECT:
-      return <Tag color="red" {...rest}>{t('offerStatusTitles.bankReject')}</Tag>
     case FactoringStatus.FACTOR_WAIT_FOR_CHARGE:
       return <Tag color="green" {...rest}>{t('offerStatusTitles.factorWaitForCharge')}</Tag>
     case FactoringStatus.FACTOR_CHARGED:
       return <Tag color="green" {...rest}>{t('offerStatusTitles.factorCharged')}</Tag>
     case FactoringStatus.FACTOR_COMPLETED:
       return <Tag color="blue" {...rest}>{t('offerStatusTitles.factorCompleted')}</Tag>
+    case OrderStatus.FRAME_BANK_REJECT:
+    case FactoringStatus.FACTOR_BANK_REJECT:
+    case BankOfferStatus.BankReject:
+      return <Tag color="red" {...rest}>{t('offerStatusTitles.bankReject')}</Tag>
+    case BankOfferStatus.ClientOfferReject:
+      return <Tag color="red" {...rest}>{t('offerStatusTitles.clientReject')}</Tag>
     default:
       // NOTE: unknown statutes shouldn't be displayed
       return <></>
