@@ -26,21 +26,14 @@ import './FrameSimpleOrdersList.style.less'
 const { Option } = Select
 
 export enum FrameSimpleOrderStatusFilter {
-  OperatorWaitForVerify = OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY,
-  OperatorVerify = OrderStatus.FRAME_OPERATOR_VERIFYING,
-  ClientRework = OrderStatus.FRAME_CLIENT_REWORK,
-  ClientSign = OrderStatus.FRAME_CLIENT_SIGN,
-  BankVerify = OrderStatus.FRAME_BANK_VERIFYING,
-  HasOffer = OrderStatus.FRAME_HAS_OFFER,
+  BankSign = OrderStatus.FRAME_BANK_SIGN,
   CustomerSign = OrderStatus.FRAME_CUSTOMER_SIGN,
   Completed = OrderStatus.FRAME_COMPLETED,
-  OperatorReject = OrderStatus.FRAME_OPERATOR_REJECT,
   BankReject = OrderStatus.FRAME_BANK_REJECT,
-  Cancel = OrderStatus.FRAME_CANCEL,
 }
 
 const defaultStatusFilter = [
-  FrameSimpleOrderStatusFilter.OperatorWaitForVerify
+  FrameSimpleOrderStatusFilter.BankSign
 ]
 
 export interface FrameSimpleOrdersListProps {
@@ -90,48 +83,20 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
 
   const statusFilterOptions: BaseOptionType[] = [
     {
-      label: t('orderStatusTitles.waitForVerify'),
-      value: FrameSimpleOrderStatusFilter.OperatorWaitForVerify,
+      label: t('offerStatusTitles.bankSign'),
+      value: FrameSimpleOrderStatusFilter.BankSign,
     },
     {
-      label: t('orderStatusTitles.verifying'),
-      value: FrameSimpleOrderStatusFilter.OperatorVerify,
-    },
-    {
-      label: t('orderStatusTitles.needsForRework'),
-      value: FrameSimpleOrderStatusFilter.ClientRework,
-    },
-    {
-      label: t('orderStatusTitles.clientSign'),
-      value: FrameSimpleOrderStatusFilter.ClientSign,
-    },
-    {
-      label: t('orderStatusTitles.bankVerify'),
-      value: FrameSimpleOrderStatusFilter.BankVerify,
-    },
-    {
-      label: t('orderStatusTitles.hasOffer'),
-      value: FrameSimpleOrderStatusFilter.HasOffer,
-    },
-    {
-      label: t('orderStatusTitles.customerSign'),
+      label: t('offerStatusTitles.customerSign'),
       value: FrameSimpleOrderStatusFilter.CustomerSign,
     },
     {
-      label: t('orderStatusTitles.completed'),
+      label: t('offerStatusTitles.completed'),
       value: FrameSimpleOrderStatusFilter.Completed,
     },
     {
-      label: t('orderStatusTitles.operatorReject'),
-      value: FrameSimpleOrderStatusFilter.OperatorReject,
-    },
-    {
-      label: t('orderStatusTitles.bankReject'),
+      label: t('offerStatusTitles.bankReject'),
       value: FrameSimpleOrderStatusFilter.BankReject,
-    },
-    {
-      label: t('orderStatusTitles.cancel'),
-      value: FrameSimpleOrderStatusFilter.Cancel,
     },
   ]
 
@@ -245,7 +210,8 @@ const FrameSimpleOrdersList: React.FC<FrameSimpleOrdersListProps> = ({ bankId })
     <Div className="OrderList__filter">
       <Select
         mode="tags"
-        className="OrderList__filter__item--grow"
+        dropdownClassName="OrderList__filter__combobox__options"
+        className="OrderList__filter__combobox OrderList__filter__item--grow"
         placeholder={t('common.filter.fieldPlaceholders.status')}
         tagRender={selectedStatusTagRender}
         value={selectedStatuses}

@@ -261,7 +261,8 @@ const FactoringOrdersList: React.FC = () => {
     <Div className="OrderList__filter">
       <Select
         mode="tags"
-        className="OrderList__filter__item--grow"
+        dropdownClassName="OrderList__filter__combobox__options"
+        className="OrderList__filter__combobox OrderList__filter__item--grow"
         placeholder={t('common.filter.fieldPlaceholders.status')}
         tagRender={selectedStatusTagRender}
         value={selectedStatuses}

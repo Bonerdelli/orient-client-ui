@@ -65,7 +65,7 @@ const OrderStatusTag: React.FC<OrderStatusTagProps> = ({
     case OrderStatus.FRAME_CANCEL:
     case FactoringStatus.FACTOR_CANCEL:
       return <Tag>{t('orderStatusTitles.cancel')}</Tag>
-
+    case OrderStatus.FRAME_BANK_REJECT:
     case FactoringStatus.FACTOR_BANK_REJECT:
       return <Tag color="red" {...rest}>{t('orderStatusTitles.bankReject')}</Tag>
     case OrderStatus.FRAME_OPERATOR_REJECT:

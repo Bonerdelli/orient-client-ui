@@ -23,11 +23,11 @@
  * Ant overriding
  */
 
-.OrderList__filter {
+.OrderList__filter__combobox {
 
   @filter-clear-icon: 16px;
 
-  .ant-select .ant-select-selector {
+  .ant-select-selector {
     padding-top: calc(@padding-xs * .6);
     padding-bottom: calc(@padding-xs * .6);
     padding-left: @padding-sm;
@@ -60,4 +60,16 @@
       }
     }
   }
+}
+
+.OrderList__filter__combobox__options {
+
+  .ant-select-item {
+    .ant-select-item-option-selected {
+      // NOTE: Dirty hack for selected items hiding
+      // Looks like bug in antd Select
+      display: none !important;
+    }
+  }
+
 }

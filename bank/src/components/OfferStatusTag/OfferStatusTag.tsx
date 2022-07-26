@@ -55,6 +55,9 @@ const OfferStatusTag: React.FC<OfferStatusTagProps> = ({
     case BankOfferStatus.Completed:
     case OrderStatus.FRAME_COMPLETED:
       return <Tag color="blue" {...rest}>{t('offerStatusTitles.completed')}</Tag>
+    case OrderStatus.FRAME_BANK_REJECT:
+    case FactoringStatus.FACTOR_BANK_REJECT:
+      return <Tag color="red" {...rest}>{t('offerStatusTitles.bankReject')}</Tag>
     case FactoringStatus.FACTOR_WAIT_FOR_CHARGE:
       return <Tag color="green" {...rest}>{t('offerStatusTitles.factorWaitForCharge')}</Tag>
     case FactoringStatus.FACTOR_CHARGED:
