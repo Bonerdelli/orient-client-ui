@@ -30,3 +30,30 @@
 .ant-descriptions-header {
   margin-bottom: .5em; // As for headers
 }
+
+/**
+ * Step items
+ */
+
+.ant-steps-item-wait:not(.ant-steps-item-disabled) {
+  > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+    color: @text-color;
+  }
+
+  .ant-steps-item-icon {
+    border-color: @text-color;
+
+    > .ant-steps-icon {
+      color: @text-color;
+    }
+  }
+}
+
+.ant-steps:not(.ant-steps-vertical) {
+  .ant-steps-item-title {
+    line-height: 1.25em;
+    white-space: normal;
+    padding-top: 6px;
+    padding-right: 24px;
+  }
+}
