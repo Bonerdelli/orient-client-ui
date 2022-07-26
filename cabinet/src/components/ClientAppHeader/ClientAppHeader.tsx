@@ -51,8 +51,8 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
     {
       key: 'frameOrder',
       path: FRAME_ORDER_PATH,
-      title: 'Заявка на заключение рамочного договора',
-      description: 'Тут краткое описание продукта, его параметры, для чего',
+      title: t('productModal.frame.title'),
+      description: t('productModal.frame.description'),
       ProductIcon: props => <Icon component={HandshakeSvg} {...props}/>,
       disabled: false,
       showSpinner: false,
@@ -60,8 +60,8 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
     {
       key: 'frameSimpleOrder',
       path: SIMPLE_FRAME_ORDER_PATH,
-      title: 'Упрощенная заявка на рамочный договор',
-      description: 'Если у вас уже есть заключенный рамочный договор с интересующими банком и заказчиком, подайте упрощенную заявку для получения возможности создания заявки на факторинг',
+      title: t('productModal.frameSimple.title'),
+      description: t('productModal.frameSimple.description'),
       ProductIcon: props => <Icon component={HandshakeSvg} {...props}/>,
       disabled: false,
       showSpinner: false,
@@ -69,8 +69,8 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
     {
       key: 'factoring',
       path: FACTORING_PATH,
-      title: 'Факторинг',
-      description: 'Тут краткое описание продукта, его параметры, для чего',
+      title: t('productModal.factoring.description'),
+      description: t('productModal.factoring.description'),
       ProductIcon: props => <Icon component={BoxWithSmileSvg} {...props}/>,
       disabled: factoringDisabled,
       showSpinner: isCheckingInProcess,
@@ -120,8 +120,12 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
 
   const renderProductsModal = () => (
     <Modal
-      title={<Title level={4} style={{ textAlign: 'center' }}>
-        Выбор продукта для компании <Text style={{ fontWeight: 'bold' }}>{company?.shortName}</Text>
+      title={<Title
+        level={4}
+        style={{ textAlign: 'center' }}
+      >
+        {t('productModal.title')}
+        <Text style={{ fontWeight: 'bold' }}>{company?.shortName}</Text>
       </Title>}
       visible={productsModalVisible}
       onCancel={closeModal}
