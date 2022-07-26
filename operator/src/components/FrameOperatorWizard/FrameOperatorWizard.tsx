@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Grid, Skeleton } from 'antd'
+import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -50,7 +50,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
     if (selectedStep !== currentStep) {
       setSelectedStep(currentStep)
     }
-  }, [currentStep])
+  }, [ currentStep ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameOrderWizard({
@@ -83,7 +83,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
 
   const renderCurrentStep = () => {
     if (stepDataLoading) {
-      return <Skeleton active={true} />
+      return <Skeleton active={true}/>
     }
     const stepBaseProps = {
       orderId: Number(itemId) || orderId,
@@ -106,7 +106,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -128,10 +128,10 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
-          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
-          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fifthStep.title')} />
+          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')}/>
+          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')}/>
+          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')}/>
+          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fifthStep.title')}/>
         </Steps>
       </Card>
       <Card className="FrameWizard__step">

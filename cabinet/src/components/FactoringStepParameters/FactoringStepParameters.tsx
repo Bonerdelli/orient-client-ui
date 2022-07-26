@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Col, Form, Input, Descriptions, Row, Select, Skeleton, Space, Spin, Typography, message } from 'antd'
+import { Button, Col, Descriptions, Form, Input, message, Row, Select, Skeleton, Space, Spin, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -23,10 +23,12 @@ import { FrameOrderOfferForFactoringDto } from 'library/models/offers'
 import { Dictionaries } from 'orient-ui-library/library/models/dictionaries'
 import { CabinetMode } from 'library/models/cabinet'
 import { EditOutlined } from '@ant-design/icons'
-import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
 import OrderCondition from 'orient-ui-library/components/OrderCondition'
 import { useHistory, useLocation } from 'react-router-dom'
 import { FACTORING_ORDER_ID_PARAM, OFFER_BANK_ID_PARAM } from 'library/constants'
+import {
+  convertDictionaryToSelectOptions,
+} from 'orient-ui-library/library/converters/dictionary-to-select-options.converter'
 
 const { Text, Paragraph } = Typography
 const { Item: DescItem } = Descriptions

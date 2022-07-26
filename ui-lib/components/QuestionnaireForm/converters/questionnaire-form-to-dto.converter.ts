@@ -1,5 +1,5 @@
 import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
-import { CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
+import { CompanyQuestionnaireDto } from '../../../library/models/proxy'
 
 export const convertQuestionnaireFormToDto = (data: QuestionnaireFormData): CompanyQuestionnaireDto => {
   return {

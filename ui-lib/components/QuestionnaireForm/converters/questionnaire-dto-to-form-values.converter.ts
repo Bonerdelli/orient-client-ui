@@ -1,6 +1,6 @@
 import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
 import { defaultQuestionnaireFormState } from '../constants/default-questionnaire-form-state.const'
-import { CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
+import { CompanyQuestionnaireDto } from '../../../library/models/proxy'
 
 export const convertQuestionnaireDtoToFormValues = (dto: CompanyQuestionnaireDto | null): QuestionnaireFormData => {
   if (!dto) {

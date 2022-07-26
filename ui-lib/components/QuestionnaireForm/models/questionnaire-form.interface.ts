@@ -1,4 +1,4 @@
-import { CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
+import { CompanyQuestionnaireDto } from '../../../library/models/proxy'
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
 

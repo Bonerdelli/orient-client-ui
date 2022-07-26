@@ -2,22 +2,25 @@ import { useTranslation } from 'react-i18next'
 import { Button, Col, Form, Input, Row, Select, Typography } from 'antd'
 import React from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { Dictionaries } from 'orient-ui-library/library/models/dictionaries'
-import { convertDictionaryToSelectOptions } from 'library/converters/dictionary-to-select-options.converter'
-import {
-  defaultQuestionnaireFormState,
-} from 'components/QuestionnaireForm/constants/default-questionnaire-form-state.const'
+import { defaultQuestionnaireFormState } from '../constants/default-questionnaire-form-state.const'
+import { Dictionaries } from '../../../library'
+import { convertDictionaryToSelectOptions } from '../../../library/converters/dictionary-to-select-options.converter'
 
 interface QuestionnaireSuppliersAndBuyersFormFieldsProps {
   dictionaries: Dictionaries,
+  isEditable: boolean,
 }
 
-const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliersAndBuyersFormFieldsProps> = ({ dictionaries }) => {
+const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliersAndBuyersFormFieldsProps> = ({
+  dictionaries,
+  isEditable,
+}) => {
   const { t } = useTranslation()
   const { Title, Text } = Typography
 
   const inputLayout = {
     suffix: <EditOutlined/>,
+    disabled: !isEditable,
   }
   const formItemRowLayout = {
     labelAlign: 'left' as any,
@@ -70,17 +73,18 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliers
                          {...formItemRowLayout}
                          label={t('questionnaire.suppliersAndBuyers.fields.paymentFormId.title')}>
                 <Select placeholder={t('questionnaire.suppliersAndBuyers.fields.paymentFormId.placeholder')}
+                        disabled={!isEditable}
                         options={convertDictionaryToSelectOptions(dictionaries.paymentForm)}/>
               </Form.Item>
             </Col>
-            {field.key > 0 && <Col span={1}>
+            {field.key > 0 && isEditable && <Col span={1}>
               <Form.Item wrapperCol={{ span: 'auto' }}>
                 <MinusCircleOutlined onClick={() => remove(field.name)}/>
               </Form.Item>
             </Col>}
           </Row>
         ))}
-        <Form.Item>
+        {isEditable && <Form.Item>
           <Button onClick={() => add(defaultQuestionnaireFormState[name][0])}
                   disabled={fields.length >= maximumFieldsCount}
                   type="primary"
@@ -88,7 +92,7 @@ const QuestionnaireSuppliersAndBuyersFormFields: React.FC<QuestionnaireSuppliers
           >
             {t('questionnaire.common.add')}
           </Button>
-        </Form.Item>
+        </Form.Item>}
       </>)}
     </Form.List>
   </>)

@@ -1,7 +1,6 @@
 import './QuestionnaireForm.style.less'
-import { getQuestionnaire, sendQuestionnaire } from 'library/api/questionnaire'
 import QuestionnaireGeneralFormFields from './sections/QuestionnaireGeneralInfoFormFields'
-import { Button, Form, Row, Skeleton } from 'antd'
+import { Button, Form, Row } from 'antd'
 import { QuestionnaireFormData } from './models/questionnaire-form.interface'
 import QuestionnaireHoldingFormFields from './sections/QuestionnaireHoldingFormFields'
 import QuestionnaireCreditFormFields from './sections/QuestionnaireCreditFormFields'
@@ -9,47 +8,32 @@ import QuestionnaireCreditExpirationsFormFields from './sections/QuestionnaireCr
 import QuestionnaireSuppliersAndBuyersFormFields from './sections/QuestionnaireSuppliersAndBuyersFormFields'
 import QuestionnaireEasyFinansRelationshipsFormFields from './sections/QuestionnaireEasyFinansRelationshipsFormFields'
 import { useTranslation } from 'react-i18next'
-import {
-  convertQuestionnaireFormToDto,
-} from 'components/QuestionnaireForm/converters/questionnaire-form-to-dto.converter'
-import { useStoreState } from 'library/store'
+import { convertQuestionnaireFormToDto } from './converters/questionnaire-form-to-dto.converter'
 import { Link } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
-import { CompanyQuestionnaireDto } from 'orient-ui-library/library/models/proxy'
-import {
-  convertQuestionnaireDtoToFormValues,
-} from 'components/QuestionnaireForm/converters/questionnaire-dto-to-form-values.converter'
+import { useState } from 'react'
+import { convertQuestionnaireDtoToFormValues } from './converters/questionnaire-dto-to-form-values.converter'
+import { Dictionaries } from '../../library'
+import { CompanyQuestionnaireDto } from '../../library/models/proxy'
 
 interface QuestionnaireFormProps {
-  companyId: string,
-  returnUrl: string | null,
+  questionnaireDto: CompanyQuestionnaireDto | null
+  dictionaries: Dictionaries
+  isEditable: boolean
+  onSave?: (dto: CompanyQuestionnaireDto) => Promise<unknown>
+  returnUrl?: string | null
 }
 
-const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, returnUrl }) => {
+const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
+  questionnaireDto,
+  dictionaries,
+  isEditable,
+  onSave,
+  returnUrl,
+}) => {
   const { t } = useTranslation()
-  const dictionaries = useStoreState(state => state.dictionary.list)
   const [ form ] = Form.useForm<QuestionnaireFormData>()
-  const [ isQuestionnaireLoading, setIsQuestionnaireLoading ] = useState<boolean>(true)
-  const [ questionnaireDto, setQuestionnaireDto ] = useState<CompanyQuestionnaireDto | null>(null)
   const [ saveInProcess, setSaveInProcess ] = useState<boolean>(false)
-  useEffect(() => {
-    fetchQuestionnaire()
-  }, [])
-
-  const fetchQuestionnaire = async () => {
-    const result = await getQuestionnaire(companyId)
-    if (result.success) {
-      setQuestionnaireDto(result.data as CompanyQuestionnaireDto)
-    }
-    setIsQuestionnaireLoading(false)
-  }
-
-  if (isQuestionnaireLoading || !dictionaries) {
-    return (
-      <Skeleton active/>
-    )
-  }
 
   const initialValues = convertQuestionnaireDtoToFormValues(questionnaireDto)
   const formSettings = {
@@ -64,20 +48,32 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
   const saveQuestionnaire = async (formValue: QuestionnaireFormData) => {
     const dto: CompanyQuestionnaireDto = convertQuestionnaireFormToDto(formValue)
     setSaveInProcess(true)
-    await sendQuestionnaire(companyId, dto)
+    await onSave?.(dto)
     setSaveInProcess(false)
+  }
+
+  let classNames = 'QuestionnaireForm'
+  if (!isEditable) {
+    classNames += ' QuestionnaireForm_readonly'
   }
 
   return (
     <Form {...formSettings}
           onFinish={saveQuestionnaire}
+          className={classNames}
     >
-      <QuestionnaireGeneralFormFields dictionaries={dictionaries}/>
-      <QuestionnaireHoldingFormFields/>
-      <QuestionnaireCreditFormFields/>
-      <QuestionnaireCreditExpirationsFormFields/>
-      <QuestionnaireSuppliersAndBuyersFormFields dictionaries={dictionaries}/>
-      <QuestionnaireEasyFinansRelationshipsFormFields/>
+      <QuestionnaireGeneralFormFields
+        isEditable={isEditable}
+        dictionaries={dictionaries}
+      />
+      <QuestionnaireHoldingFormFields isEditable={isEditable}/>
+      <QuestionnaireCreditFormFields isEditable={isEditable}/>
+      <QuestionnaireCreditExpirationsFormFields isEditable={isEditable}/>
+      <QuestionnaireSuppliersAndBuyersFormFields
+        dictionaries={dictionaries}
+        isEditable={isEditable}
+      />
+      <QuestionnaireEasyFinansRelationshipsFormFields isEditable={isEditable}/>
       <Row justify={returnUrl ? 'space-between' : 'end'}>
         {returnUrl &&
           <Link to={returnUrl}>
@@ -87,12 +83,12 @@ const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({ companyId, return
           </Link>
         }
 
-        <Button type="primary"
-                htmlType="submit"
-                loading={saveInProcess}
+        {isEditable && <Button type="primary"
+                               htmlType="submit"
+                               loading={saveInProcess}
         >
           {t('questionnaire.save')}
-        </Button>
+        </Button>}
       </Row>
     </Form>
   )
