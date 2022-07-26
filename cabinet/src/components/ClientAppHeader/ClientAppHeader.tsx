@@ -69,7 +69,7 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
     {
       key: 'factoring',
       path: FACTORING_PATH,
-      title: t('productModal.factoring.description'),
+      title: t('productModal.factoring.title'),
       description: t('productModal.factoring.description'),
       ProductIcon: props => <Icon component={BoxWithSmileSvg} {...props}/>,
       disabled: factoringDisabled,
