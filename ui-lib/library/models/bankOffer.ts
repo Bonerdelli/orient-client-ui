@@ -18,4 +18,7 @@ export enum BankOfferStatus {
   BankOfferSent = 'bank_bank_offer_sent',
   CustomerSign = 'bank_customer_sign',
   Completed = 'bank_completed',
+  ClientRework = 'bank_client_rework',
+  BankReject = 'bank_bank_reject',
+  ClientOfferReject = 'bank_client_offer_reject',
 }

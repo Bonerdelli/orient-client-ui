@@ -7,6 +7,7 @@ l10n:
 dataDisplay:
   quickSearchMaxItems: 15
   numberFractionalLength: 2
+  listItemsOnPage: 50
 
 dataEntry:
   accountNumberLength: 20

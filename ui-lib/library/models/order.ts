@@ -29,8 +29,9 @@ export enum OrderStatus {
   FRAME_HAS_OFFER = 'frame_has_offer',
   FRAME_CUSTOMER_SIGN = 'frame_customer_sign',
   FRAME_COMPLETED = 'frame_completed',
-  FRAME_CANCEL = 'frame_cancel',
   FRAME_OPERATOR_REJECT = 'frame_operator_reject',
+  FRAME_BANK_REJECT = 'frame_bank_reject',
+  FRAME_CANCEL = 'frame_cancel',
 }
 
 export enum FactoringStatus {

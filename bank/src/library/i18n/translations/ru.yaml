@@ -137,3 +137,6 @@ offerStatusTitles:
   factorWaitForCharge: Ожидает финансирования
   factorCharged: Профинансировано
   factorCompleted: Финансирование погашено
+  bankReject: Отказ Банка
+  clientRework: Доработка
+  clientReject: Отказ от предложения

@@ -11,8 +11,6 @@ import { store } from 'library/store'
 
 import AppLayout from 'components/AppLayout'
 
-import './App.style.less'
-
 const { ErrorBoundary } = Alert
 
 const App = () => (

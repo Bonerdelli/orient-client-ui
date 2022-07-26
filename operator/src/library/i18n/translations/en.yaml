@@ -50,6 +50,8 @@ orderStatusTitles:
   cancel: Canceled
   operatorReject: Rejected by Operator
   bankReject: Rejected by Bank
+  waitForCharge: Wait for Charge
+  charged: Charged
   completed: Completed
 
 ## TODO: translate me
