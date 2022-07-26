@@ -4,9 +4,7 @@ import { Layout, message, Spin, Tabs } from 'antd'
 import { useStoreState } from 'library/store'
 
 import Div from 'orient-ui-library/components/Div'
-import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { ApiSuccessResponse } from 'orient-ui-library/library/helpers/api'
-import { CompanyDto, CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
+import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 
 import CompanyForm from 'components/CompanyForm'
 import CompanyContactsForm from 'components/CompanyContactsForm'
@@ -14,31 +12,14 @@ import CompanyContactsForm from 'components/CompanyContactsForm'
 import './MyCompanyPage.style.less'
 import { useEffect, useState } from 'react'
 import { getCompanyHeads } from 'library/api'
-import { getCompany } from 'library/api'
 
 const { TabPane } = Tabs
 
 const MyCompanyPage = () => {
   const { t } = useTranslation()
-  const companyId = useStoreState(state => state.company.companyId)
+  const company = useStoreState(state => state.company.current)
 
-  const [ company, setCompany ] = useState<CompanyDto>()
   const [ companyHead, setCompanyHead ] = useState<CompanyFounderDto>()
-  const [ companyLoaded, setCompanyLoaded ] = useState<boolean>()
-
-  const getCurrentCompany = async () => {
-    const result = await getCompany()
-    if (result.success && (result as ApiSuccessResponse<CompanyDto[]>).data?.length) {
-      setCompany(result.data?.[0] as CompanyDto)
-      setCompanyLoaded(true)
-    } else {
-      setCompanyLoaded(false)
-    }
-  }
-
-  useEffect(() => {
-    getCurrentCompany()
-  }, [ companyId ])
 
   useEffect(() => {
     if (company) {
@@ -58,12 +39,6 @@ const MyCompanyPage = () => {
     } else {
       message.error('Ошибка получения информации об учредителе компании')
     }
-  }
-
-  if (companyLoaded === false) {
-    return (
-      <ErrorResultView centered status="error"/>
-    )
   }
 
   if (!company) {
