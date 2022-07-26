@@ -13,6 +13,7 @@ declare const portalRolesPagesConfig: {
 declare const portalDataDisplayConfig: {
   quickSearchMaxItems: number
   numberFractionalLength: number
+  listItemsOnPage: number
 }
 
 declare const portalDataEntryConfig: {

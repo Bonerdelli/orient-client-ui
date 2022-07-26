@@ -47,7 +47,9 @@ orderStatusTitles:
   cancel: Отмена заявки
   operatorReject: Отказ системы
   bankReject: Отказ Банка
-  completed: Договор заключен
+  waitForCharge: Ожидает финансирования
+  charged: Поставщик профинансирован
+  completed: Финансирование погашено
 
 frameWizard:
   title: Заявка на заключение рамочного договора
