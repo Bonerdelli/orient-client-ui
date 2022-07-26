@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Button, Col, Divider, Form, Input, Radio, Row, Typography } from 'antd'
 import React, { useState } from 'react'
 import { EditOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
-import { QuestionnaireFormData } from 'components/QuestionnaireForm/models/questionnaire-form.interface'
+import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
 
 type ExpirationsState = [
   budget: boolean,
@@ -11,7 +11,13 @@ type ExpirationsState = [
   credits: boolean,
 ]
 
-const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
+interface QuestionnaireCreditExpirationsFormFieldsProps {
+  isEditable: boolean
+}
+
+const QuestionnaireCreditExpirationsFormFields: React.FC<QuestionnaireCreditExpirationsFormFieldsProps> = ({
+  isEditable,
+}) => {
   const { t } = useTranslation()
   const { Title } = Typography
   const form = Form.useFormInstance<QuestionnaireFormData>()
@@ -36,6 +42,7 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
   }
   const inputLayout = {
     suffix: <EditOutlined/>,
+    disabled: !isEditable,
   }
 
   const handleIsExpiredChange = (expirationIndex: number) => {
@@ -63,6 +70,7 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
                          labelCol={{ span: 12 }}
                          label={t(`questionnaire.creditExpirations.${field.key}`)}>
                 <Radio.Group options={yesNoOptions}
+                             disabled={!isEditable}
                              onChange={() => handleIsExpiredChange(field.key)}/>
               </Form.Item>
             </Col>
@@ -90,14 +98,14 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
           </React.Fragment>
         ))}
 
-        <Form.Item>
+        {isEditable && <Form.Item>
           <Button onClick={() => add()}
                   type="primary"
                   icon={<PlusOutlined/>}
           >
             {t('questionnaire.common.add')}
           </Button>
-        </Form.Item>
+        </Form.Item>}
       </>)}
     </Form.List>
   )
@@ -124,7 +132,7 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
             </Form.Item>
           </Col>
         ))}
-        {!!remove && <Col span={1}>
+        {!!remove && isEditable && <Col span={1}>
           <Form.Item wrapperCol={{ span: 'auto' }}
                      style={noMarginBottom ? { marginBottom: '0px' } : undefined}
           >
@@ -146,6 +154,7 @@ const QuestionnaireCreditExpirationsFormFields: React.FC = () => {
                  labelAlign="left"
                  label={t('questionnaire.creditExpirations.hasTrials')}>
         <Radio.Group options={yesNoOptions}
+                     disabled={!isEditable}
                      onChange={handleTrialsChange}/>
       </Form.Item>
       {hasTrials && renderTrialsRows()}

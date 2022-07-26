@@ -2,10 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { Form, Input, Radio, Typography } from 'antd'
 import { useState } from 'react'
 import { EditOutlined } from '@ant-design/icons'
-import { QuestionnaireFormData } from 'components/QuestionnaireForm/models/questionnaire-form.interface'
+import { QuestionnaireFormData } from '../models/questionnaire-form.interface'
 
+interface QuestionnaireHoldingFormFieldsProps {
+  isEditable: boolean
+}
 
-const QuestionnaireHoldingFormFields: React.FC = () => {
+const QuestionnaireHoldingFormFields: React.FC<QuestionnaireHoldingFormFieldsProps> = ({ isEditable }) => {
   const { t } = useTranslation()
   const { Title } = Typography
   const form = Form.useFormInstance<QuestionnaireFormData>()
@@ -18,6 +21,7 @@ const QuestionnaireHoldingFormFields: React.FC = () => {
   }
   const inputLayout = {
     suffix: <EditOutlined/>,
+    disabled: !isEditable,
   }
   const belongsToHoldingsOptions = [
     { label: t('questionnaire.common.yes'), value: true },
@@ -53,7 +57,8 @@ const QuestionnaireHoldingFormFields: React.FC = () => {
                  labelAlign="left"
                  label={t('questionnaire.holdings.belongsToHoldings')}
       >
-        <Radio.Group onChange={onBelongsToHoldingsChange}
+        <Radio.Group disabled={!isEditable}
+                     onChange={onBelongsToHoldingsChange}
                      options={belongsToHoldingsOptions}/>
       </Form.Item>
       {isHoldingFieldsVisible && renderHoldingFields(
