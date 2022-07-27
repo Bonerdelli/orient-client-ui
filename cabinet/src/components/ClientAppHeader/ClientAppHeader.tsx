@@ -141,7 +141,8 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
   )
 
   const renderMainAction = () => (
-    <Button onClick={openModal}>
+    <Button onClick={openModal}
+            type="link">
       <Space>
         {t('orders.actionButton.title')}
         <PlusOutlined/>
