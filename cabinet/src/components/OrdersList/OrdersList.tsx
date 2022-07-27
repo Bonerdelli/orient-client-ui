@@ -25,6 +25,94 @@ export interface OrdersListProps {
   mode?: CabinetMode
 }
 
+export enum ClientStatusFilter {
+  Drafts,
+  Verifying,
+  SignRequired,
+  WaitForCharge,
+  Charged,
+  Completed,
+  Cancelled,
+}
+
+export enum CustomerStatusFilter {
+  SignRequired,
+  Verifying,
+  WaitForCharge,
+  Charged,
+  Completed,
+  Cancelled,
+}
+
+const ClientStatusFilterValues = {
+  [ClientStatusFilter.Drafts]: [
+    FactoringStatus.FACTOR_CLIENT_REWORK,
+    FactoringStatus.FACTOR_DRAFT,
+    OrderStatus.FRAME_CLIENT_REWORK,
+    OrderStatus.FRAME_DRAFT,
+  ],
+  [ClientStatusFilter.Verifying]: [
+    FactoringStatus.FACTOR_OPERATOR_VERIFY,
+    FactoringStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY,
+    OrderStatus.FRAME_BANK_VERIFYING,
+    OrderStatus.FRAME_OPERATOR_VERIFYING,
+    OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY,
+  ],
+  [ClientStatusFilter.SignRequired]: [
+    FactoringStatus.FACTOR_CLIENT_SIGN,
+    OrderStatus.FRAME_CLIENT_SIGN,
+    OrderStatus.FRAME_HAS_OFFER,
+  ],
+  [ClientStatusFilter.WaitForCharge]: [
+    FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
+  ],
+  [ClientStatusFilter.Charged]: [
+    FactoringStatus.FACTOR_CHARGED,
+  ],
+  [ClientStatusFilter.Completed]: [
+    FactoringStatus.FACTOR_CHARGED,
+    OrderStatus.FRAME_COMPLETED,
+  ],
+  [ClientStatusFilter.Cancelled]: [
+    FactoringStatus.FACTOR_BANK_REJECT,
+    FactoringStatus.FACTOR_CANCEL,
+    FactoringStatus.FACTOR_OPERATOR_REJECT,
+    OrderStatus.FRAME_BANK_REJECT,
+    OrderStatus.FRAME_CANCEL,
+    OrderStatus.FRAME_OPERATOR_REJECT,
+  ],
+}
+
+
+const CustomerStatusFilterValues = {
+  [ClientStatusFilter.SignRequired]: [
+    FactoringStatus.FACTOR_BANK_REJECT,
+    FactoringStatus.FACTOR_BANK_SIGN,
+    FactoringStatus.FACTOR_CHARGED,
+    FactoringStatus.FACTOR_COMPLETED,
+    FactoringStatus.FACTOR_CUSTOMER_SIGN,
+    FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
+    OrderStatus.FRAME_COMPLETED,
+    OrderStatus.FRAME_CUSTOMER_SIGN,
+  ],
+  [ClientStatusFilter.Verifying]: [
+    FactoringStatus.FACTOR_BANK_SIGN,
+  ],
+  [ClientStatusFilter.WaitForCharge]: [
+    FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
+  ],
+  [ClientStatusFilter.Charged]: [
+    FactoringStatus.FACTOR_CHARGED,
+  ],
+  [ClientStatusFilter.Completed]: [
+    OrderStatus.FRAME_COMPLETED,
+    FactoringStatus.FACTOR_COMPLETED,
+  ],
+  [ClientStatusFilter.Cancelled]: [
+    FactoringStatus.FACTOR_BANK_REJECT,
+  ],
+}
+
 const OrdersList: React.FC<OrdersListProps> = ({ companyId, mode }) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()

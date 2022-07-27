@@ -335,3 +335,12 @@ offerStatusTitles:
   cancel: Отмена заявки
   offerRejected: Отказ от предложения
   rejectByBank: Отказ Банка
+
+offerFilterLabels:
+  drafts: Черновики и доработки
+  verifying: На рассмотрении
+  signRequired: Требующие подписи
+  waitForCharge: Ожидающие финансирования
+  charged: Профинансированнык
+  completed: Заключенные
+  cancelled: Отменнёные и отклоненные
