@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space } from 'antd'
+import { Table, Button, Space, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
@@ -24,18 +24,8 @@ export interface OrdersListProps {
   companyId: number
   mode?: CabinetMode
 }
-
-export enum ClientStatusFilter {
-  Drafts,
-  Verifying,
-  SignRequired,
-  WaitForCharge,
-  Charged,
-  Completed,
-  Cancelled,
-}
-
-export enum CustomerStatusFilter {
+export enum StatusFilter {
+  Drafts, // NOTE: disabled for Customer
   SignRequired,
   Verifying,
   WaitForCharge,
@@ -44,36 +34,36 @@ export enum CustomerStatusFilter {
   Cancelled,
 }
 
-const ClientStatusFilterValues = {
-  [ClientStatusFilter.Drafts]: [
+const StatusFilterValues = {
+  [StatusFilter.Drafts]: [
     FactoringStatus.FACTOR_CLIENT_REWORK,
     FactoringStatus.FACTOR_DRAFT,
     OrderStatus.FRAME_CLIENT_REWORK,
     OrderStatus.FRAME_DRAFT,
   ],
-  [ClientStatusFilter.Verifying]: [
+  [StatusFilter.Verifying]: [
     FactoringStatus.FACTOR_OPERATOR_VERIFY,
     FactoringStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY,
     OrderStatus.FRAME_BANK_VERIFYING,
     OrderStatus.FRAME_OPERATOR_VERIFYING,
     OrderStatus.FRAME_OPERATOR_WAIT_FOR_VERIFY,
   ],
-  [ClientStatusFilter.SignRequired]: [
+  [StatusFilter.SignRequired]: [
     FactoringStatus.FACTOR_CLIENT_SIGN,
     OrderStatus.FRAME_CLIENT_SIGN,
     OrderStatus.FRAME_HAS_OFFER,
   ],
-  [ClientStatusFilter.WaitForCharge]: [
+  [StatusFilter.WaitForCharge]: [
     FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
   ],
-  [ClientStatusFilter.Charged]: [
+  [StatusFilter.Charged]: [
     FactoringStatus.FACTOR_CHARGED,
   ],
-  [ClientStatusFilter.Completed]: [
+  [StatusFilter.Completed]: [
     FactoringStatus.FACTOR_CHARGED,
     OrderStatus.FRAME_COMPLETED,
   ],
-  [ClientStatusFilter.Cancelled]: [
+  [StatusFilter.Cancelled]: [
     FactoringStatus.FACTOR_BANK_REJECT,
     FactoringStatus.FACTOR_CANCEL,
     FactoringStatus.FACTOR_OPERATOR_REJECT,
@@ -85,7 +75,7 @@ const ClientStatusFilterValues = {
 
 
 const CustomerStatusFilterValues = {
-  [ClientStatusFilter.SignRequired]: [
+  [StatusFilter.SignRequired]: [
     FactoringStatus.FACTOR_BANK_REJECT,
     FactoringStatus.FACTOR_BANK_SIGN,
     FactoringStatus.FACTOR_CHARGED,
@@ -95,20 +85,20 @@ const CustomerStatusFilterValues = {
     OrderStatus.FRAME_COMPLETED,
     OrderStatus.FRAME_CUSTOMER_SIGN,
   ],
-  [ClientStatusFilter.Verifying]: [
+  [StatusFilter.Verifying]: [
     FactoringStatus.FACTOR_BANK_SIGN,
   ],
-  [ClientStatusFilter.WaitForCharge]: [
+  [StatusFilter.WaitForCharge]: [
     FactoringStatus.FACTOR_WAIT_FOR_CHARGE,
   ],
-  [ClientStatusFilter.Charged]: [
+  [StatusFilter.Charged]: [
     FactoringStatus.FACTOR_CHARGED,
   ],
-  [ClientStatusFilter.Completed]: [
+  [StatusFilter.Completed]: [
     OrderStatus.FRAME_COMPLETED,
     FactoringStatus.FACTOR_COMPLETED,
   ],
-  [ClientStatusFilter.Cancelled]: [
+  [StatusFilter.Cancelled]: [
     FactoringStatus.FACTOR_BANK_REJECT,
   ],
 }
@@ -165,6 +155,27 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId, mode }) => {
         return t('models.order.types.frameSimpleOrder.titleShort')
       case OrderWizardType.Factoring:
         return t('models.order.types.factoring.titleShort')
+      default:
+        return <></>
+    }
+  }
+
+  const renderStatusFilterTag = (value: StatusFilter) => {
+    switch (value) {
+      case StatusFilter.Drafts:
+        return <Tag>{t('offerFilterLabels.drafts')}</Tag>
+      case StatusFilter.SignRequired:
+        return <Tag color="green">{t('offerFilterLabels.signRequired')}</Tag>
+      case StatusFilter.Verifying:
+        return <Tag color="blue">{t('offerFilterLabels.verifying')}</Tag>
+      case StatusFilter.WaitForCharge:
+        return <Tag color="blue">{t('offerFilterLabels.waitForCharge')}</Tag>
+      case StatusFilter.Charged:
+        return <Tag color="blue">{t('offerFilterLabels.charged')}</Tag>
+      case StatusFilter.Completed:
+        return <Tag color="blue">{t('offerFilterLabels.completed')}</Tag>
+      case StatusFilter.Cancelled:
+        return <Tag color="red">{t('offerFilterLabels.cancelled')}</Tag>
       default:
         return <></>
     }
