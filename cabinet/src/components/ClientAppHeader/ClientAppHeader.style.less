@@ -17,14 +17,14 @@
 }
 
 .Product {
-  padding: 20px;
+  padding: @padding-lg;
   position: relative;
   min-height: 239px;
-  background-color: #F8F9FD;
-  transition: box-shadow 0.3s ease-in-out;
+  background-color: @blue-1;
+  transition: box-shadow @animation-duration-slow ease-in-out;
 
   &:hover:not(.Product_disabled) {
-    box-shadow: 0 0 8px 2px rgba(71, 111, 243, 0.3);
+    box-shadow: @box-shadow-base;
   }
 
   &_disabled {

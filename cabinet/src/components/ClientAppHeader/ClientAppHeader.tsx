@@ -124,7 +124,7 @@ const ClientAppHeader: React.FC<ClientAppHeaderProps> = ({}) => {
         level={4}
         style={{ textAlign: 'center' }}
       >
-        {t('productModal.title')}
+        {t('productModal.title')}&nbsp;
         <Text style={{ fontWeight: 'bold' }}>{company?.shortName}</Text>
       </Title>}
       visible={productsModalVisible}
