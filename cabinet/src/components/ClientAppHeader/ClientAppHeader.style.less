@@ -20,11 +20,11 @@
   padding: @padding-lg;
   position: relative;
   min-height: 239px;
-  background-color: @blue-1;
+  background-color: @background-color-base;
   transition: box-shadow @animation-duration-slow ease-in-out;
 
   &:hover:not(.Product_disabled) {
-    box-shadow: @box-shadow-base;
+    box-shadow: 0 0 8px 4px fade(saturate(@primary-color, 30%), 25%);
   }
 
   &_disabled {
