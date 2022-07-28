@@ -13,6 +13,7 @@ import { Customer } from 'library/models' // TODO: check API schema, why not fro
 import { getFrameWizardStep, searchCustomers, startFrameWizard } from 'library/api'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
+import portalConfig from 'config/portal.yaml'
 import './OrderStepSelectInn.style.less'
 
 const { Title, Text } = Typography
@@ -145,9 +146,9 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
     } else {
       const orderId = (result as any)?.data?.orderId as number
       if (wizardType === FrameWizardType.Full) {
-        history.push(`/requests/frame/${orderId}`)
+        history.push(`${portalConfig.sections.requests}/frame/${orderId}`)
       } else {
-        history.push(`/requests/frame-simple/${orderId}`)
+        history.push(`${portalConfig.sections.requests}/frame-simple/${orderId}`)
       }
       setOrderId(orderId)
     }

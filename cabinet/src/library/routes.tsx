@@ -58,7 +58,7 @@ const PrivateRoute: React.FC<PrivateRouteOptions> = ({
 
 export const PublicRoutes = () => (
   <Switch>
-    <Route exact path="/login">
+    <Route exact path={LOGIN_PATH}>
       <LoginPage/>
     </Route>
     <Route path="*">
