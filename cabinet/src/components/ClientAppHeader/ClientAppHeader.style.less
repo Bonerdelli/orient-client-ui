@@ -9,8 +9,38 @@
 
 .ClientAppHeader__dropDownMenu {
   margin-left: @margin-lg;
+
   &:hover,
   &:focus {
     color: inherit;
+  }
+}
+
+.Product {
+  padding: @padding-lg;
+  position: relative;
+  min-height: 239px;
+  background-color: @background-color-base;
+  transition: box-shadow @animation-duration-slow ease-in-out;
+
+  &:hover:not(.Product_disabled) {
+    box-shadow: 0 0 8px 4px fade(saturate(@primary-color, 30%), 25%);
+  }
+
+  &_disabled {
+    cursor: not-allowed;
+    filter: grayscale(100%);
+  }
+
+  &__description {
+    position: relative;
+    max-width: 88%;
+    z-index: 1;
+  }
+
+  &__icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 }
