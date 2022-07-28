@@ -35,6 +35,7 @@ export const FRAME_ORDER_PATH = '/frame-order'
 export const SIMPLE_FRAME_ORDER_PATH = '/frame-simple-order'
 export const FACTORING_PATH = '/factoring'
 export const QUESTIONNAIRE_PATH = '/questionnaire'
+export const QUESTIONNAIRE_PATH = '/questionnaire'
 
 const PrivateRoute: React.FC<PrivateRouteOptions> = ({
   component: Component,
@@ -58,7 +59,7 @@ const PrivateRoute: React.FC<PrivateRouteOptions> = ({
 
 export const PublicRoutes = () => (
   <Switch>
-    <Route exact path="/login">
+    <Route exact path={LOGIN_PATH}>
       <LoginPage/>
     </Route>
     <Route path="*">

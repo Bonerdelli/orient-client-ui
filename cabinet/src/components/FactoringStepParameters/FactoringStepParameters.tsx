@@ -14,7 +14,6 @@ import {
   sendFactoringWizardStep,
 } from 'library/api/factoringWizard'
 
-import './FactoringStepParameters.style.less'
 import { BaseOptionType } from 'antd/es/select'
 import { getOrdersForFactoring } from 'library/api/orders'
 import { FrameOrderForFactoringDto } from 'library/models/orders'
@@ -26,9 +25,13 @@ import { EditOutlined } from '@ant-design/icons'
 import OrderCondition from 'orient-ui-library/components/OrderCondition'
 import { useHistory, useLocation } from 'react-router-dom'
 import { FACTORING_ORDER_ID_PARAM, OFFER_BANK_ID_PARAM } from 'library/constants'
+
 import {
   convertDictionaryToSelectOptions,
 } from 'orient-ui-library/library/converters/dictionary-to-select-options.converter'
+
+import portalConfig from 'config/portal.yaml'
+import './FactoringStepParameters.style.less'
 
 const { Text, Paragraph } = Typography
 const { Item: DescItem } = Descriptions
@@ -182,7 +185,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     if (result.success) {
       const id = result.data?.orderId ?? null
       if (id !== null) {
-        history.push(`/requests/factoring/${id}`)
+        history.push(`${portalConfig.sections.requests}/factoring/${id}`)
       } else {
         message.error(t('factoringStepParameters.apiErrors.incorrectFactoringOrderId', { orderId: id }))
         setSubmitting(false)
