@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Tag, Select } from 'antd'
+import { Table, Button, Space, Tag, TagProps, Select } from 'antd'
 import { ReloadOutlined, ClearOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
@@ -111,7 +111,10 @@ const CustomerStatusFilterValues = {
 
 const defaultStatusFilter: StatusFilter[] = []
 
-const OrdersList: React.FC<OrdersListProps> = ({ companyId, mode }) => {
+const OrdersList: React.FC<OrdersListProps> = ({
+  companyId,
+  mode = CabinetMode.Client,
+}) => {
   const { t } = useTranslation()
   const { url } = useRouteMatch()
 
@@ -186,9 +189,13 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId, mode }) => {
   ]
 
   useEffect(() => {
-    const filteredOptions = statusFilterOptions.filter(
-      datum => !selectedStatuses.includes(datum.value)
-    )
+    const filteredOptions = statusFilterOptions
+      .filter(
+        datum => (mode === CabinetMode.Client || datum.value !== StatusFilter.Drafts)
+      )
+      .filter(
+        datum => !selectedStatuses.includes(datum.value)
+      )
     setFilterAvailableOptions(filteredOptions)
     setPage(1)
   }, [ selectedStatuses ])
@@ -215,7 +222,7 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId, mode }) => {
         dropdownClassName="OrderList__filter__combobox__options"
         className="OrderList__filter__combobox OrderList__filter__item--grow"
         placeholder={t('common.filter.fieldPlaceholders.status')}
-        tagRender={renderStatusFilterTag}
+        tagRender={({ value, ...props }) => renderStatusFilterTag(value, props)}
         value={selectedStatuses}
         onChange={setSelectedStatusOptions}
         filterOption={statusOptionsFilter}
@@ -297,22 +304,22 @@ const OrdersList: React.FC<OrdersListProps> = ({ companyId, mode }) => {
     }
   }
 
-  const renderStatusFilterTag = (value: StatusFilter) => {
+  const renderStatusFilterTag = (value: StatusFilter, props?: TagProps) => {
     switch (value) {
       case StatusFilter.Drafts:
-        return <Tag>{t('offerFilterLabels.drafts')}</Tag>
+        return <Tag {...props}>{t('offerFilterLabels.drafts')}</Tag>
       case StatusFilter.SignRequired:
-        return <Tag color="green">{t('offerFilterLabels.signRequired')}</Tag>
+        return <Tag color="green" {...props}>{t('offerFilterLabels.signRequired')}</Tag>
       case StatusFilter.Verifying:
-        return <Tag color="blue">{t('offerFilterLabels.verifying')}</Tag>
+        return <Tag color="blue" {...props}>{t('offerFilterLabels.verifying')}</Tag>
       case StatusFilter.WaitForCharge:
-        return <Tag color="blue">{t('offerFilterLabels.waitForCharge')}</Tag>
+        return <Tag color="blue" {...props}>{t('offerFilterLabels.waitForCharge')}</Tag>
       case StatusFilter.Charged:
-        return <Tag color="blue">{t('offerFilterLabels.charged')}</Tag>
+        return <Tag color="blue" {...props}>{t('offerFilterLabels.charged')}</Tag>
       case StatusFilter.Completed:
-        return <Tag color="blue">{t('offerFilterLabels.completed')}</Tag>
+        return <Tag color="blue" {...props}>{t('offerFilterLabels.completed')}</Tag>
       case StatusFilter.Cancelled:
-        return <Tag color="red">{t('offerFilterLabels.cancelled')}</Tag>
+        return <Tag color="red" {...props}>{t('offerFilterLabels.cancelled')}</Tag>
       default:
         return <></>
     }

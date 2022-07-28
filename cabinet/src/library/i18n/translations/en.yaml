@@ -68,6 +68,26 @@ orderStatusTitles:
   operatorReject: Operator Reject
   chagred: Funding redeemed
 
+
+offerStatusTitles:
+  bankVerify: Bank Verify
+  needsForRework: Needs for Rework
+  bankOfferSent: Bank Offer Sent
+  customerSign: Customer Sign
+  completed: Completed
+  cancel: Cancel
+  offerRejected: Offer Rejected
+  rejectByBank: Reject by Bank
+
+offerFilterLabels:
+  drafts: Drafts
+  verifying: Verifying
+  signRequired: Sign Required
+  waitForCharge: Wait for Charge
+  charged: Charged
+  completed: Completed
+  cancelled: Cancelled
+
 orderStatusCustomerTitles:
   customerSign: Requires a signature
   completed: Completed
