@@ -15,6 +15,7 @@ import AppLayoutPublic from './AppLayoutPublic'
 import AppLayoutProtected from './AppLayoutProtected'
 
 import './AppLayout.style.less'
+import { getCompany } from 'library/api'
 
 
 const AppLayout = () => {
@@ -22,7 +23,7 @@ const AppLayout = () => {
   const rehydrated = useStoreRehydrated()
   const user = useStoreState(state => state.user.current)
   const auth = useStoreState(state => state.user.currentAuth)
-  const { setCompanyId } = useStoreActions(state => state.company)
+  const { setCompany, setCompanyId } = useStoreActions(state => state.company)
 
   const [ loading, setLoading ] = useState<boolean>(true)
   const [ apiError, setApiError ] = useState<string | null>(null)
@@ -46,6 +47,13 @@ const AppLayout = () => {
     setLoading(false)
   }
 
+  const fetchCompanyInfo = async () => {
+    const res = await getCompany()
+    if (res.success) {
+      setCompany(res?.data?.[0])
+    }
+  }
+
   useEffect(() => {
     initialize()
   }, [])
@@ -53,8 +61,9 @@ const AppLayout = () => {
   useEffect(() => {
     if (user) {
       setCompanyId((user as User).companyId)
+      fetchCompanyInfo()
     }
-  }, [user])
+  }, [ user ])
 
   if (apiError) {
     return (
