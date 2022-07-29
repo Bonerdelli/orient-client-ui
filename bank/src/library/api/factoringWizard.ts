@@ -1,6 +1,10 @@
 import { get, post } from 'orient-ui-library/library/helpers/api'
+import * as schema from 'orient-ui-library/library/api/schema'
+
 import { FactoringWizardStepResponse } from 'orient-ui-library/library'
 import { BankFactoringWizardStep1Dto, BankFactoringWizardStep2Dto } from 'library/models/factoringWizard'
+
+export type FactoringOrderCheckListRequest = schema.components['schemas']['BankOrderCheckListRequest']
 
 interface FactoringWizardCommonParameters {
   bankId: number
@@ -30,7 +34,7 @@ export async function sendFactoringWizardStep(
 ) {
   const { bankId, orderId, step } = params
   const basePath = getBasePath(bankId)
-  return await post(`${basePath}/${orderId}/${step}`, request, true)
+  return await post(`${basePath}/${orderId}/${step}`, request)
 }
 
 /**
@@ -53,4 +57,16 @@ export async function getFactoringWizardStep(
   const { bankId, orderId, step } = params
   const basePath = getBasePath(bankId)
   return await get(`${basePath}/${orderId}/${step}`)
+}
+
+/**
+ * Send order check list
+ */
+export async function updateFrameWizardCheckList(
+  params: FactoringWizardCommonParameters,
+  request: FactoringOrderCheckListRequest,
+) {
+  const { bankId, orderId } = params
+  const basePath = getBasePath(bankId)
+  return await post(`${basePath}/${orderId}/checks`, request)
 }

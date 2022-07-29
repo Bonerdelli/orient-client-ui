@@ -11,12 +11,14 @@ import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
+import { OrderCheckList as OrderCheckListModel } from 'library/models'
 import OrderDocumentsList from 'components/OrderDocumentsList'
-import FakeCheckList from 'components/FakeCheckList'
+import OrderCheckList from 'components/OrderCheckList'
 
 import {
   getFrameWizardStep,
   sendFrameWizardStep2,
+  updateFrameWizardCheckList,
 } from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
@@ -164,6 +166,19 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     }
   }
 
+  const handleCheckListChange = async (value: OrderCheckListModel[]) => {
+    const result = await updateFrameWizardCheckList({
+      type: wizardType,
+      bankId,
+      orderId,
+    }, {
+      checks: value,
+    })
+    if (!result.success) {
+      message.error(t('common.errors.requestError.title'))
+    }
+  }
+
   const renderPrevStepButton = () => {
     // NOTE: disabled as we can't go back by status model
     return (
@@ -260,7 +275,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       {documentsGenerated !== null && renderGeneratedDocumentsSection()}
       <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepDocuments.sectionTitles.checkList')}</Title>
-        <FakeCheckList defaultChecked={currentStep > sequenceStepNumber} />
+        <OrderCheckList checkList={stepData?.checks} onChange={handleCheckListChange} />
       </Div>
     </Div>
   )

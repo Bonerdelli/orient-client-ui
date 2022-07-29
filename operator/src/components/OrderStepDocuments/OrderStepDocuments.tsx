@@ -298,7 +298,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         footer={
           <Button type="primary"
                   onClick={closeCompanyFounderModal}>
-            {t('models.companyFounderInformation.close')}
+            {t('orderStepDocuments.companyFounderInformation.close')}
           </Button>
         }
       >
