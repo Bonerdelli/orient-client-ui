@@ -90,6 +90,7 @@ orderStepDocuments:
   companyFounderInformation:
     title: Данные о руководителе
     check: Проверить
+    close: Закрыть
   companyQuestionnaire:
     title: Анкета компании
     check: Проверить

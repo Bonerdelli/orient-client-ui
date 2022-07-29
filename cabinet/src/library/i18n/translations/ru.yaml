@@ -42,7 +42,7 @@ companyPage:
     lastName:
       title: Руководитель
     inn:
-      title: ИНН руководителя
+      title: ПИНФЛ руководителя
 
 headsPage:
   tableColumns:
