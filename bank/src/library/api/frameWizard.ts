@@ -8,6 +8,7 @@ import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 export type FrameWizardRejectOrderRequest = schema.components['schemas']['RejectOrderDto']
 export type FrameWizardDocumentStatusRequest = schema.components['schemas']['OrderDocumentStatusRequest']
 export type FrameWizardStopFactorRequest = schema.components['schemas']['OrderStopFactorRequest']
+export type FrameWizardOrderCheckListRequest = schema.components['schemas']['BankOrderCheckListRequest']
 
 export interface FrameWizardParameters {
   bankId?: number | bigint
@@ -105,4 +106,16 @@ export async function getFrameWizardStep(
   const { bankId, orderId, step, type } = params
   const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'frame'
   return await get(`/bank/${bankId}/wizard/${wizard}/${orderId}/${step}`)
+}
+
+/**
+ * Send order check list
+ */
+export async function updateFrameWizardCheckList(
+  params: FrameWizardsCommonParameters,
+  request: FrameWizardOrderCheckListRequest,
+) {
+  const { bankId, orderId, type } = params
+  const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'frame'
+  return await post(`/bank/${bankId}/wizard/${wizard}/${orderId}/checks`, request)
 }
