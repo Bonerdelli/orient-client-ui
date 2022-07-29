@@ -336,6 +336,15 @@ offerStatusTitles:
   offerRejected: Отказ от предложения
   rejectByBank: Отказ Банка
 
+offerFilterLabels:
+  drafts: Черновики и доработки
+  verifying: На рассмотрении
+  signRequired: Требующие подписи
+  waitForCharge: Ожидающие финансирования
+  charged: Профинансированные
+  completed: Заключенные
+  cancelled: Отменнёные и отклоненные
+
 productModal:
   title: Выбор продукта для компании
   frame:
