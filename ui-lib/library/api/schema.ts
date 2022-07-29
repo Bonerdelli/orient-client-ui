@@ -13,6 +13,9 @@ export interface paths {
   '/operator/wizard/frameSimple/{orderId}/docStatus': {
     post: operations['changeDocStatus']
   }
+  '/operator/wizard/frameSimple/{orderId}/assign': {
+    post: operations['assignToOrder']
+  }
   '/operator/wizard/frameSimple/{orderId}/3': {
     post: operations['postStep3']
   }
@@ -30,6 +33,9 @@ export interface paths {
   }
   '/operator/wizard/frame/{orderId}/docStatus': {
     post: operations['changeDocStatus_1']
+  }
+  '/operator/wizard/frame/{orderId}/assign': {
+    post: operations['assignToOrder_1']
   }
   '/operator/wizard/frame/{orderId}/4': {
     post: operations['postStep3_1']
@@ -51,6 +57,9 @@ export interface paths {
   }
   '/operator/wizard/factor/{orderId}/docStatus': {
     post: operations['changeDocStatus_2']
+  }
+  '/operator/wizard/factor/{orderId}/assign': {
+    post: operations['assignToOrder_2']
   }
   '/operator/wizard/factor/{orderId}/4': {
     post: operations['postStep3_3']
@@ -103,7 +112,7 @@ export interface paths {
     post: operations['reject_3']
   }
   '/customer/company/{companyId}/questionnaire': {
-    get: operations['getQuest']
+    get: operations['getQuest_1']
     post: operations['saveQuest']
   }
   '/customer/company/{companyId}/order/list': {
@@ -186,7 +195,7 @@ export interface paths {
     post: operations['saveRequisites']
   }
   '/client/company/{companyId}/questionnaire': {
-    get: operations['getQuest_1']
+    get: operations['getQuest_2']
     post: operations['saveQuest_1']
   }
   '/client/company/{companyId}/order/{orderId}/document/upload/{typeId}': {
@@ -231,6 +240,12 @@ export interface paths {
   '/bank/{bankId}/wizard/frameSimple/{orderId}/reject': {
     post: operations['reject_4']
   }
+  '/bank/{bankId}/wizard/frameSimple/{orderId}/checks': {
+    post: operations['changeCkeckList']
+  }
+  '/bank/{bankId}/wizard/frameSimple/{orderId}/assign': {
+    post: operations['assignToOrder_3']
+  }
   '/bank/{bankId}/wizard/frameSimple/{orderId}/3': {
     post: operations['postStep3_7']
   }
@@ -242,6 +257,12 @@ export interface paths {
   }
   '/bank/{bankId}/wizard/frame/{orderId}/reject': {
     post: operations['reject_5']
+  }
+  '/bank/{bankId}/wizard/frame/{orderId}/checks': {
+    post: operations['changeCkeckList_1']
+  }
+  '/bank/{bankId}/wizard/frame/{orderId}/assign': {
+    post: operations['assignToOrder_4']
   }
   '/bank/{bankId}/wizard/frame/{orderId}/5': {
     post: operations['postStep5']
@@ -260,10 +281,16 @@ export interface paths {
   }
   '/bank/{bankId}/wizard/factor/{orderId}/{step}': {
     get: operations['getStep_23']
-    post: operations['reject_6']
+    post: operations['post']
   }
   '/bank/{bankId}/wizard/factor/{orderId}/reject': {
-    post: operations['reject_7']
+    post: operations['reject_6']
+  }
+  '/bank/{bankId}/wizard/factor/{orderId}/checks': {
+    post: operations['changeCkeckList_2']
+  }
+  '/bank/{bankId}/wizard/factor/{orderId}/assign': {
+    post: operations['assignToOrder_5']
   }
   '/bank/{bankId}/rejectReason/list': {
     post: operations['list_1']
@@ -309,6 +336,9 @@ export interface paths {
   }
   '/operator/order/graph/{orderType}/{statusCode}': {
     get: operations['getForStatus_1']
+  }
+  '/operator/company/{companyId}/questionnaire': {
+    get: operations['getQuest']
   }
   '/dictionary/{name}': {
     get: operations['byKey']
@@ -845,6 +875,14 @@ export interface components {
       site?: string
       email?: string
     }
+    BankOrderCheckListRequest: {
+      checks: components['schemas']['Checks'][]
+    }
+    Checks: {
+      /** Format: int64 */
+      id: number
+      isChecked: boolean
+    }
     BankFrameStep4To5Request: {
       conditionCode: string
       /** Format: double */
@@ -911,6 +949,10 @@ export interface components {
       success: boolean
       data?: components['schemas']['OrderStatusGraphAxis'][]
     }
+    ServerResponseCompanyQuestionnaire: {
+      success: boolean
+      data?: components['schemas']['CompanyQuestionnaire']
+    }
     ServerResponseListObject: {
       success: boolean
       data?: { [key: string]: unknown }[]
@@ -918,10 +960,6 @@ export interface components {
     ServerResponseMapStringListObject: {
       success: boolean
       data?: { [key: string]: { [key: string]: unknown }[] }
-    }
-    ServerResponseCompanyQuestionnaire: {
-      success: boolean
-      data?: components['schemas']['CompanyQuestionnaire']
     }
     FileLocation: {
       location: string
@@ -962,6 +1000,8 @@ export interface components {
       addressFact?: string
       soatoFact?: string
       isAddressesSame?: boolean
+      isClient?: boolean
+      isCustomer?: boolean
     }
     ServerResponseJCompany: {
       success: boolean
@@ -984,8 +1024,11 @@ export interface components {
       fileStatus: string
       /** Format: date-time */
       createdAt: string
+      needClientSign: boolean
       clientSigned: boolean
+      needBankSign: boolean
       bankSigned: boolean
+      needCustomerSign: boolean
       customerSigned: boolean
       /** Format: int64 */
       bankId?: number
@@ -994,6 +1037,8 @@ export interface components {
       /** Format: int64 */
       typeId: number
       typeName: string
+      /** Format: int32 */
+      priority: number
       isGenerated: boolean
       isRequired: boolean
       info?: components['schemas']['Info']
@@ -1018,6 +1063,8 @@ export interface components {
       /** Format: int64 */
       typeId: number
       type: string
+      /** Format: int32 */
+      priority: number
       info?: components['schemas']['Info']
     }
     ServerResponseListCompanyDocumentsResponse: {
@@ -1090,6 +1137,21 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['OrderDocumentStatusRequest']
+      }
+    }
+  }
+  assignToOrder: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
       }
     }
   }
@@ -1200,6 +1262,21 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['OrderDocumentStatusRequest']
+      }
+    }
+  }
+  assignToOrder_1: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
       }
     }
   }
@@ -1335,6 +1412,21 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['OrderDocumentStatusRequest']
+      }
+    }
+  }
+  assignToOrder_2: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
       }
     }
   }
@@ -1641,7 +1733,7 @@ export interface operations {
       }
     }
   }
-  getQuest: {
+  getQuest_1: {
     parameters: {
       path: {
         companyId: number
@@ -2189,7 +2281,7 @@ export interface operations {
       }
     }
   }
-  getQuest_1: {
+  getQuest_2: {
     parameters: {
       path: {
         companyId: number
@@ -2532,6 +2624,42 @@ export interface operations {
       }
     }
   }
+  changeCkeckList: {
+    parameters: {
+      path: {
+        bankId: number
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BankOrderCheckListRequest']
+      }
+    }
+  }
+  assignToOrder_3: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
+      }
+    }
+  }
   postStep3_7: {
     parameters: {
       path: {
@@ -2598,6 +2726,42 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['RejectOrderDto']
+      }
+    }
+  }
+  changeCkeckList_1: {
+    parameters: {
+      path: {
+        bankId: number
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BankOrderCheckListRequest']
+      }
+    }
+  }
+  assignToOrder_4: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
       }
     }
   }
@@ -2708,7 +2872,7 @@ export interface operations {
       }
     }
   }
-  reject_6: {
+  post: {
     parameters: {
       path: {
         bankId: number
@@ -2725,7 +2889,7 @@ export interface operations {
       }
     }
   }
-  reject_7: {
+  reject_6: {
     parameters: {
       path: {
         bankId: number
@@ -2743,6 +2907,42 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['RejectOrderDto']
+      }
+    }
+  }
+  changeCkeckList_2: {
+    parameters: {
+      path: {
+        bankId: number
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BankOrderCheckListRequest']
+      }
+    }
+  }
+  assignToOrder_5: {
+    parameters: {
+      path: {
+        orderId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseUnit']
+        }
       }
     }
   }
@@ -2984,6 +3184,21 @@ export interface operations {
       200: {
         content: {
           '*/*': components['schemas']['ServerResponseSetOrderStatusGraphAxis']
+        }
+      }
+    }
+  }
+  getQuest: {
+    parameters: {
+      path: {
+        companyId: number
+      }
+    }
+    responses: {
+      /** OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['ServerResponseCompanyQuestionnaire']
         }
       }
     }

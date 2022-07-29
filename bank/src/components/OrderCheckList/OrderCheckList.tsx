@@ -1,10 +1,10 @@
 import { Row, Col, Typography, List, Checkbox } from 'antd'
 
-import './FakeCheckList.style.less'
+import './OrderCheckList.style.less'
 
 const { Text } = Typography
 
-export interface FakeCheckListProps {
+export interface OrderCheckListProps {
   defaultChecked?: boolean
 }
 
@@ -14,7 +14,7 @@ const checkListData = [
   'Параметр 3',
 ];
 
-const FakeCheckList: React.FC<FakeCheckListProps> = ({ defaultChecked }) => {
+const OrderCheckList: React.FC<OrderCheckListProps> = ({ defaultChecked }) => {
   return (
     <Row>
       <Col lg={12}>
@@ -32,4 +32,4 @@ const FakeCheckList: React.FC<FakeCheckListProps> = ({ defaultChecked }) => {
   )
 }
 
-export default FakeCheckList
+export default OrderCheckList
