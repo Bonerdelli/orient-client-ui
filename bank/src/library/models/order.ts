@@ -11,6 +11,12 @@ export interface Order {
   typeCode: OrderWizardType
 }
 
+export interface OrderCheckList {
+  id: number
+  checkListCode: boolean
+  isChecked: boolean
+}
+
 export enum OrderWizardType {
   Frame = 'frame',
   FrameSimple = 'frame_simple',
