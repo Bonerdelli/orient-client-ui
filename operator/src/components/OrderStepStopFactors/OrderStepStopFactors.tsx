@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Table, Button, Skeleton, Tag, message } from 'antd'
+import { Button, Col, message, Row, Skeleton, Table, Tag, Typography } from 'antd'
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 
@@ -12,11 +12,7 @@ import { getControlColorByState } from 'orient-ui-library/library/helpers/contro
 
 import { StopFactor } from 'library/models/stopFactor'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep3,
-  frameWizardSetStopFactor,
-} from 'library/api/frameWizard'
+import { frameWizardSetStopFactor, getFrameWizardStep, sendFrameWizardStep3 } from 'library/api/frameWizard'
 
 import './OrderStepStopFactors.style.less'
 
@@ -27,6 +23,8 @@ export interface OrderStepStopFactorsProps {
   currentStep?: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
@@ -34,6 +32,8 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
   const [ approveInProccess, setApproveInProccess ] = useState<Record<StopFactor['stopFactorId'], boolean>>({})
@@ -170,12 +170,34 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
     })
   }
 
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.assign.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{renderNextButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const renderNextButton = () => (
     <Button

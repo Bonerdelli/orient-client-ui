@@ -14,7 +14,9 @@ import FactoringStepStopFactors from 'components/FactoringStepStopFactors'
 import FactoringStepSendToBank from 'components/FactoringStepSendToBank'
 
 import './FactoringOperatorWizard.style.less'
-import { getFactoringOrderWizard } from 'library/api/factoringWizard'
+import { getFactoringOrderWizard, setAssignedUserForFactoringOrder } from 'library/api/factoringWizard'
+import { useStoreState } from 'library/store'
+import { AssignedUserDto } from 'library/models'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid
@@ -33,12 +35,15 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FactoringOperatorWizardPathParams>()
+  const currentUserId = useStoreState(state => state.user.current.userId)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
+  const [ username, setUsername ] = useState<string | undefined>()
+  const [ isCurrentUserAssigned, setIsCurrentUserAssigned ] = useState<boolean>(false)
 
   useEffect(() => {
     setStepDataLoading(true)
@@ -61,11 +66,29 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
       setOrderStatus(orderStatus)
       setCurrentStep(step)
       setSelectedStep(step)
+
+      // replace with (result.data as any).assignedUserData after BE support
+      const assignedUser: AssignedUserDto = (result.data as any).data?.assignedUserData
+      if (assignedUser) {
+        if (assignedUser.userLogin) {
+          setUsername(assignedUser.userLogin)
+        }
+        setIsCurrentUserAssigned(assignedUser.userId === currentUserId)
+      }
+
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
+  }
+
+  const assignCurrentUser = async () => {
+    const result = await setAssignedUserForFactoringOrder({ orderId: Number(itemId) || orderId as number })
+    if (result.success) {
+      // TODO: подумать над апдейтом фронта без притягивания всей информации о шаге
+      return loadCurrentStepData()
+    }
   }
 
   const isFirstStepActive = (): boolean => true
@@ -88,6 +111,8 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
       orderId: Number(itemId) || orderId,
       currentStep: currentStep,
       setCurrentStep: handleStepChange,
+      isCurrentUserAssigned,
+      assignCurrentUser,
     }
     switch (selectedStep) {
       case 1:
@@ -124,6 +149,7 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
         <WizardHeader
           title={t('frameWizard.title')}
           backUrl={backUrl}
+          username={username}
           statusTag={
             <OrderStatusTag
               statusCode={orderStatus}

@@ -68,3 +68,11 @@ export async function factoringWizardSetStopFactor(
   const { orderId } = params
   return await post(`/operator/wizard/factor/${orderId}/stopFactor`, request)
 }
+
+/**
+ * Assign factoring order to current operator
+ */
+export async function setAssignedUserForFactoringOrder(params: FactoringWizardStepParameters) {
+  const { orderId } = params
+  return await post(`/operator/wizard/factor/${orderId}/assign`, {}, true)
+}

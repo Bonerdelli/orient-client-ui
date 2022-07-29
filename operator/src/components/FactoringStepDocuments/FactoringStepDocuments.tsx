@@ -14,9 +14,9 @@ import OrderDocumentsList from 'components/OrderDocumentsList'
 import { DocumentStatus } from 'library/models'
 
 import {
+  factoringWizardSetDocStatus,
   getFactoringWizardStep,
   sendFactoringWizardStep,
-  factoringWizardSetDocStatus,
 } from 'library/api/factoringWizard'
 
 import './FactoringStepDocuments.style.less'
@@ -30,6 +30,8 @@ export interface FactoringStepDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
@@ -37,6 +39,8 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
+  isCurrentUserAssigned,
+  assignCurrentUser
 }) => {
   const { t } = useTranslation()
 
@@ -181,13 +185,35 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     )
   }
 
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.assign.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const changeDocStatus = async (documentId: number, status: DocumentStatus) => {
     const result = await factoringWizardSetDocStatus({

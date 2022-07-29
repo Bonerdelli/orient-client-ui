@@ -13,9 +13,11 @@ import OrderStepDocuments from 'components/OrderStepDocuments'
 import OrderStepStopFactors from 'components/OrderStepStopFactors'
 import OrderStepScoringResults from 'components/OrderStepScoringResults'
 
-import { getFrameOrderWizard } from 'library/api/frameOrder'
+import { getFrameOrderWizard, setAssignedUserForFrameOrder } from 'library/api/frameOrder'
 
 import './FrameOperatorWizard.style.less'
+import { AssignedUserDto } from 'library/models'
+import { useStoreState } from 'library/store'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid
@@ -34,12 +36,15 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const breakpoint = useBreakpoint()
 
   const { itemId } = useParams<FrameOperatorWizardPathParams>()
+  const currentUserId = useStoreState(state => state.user.current.userId)
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
   const [ currentStep, setCurrentStep ] = useState<number>(0)
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ username, setUsername ] = useState<string | undefined>()
+  const [ isCurrentUserAssigned, setIsCurrentUserAssigned ] = useState<boolean>(false)
 
   useEffect(() => {
     setStepDataLoading(true)
@@ -62,11 +67,29 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
       setOrderStatus(orderStatus)
       setCurrentStep(step)
       setSelectedStep(step)
+
+      // replace with (result.data as any).assignedUserData after BE support
+      const assignedUser: AssignedUserDto = (result.data as any).data?.assignedUserData
+      if (assignedUser) {
+        if (assignedUser.userLogin) {
+          setUsername(assignedUser.userLogin)
+        }
+        setIsCurrentUserAssigned(assignedUser.userId === currentUserId)
+      }
+
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
+  }
+
+  const assignCurrentUser = async () => {
+    const result = await setAssignedUserForFrameOrder({ orderId: Number(itemId) || orderId as number })
+    if (result.success) {
+      // TODO: подумать над апдейтом фронта без притягивания всей информации о шаге
+      return loadCurrentStepData()
+    }
   }
 
   const isFirstStepActive = (): boolean => true
@@ -89,6 +112,8 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
       orderId: Number(itemId) || orderId,
       currentStep: currentStep,
       setCurrentStep: handleStepChange,
+      isCurrentUserAssigned,
+      assignCurrentUser,
     }
     switch (selectedStep) {
       case 1:
@@ -116,6 +141,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
         <WizardHeader
           title={t('frameWizard.title')}
           backUrl={backUrl}
+          username={username}
           statusTag={
             <OrderStatusTag
               statusCode={orderStatus}
