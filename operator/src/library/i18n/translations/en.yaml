@@ -1,9 +1,5 @@
-portalTitle: Planet ORIENT
+portalTitle: Планета ORIENT
 shortTitle: ORIENT
-
-###
-# TODO: translate this
-###
 
 sections:
   banks:
@@ -38,23 +34,24 @@ frameOrdersPage:
     statusName: Статус
     amount: Сумма
     days: Срок отсрочки, дней
+    underwriter: Андеррайтер
 
 orderStatusTitles:
-  waitForVerify: Wait for Verify
-  verifying: Verifying
-  clientSign: Requires Client's signature
-  bankVerify: Bank Verify
-  needsForRework: Reworking
-  hasOffer: Has Offer
-  customerSign: Requires Customer's signature
-  cancel: Canceled
-  operatorReject: Rejected by Operator
-  bankReject: Rejected by Bank
-  waitForCharge: Wait for Charge
-  charged: Charged
-  completed: Completed
+  waitForVerify: Ожидает проверки
+  verifying: Проверка
+  clientSign: Требует подписи Клиента
+  bankVerify: В Банке
+  bankSign: Требует подписи Банка
+  needsForRework: На доработке
+  hasOffer: Есть предложение
+  customerSign: Требует подписи Заказчика
+  cancel: Отмена заявки
+  operatorReject: Отказ системы
+  bankReject: Отказ Банка
+  waitForCharge: Ожидает финансирования
+  charged: Поставщик профинансирован
+  completed: Финансирование погашено
 
-## TODO: translate me
 frameWizard:
   title: Заявка на заключение рамочного договора
   firstStep:
@@ -84,12 +81,43 @@ orderStepParameters:
   title: Параметры заявки и клиента
 
 orderStepDocuments:
-  title: Документы / БО
+  title: Список документов, приложенных к заявке
   sectionTitles:
     mainDocs: Обязательные документы
     additionalDocs: Дополнительные документы
     companyHeadInfo: Данные о руководителе
     finStatements: Бухгалтерская отчетность (Форма 1)
+    orderParameters: Введите данные по заявке
+  companyFounderInformation:
+    title: Данные о руководителе
+    check: Проверить
+    close: Закрыть
+  companyQuestionnaire:
+    title: Анкета компании
+    check: Проверить
+  customerInformation:
+    title: Информация о выбранном Заказчике
+  orderParametersFormFields:
+    customer:
+      title: ИНН Заказчика
+      placeholder: Выберите ИНН Заказчика...
+    bank:
+      title: Банк
+      placeholder: Выберите банк...
+    conditionCode:
+      title: Условие договора
+      placeholder: Выберите условие договора...
+      options:
+        comission: Комиссия от суммы финансирования
+        discount: Дисконт от суммы финансирования
+    percentOverall:
+      title: Комиссия (единовременная)
+    percentYear:
+      title: Комиссия (% годовых)
+    percentDiscount:
+      title: Размер дисконта (%)
+    startDate:
+      title: Дата договора
 
 orderStepStopFactors:
   title: Проверка на стоп-факторы
@@ -112,7 +140,11 @@ orderStepOptionalParameters:
   title: Дополнительные параметры
 
 orderStepSendToBank:
-  readyForSending: Заявка будет направлена в Банк «{{-bankName}}»
+  actionButton:
+    title: Отправить
+  readyForSending:
+    title: Отправка в банк
+    desc: Заявка будет направлена в Банк «{{-bankName}}»
   sent:
     title: Заявка отправлена
     desc: Заявка направлена в Банк «{{-bankName}}»
@@ -130,23 +162,25 @@ orderActions:
   next:
     title: Далее
   submitForRevision:
-      Отправить на доработку
+    title: Отправить на доработку
   saveAndContinue:
     title: Сохранить и продолжить
   sendToBanks:
     title: Отправить в Банки
+  assign:
+    title: Взять на проверку
 
 orderStatuses:
-  # Ожидает проверки
-  # Просмотрена
-  # Проверка
-  # На доработке
-  # Проверка исправлений
-  # Формирование предложения
-  # Формирование документов
-  # Отправлено предложение
-  # Требует подписи Заказчика
-  # Договор заключен
-  # Отказ Банка
-  # Отмена заявки
-  # Отказ от предложения
+# Ожидает проверки
+# Просмотрена
+# Проверка
+# На доработке
+# Проверка исправлений
+# Формирование предложения
+# Формирование документов
+# Отправлено предложение
+# Требует подписи Заказчика
+# Договор заключен
+# Отказ Банка
+# Отмена заявки
+# Отказ от предложения

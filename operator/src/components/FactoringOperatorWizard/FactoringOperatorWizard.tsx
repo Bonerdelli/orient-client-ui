@@ -86,7 +86,7 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
   const assignCurrentUser = async () => {
     const result = await setAssignedUserForFactoringOrder({ orderId: Number(itemId) || orderId as number })
     if (result.success) {
-      // TODO: подумать над апдейтом фронта без притягивания всей информации о шаге
+      // TODO: think about updating view w/o fetching step info
       return loadCurrentStepData()
     }
   }
