@@ -8,12 +8,13 @@ import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { Bank } from 'library/models/bank' // TODO: to ui-lib
 
+import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+
+import { Bank } from 'library/models/bank' // TODO: to ui-lib
 import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 
 import { getFrameWizardStep, sendFrameWizardStep3 } from 'library/api'
@@ -268,7 +269,8 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
         orderId={orderId as number}
         types={documentTypes}
         current={documents}
-        checkSignedFn={document => document.info?.clientSigned === true}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         onChange={loadCurrentStepData}
       />
     </Spin>

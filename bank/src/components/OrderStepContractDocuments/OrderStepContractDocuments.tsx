@@ -12,6 +12,8 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
+import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
 import {
@@ -206,6 +208,8 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         types={documentTypes || []}
         current={documents}
       />
