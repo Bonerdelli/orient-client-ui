@@ -10,6 +10,8 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { FactoringStatus } from 'orient-ui-library/library'
 
+import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
@@ -124,18 +126,12 @@ const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
     setSubmitting(false)
   }
 
-  const checkSignedFn = (orderDocument: OrderDocument) => {
-    if (orderDocument.typeId === 15) {
-      return true
-    }
-    return orderDocument?.info?.bankSigned ?? false
-  }
-
   const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
-        checkSignedFn={checkSignedFn}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         types={documentTypes || []}
         current={documents}
       />

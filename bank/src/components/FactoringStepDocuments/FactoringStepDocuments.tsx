@@ -10,6 +10,8 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { FactoringStatus } from 'orient-ui-library/library'
 
+import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+
 import { OrderCheckList as OrderCheckListModel } from 'library/models'
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import OrderCheckList from 'components/OrderCheckList'
@@ -206,6 +208,8 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         types={documentTypes || []}
         current={documents}
       />
@@ -223,6 +227,8 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         types={documentTypesOptional as number[]}
         current={documentsOptional as OrderDocument[]}
       />
@@ -240,6 +246,8 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         types={documentTypesGenerated as number[]}
         current={documentsGenerated as OrderDocument[]}
       />
