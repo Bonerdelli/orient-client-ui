@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, message } from 'antd'
-import { DownloadOutlined, CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
+import { CheckCircleTwoTone, CloseCircleTwoTone, DownloadOutlined } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import { getControlColorByState } from 'orient-ui-library/library/helpers/control'
@@ -15,6 +15,7 @@ export interface DocumentActionsProps {
   downloadHandler: (doc: Document) => Promise<boolean>
   approveHandler: (doc: Document) => Promise<boolean>
   rejectHandler: (doc: Document) => Promise<boolean>
+  readonlyMode?: boolean
   onChange?: () => Promise<{}>
   loading?: boolean | null
 }
@@ -26,6 +27,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
   downloadHandler,
   onChange,
   loading,
+  readonlyMode = false,
 }) => {
   const { t } = useTranslation()
   const [ approveInProccess, setApproveInProccess ] = useState<boolean>()
@@ -35,7 +37,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
     const result = await downloadHandler(document)
     if (!result) {
       message.error(
-        t('common.documents.statusMessages.downloadingError')
+        t('common.documents.statusMessages.downloadingError'),
       )
     }
   }
@@ -45,7 +47,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
     const result = await approveHandler(document)
     if (!result) {
       message.error(
-        t('common.errors.requestError.title')
+        t('common.errors.requestError.title'),
       )
     } else {
       onChange && await onChange()
@@ -58,7 +60,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
     const result = await rejectHandler(document)
     if (!result) {
       message.error(
-        t('common.errors.requestError.title')
+        t('common.errors.requestError.title'),
       )
     } else {
       onChange && await onChange()
@@ -74,7 +76,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       title={t('common.documents.actions.download.title')}
       onClick={handleDownload}
       disabled={loading === true}
-      icon={<DownloadOutlined />}
+      icon={<DownloadOutlined/>}
     />
   )
 
@@ -89,7 +91,7 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       disabled={loading === true || rejectInProccess || document.status === DocumentStatus.Approved}
       icon={<CheckCircleTwoTone twoToneColor={
         getControlColorByState(document.status !== DocumentStatus.Approved ? true : null)
-      } />}
+      }/>}
     />
   )
 
@@ -105,15 +107,19 @@ const DocumentActions: React.FC<DocumentActionsProps> = ({
       disabled={loading === true || approveInProccess || document.status === DocumentStatus.NotApproved}
       icon={<CloseCircleTwoTone twoToneColor={
         getControlColorByState(document.status !== DocumentStatus.NotApproved ? false : null)
-      } />}
+      }/>}
     />
   )
 
+  if (document.status === DocumentStatus.NotUploaded) {
+    return <></>
+  }
+
   return (
     <Div className="DocumentActions">
-      {document.status !== DocumentStatus.NotUploaded && renderDownloadButton()}
-      {document.status !== DocumentStatus.NotUploaded && renderApproveButton()}
-      {document.status !== DocumentStatus.NotUploaded && renderRejectButton()}
+      {renderDownloadButton()}
+      {!readonlyMode && renderApproveButton()}
+      {!readonlyMode && renderRejectButton()}
     </Div>
   )
 }

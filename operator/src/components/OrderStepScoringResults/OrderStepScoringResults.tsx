@@ -260,7 +260,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     selectedRowKeys,
     onChange: setSelectedRowKeys,
     getCheckboxProps: () => ({
-      disabled: isWizardCompleted,
+      disabled: isWizardCompleted || !isCurrentUserAssigned,
     }),
   }
 

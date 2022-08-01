@@ -241,6 +241,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         current={documents}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )
@@ -260,6 +261,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         current={documentsOptional as OrderDocument[]}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )

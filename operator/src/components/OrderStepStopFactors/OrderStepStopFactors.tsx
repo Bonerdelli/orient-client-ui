@@ -250,14 +250,17 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
       width: 120,
       align: 'center',
     },
-    {
+  ]
+
+  if (isCurrentUserAssigned) {
+    stopFactorColumns.push({
       key: 'actions',
       render: (item) => renderStopFactorActions(item),
       title: t('common.dataEntity.actions'),
       align: 'left',
       width: 80,
-    },
-  ]
+    })
+  }
 
   const renderStopFactors = () => (
     <Table

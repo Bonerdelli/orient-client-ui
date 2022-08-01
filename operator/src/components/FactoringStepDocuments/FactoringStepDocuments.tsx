@@ -40,7 +40,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   sequenceStepNumber,
   setCurrentStep,
   isCurrentUserAssigned,
-  assignCurrentUser
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -233,6 +233,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
         current={documents}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )
@@ -252,6 +253,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
         current={documentsOptional as OrderDocument[]}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )

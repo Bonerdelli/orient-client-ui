@@ -104,10 +104,12 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
 
   useEffect(() => {
     loadStepData()
-    if (currentStep > sequenceStepNumber) {
-      setFormDisabled(true)
-    }
+    setFormDisabled(currentStep > sequenceStepNumber || !isCurrentUserAssigned)
   }, [ currentStep ])
+
+  useEffect(() => {
+    setFormDisabled(currentStep > sequenceStepNumber || !isCurrentUserAssigned)
+  }, [ isCurrentUserAssigned ])
 
   useEffect(() => {
     setBankSelectItems(banks?.data ?? [])
@@ -305,6 +307,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
         current={documents}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )
@@ -324,6 +327,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
         current={documentsOptional as OrderDocument[]}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )

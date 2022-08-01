@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Table, Space, Tag } from 'antd'
+import { Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { isUndefined } from 'lodash'
 
@@ -22,10 +22,12 @@ export interface OrderDocumentsListProps {
     status: DocumentStatus,
   ) => Promise<boolean>
   onChange?: () => {}
+  readonlyMode?: boolean
 }
 
-const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
-  const { orderId, types, current, setStatusHandler, onChange } = props
+const OrderDocumentsList: React.FC<OrderDocumentsListProps> = ({
+  orderId, types, current, setStatusHandler, onChange, readonlyMode = false,
+}) => {
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
@@ -39,7 +41,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       return composeDocument(typeId, existsDoc)
     })
     setItems(updatedItems)
-  }, [types, current])
+  }, [ types, current ])
 
   const composeDocument = (typeId: number, document?: OrderDocument): Document => {
     if (!document?.info) {
@@ -86,7 +88,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
       case DocumentStatus.Approved:
         return <Tag color="green">{t('common.documents.statuses.approved')}</Tag>
       case DocumentStatus.NotApproved:
-      return <Tag color="red">{t('common.documents.statuses.notApproved')}</Tag>
+        return <Tag color="red">{t('common.documents.statuses.notApproved')}</Tag>
       default:
         return <></>
     }
@@ -100,6 +102,7 @@ const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
         rejectHandler={handleItemReject}
         downloadHandler={handleItemDownload}
         onChange={onChange}
+        readonlyMode={readonlyMode}
       />
     </Space>
   )

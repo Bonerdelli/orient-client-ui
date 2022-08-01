@@ -253,14 +253,17 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       width: 120,
       align: 'center',
     },
-    {
+  ]
+
+  if (isCurrentUserAssigned) {
+    stopFactorColumns.push({
       key: 'actions',
       render: (item) => renderStopFactorActions(item),
       title: t('common.dataEntity.actions'),
       align: 'left',
       width: 80,
-    },
-  ]
+    },)
+  }
 
   const renderStopFactors = () => (
     <Table
@@ -316,10 +319,6 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       </Div>
     </Div>
   )
-
-  // <Div className="FactoringStepDocuments__section">
-  //   <Title level={5}>{t('orderStepStopFactors.sectionTitles.banksWhereTrigerred')}</Title>
-  // </Div>
 
   if (!stepData && stepDataLoading) {
     return (
