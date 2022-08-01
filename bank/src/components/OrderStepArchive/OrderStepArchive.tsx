@@ -9,6 +9,7 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
@@ -86,29 +87,12 @@ const OrderStepArchive: React.FC<OrderDocumentsProps> = ({
     setStepDataLoading(false)
   }
 
-  // NOTE: not used yet, for the future
-  /* const checkSignedFn = (document: OrderDocument) => {
-    if (!document.info) {
-      return false
-    }
-    const {
-      needClientSign,
-      needBankSign,
-      needCustomerSign,
-      clientSigned,
-      bankSigned,
-      customerSigned,
-    } = document.info
-    const statusClient = needClientSign ? Boolean(clientSigned) : true
-    const statusBank = needBankSign ? Boolean(bankSigned) : true
-    const statusCustomer = needCustomerSign ? Boolean(customerSigned) : true
-    return statusClient && statusBank && statusCustomer
-  } */
-
   const renderDocuments = () =>  (
     <Spin spinning={documentsLoading}>
       <OrderDocumentsList
         orderId={orderId as number}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         types={documentTypes || []}
         current={documents}
       />
