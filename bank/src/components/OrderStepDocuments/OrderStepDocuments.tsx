@@ -11,6 +11,8 @@ import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
+import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+
 import { OrderCheckList as OrderCheckListModel } from 'library/models'
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import OrderCheckList from 'components/OrderCheckList'
@@ -220,7 +222,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <OrderDocumentsList
         orderId={orderId as number}
         types={documentTypes || []}
-        checkSignedFn={document => document.info?.clientSigned === true}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         current={documents}
       />
     </Spin>
@@ -238,7 +241,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <OrderDocumentsList
         orderId={orderId as number}
         types={documentTypesOptional as number[]}
-        checkSignedFn={document => document.info?.clientSigned === true}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         current={documentsOptional as OrderDocument[]}
       />
     </Spin>
@@ -256,7 +260,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <OrderDocumentsList
         orderId={orderId as number}
         types={documentTypesGenerated as number[]}
-        checkSignedFn={document => document.info?.clientSigned === true}
+        checkSignNeededFn={checkDocumentSignNeeded}
+        checkSignedFn={checkDocumentSigned}
         current={documentsGenerated as OrderDocument[]}
       />
     </Spin>

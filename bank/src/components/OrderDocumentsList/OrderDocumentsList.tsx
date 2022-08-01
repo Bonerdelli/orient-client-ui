@@ -17,8 +17,8 @@ export interface OrderDocumentsListProps {
   orderId: number
   types: number[]
   current?: OrderDocument[]
-  checkSignNeededFn?: (document: OrderDocument) => boolean,
-  checkSignedFn?: (document: OrderDocument) => boolean,
+  checkSignNeededFn?: (document?: OrderDocument) => boolean,
+  checkSignedFn?: (document?: OrderDocument) => boolean,
 }
 
 const OrderDocumentsList: React.FC<OrderDocumentsListProps> = (props) => {
