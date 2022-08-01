@@ -13,6 +13,8 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { BankDto } from 'orient-ui-library/library/models/proxy'
 
+import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+
 import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
 import { sendFrameWizardStep } from 'library/api/frameWizard'
 import { CabinetMode } from 'library/models/cabinet'
@@ -105,7 +107,8 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
       companyId={companyId}
       orderId={orderId as number}
       types={documentTypes || []}
-      checkSignedFn={document => document.info?.customerSigned === true}
+      checkSignNeededFn={checkDocumentSignNeeded}
+      checkSignedFn={checkDocumentSigned}
       current={documents || []}
     />
   )

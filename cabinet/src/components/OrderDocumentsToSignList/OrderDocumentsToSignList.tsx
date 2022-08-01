@@ -18,12 +18,13 @@ export interface OrderDocumentsToSignListProps {
   orderId: number
   types: number[]
   current?: OrderDocument[]
+  checkSignNeededFn?: (document?: OrderDocument) => boolean,
   checkSignedFn?: (document: OrderDocument) => boolean,
   onChange?: () => {}
 }
 
 const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props) => {
-  const { companyId, orderId, types, current, onChange, checkSignedFn } = props
+  const { companyId, orderId, types, current, onChange, checkSignNeededFn, checkSignedFn } = props
   const { t } = useTranslation()
 
   const [ items, setItems ] = useState<Document[]>()
@@ -59,11 +60,14 @@ const OrderDocumentsToSignList: React.FC<OrderDocumentsToSignListProps> = (props
 
   const renderDocumentStatus = (document: Document) => {
     let isSigned: boolean
+    const orderDocument = current?.find(item => item.typeId === document.type)
     if (checkSignedFn) {
-      const orderDocument = current?.find(item => item.typeId === document.type)
       isSigned = orderDocument ? checkSignedFn(orderDocument) : false
     } else {
       isSigned = isSignedFn(document.status as DocumentStatus)
+    }
+    if (checkSignNeededFn && !checkSignNeededFn(orderDocument)) {
+      return <></>
     }
     if (isSigned) {
       return <Tag>{t('common.documents.statuses.signed')}</Tag>

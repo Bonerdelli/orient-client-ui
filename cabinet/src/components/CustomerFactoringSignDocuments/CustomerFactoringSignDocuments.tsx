@@ -11,6 +11,8 @@ import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FactoringStatus } from 'orient-ui-library/library/models/order'
 
+import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+
 import { CabinetMode } from 'library/models/cabinet'
 import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
 import { FACTORING_CUSTOMER_COMPLETED_STATUSES } from 'components/FactoringCustomerWizard'
@@ -159,7 +161,8 @@ const CustomerFactoringSignDocuments: React.FC<CustomerFactoringSignDocumentsPro
       orderId={orderId as number}
       types={documentTypes || []}
       current={stepData?.documents || []}
-      checkSignedFn={document => document.info?.customerSigned === true}
+      checkSignNeededFn={checkDocumentSignNeeded}
+      checkSignedFn={checkDocumentSigned}
     />
   )
 
