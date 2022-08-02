@@ -190,6 +190,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     await assignCurrentUser()
     setSubmitting(false)
   }
+
   const renderAssignOrderButton = () => (
     <Button
       size="large"
@@ -201,19 +202,19 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (<>
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+    </Row>
+  )
 
   const changeDocStatus = async (documentId: number, status: DocumentStatus) => {
     const result = await factoringWizardSetDocStatus({
@@ -325,7 +326,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
     </Div>
   )
 }

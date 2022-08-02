@@ -270,19 +270,19 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (<>
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{formDisabled ? renderNextButton() : renderSubmitButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+    </Row>
+  )
 
   /**
    * Order documents
@@ -537,7 +537,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
         labelWrap={true}
       >
         {renderStepContent()}
-        {renderActions()}
+        {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
       </Form>
     </Div>
   )

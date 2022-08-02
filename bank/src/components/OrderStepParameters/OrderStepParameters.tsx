@@ -102,7 +102,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="WizardStep__actions">
+    <Row className="WizardStep__actions WizardStep__actions--single">
       <Col>{isCurrentUserAssigned ? renderNextButton() : renderAssignOrderButton()}</Col>
     </Row>
   )
@@ -126,6 +126,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     }
     setSubmitting(false)
   }
+
   const renderAssignOrderButton = () => (
     <Button
       size="large"

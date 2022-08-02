@@ -125,6 +125,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     await assignCurrentUser()
     setSubmitting(false)
   }
+
   const renderAssignOrderButton = () => (
     <Button
       size="large"
@@ -136,18 +137,18 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (<>
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{!completed && renderSubmitButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+    </Row>
+  )
 
   const renderSubmitButton = () => (
     <Button
@@ -222,7 +223,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     <Div className="WizardStep__content">
       {!completed ? renderReadyForSendingContent() : renderOrderSentContent()}
       {/* !completed && Boolean(failedStopFactors?.length) && renderStopFactors() */}
-      {!completed && renderActions()}
+      {!completed && (isCurrentUserAssigned ? renderActions() : renderAssignAction())}
     </Div>
   )
 }

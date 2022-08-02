@@ -175,6 +175,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
     await assignCurrentUser()
     setSubmitting(false)
   }
+
   const renderAssignOrderButton = () => (
     <Button
       size="large"
@@ -186,18 +187,18 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (<>
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{renderNextButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+    </Row>
+  )
 
   const renderNextButton = () => (
     <Button
@@ -338,7 +339,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
     </Div>
   )
 }

@@ -216,6 +216,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     await assignCurrentUser()
     setSubmitting(false)
   }
+
   const renderAssignOrderButton = () => (
     <Button
       size="large"
@@ -227,19 +228,19 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (<>
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
       <Col>{renderPrevStepButton()}</Col>
       <Col flex={1}/>
       <Col>{renderNextButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+    </Row>
+  )
 
   const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
@@ -327,7 +328,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {!isAccepted && renderActions()}
+      {!isAccepted && (isCurrentUserAssigned ? renderActions() : renderAssignAction())}
     </Div>
   )
 }

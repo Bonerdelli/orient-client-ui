@@ -110,22 +110,20 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (
-      <>
-        <Col flex={1}></Col>
-        <Col>{currentStep > sequenceStepNumber
-          ? renderNextButton()
-          : renderSubmitButton()}</Col>
-      </>
-    )
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
 
-    return (
-      <Row className="WizardStep__actions">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
+      <Col flex={1}></Col>
+      <Col>{currentStep > sequenceStepNumber
+        ? renderNextButton()
+        : renderSubmitButton()}</Col>
+    </Row>
+  )
 
   const renderNextButton = () => (
     <Button
@@ -196,7 +194,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {!completed && renderActions()}
+      {!completed && (isCurrentUserAssigned ? renderActions() : renderAssignAction())}
     </Div>
   )
 }
