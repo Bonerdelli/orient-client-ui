@@ -528,7 +528,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       <Form
         form={form}
         initialValues={initialData || undefined}

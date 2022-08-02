@@ -189,7 +189,7 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {!completed ? renderReadyForSendingContent() : renderOrderSentContent()}
       {renderActions()}
     </Div>

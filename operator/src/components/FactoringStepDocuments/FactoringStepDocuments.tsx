@@ -323,7 +323,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {renderActions()}
     </Div>

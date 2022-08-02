@@ -219,7 +219,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {!completed ? renderReadyForSendingContent() : renderOrderSentContent()}
       {/* !completed && Boolean(failedStopFactors?.length) && renderStopFactors() */}
       {!completed && renderActions()}

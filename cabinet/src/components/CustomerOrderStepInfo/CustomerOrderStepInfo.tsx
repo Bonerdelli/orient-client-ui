@@ -143,7 +143,7 @@ const CustomerOrderStepInfo: React.FC<CustomerOrderStepInfoProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {renderActions()}
     </Div>

@@ -339,7 +339,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {isVerifying ? renderWaitMessage() : renderStepContent()}
       {isVerifying ? renderWaitActions() : renderStepActions()}
     </Div>

@@ -247,7 +247,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {currentStep <= sequenceStepNumber && renderActions()}
     </Div>
