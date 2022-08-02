@@ -89,7 +89,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   }
 
   const renderActions = () => (
-    <Row justify={isCurrentUserAssigned ? 'end' : 'center'} className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col>{isCurrentUserAssigned ? renderNextButton() : renderAssignOrderButton()}</Col>
     </Row>
   )
@@ -154,7 +154,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   }
 
   return (
-    <Div className="OrderStepParameters">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {renderActions()}
     </Div>

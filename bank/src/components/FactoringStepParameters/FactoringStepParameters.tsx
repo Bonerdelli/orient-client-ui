@@ -111,15 +111,17 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   )
 
   const renderActions = () => {
-    const actions = () => (<>
-      <Col flex={1}></Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
-    </>)
+    const actions = () => (
+      <>
+        <Col flex={1}></Col>
+        <Col>{currentStep > sequenceStepNumber
+          ? renderNextButton()
+          : renderSubmitButton()}</Col>
+      </>
+    )
 
     return (
-      <Row justify="center">
+      <Row className="WizardStep__actions">
         {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
       </Row>
     )
@@ -157,23 +159,25 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     }
 
     return (
-      <Row gutter={12}>
-        <Col span={12}>
-          <ClientInfo
-            company={stepData?.clientCompany}
-            companyHead={stepData?.clientCompanyFounder}
-            companyRequisites={stepData?.clientCompanyRequisites}
-          />
-        </Col>
-        <Col span={12}>
-          <OrderInfo
-            orderId={orderId}
-            customerCompany={customerCompanyData}
-            factoring={stepData?.factorOrder}
-            conditions={stepData?.conditions}
-          />
-        </Col>
-      </Row>
+      <Div className="FactoringStepParameters">
+        <Row gutter={12}>
+          <Col span={12}>
+            <ClientInfo
+              company={stepData?.clientCompany}
+              companyHead={stepData?.clientCompanyFounder}
+              companyRequisites={stepData?.clientCompanyRequisites}
+            />
+          </Col>
+          <Col span={12}>
+            <OrderInfo
+              orderId={orderId}
+              customerCompany={customerCompanyData}
+              factoring={stepData?.factorOrder}
+              conditions={stepData?.conditions}
+            />
+          </Col>
+        </Row>
+      </Div>
     )
   }
 
@@ -190,7 +194,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   }
 
   return (
-    <Div className="FactoringStepParameters">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {!completed && renderActions()}
     </Div>
