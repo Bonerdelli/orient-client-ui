@@ -170,6 +170,12 @@ orderActions:
   assign:
     title: Взять на проверку
 
+rejectOrderModal:
+  title: Укажите причины отказа
+  fields:
+    reason: Причина отказа
+    comment: Комментарий
+
 orderStatuses:
 # Ожидает проверки
 # Просмотрена
