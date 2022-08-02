@@ -1,27 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { sortBy } from 'lodash'
 
-import { Typography, Skeleton, Spin, Row, Col, Button, message } from 'antd'
+import { Button, Col, message, Row, Skeleton, Spin, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
-import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+import { checkDocumentSigned, checkDocumentSignNeeded } from 'orient-ui-library/library/helpers/order'
 
 import { OrderCheckList as OrderCheckListModel } from 'library/models'
 import OrderDocumentsList from 'components/OrderDocumentsList'
 import OrderCheckList from 'components/OrderCheckList'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep2,
-  updateFrameWizardCheckList,
-} from 'library/api/frameWizard'
+import { getFrameWizardStep, sendFrameWizardStep2, updateFrameWizardCheckList } from 'library/api/frameWizard'
 
 import './OrderStepDocuments.style.less'
 
@@ -36,6 +31,8 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
@@ -47,6 +44,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -169,6 +168,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const handleCheckListChange = async (value: OrderCheckListModel[]) => {
+    if (!isCurrentUserAssigned) {
+      return
+    }
     const result = await updateFrameWizardCheckList({
       type: wizardType,
       bankId,
@@ -209,13 +211,35 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     )
   }
 
-  const renderActions = () => (
-    <Row className="WizardStep__actions">
-      <Col>{renderPrevStepButton()}</Col>
-      <Col flex={1}></Col>
-      <Col>{renderNextButton()}</Col>
-    </Row>
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.take.title')}
+    </Button>
   )
+
+  const renderActions = () => {
+    const actions = () => (<>
+      <Col>{renderPrevStepButton()}</Col>
+      <Col flex={1}/>
+      <Col>{renderNextButton()}</Col>
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const renderDocuments = () => (
     <Spin spinning={documentsLoading}>
@@ -280,7 +304,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       {documentsGenerated !== null && renderGeneratedDocumentsSection()}
       <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepDocuments.sectionTitles.checkList')}</Title>
-        <OrderCheckList checkList={stepData?.checks} onChange={handleCheckListChange} />
+        <OrderCheckList
+          checkList={stepData?.checks}
+          onChange={handleCheckListChange}
+          readonlyMode={!isCurrentUserAssigned}/>
       </Div>
     </Div>
   )

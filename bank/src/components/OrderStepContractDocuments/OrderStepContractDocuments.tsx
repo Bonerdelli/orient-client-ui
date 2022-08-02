@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { sortBy } from 'lodash'
 
-import { Typography, Row, Col, Button, Skeleton, Spin, message } from 'antd'
+import { Button, Col, message, Row, Skeleton, Spin, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -12,14 +12,11 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
-import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+import { checkDocumentSigned, checkDocumentSignNeeded } from 'orient-ui-library/library/helpers/order'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep,
-} from 'library/api/frameWizard'
+import { getFrameWizardStep, sendFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepContractDocuments.style.less'
 
@@ -33,6 +30,8 @@ export interface OrderStepContractDocumentsProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOfferStatus: (step: BankOfferStatus) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const DOCUMENTS_TO_SHOW = [
@@ -48,6 +47,8 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   setCurrentStep,
   setOfferStatus,
   sequenceStepNumber,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -160,14 +161,36 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     }
   }
 
-  const renderActions = () => (
-    <Row className="WizardStep__actions">
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.take.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
         : renderSubmitButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const renderSubmitButton = () => (
     <Button

@@ -16,8 +16,8 @@ import OrderStepScoringResults from 'components/OrderStepScoringResults'
 import { getFrameOrderWizard, setAssignedUserForFrameOrder } from 'library/api/frameOrder'
 
 import './FrameOperatorWizard.style.less'
-import { AssignedUserDto } from 'library/models'
 import { useStoreState } from 'library/store'
+import { AssignedUserDto } from 'orient-ui-library/library'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid

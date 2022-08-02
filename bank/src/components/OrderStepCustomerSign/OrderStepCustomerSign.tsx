@@ -1,21 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, Result, message } from 'antd'
+import { Button, Col, message, Result, Row, Skeleton } from 'antd'
 import { ClockCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep,
-} from 'library/api/frameWizard'
+import { getFrameWizardStep, sendFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepCustomerSign.style.less'
-
-const { Title } = Typography
 
 export interface OrderStepCustomerSignProps {
   bankId?: number | bigint
@@ -148,8 +142,8 @@ const OrderStepCustomerSign: React.FC<OrderStepCustomerSignProps> = ({
 
   const renderStepContent = () => (
     <Result className="OrderStepCustomerSign"
-      icon={<ClockCircleFilled />}
-      title={t('Ожидайте подписания')}
+            icon={<ClockCircleFilled/>}
+            title={t('Ожидайте подписания')}
     />
   )
 

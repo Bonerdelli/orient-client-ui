@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Grid, Skeleton } from 'antd'
+import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-// import { OrderStatus } from 'orient-ui-library/library/models'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import OfferStatusTag from 'components/OfferStatusTag'
@@ -17,11 +16,12 @@ import OrderStepOfferAcceptance from 'components/OrderStepOfferAcceptance'
 import OrderStepArchive from 'components/OrderStepArchive'
 
 import { OrderWizardType } from 'library/models'
-import { getFrameOrderWizard } from 'library/api/frameOrder'
+import { getFrameOrderWizard, setAssignedUserForFrameOrder } from 'library/api/frameOrder'
 import { sendFrameWizardStep } from 'library/api/frameWizard'
 import { useStoreState } from 'library/store'
 
 import './FrameBankWizard.style.less'
+import { AssignedUserDto } from 'orient-ui-library/library'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid
@@ -40,6 +40,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const breakpoint = useBreakpoint()
 
   const bankId = useStoreState(state => state.bank.bankId)
+  const currentUserId = useStoreState(state => state.user.current.userId)
   const { itemId } = useParams<FrameBankWizardPathParams>()
 
   const [ selectedStep, setSelectedStep ] = useState<number>(0)
@@ -48,29 +49,31 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ offerStatus, setOfferStatus ] = useState<BankOfferStatus>()
+  const [ username, setUsername ] = useState<string | undefined>()
+  const [ isCurrentUserAssigned, setIsCurrentUserAssigned ] = useState<boolean>(false)
 
   useEffect(() => {
     if (bankId) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [bankId])
+  }, [ bankId ])
 
   useEffect(() => {
     if (currentStep > 5 && (
-        offerStatus === BankOfferStatus.CustomerSign
+      offerStatus === BankOfferStatus.CustomerSign
     )) {
       // NOTE: show waiting for customer sign message
       setSelectedStep(5)
       setCurrentStep(5)
     }
     if (currentStep === 5 && (
-        offerStatus === BankOfferStatus.Completed
+      offerStatus === BankOfferStatus.Completed
     )) {
       // NOTE: workaround to show completed step
       sendToArchive()
     }
-  }, [currentStep, offerStatus])
+  }, [ currentStep, offerStatus ])
 
   // NOTE: workaround to show completed step
   const sendToArchive = async () => {
@@ -95,11 +98,32 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       setOfferStatus(offerStatus)
       setCurrentStep(step)
       setSelectedStep(step)
+
+      // replace with (result.data as any).assignedUserData after BE support
+      const assignedUser: AssignedUserDto = (result.data as any).data?.assignedUserData
+      if (assignedUser) {
+        if (assignedUser.userLogin) {
+          setUsername(assignedUser.userLogin)
+        }
+        setIsCurrentUserAssigned(assignedUser.userId === currentUserId)
+      }
+
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
+  }
+
+  const assignCurrentUser = async () => {
+    const result = await setAssignedUserForFrameOrder({
+      orderId: Number(itemId) || orderId as number,
+      bankId: bankId as number,
+    })
+    if (result.success) {
+      // TODO: think about updating view w/o fetching step info
+      return loadCurrentStepData()
+    }
   }
 
   const isFirstStepActive = (): boolean => true
@@ -118,7 +142,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
 
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
-      return <Skeleton active={true} />
+      return <Skeleton active={true}/>
     }
     const stepBaseProps = {
       bankId: bankId as number,
@@ -128,20 +152,22 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
       setCurrentStep: handleStepChange,
       setOfferStatus,
       offerStatus,
+      isCurrentUserAssigned,
+      assignCurrentUser,
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1} />
+        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
       case 2:
-        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
+        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
-        return <OrderStepContractParams {...stepBaseProps} sequenceStepNumber={3} />
+        return <OrderStepContractParams {...stepBaseProps} sequenceStepNumber={3}/>
       case 4:
-        return <OrderStepContractDocuments {...stepBaseProps} sequenceStepNumber={4} />
+        return <OrderStepContractDocuments {...stepBaseProps} sequenceStepNumber={4}/>
       case 5:
-        return <OrderStepOfferAcceptance {...stepBaseProps} sequenceStepNumber={5} />
+        return <OrderStepOfferAcceptance {...stepBaseProps} sequenceStepNumber={5}/>
       case 6:
-        return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={6} />
+        return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={6}/>
       default:
         return <></>
     }
@@ -149,7 +175,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -159,6 +185,7 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
         <WizardHeader
           title={t('frameWizard.title')}
           backUrl={backUrl}
+          username={username}
           statusTag={
             <OfferStatusTag
               statusCode={offerStatus}
@@ -171,12 +198,12 @@ const FrameBankWizard: React.FC<FrameBankWizardProps> = ({ orderId, backUrl }) =
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')} />
-          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')} />
-          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fourthStep.title')} />
-          <Step disabled={!isFifthStepActive()} title={t('frameWizard.fifthStep.title')} />
-          <Step disabled={!isSixthStepActive()} title={t('frameWizard.sixthStep.title')} />
+          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')}/>
+          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')}/>
+          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')}/>
+          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fourthStep.title')}/>
+          <Step disabled={!isFifthStepActive()} title={t('frameWizard.fifthStep.title')}/>
+          <Step disabled={!isSixthStepActive()} title={t('frameWizard.sixthStep.title')}/>
         </Steps>
       </Card>
       <Card className="FrameWizard__step">

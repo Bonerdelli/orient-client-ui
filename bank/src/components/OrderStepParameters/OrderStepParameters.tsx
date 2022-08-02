@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Button, Skeleton, message } from 'antd'
+import { Button, Col, message, Row, Skeleton } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 
 import { FrameWizardStep1Response, getFrameWizardStep, sendFrameWizardStep1 } from 'library/api/frameWizard'
 
@@ -23,6 +22,8 @@ export interface OrderStepParametersProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOfferStatus: (step: BankOfferStatus) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
@@ -34,6 +35,8 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   setCurrentStep,
   sequenceStepNumber,
   setOfferStatus,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -91,17 +94,16 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   }
 
   const handleNextStep = () => {
-    if (isNextStepAllowed) {
+    if (currentStep > sequenceStepNumber) {
+      setCurrentStep(sequenceStepNumber + 1)
+    } else if (isNextStepAllowed) {
       sendNextStep()
     }
   }
 
   const renderActions = () => (
-    <Row className="WizardStep__actions">
-      <Col flex={1}></Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
+    <Row justify={isCurrentUserAssigned ? 'end' : 'center'}>
+      <Col>{isCurrentUserAssigned ? renderNextButton() : renderAssignOrderButton()}</Col>
     </Row>
   )
 
@@ -109,42 +111,48 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     <Button
       size="large"
       type="primary"
-      onClick={() => setCurrentStep(sequenceStepNumber + 1)}
-      disabled={!isNextStepAllowed}
+      onClick={handleNextStep}
+      disabled={!isNextStepAllowed || submitting}
     >
       {t('common.actions.next.title')}
     </Button>
   )
 
-  const renderSubmitButton = () => (
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    if (currentStep === sequenceStepNumber) {
+      await sendNextStep()
+    }
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
     <Button
       size="large"
       type="primary"
       disabled={submitting}
-      onClick={handleNextStep}
+      onClick={handleOrderAssign}
     >
-      Взять на проверку
+      {t('orderActions.take.title')}
     </Button>
   )
 
   const renderStepContent = () => (
-    <Div className="OrderStepParameters">
-      <Row gutter={12}>
-        <Col span={12}>
-          <ClientInfo
-            company={stepData?.clientCompany}
-            companyHead={stepData?.clientCompanyChief}
-            companyRequisites={stepData?.clientCompanyRequisites}
-          />
-        </Col>
-        <Col span={12}>
-          <OrderInfo
-            orderId={orderId}
-            customerCompany={stepData?.customerCompany}
-          />
-        </Col>
-      </Row>
-    </Div>
+    <Row gutter={12}>
+      <Col span={12}>
+        <ClientInfo
+          company={stepData?.clientCompany}
+          companyHead={stepData?.clientCompanyChief}
+          companyRequisites={stepData?.clientCompanyRequisites}
+        />
+      </Col>
+      <Col span={12}>
+        <OrderInfo
+          orderId={orderId}
+          customerCompany={stepData?.customerCompany}
+        />
+      </Col>
+    </Row>
   )
 
   if (!stepData && stepDataLoading) {
@@ -160,7 +168,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   }
 
   return (
-    <Div className="WizardStep__content">
+    <Div className="OrderStepParameters">
       {renderStepContent()}
       {!isAccepted && renderActions()}
     </Div>

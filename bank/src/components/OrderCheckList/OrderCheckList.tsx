@@ -1,4 +1,4 @@
-import { Row, Col, Typography, List, Checkbox } from 'antd'
+import { Checkbox, Col, List, Row, Typography } from 'antd'
 import type { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { OrderCheckList } from 'library/models'
 
@@ -9,11 +9,13 @@ const { Text } = Typography
 export interface OrderCheckListProps {
   checkList?: OrderCheckList[]
   onChange?: (checkList: OrderCheckList[]) => void
+  readonlyMode?: boolean
 }
 
 const OrderCheckList: React.FC<OrderCheckListProps> = ({
   checkList,
   onChange,
+  readonlyMode = false,
 }) => {
   const handleChange = (value: CheckboxChangeEvent, item: OrderCheckList) => {
     item.isChecked = value.target.checked
@@ -30,6 +32,7 @@ const OrderCheckList: React.FC<OrderCheckListProps> = ({
               <Checkbox
                 defaultChecked={item.isChecked ?? false}
                 onChange={(value) => handleChange(value, item)}
+                disabled={readonlyMode}
               >
                 <Text>{item.checkListCode}</Text>
               </Checkbox>

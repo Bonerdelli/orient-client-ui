@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { Card, Steps, Grid, Skeleton } from 'antd'
+import { Card, Grid, Skeleton, Steps } from 'antd'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -20,6 +20,8 @@ import { getCurrentFrameWizardStep, sendFrameWizardStep } from 'library/api/fram
 import { useStoreState } from 'library/store'
 
 import './FrameSimpleBankWizard.style.less'
+import { AssignedUserDto } from 'orient-ui-library/library'
+import { setAssignedUserForFrameSimpleOrder } from 'library/api/frameSimpleOrder'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid
@@ -37,6 +39,7 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
   const bankId = useStoreState(state => state.bank.bankId)
+  const currentUserId = useStoreState(state => state.user.current.userId)
 
   const { itemId } = useParams<FrameSimpleBankWizardPathParams>()
 
@@ -46,22 +49,24 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
   const [ stepDataLoading, setStepDataLoading ] = useState<boolean>()
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ offerStatus, setOfferStatus ] = useState<BankOfferStatus>()
+  const [ username, setUsername ] = useState<string | undefined>()
+  const [ isCurrentUserAssigned, setIsCurrentUserAssigned ] = useState<boolean>(false)
 
   useEffect(() => {
     if (bankId) {
       setStepDataLoading(true)
       loadCurrentStepData()
     }
-  }, [bankId])
+  }, [ bankId ])
 
   useEffect(() => {
     if (currentStep === 3 && (
-        offerStatus === BankOfferStatus.Completed
+      offerStatus === BankOfferStatus.Completed
     )) {
       // NOTE: workaround to show completed step
       sendToArchive()
     }
-  }, [currentStep, offerStatus])
+  }, [ currentStep, offerStatus ])
 
   // NOTE: workaround to show completed step
   const sendToArchive = async () => {
@@ -88,11 +93,33 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
       setOfferStatus(offerStatus)
       setCurrentStep(step)
       setSelectedStep(step)
+
+      // replace with (result.data as any).assignedUserData after BE support
+      const assignedUser: AssignedUserDto = (result.data as any).data?.assignedUserData
+      if (assignedUser) {
+        if (assignedUser.userLogin) {
+          setUsername(assignedUser.userLogin)
+        }
+        setIsCurrentUserAssigned(assignedUser.userId === currentUserId)
+      }
+
+
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
+  }
+
+  const assignCurrentUser = async () => {
+    const result = await setAssignedUserForFrameSimpleOrder({
+      orderId: Number(itemId) || orderId as number,
+      bankId: bankId as number,
+    })
+    if (result.success) {
+      // TODO: think about updating view w/o fetching step info
+      return loadCurrentStepData()
+    }
   }
 
   const isFirstStepActive = (): boolean => true
@@ -110,7 +137,7 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
 
   const renderCurrentStep = () => {
     if (!bankId || stepDataLoading) {
-      return <Skeleton active={true} />
+      return <Skeleton active={true}/>
     }
     const stepBaseProps = {
       bankId: bankId as number,
@@ -121,16 +148,18 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
       setCurrentStep: handleStepChange,
       setOfferStatus,
       offerStatus,
+      isCurrentUserAssigned,
+      assignCurrentUser,
     }
     switch (selectedStep) {
       case 1:
-        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1} />
+        return <OrderStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
       case 2:
-        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2} />
+        return <OrderStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
-        return <OrderStepCustomerSign {...stepBaseProps} sequenceStepNumber={3} />
+        return <OrderStepCustomerSign {...stepBaseProps} sequenceStepNumber={3}/>
       case 4:
-        return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={4} />
+        return <OrderStepArchive {...stepBaseProps} sequenceStepNumber={4}/>
       default:
         return <></>
     }
@@ -138,7 +167,7 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
 
   if (dataLoaded === false) {
     return (
-      <ErrorResultView centered status="warning" />
+      <ErrorResultView centered status="warning"/>
     )
   }
 
@@ -148,6 +177,7 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
         <WizardHeader
           title={t('frameSimpleWizard.title')}
           backUrl={backUrl}
+          username={username}
           statusTag={
             <OfferStatusTag
               statusCode={offerStatus}
@@ -160,10 +190,10 @@ const FrameSimpleBankWizard: React.FC<FrameSimpleBankWizardProps> = ({ orderId, 
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('frameSimpleWizard.firstStep.title')} />
-          <Step disabled={!isSecondStepActive()} title={t('frameSimpleWizard.secondStep.title')} />
-          <Step disabled={!isThirdStepActive()} title={t('frameSimpleWizard.thirdStep.title')} />
-          <Step disabled={!isFourthStepActive()} title={t('frameSimpleWizard.fourthStep.title')} />
+          <Step disabled={!isFirstStepActive()} title={t('frameSimpleWizard.firstStep.title')}/>
+          <Step disabled={!isSecondStepActive()} title={t('frameSimpleWizard.secondStep.title')}/>
+          <Step disabled={!isThirdStepActive()} title={t('frameSimpleWizard.thirdStep.title')}/>
+          <Step disabled={!isFourthStepActive()} title={t('frameSimpleWizard.fourthStep.title')}/>
         </Steps>
       </Card>
       <Card className="FrameWizard__step">

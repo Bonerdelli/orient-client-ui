@@ -15,9 +15,10 @@ import FactoringStepArchive from 'components/FactoringStepArchive'
 import { OrderWizardType } from 'library/models'
 
 import { useStoreState } from 'library/store'
-import { getFactoringOrderWizard } from 'library/api/factoringOrder'
+import { getFactoringOrderWizard, setAssignedUserForFactoringOrder } from 'library/api/factoringOrder'
 
 import './FactoringBankWizard.style.less'
+import { AssignedUserDto } from 'orient-ui-library/library'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid
@@ -42,6 +43,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
   const { t } = useTranslation()
   const breakpoint = useBreakpoint()
 
+  const currentUserId = useStoreState(state => state.user.current.userId)
   const bankId = useStoreState(state => state.bank.bankId)
   const { itemId } = useParams<FactoringBankWizardPathParams>()
 
@@ -52,6 +54,9 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
 
   const [ orderStatus, setOrderStatus ] = useState<FactoringStatus>()
   const [ completed, setCompleted ] = useState<boolean>()
+
+  const [ username, setUsername ] = useState<string | undefined>()
+  const [ isCurrentUserAssigned, setIsCurrentUserAssigned ] = useState<boolean>(false)
 
   useEffect(() => {
     if (bankId) {
@@ -77,11 +82,32 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       setOrderStatus(orderStatus)
       setSelectedStep(step > 3 ? 3 : step) // NOTE: workaround to handle 'invisible' steps
       setCurrentStep(step)
+
+      // replace with (result.data as any).assignedUserData after BE support
+      const assignedUser: AssignedUserDto = (result.data as any).data?.assignedUserData
+      if (assignedUser) {
+        if (assignedUser.userLogin) {
+          setUsername(assignedUser.userLogin)
+        }
+        setIsCurrentUserAssigned(assignedUser.userId === currentUserId)
+      }
+
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
     }
     setStepDataLoading(false)
+  }
+
+  const assignCurrentUser = async () => {
+    const result = await setAssignedUserForFactoringOrder({
+      orderId: Number(itemId) || orderId as number,
+      bankId: bankId as number,
+    })
+    if (result.success) {
+      // TODO: think about updating view w/o fetching step info
+      return loadCurrentStepData()
+    }
   }
 
   const isFirstStepActive = (): boolean => true
@@ -107,6 +133,8 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
       setOrderStatus,
       currentStep,
       completed,
+      isCurrentUserAssigned,
+      assignCurrentUser,
     }
     switch (selectedStep) {
       case 1:
@@ -132,6 +160,7 @@ const FactoringBankWizard: React.FC<FactoringBankWizardProps> = ({ orderId, back
         <WizardHeader
           title={t('factoringWizard.title')}
           backUrl={backUrl}
+          username={username}
           statusTag={
             <OfferStatusTag
               statusCode={orderStatus}

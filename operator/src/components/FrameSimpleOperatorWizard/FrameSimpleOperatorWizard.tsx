@@ -7,6 +7,7 @@ import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { AssignedUserDto } from 'orient-ui-library/library'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import OrderStepParameters from 'components/OrderStepParameters'
@@ -16,7 +17,6 @@ import OrderStepSendToBank from 'components/OrderStepSendToBank'
 import { getFrameSimpleOrderWizard, setAssignedUserForFrameSimpleOrder } from 'library/api/frameSimpleOrder'
 
 import './FrameSimpleOperatorWizard.style.less'
-import { AssignedUserDto } from 'library/models'
 import { useStoreState } from 'library/store'
 
 const { Step } = Steps
