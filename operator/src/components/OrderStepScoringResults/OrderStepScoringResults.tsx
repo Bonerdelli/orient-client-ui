@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Table, Button, Skeleton, Tag, message } from 'antd'
-import { EyeOutlined, DownloadOutlined } from '@ant-design/icons'
+import { Button, Col, message, Row, Skeleton, Table, Tag, Typography } from 'antd'
+import { DownloadOutlined, EyeOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
@@ -9,6 +9,9 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { Bank } from 'orient-ui-library/library/models/bank'
+import { getFrameWizardStep, sendFrameWizardStep4 } from 'library/api/frameWizard'
+
+import './OrderStepScoringResults.style.less'
 
 // import { ScoringResult } from 'library/models/stopFactor'
 type ScoringResult = any // NOTE: not implemented
@@ -24,13 +27,6 @@ interface BankScoringResult extends ScoringResult {
   bankScoringResultId: string
 }
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep4,
-} from 'library/api/frameWizard'
-
-import './OrderStepScoringResults.style.less'
-
 const { Title } = Typography
 
 export interface OrderStepScoringResultsProps {
@@ -39,6 +35,8 @@ export interface OrderStepScoringResultsProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: OrderStatus) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
@@ -46,6 +44,8 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   setCurrentStep,
   sequenceStepNumber,
   setOrderStatus,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -151,12 +151,34 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     }
   }
 
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.assign.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{!isWizardCompleted && renderNextButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const renderNextButton = () => (
     <Button
@@ -238,7 +260,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     selectedRowKeys,
     onChange: setSelectedRowKeys,
     getCheckboxProps: () => ({
-      disabled: isWizardCompleted,
+      disabled: isWizardCompleted || !isCurrentUserAssigned,
     }),
   }
 

@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Select } from 'antd'
-import { ReloadOutlined, ClearOutlined } from '@ant-design/icons'
+import { Button, Select, Space, Table } from 'antd'
+import { ClearOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
-import type { BaseOptionType } from 'rc-select/lib/Select';
-import { EyeOutlined } from '@ant-design/icons'
+import type { BaseOptionType } from 'rc-select/lib/Select'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -23,6 +22,7 @@ import { getFactoringOrdersList } from 'library/api/factoring'
 
 import portalConfig from 'config/portal.yaml'
 import './FactoringOrdersList.style.less'
+import { isEqual } from 'lodash'
 
 const { Option } = Select
 
@@ -42,7 +42,7 @@ export enum FactoringStatusFilter {
 }
 
 const defaultStatusFilter = [
-  FactoringStatusFilter.OperatorWaitForVerify
+  FactoringStatusFilter.OperatorWaitForVerify,
 ]
 
 const FactoringOrdersList: React.FC = () => {
@@ -138,7 +138,7 @@ const FactoringOrdersList: React.FC = () => {
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
       // datum => selectedStatuses.findIndex(selStatus => selStatus.value === datum.value)  // for labelInValue
-      datum => !selectedStatuses.includes(datum.value)
+      datum => !selectedStatuses.includes(datum.value),
     )
     setFilterAvailableOptions(filteredOptions)
     setPage(1)
@@ -152,19 +152,19 @@ const FactoringOrdersList: React.FC = () => {
           type="link"
           shape="circle"
           title={t('common.actions.view.title')}
-          icon={<EyeOutlined />}
+          icon={<EyeOutlined/>}
         />
       </Link>
     </Space>
   )
 
   const renderStatus = (statusCode: OrderStatus, item: Order) => (
-    <OrderStatusTag statusCode={statusCode} item={item} />
+    <OrderStatusTag statusCode={statusCode} item={item}/>
   )
 
   if (loaded === false) {
     return (
-      <ErrorResultView centered status="error" />
+      <ErrorResultView centered status="error"/>
     )
   }
 
@@ -225,6 +225,16 @@ const FactoringOrdersList: React.FC = () => {
     },
   ]
 
+  if (!isEqual(selectedStatuses, defaultStatusFilter)) {
+    columns.splice(-2, 0, {
+      key: 'underwriter',
+      dataIndex: [ 'assignedUserData', 'userLogin' ],
+      title: t('frameOrdersPage.tableColumnTitles.underwriter'),
+      render: (x) => x ? x : '–',
+      align: 'center',
+    })
+  }
+
   const rowClassName = (record: Order) => (
     record.statusCode === FactoringStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY
       ? 'FactoringOrdersList__row--new'
@@ -250,7 +260,7 @@ const FactoringOrdersList: React.FC = () => {
   const setSelectedStatusOptions = (options: FactoringStatusFilter[]) => {
     const selected = options.filter(option =>
       statusFilterOptions.findIndex(filterOpt => filterOpt.value === option)
-    !== -1)
+      !== -1)
     setSelectedStatuses(selected)
   }
 
@@ -274,7 +284,7 @@ const FactoringOrdersList: React.FC = () => {
       >
         {statusFilterAvailableOptions.map(item => (
           <Option key={item.value} value={item.value} label={item.label}>
-            <OrderStatusTag statusCode={item.value as OrderStatus} />
+            <OrderStatusTag statusCode={item.value as OrderStatus}/>
           </Option>
         ))}
       </Select>
@@ -282,7 +292,7 @@ const FactoringOrdersList: React.FC = () => {
         size="large"
         type="link"
         className="OrderList__filter__action"
-        icon={<ClearOutlined />}
+        icon={<ClearOutlined/>}
         disabled={!selectedStatuses.length}
         onClick={clearFilter}
       >
@@ -292,7 +302,7 @@ const FactoringOrdersList: React.FC = () => {
         size="large"
         type="link"
         className="OrderList__filter__action"
-        icon={<ReloadOutlined />}
+        icon={<ReloadOutlined/>}
         onClick={() => {
           setLoaded(null)
           loadData()
@@ -314,7 +324,7 @@ const FactoringOrdersList: React.FC = () => {
         dataSource={listData ?? []}
         rowClassName={rowClassName}
         pagination={{
-          size: "default",
+          size: 'default',
           current: page,
           pageSize: onPage,
           total: itemsTotal,
@@ -323,7 +333,7 @@ const FactoringOrdersList: React.FC = () => {
           onChange: (current, size) => {
             setPage(current)
             setOnPage(size)
-          }
+          },
         }}
         rowKey="id"
       />

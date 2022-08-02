@@ -27,6 +27,8 @@ export interface FactoringStepStopFactorsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
@@ -34,6 +36,8 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
   currentStep,
   setCurrentStep,
   sequenceStepNumber,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
   const [ approveInProccess, setApproveInProccess ] = useState<Record<StopFactor['stopFactorId'], boolean>>({})
@@ -169,12 +173,34 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
     })
   }
 
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.assign.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{renderNextButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const renderNextButton = () => (
     <Button
@@ -227,14 +253,17 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       width: 120,
       align: 'center',
     },
-    {
+  ]
+
+  if (isCurrentUserAssigned) {
+    stopFactorColumns.push({
       key: 'actions',
       render: (item) => renderStopFactorActions(item),
       title: t('common.dataEntity.actions'),
       align: 'left',
       width: 80,
-    },
-  ]
+    },)
+  }
 
   const renderStopFactors = () => (
     <Table
@@ -290,10 +319,6 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       </Div>
     </Div>
   )
-
-  // <Div className="FactoringStepDocuments__section">
-  //   <Title level={5}>{t('orderStepStopFactors.sectionTitles.banksWhereTrigerred')}</Title>
-  // </Div>
 
   if (!stepData && stepDataLoading) {
     return (

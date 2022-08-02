@@ -34,6 +34,7 @@ frameOrdersPage:
     statusName: Статус
     amount: Сумма
     days: Срок отсрочки, дней
+    underwriter: Андеррайтер
 
 orderStatusTitles:
   waitForVerify: Ожидает проверки
@@ -161,11 +162,13 @@ orderActions:
   next:
     title: Далее
   submitForRevision:
-    Отправить на доработку
+    title: Отправить на доработку
   saveAndContinue:
     title: Сохранить и продолжить
   sendToBanks:
     title: Отправить в Банки
+  assign:
+    title: Взять на проверку
 
 orderStatuses:
 # Ожидает проверки

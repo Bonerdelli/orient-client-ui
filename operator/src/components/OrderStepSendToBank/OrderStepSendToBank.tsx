@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Row, Col, Button, Skeleton, Result, message } from 'antd'
+import { Button, Col, message, Result, Row, Skeleton } from 'antd'
 import { InfoCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
@@ -19,6 +19,8 @@ export interface OrderStepSendToBankProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
@@ -28,6 +30,8 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   setOrderStatus,
   setCurrentStep,
   sequenceStepNumber,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -95,12 +99,34 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
     }
   }
 
-  const renderActions = () => (
-    <Row>
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.assign.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{!completed && renderSubmitButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const renderPrevButton = () => (
     <Button
@@ -127,7 +153,7 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   const renderReadyForSendingContent = () => (
     <Div className="OrderStepSendToBank">
       <Result
-        icon={<InfoCircleFilled />}
+        icon={<InfoCircleFilled/>}
         title={t('orderStepSendToBank.readyForSending.title')}
         subTitle={bankName ? t(
           'orderStepSendToBank.readyForSending.desc',

@@ -3,20 +3,20 @@ import { useTranslation } from 'react-i18next'
 import { sortBy } from 'lodash'
 
 import {
-  message,
   Button,
+  Card,
   Col,
+  DatePicker,
+  Descriptions,
+  Form,
+  Input,
+  message,
   Modal,
   Row,
+  Select,
   Skeleton,
   Spin,
   Typography,
-  Form,
-  Input,
-  DatePicker,
-  Select,
-  Card,
-  Descriptions,
 } from 'antd'
 
 import { SelectOutlined } from '@ant-design/icons'
@@ -25,17 +25,13 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderConditions, OrderConditionType } from 'orient-ui-library/library/models/orderCondition'
-import { CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
-import { BankDto } from 'orient-ui-library/library/models/proxy'
+import { BankDto, CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 
 import OrderDocumentsList from 'components/OrderDocumentsList'
-import { DocumentStatus } from 'library/models'
-import { GridResponse } from 'library/models' // TODO: to ui-lib
-import { Customer } from 'library/models' // TODO: to ui-lib
+import { Customer, DocumentStatus, GridResponse } from 'library/models' // TODO: to ui-lib // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getAllBanks } from 'library/api/bank'
 import { getAllCustomers } from 'library/api/customer'
@@ -55,6 +51,8 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const formItemProps = {
@@ -71,6 +69,8 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
   const [ form ] = useForm()
@@ -104,10 +104,12 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
 
   useEffect(() => {
     loadStepData()
-    if (currentStep > sequenceStepNumber) {
-      setFormDisabled(true)
-    }
+    setFormDisabled(currentStep > sequenceStepNumber || !isCurrentUserAssigned)
   }, [ currentStep ])
+
+  useEffect(() => {
+    setFormDisabled(currentStep > sequenceStepNumber || !isCurrentUserAssigned)
+  }, [ isCurrentUserAssigned ])
 
   useEffect(() => {
     setBankSelectItems(banks?.data ?? [])
@@ -252,13 +254,35 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     )
   }
 
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.assign.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{formDisabled ? renderNextButton() : renderSubmitButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   /**
    * Order documents
@@ -283,6 +307,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
         current={documents}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )
@@ -302,6 +327,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
         current={documentsOptional as OrderDocument[]}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )

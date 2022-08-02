@@ -30,6 +30,8 @@ export interface OrderDocumentsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
@@ -38,6 +40,8 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   currentStep,
   sequenceStepNumber,
   setCurrentStep,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
   const dictionaries = useStoreState(state => state.dictionary.list)
@@ -188,13 +192,35 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     )
   }
 
-  const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.assign.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const changeDocStatus = async (documentId: number, status: DocumentStatus) => {
     const result = await frameWizardSetDocStatus({
@@ -215,6 +241,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         current={documents}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )
@@ -234,6 +261,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
         current={documentsOptional as OrderDocument[]}
         onChange={loadStepData}
         setStatusHandler={changeDocStatus}
+        readonlyMode={!isCurrentUserAssigned}
       />
     </Spin>
   )

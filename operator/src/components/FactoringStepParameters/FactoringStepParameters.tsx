@@ -19,6 +19,8 @@ export interface FactoringStepParametersProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: FactoringStatus) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
@@ -27,6 +29,8 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   setCurrentStep,
   sequenceStepNumber,
   setOrderStatus,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -83,14 +87,36 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
     }
   }
 
-  const renderActions = () => (
-    <Row className="FactoringWizard__step__actions">
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.assign.title')}
+    </Button>
+  )
+
+  const renderActions = () => {
+    const actions = () => (<>
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
         : renderSubmitButton()}</Col>
-    </Row>
-  )
+    </>)
+
+    return (
+      <Row justify="center">
+        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+      </Row>
+    )
+  }
 
   const renderNextButton = () => (
     <Button
@@ -110,7 +136,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       disabled={submitting}
       onClick={handleNextStep}
     >
-      Взять на проверку
+      {t('orderActions.assign.title')}
     </Button>
   )
 

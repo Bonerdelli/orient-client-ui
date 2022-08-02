@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Select } from 'antd'
-import { ReloadOutlined, ClearOutlined } from '@ant-design/icons'
+import { Button, Select, Space, Table } from 'antd'
+import { ClearOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
-import type { BaseOptionType } from 'rc-select/lib/Select';
-import { EyeOutlined } from '@ant-design/icons'
+import type { BaseOptionType } from 'rc-select/lib/Select'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -21,6 +20,7 @@ import { getFrameSimpleOrdersList } from 'library/api/frameSimpleOrder'
 
 import portalConfig from 'config/portal.yaml'
 import './FrameSimpleOrdersList.style.less'
+import { isEqual } from 'lodash'
 
 const { Option } = Select
 
@@ -39,7 +39,7 @@ export enum FrameSimpleOrderStatusFilter {
 }
 
 const defaultStatusFilter = [
-  FrameSimpleOrderStatusFilter.OperatorWaitForVerify
+  FrameSimpleOrderStatusFilter.OperatorWaitForVerify,
 ]
 
 const FrameSimpleOrdersList: React.FC = () => {
@@ -130,7 +130,7 @@ const FrameSimpleOrdersList: React.FC = () => {
 
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
-      datum => !selectedStatuses.includes(datum.value)
+      datum => !selectedStatuses.includes(datum.value),
     )
     setFilterAvailableOptions(filteredOptions)
     setPage(1)
@@ -144,14 +144,14 @@ const FrameSimpleOrdersList: React.FC = () => {
           type="link"
           shape="circle"
           title={t('common.actions.view.title')}
-          icon={<EyeOutlined />}
+          icon={<EyeOutlined/>}
         />
       </Link>
     </Space>
   )
 
   const renderStatus = (statusCode: OrderStatus, item: Order) => (
-    <OrderStatusTag statusCode={statusCode} item={item} />
+    <OrderStatusTag statusCode={statusCode} item={item}/>
   )
 
   const rowClassName = (record: Order) => (
@@ -162,7 +162,7 @@ const FrameSimpleOrdersList: React.FC = () => {
 
   if (loaded === false) {
     return (
-      <ErrorResultView centered status="error" />
+      <ErrorResultView centered status="error"/>
     )
   }
 
@@ -208,6 +208,16 @@ const FrameSimpleOrdersList: React.FC = () => {
     },
   ]
 
+  if (!isEqual(selectedStatuses, defaultStatusFilter)) {
+    columns.splice(-2, 0, {
+      key: 'underwriter',
+      dataIndex: [ 'assignedUserData', 'userLogin' ],
+      title: t('frameOrdersPage.tableColumnTitles.underwriter'),
+      render: (x) => x ? x : '–',
+      align: 'center',
+    })
+  }
+
   const selectedStatusTagRender = (props: CustomTagProps) => {
     const { value, closable, onClose } = props
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
@@ -227,7 +237,7 @@ const FrameSimpleOrdersList: React.FC = () => {
   const setSelectedStatusOptions = (options: FrameSimpleOrderStatusFilter[]) => {
     const selected = options.filter(option =>
       statusFilterOptions.findIndex(filterOpt => filterOpt.value === option)
-    !== -1)
+      !== -1)
     setSelectedStatuses(selected)
   }
 
@@ -251,7 +261,7 @@ const FrameSimpleOrdersList: React.FC = () => {
       >
         {statusFilterAvailableOptions.map(item => (
           <Option key={item.value} value={item.value} label={item.label}>
-            <OrderStatusTag statusCode={item.value as OrderStatus} />
+            <OrderStatusTag statusCode={item.value as OrderStatus}/>
           </Option>
         ))}
       </Select>
@@ -259,7 +269,7 @@ const FrameSimpleOrdersList: React.FC = () => {
         size="large"
         type="link"
         className="OrderList__filter__action"
-        icon={<ClearOutlined />}
+        icon={<ClearOutlined/>}
         disabled={!selectedStatuses.length}
         onClick={clearFilter}
       >
@@ -269,7 +279,7 @@ const FrameSimpleOrdersList: React.FC = () => {
         size="large"
         type="link"
         className="OrderList__filter__action"
-        icon={<ReloadOutlined />}
+        icon={<ReloadOutlined/>}
         onClick={() => {
           setLoaded(null)
           loadData()
@@ -291,7 +301,7 @@ const FrameSimpleOrdersList: React.FC = () => {
         dataSource={listData ?? []}
         rowClassName={rowClassName}
         pagination={{
-          size: "default",
+          size: 'default',
           current: page,
           pageSize: onPage,
           total: itemsTotal,
@@ -300,7 +310,7 @@ const FrameSimpleOrdersList: React.FC = () => {
           onChange: (current, size) => {
             setPage(current)
             setOnPage(size)
-          }
+          },
         }}
         rowKey="id"
       />

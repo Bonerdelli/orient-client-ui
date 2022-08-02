@@ -8,8 +8,7 @@ import ClientInfo from 'orient-ui-library/components/ClientInfo'
 import OrderInfo from 'orient-ui-library/components/OrderInfo'
 
 import { OrderStatus } from 'orient-ui-library/library/models/order'
-import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { FrameWizardStep1Response, getFrameWizardStep, sendFrameWizardStep1 } from 'library/api/frameWizard'
 
 import './OrderStepParameters.style.less'
@@ -21,6 +20,8 @@ export interface OrderStepParametersProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: OrderStatus) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
@@ -30,6 +31,8 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   setCurrentStep,
   sequenceStepNumber,
   setOrderStatus,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -86,11 +89,8 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
-      <Col flex={1}></Col>
-      <Col>{currentStep > sequenceStepNumber
-        ? renderNextButton()
-        : renderSubmitButton()}</Col>
+    <Row justify={isCurrentUserAssigned ? 'end' : 'center'} className="FrameWizard__step__actions">
+      <Col>{isCurrentUserAssigned ? renderNextButton() : renderAssignOrderButton()}</Col>
     </Row>
   )
 
@@ -98,21 +98,26 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
     <Button
       size="large"
       type="primary"
-      onClick={() => setCurrentStep(sequenceStepNumber + 1)}
+      onClick={handleNextStep}
       disabled={!isNextStepAllowed}
     >
       {t('common.actions.next.title')}
     </Button>
   )
 
-  const renderSubmitButton = () => (
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
     <Button
       size="large"
       type="primary"
       disabled={submitting}
-      onClick={handleNextStep}
+      onClick={handleOrderAssign}
     >
-      Взять на проверку
+      {t('orderActions.assign.title')}
     </Button>
   )
 
@@ -149,7 +154,7 @@ const OrderStepParameters: React.FC<OrderStepParametersProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="OrderStepParameters">
       {renderStepContent()}
       {renderActions()}
     </Div>

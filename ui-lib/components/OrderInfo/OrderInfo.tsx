@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Typography, Descriptions, Skeleton } from 'antd'
+import { Descriptions, Skeleton, Typography } from 'antd'
 import { FactoringOrderInfo, OrderConditions, OrderConditionType } from 'library/models'
 import { CompanyDto } from 'library/models/proxy'
 import { formatDate } from 'library/helpers/date'
@@ -10,7 +10,7 @@ const { Text } = Typography
 
 export interface OrderInfoProps {
   orderId?: number
-  customerCompany?: Pick<CompanyDto, 'inn' | 'shortName'>
+  customerCompany?: CompanyDto
   factoring?: FactoringOrderInfo
   conditions?: OrderConditions
   size?: 'middle' | 'small' | 'default'
