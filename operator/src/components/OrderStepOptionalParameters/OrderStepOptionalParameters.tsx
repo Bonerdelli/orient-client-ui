@@ -111,7 +111,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{renderNextButton()}</Col>
     </Row>

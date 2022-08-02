@@ -86,7 +86,7 @@ const CustomerOrderStepInfo: React.FC<CustomerOrderStepInfoProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()

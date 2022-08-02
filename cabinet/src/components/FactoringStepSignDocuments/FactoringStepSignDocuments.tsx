@@ -203,7 +203,7 @@ const FactoringStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
 
   const renderStepActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
@@ -213,7 +213,7 @@ const FactoringStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   )
 
   const renderWaitActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col>{renderRejectButton()}</Col>
     </Row>
   )

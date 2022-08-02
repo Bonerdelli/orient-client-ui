@@ -135,7 +135,7 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
   )
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col flex={1}></Col>
       <Col>{renderAcceptButton()}</Col>
     </Row>

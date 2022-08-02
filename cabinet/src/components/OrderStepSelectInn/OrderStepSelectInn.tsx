@@ -221,7 +221,7 @@ const OrderStepSelectInn: React.FC<OrderSelectInnProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
