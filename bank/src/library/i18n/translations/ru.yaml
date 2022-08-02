@@ -22,6 +22,7 @@ frameOrdersPage:
     statusName: Статус
     amount: Сумма
     days: Срок отсрочки, дней
+    underwriter: Андеррайтер
 
 frameWizard:
   title: Заявка на рамочный договор

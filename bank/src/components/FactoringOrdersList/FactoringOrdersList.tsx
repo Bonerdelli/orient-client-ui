@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Select } from 'antd'
-import { ReloadOutlined, ClearOutlined } from '@ant-design/icons'
+import { Button, Select, Space, Table } from 'antd'
+import { ClearOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
-import type { BaseOptionType } from 'rc-select/lib/Select';
-import { EyeOutlined } from '@ant-design/icons'
+import type { BaseOptionType } from 'rc-select/lib/Select'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { Order, FactoringStatus } from 'orient-ui-library/library/models/order'
+import { FactoringStatus, Order } from 'orient-ui-library/library/models/order'
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 
 import OfferStatusTag from 'components/OfferStatusTag'
@@ -23,6 +22,7 @@ import { getFactoringOrdersList } from 'library/api/factoringOrder'
 
 import portalConfig from 'config/portal.yaml'
 import './FactoringOrdersList.style.less'
+import { isEqual } from 'lodash'
 
 const { Option } = Select
 
@@ -122,19 +122,19 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
           type="link"
           shape="circle"
           title={t('common.actions.view.title')}
-          icon={<EyeOutlined />}
+          icon={<EyeOutlined/>}
         />
       </Link>
     </Space>
   )
 
   const renderStatus = (statusCode: BankOfferStatus) => (
-    <OfferStatusTag statusCode={statusCode} />
+    <OfferStatusTag statusCode={statusCode}/>
   )
 
   if (loaded === false) {
     return (
-      <ErrorResultView centered status="error" />
+      <ErrorResultView centered status="error"/>
     )
   }
 
@@ -195,6 +195,16 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
     },
   ]
 
+  if (!isEqual(selectedStatuses, defaultStatusFilter)) {
+    columns.splice(-2, 0, {
+      key: 'underwriter',
+      dataIndex: [ 'assignedUserData', 'userLogin' ],
+      title: t('frameOrdersPage.tableColumnTitles.underwriter'),
+      render: (x) => x ? x : '–',
+      align: 'center',
+    })
+  }
+
   const rowClassName = (record: Order) => (
     record.statusCode === FactoringStatus.FACTOR_BANK_SIGN
       ? 'FactoringOrdersList__row--new'
@@ -220,7 +230,7 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
   const setSelectedStatusOptions = (options: FactoringStatusFilter[]) => {
     const selected = options.filter(option =>
       statusFilterOptions.findIndex(filterOpt => filterOpt.value === option)
-    !== -1)
+      !== -1)
     setSelectedStatuses(selected)
   }
 
@@ -244,7 +254,7 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
       >
         {statusFilterAvailableOptions.map(item => (
           <Option key={item.value} value={item.value} label={item.label}>
-            <OfferStatusTag statusCode={item.value as FactoringStatus} />
+            <OfferStatusTag statusCode={item.value as FactoringStatus}/>
           </Option>
         ))}
       </Select>
@@ -252,7 +262,7 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
         size="large"
         type="link"
         className="OrderList__filter__action"
-        icon={<ClearOutlined />}
+        icon={<ClearOutlined/>}
         disabled={!selectedStatuses.length}
         onClick={clearFilter}
       >
@@ -262,7 +272,7 @@ const FactoringOrdersList: React.FC<FactoringOrdersListProps> = ({ bankId }) => 
         size="large"
         type="link"
         className="OrderList__filter__action"
-        icon={<ReloadOutlined />}
+        icon={<ReloadOutlined/>}
         onClick={() => {
           setLoaded(null)
           loadData()
