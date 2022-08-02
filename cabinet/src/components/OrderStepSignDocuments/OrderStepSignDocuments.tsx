@@ -240,7 +240,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
 
   const renderStepActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
@@ -249,7 +249,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
   )
 
   const renderWaitActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col></Col>
     </Row>
   )
@@ -339,7 +339,7 @@ const OrderStepSignDocuments: React.FC<OrderSignDocumentsProps> = ({
 
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {isVerifying ? renderWaitMessage() : renderStepContent()}
       {isVerifying ? renderWaitActions() : renderStepActions()}
     </Div>

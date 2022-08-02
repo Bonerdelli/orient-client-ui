@@ -198,7 +198,7 @@ const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
     </>)
 
     return (
-      <Row justify="center">
+      <Row className="WizardStep__actions WizardStep__actions--single">
         {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
       </Row>
     )

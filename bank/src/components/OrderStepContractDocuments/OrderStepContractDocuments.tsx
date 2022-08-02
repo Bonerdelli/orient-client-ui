@@ -177,20 +177,20 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (<>
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
         : renderSubmitButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+    </Row>
+  )
 
   const renderSubmitButton = () => (
     <Button
@@ -268,7 +268,7 @@ const OrderStepContractDocuments: React.FC<OrderStepContractDocumentsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {!isAccepted && renderActions()}
+      {!isAccepted && (isCurrentUserAssigned ? renderActions() : renderAssignAction())}
     </Div>
   )
 }

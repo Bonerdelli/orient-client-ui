@@ -249,7 +249,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
@@ -269,7 +269,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   )
 
   const renderOptionalDocumentsSection = () => (
-    <Div className="OrderStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
@@ -314,12 +314,12 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <Div className="OrderStepDocuments__title">
         <Title level={4}>{t('frameSteps.documents.title')}</Title>
       </Div>
-      <Div className="OrderStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
       {documentTypesOptional !== null && renderOptionalDocumentsSection}
-      <Div className="OrderStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.companyData')}</Title>
         <CompanyDataReadyStatuses
           wizardType={wizardType}
@@ -346,7 +346,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {renderActions()}
     </Div>

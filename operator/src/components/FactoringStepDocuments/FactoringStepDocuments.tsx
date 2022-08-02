@@ -190,6 +190,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     await assignCurrentUser()
     setSubmitting(false)
   }
+
   const renderAssignOrderButton = () => (
     <Button
       size="large"
@@ -201,19 +202,19 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (<>
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+    </Row>
+  )
 
   const changeDocStatus = async (documentId: number, status: DocumentStatus) => {
     const result = await factoringWizardSetDocStatus({
@@ -239,7 +240,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   )
 
   const renderOptionalDocumentsSection = () => (
-    <Div className="FactoringStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>{t('orderStepDocuments.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
@@ -266,7 +267,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     setCompanyFounderModalVisible(false)
   }
   const renderCompanyFounderSection = () => (
-    <Div className="FactoringStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>
         {t('orderStepDocuments.companyFounderInformation.title')}
         <Button size="small"
@@ -301,7 +302,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
       <Div className="FactoringStepDocuments__title">
         <Title level={4}>{t('orderStepDocuments.title')}</Title>
       </Div>
-      <Div className="FactoringStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
@@ -323,9 +324,9 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
     </Div>
   )
 }
