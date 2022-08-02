@@ -87,7 +87,7 @@ const FrameOperatorWizard: React.FC<FrameOperatorWizardProps> = ({ orderId, back
   const assignCurrentUser = async () => {
     const result = await setAssignedUserForFrameOrder({ orderId: Number(itemId) || orderId as number })
     if (result.success) {
-      // TODO: подумать над апдейтом фронта без притягивания всей информации о шаге
+      // TODO: think about updating view w/o fetching step info
       return loadCurrentStepData()
     }
   }

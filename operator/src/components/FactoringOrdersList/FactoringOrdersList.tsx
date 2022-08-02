@@ -42,7 +42,7 @@ export enum FactoringStatusFilter {
 }
 
 const defaultStatusFilter = [
-  FactoringStatusFilter.OperatorWaitForVerify
+  FactoringStatusFilter.OperatorWaitForVerify,
 ]
 
 const FactoringOrdersList: React.FC = () => {
@@ -138,7 +138,7 @@ const FactoringOrdersList: React.FC = () => {
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
       // datum => selectedStatuses.findIndex(selStatus => selStatus.value === datum.value)  // for labelInValue
-      datum => !selectedStatuses.includes(datum.value)
+      datum => !selectedStatuses.includes(datum.value),
     )
     setFilterAvailableOptions(filteredOptions)
     setPage(1)
@@ -230,7 +230,7 @@ const FactoringOrdersList: React.FC = () => {
       key: 'underwriter',
       dataIndex: [ 'assignedUserData', 'userLogin' ],
       title: t('frameOrdersPage.tableColumnTitles.underwriter'),
-      render: (x) => x ? x : '—',
+      render: (x) => x ? x : '–',
       align: 'center',
     })
   }
@@ -324,7 +324,7 @@ const FactoringOrdersList: React.FC = () => {
         dataSource={listData ?? []}
         rowClassName={rowClassName}
         pagination={{
-          size: "default",
+          size: 'default',
           current: page,
           pageSize: onPage,
           total: itemsTotal,
@@ -333,7 +333,7 @@ const FactoringOrdersList: React.FC = () => {
           onChange: (current, size) => {
             setPage(current)
             setOnPage(size)
-          }
+          },
         }}
         rowKey="id"
       />

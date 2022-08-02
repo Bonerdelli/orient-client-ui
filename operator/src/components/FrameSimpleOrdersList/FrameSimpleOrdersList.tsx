@@ -39,7 +39,7 @@ export enum FrameSimpleOrderStatusFilter {
 }
 
 const defaultStatusFilter = [
-  FrameSimpleOrderStatusFilter.OperatorWaitForVerify
+  FrameSimpleOrderStatusFilter.OperatorWaitForVerify,
 ]
 
 const FrameSimpleOrdersList: React.FC = () => {
@@ -130,7 +130,7 @@ const FrameSimpleOrdersList: React.FC = () => {
 
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
-      datum => !selectedStatuses.includes(datum.value)
+      datum => !selectedStatuses.includes(datum.value),
     )
     setFilterAvailableOptions(filteredOptions)
     setPage(1)
@@ -213,7 +213,7 @@ const FrameSimpleOrdersList: React.FC = () => {
       key: 'underwriter',
       dataIndex: [ 'assignedUserData', 'userLogin' ],
       title: t('frameOrdersPage.tableColumnTitles.underwriter'),
-      render: (x) => x ? x : '—',
+      render: (x) => x ? x : '–',
       align: 'center',
     })
   }
@@ -301,7 +301,7 @@ const FrameSimpleOrdersList: React.FC = () => {
         dataSource={listData ?? []}
         rowClassName={rowClassName}
         pagination={{
-          size: "default",
+          size: 'default',
           current: page,
           pageSize: onPage,
           total: itemsTotal,
@@ -310,7 +310,7 @@ const FrameSimpleOrdersList: React.FC = () => {
           onChange: (current, size) => {
             setPage(current)
             setOnPage(size)
-          }
+          },
         }}
         rowKey="id"
       />

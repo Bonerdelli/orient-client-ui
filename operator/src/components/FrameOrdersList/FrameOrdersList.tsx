@@ -209,7 +209,7 @@ const FrameOrdersList: React.FC = () => {
       key: 'underwriter',
       dataIndex: [ 'assignedUserData', 'userLogin' ],
       title: t('frameOrdersPage.tableColumnTitles.underwriter'),
-      render: (x) => x ? x : '—',
+      render: (x) => x ? x : '–',
       align: 'center',
     })
   }
