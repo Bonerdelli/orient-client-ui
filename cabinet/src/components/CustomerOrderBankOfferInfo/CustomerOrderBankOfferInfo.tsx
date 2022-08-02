@@ -115,7 +115,7 @@ const CustomerOrderBankOfferInfo: React.FC<CustomerOrderBankOfferInfoProps> = ({
 
   const renderOfferContent = () => (
     <Div>
-      <Div className="CustomerOrderBankOfferInfo__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepBankOffer.sections.documentsForSign.title')}</Title>
         {renderDocuments()}
       </Div>

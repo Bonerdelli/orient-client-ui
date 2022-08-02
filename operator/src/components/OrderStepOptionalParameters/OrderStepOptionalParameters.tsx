@@ -211,14 +211,14 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
 
   const renderStepContent = () => (
     <Div className="OrderStepOptionalParameters">
-      <Div className="OrderStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepOptionalParameters.sectionTitles.optionalParameters')}</Title>
         {renderOptionalParameters()}
       </Div>
     </Div>
   )
 
-  // <Div className="OrderStepDocuments__section">
+  // <Div className="WizardStep__section">
   //   <Title level={5}>{t('orderStepOptionalParameters.sectionTitles.banksWhereTrigerred')}</Title>
   // </Div>
 

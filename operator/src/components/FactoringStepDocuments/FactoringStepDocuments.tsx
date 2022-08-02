@@ -239,7 +239,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   )
 
   const renderOptionalDocumentsSection = () => (
-    <Div className="FactoringStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>{t('orderStepDocuments.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
@@ -266,7 +266,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     setCompanyFounderModalVisible(false)
   }
   const renderCompanyFounderSection = () => (
-    <Div className="FactoringStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>
         {t('orderStepDocuments.companyFounderInformation.title')}
         <Button size="small"
@@ -301,7 +301,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
       <Div className="FactoringStepDocuments__title">
         <Title level={4}>{t('orderStepDocuments.title')}</Title>
       </Div>
-      <Div className="FactoringStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>

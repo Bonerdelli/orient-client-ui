@@ -313,7 +313,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   )
 
   const renderOptionalDocumentsSection = () => (
-    <Div className="OrderStepDocumentsAndConditions__section">
+    <Div className="WizardStep__section">
       <Title level={5}>{t('orderStepDocuments.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
@@ -333,7 +333,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   )
 
   const renderOrderParametersSection = () => (
-    <Div className="OrderStepDocumentsAndConditions__section">
+    <Div className="WizardStep__section">
       <Title level={5}>{t('orderStepDocuments.sectionTitles.orderParameters')}</Title>
       <Row gutter={12}>
         <Col xs={24} lg={12}>
@@ -470,7 +470,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   }
 
   const renderCompanyFounderSection = () => (
-    <Div className="OrderStepDocumentsAndConditions__section">
+    <Div className="WizardStep__section">
       <Title level={5}>
         {t('orderStepDocuments.companyFounderInformation.title')}
         <Button size="small"
@@ -505,7 +505,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
       <Div className="OrderStepDocumentsAndConditions__title">
         <Title level={4}>{t('orderStepDocuments.title')}</Title>
       </Div>
-      <Div className="OrderStepDocumentsAndConditions__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>

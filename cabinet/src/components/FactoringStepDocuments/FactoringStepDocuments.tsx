@@ -203,7 +203,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   )
 
   const renderOptionalDocumentsSection = () => (
-    <Div className="FactoringStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>{t('frameSteps.documents.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
@@ -226,7 +226,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       <Div className="FactoringStepDocuments__title">
         <Title level={4}>{t('frameSteps.documents.title')}</Title>
       </Div>
-      <Div className="FactoringStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('frameSteps.documents.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>

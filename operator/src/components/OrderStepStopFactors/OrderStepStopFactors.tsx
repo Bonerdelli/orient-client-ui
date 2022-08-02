@@ -312,14 +312,14 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
 
   const renderStepContent = () => (
     <Div className="OrderStepStopFactors">
-      <Div className="OrderStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepStopFactors.sectionTitles.stopFactors')}</Title>
         {renderStopFactors()}
       </Div>
     </Div>
   )
 
-  // <Div className="OrderStepDocuments__section">
+  // <Div className="WizardStep__section">
   //   <Title level={5}>{t('orderStepStopFactors.sectionTitles.banksWhereTrigerred')}</Title>
   // </Div>
 
