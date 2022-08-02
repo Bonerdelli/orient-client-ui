@@ -191,15 +191,11 @@ const FactoringStepArchive: React.FC<OrderDocumentsProps> = ({
   const renderActions = () => {
     const buttonText = getNextButtonText()
     if (buttonText === null) return <></>
-
-    const actions = () => (<>
-      <Col flex={1}/>
-      <Col>{renderNextButton(buttonText)}</Col>
-    </>)
-
     return (
       <Row className="WizardStep__actions WizardStep__actions--single">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
+        <Col>
+          {isCurrentUserAssigned ? renderNextButton(buttonText) : renderAssignOrderButton()}
+        </Col>
       </Row>
     )
   }
