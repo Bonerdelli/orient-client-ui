@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useRouteMatch } from 'react-router-dom'
 
-import { Table, Button, Space, Select } from 'antd'
-import { ReloadOutlined, ClearOutlined } from '@ant-design/icons'
+import { Button, Select, Space, Table } from 'antd'
+import { ClearOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/lib/table'
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect'
-import type { BaseOptionType } from 'rc-select/lib/Select';
-import { EyeOutlined } from '@ant-design/icons'
+import type { BaseOptionType } from 'rc-select/lib/Select'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -22,10 +21,11 @@ import { getFrameOrdersList } from 'library/api/frameOrder'
 
 import portalConfig from 'config/portal.yaml'
 import './FrameOrdersList.style.less'
+import { isEqual } from 'lodash'
 
 const { Option } = Select
 
-export enum FrameSimpleOrderStatusFilter {
+enum FrameOrderStatusFilter {
   BankWaitForVerify = BankOfferStatus.BankWaitForVerify, // Ожидает проверки банком
   BankVerify = BankOfferStatus.BankVerify, // Проверка банком
   ClientRework = BankOfferStatus.ClientRework, // Доработка
@@ -39,7 +39,11 @@ export enum FrameSimpleOrderStatusFilter {
 }
 
 const defaultStatusFilter = [
-  FrameSimpleOrderStatusFilter.BankSign
+  FrameOrderStatusFilter.BankSign,
+]
+
+const hideUnderwriterColumnStatusFilter = [
+  FrameOrderStatusFilter.BankWaitForVerify,
 ]
 
 export interface FrameOrdersListProps {
@@ -56,7 +60,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
   const [ listData, setListData ] = useState<Order[]>()
   const [ loaded, setLoaded ] = useState<boolean | null>(null)
 
-  const [ selectedStatuses, setSelectedStatuses ] = useState<FrameSimpleOrderStatusFilter[]>(defaultStatusFilter)
+  const [ selectedStatuses, setSelectedStatuses ] = useState<FrameOrderStatusFilter[]>(defaultStatusFilter)
   const [ statusFilterAvailableOptions, setFilterAvailableOptions ] = useState<BaseOptionType[]>([])
 
   useEffect(() => {
@@ -90,49 +94,49 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
   const statusFilterOptions: BaseOptionType[] = [
     {
       label: t('offerStatusTitles.bankWaitForVerify'),
-      value: FrameSimpleOrderStatusFilter.BankWaitForVerify,
+      value: FrameOrderStatusFilter.BankWaitForVerify,
     },
     {
       label: t('offerStatusTitles.bankVerify'),
-      value: FrameSimpleOrderStatusFilter.BankVerify,
+      value: FrameOrderStatusFilter.BankVerify,
     },
     {
       label: t('offerStatusTitles.clientRework'),
-      value: FrameSimpleOrderStatusFilter.ClientRework,
+      value: FrameOrderStatusFilter.ClientRework,
     },
     {
       label: t('offerStatusTitles.bankOffer'),
-      value: FrameSimpleOrderStatusFilter.BankOffer,
+      value: FrameOrderStatusFilter.BankOffer,
     },
     {
       label: t('offerStatusTitles.bankSign'),
-      value: FrameSimpleOrderStatusFilter.BankSign,
+      value: FrameOrderStatusFilter.BankSign,
     },
     {
       label: t('offerStatusTitles.bankOfferSent'),
-      value: FrameSimpleOrderStatusFilter.BankOfferSent,
+      value: FrameOrderStatusFilter.BankOfferSent,
     },
     {
       label: t('offerStatusTitles.customerSign'),
-      value: FrameSimpleOrderStatusFilter.CustomerSign,
+      value: FrameOrderStatusFilter.CustomerSign,
     },
     {
       label: t('offerStatusTitles.completed'),
-      value: FrameSimpleOrderStatusFilter.Completed,
+      value: FrameOrderStatusFilter.Completed,
     },
     {
       label: t('offerStatusTitles.bankReject'),
-      value: FrameSimpleOrderStatusFilter.BankReject,
+      value: FrameOrderStatusFilter.BankReject,
     },
     {
       label: t('offerStatusTitles.clientOfferReject'),
-      value: FrameSimpleOrderStatusFilter.ClientOfferReject,
+      value: FrameOrderStatusFilter.ClientOfferReject,
     },
   ]
 
   useEffect(() => {
     const filteredOptions = statusFilterOptions.filter(
-      datum => !selectedStatuses.includes(datum.value)
+      datum => !selectedStatuses.includes(datum.value),
     )
     setFilterAvailableOptions(filteredOptions)
     setPage(1)
@@ -146,14 +150,14 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
           type="link"
           shape="circle"
           title={t('common.actions.view.title')}
-          icon={<EyeOutlined />}
+          icon={<EyeOutlined/>}
         />
       </Link>
     </Space>
   )
 
   const renderStatus = (statusCode: BankOfferStatus) => (
-    <OfferStatusTag statusCode={statusCode} />
+    <OfferStatusTag statusCode={statusCode}/>
   )
 
   const rowClassName = (item: Order) => (
@@ -164,7 +168,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
 
   if (loaded === false) {
     return (
-      <ErrorResultView centered status="error" />
+      <ErrorResultView centered status="error"/>
     )
   }
 
@@ -210,6 +214,16 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
     },
   ]
 
+  if (!isEqual(selectedStatuses, hideUnderwriterColumnStatusFilter)) {
+    columns.splice(-2, 0, {
+      key: 'underwriter',
+      dataIndex: [ 'assignedUserData', 'userLogin' ],
+      title: t('frameOrdersPage.tableColumnTitles.underwriter'),
+      render: (x) => x ? x : '—',
+      align: 'center',
+    })
+  }
+
   const selectedStatusTagRender = (props: CustomTagProps) => {
     const { value, closable, onClose } = props
     const onPreventMouseDown = (event: React.MouseEvent<HTMLSpanElement>) => {
@@ -226,10 +240,10 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
     )
   }
 
-  const setSelectedStatusOptions = (options: FrameSimpleOrderStatusFilter[]) => {
+  const setSelectedStatusOptions = (options: FrameOrderStatusFilter[]) => {
     const selected = options.filter(option =>
       statusFilterOptions.findIndex(filterOpt => filterOpt.value === option)
-    !== -1)
+      !== -1)
     setSelectedStatuses(selected)
   }
 
@@ -253,7 +267,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
       >
         {statusFilterAvailableOptions.map(item => (
           <Option key={item.value} value={item.value} label={item.label}>
-            <OfferStatusTag statusCode={item.value as BankOfferStatus} />
+            <OfferStatusTag statusCode={item.value as BankOfferStatus}/>
           </Option>
         ))}
       </Select>
@@ -261,7 +275,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
         size="large"
         type="link"
         className="OrderList__filter__action"
-        icon={<ClearOutlined />}
+        icon={<ClearOutlined/>}
         disabled={!selectedStatuses.length}
         onClick={clearFilter}
       >
@@ -271,7 +285,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
         size="large"
         type="link"
         className="OrderList__filter__action"
-        icon={<ReloadOutlined />}
+        icon={<ReloadOutlined/>}
         onClick={() => {
           setLoaded(null)
           loadData()
@@ -293,7 +307,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
         dataSource={listData ?? []}
         rowClassName={rowClassName}
         pagination={{
-          size: "default",
+          size: 'default',
           current: page,
           pageSize: onPage,
           total: itemsTotal,
@@ -302,7 +316,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
           onChange: (current, size) => {
             setPage(current)
             setOnPage(size)
-          }
+          },
         }}
         rowKey="id"
       />

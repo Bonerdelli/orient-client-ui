@@ -208,19 +208,19 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Button>
   )
 
-  const renderActions = () => {
-    const actions = () => (<>
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
       <Col>{renderCancelButton()}</Col>
       <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
+    </Row>
+  )
 
   const changeDocStatus = async (documentId: number, status: DocumentStatus) => {
     const result = await frameWizardSetDocStatus({
@@ -247,7 +247,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   )
 
   const renderOptionalDocumentsSection = () => (
-    <Div className="OrderStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>{t('orderStepDocuments.sectionTitles.additionalDocs')}</Title>
       {renderOptionalDocuments()}
     </Div>
@@ -279,7 +279,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   const renderCompanyFounderSection = () => (
-    <Div className="OrderStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>
         {t('orderStepDocuments.companyFounderInformation.title')}
         <Button size="small"
@@ -310,7 +310,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   )
 
   const renderCompanyQuestionnaireSection = () => (
-    <Div className="OrderStepDocuments__section">
+    <Div className="WizardStep__section">
       <Title level={5}>
         {t('orderStepDocuments.companyQuestionnaire.title')}
         <Button size="small"
@@ -341,7 +341,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
       <Div className="OrderStepDocuments__title">
         <Title level={4}>{t('orderStepDocuments.title')}</Title>
       </Div>
-      <Div className="OrderStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepDocuments.sectionTitles.mainDocs')}</Title>
         {renderDocuments()}
       </Div>
@@ -364,9 +364,9 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
     </Div>
   )
 }

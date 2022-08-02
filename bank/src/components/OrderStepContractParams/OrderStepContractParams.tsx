@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isUndefined } from 'lodash'
 import moment from 'moment' // TODO: replace with dayjs
-
-import { Form, Typography, Row, Col, Button, Input, DatePicker, Select, Skeleton, message } from 'antd'
+import { Button, Col, DatePicker, Form, Input, message, Row, Select, Skeleton, Typography } from 'antd'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -12,10 +11,7 @@ import { OrderConditions, OrderConditionType } from 'orient-ui-library/library/m
 import { BankOfferStatus } from 'orient-ui-library/library/models/bankOffer'
 import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 
-import {
-  getFrameWizardStep,
-  sendFrameWizardStep,
-} from 'library/api/frameWizard'
+import { getFrameWizardStep, sendFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepContractParams.style.less'
 
@@ -31,6 +27,8 @@ export interface OrderStepContractParamsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
@@ -41,6 +39,8 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
   setCurrentStep,
   setOfferStatus,
   sequenceStepNumber,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
   const [ form ] = useForm()
@@ -82,12 +82,16 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
     }
   }, [ offerStatus ])
 
+  const isFormDisabled = () => isCurrentUserAssigned ? currentStep > sequenceStepNumber : true
+
   useEffect(() => {
-    if (currentStep > sequenceStepNumber) {
-      setNextStepAllowed(true)
-      setFormDisabled(true)
-    }
+    setNextStepAllowed(currentStep > sequenceStepNumber)
+    setFormDisabled(isFormDisabled())
   }, [ currentStep, sequenceStepNumber ])
+
+  useEffect(() => {
+    setFormDisabled(isFormDisabled())
+  }, [ isCurrentUserAssigned ])
 
   const loadCurrentStepData = async () => {
     const result = await getFrameWizardStep({
@@ -129,6 +133,28 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
       setCurrentStep(sequenceStepNumber - 1)
     }
   }
+
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.take.title')}
+    </Button>
+  )
+
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
 
   const renderActions = () => (
     <Row className="WizardStep__actions">
@@ -293,7 +319,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
         labelWrap={true}
       >
         {renderStepContent()}
-        {!isAccepted && renderActions()}
+        {!isAccepted && (isCurrentUserAssigned ? renderActions() : renderAssignAction())}
       </Form>
     </Div>
   )

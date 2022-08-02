@@ -87,7 +87,7 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col flex={1}></Col>
       <Col>{currentStep > sequenceStepNumber
         ? renderNextButton()
@@ -150,7 +150,7 @@ const CustomerFactoringStepInfo: React.FC<CustomerFactoringStepInfoProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {!completed && renderActions()}
     </Div>

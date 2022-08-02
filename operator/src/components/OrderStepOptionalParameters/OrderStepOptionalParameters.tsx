@@ -111,7 +111,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
   }
 
   const renderActions = () => (
-    <Row className="FrameWizard__step__actions">
+    <Row className="WizardStep__actions">
       <Col flex={1}>{renderPrevButton()}</Col>
       <Col>{renderNextButton()}</Col>
     </Row>
@@ -211,14 +211,14 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
 
   const renderStepContent = () => (
     <Div className="OrderStepOptionalParameters">
-      <Div className="OrderStepDocuments__section">
+      <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepOptionalParameters.sectionTitles.optionalParameters')}</Title>
         {renderOptionalParameters()}
       </Div>
     </Div>
   )
 
-  // <Div className="OrderStepDocuments__section">
+  // <Div className="WizardStep__section">
   //   <Title level={5}>{t('orderStepOptionalParameters.sectionTitles.banksWhereTrigerred')}</Title>
   // </Div>
 
@@ -235,7 +235,7 @@ const OrderStepOptionalParameters: React.FC<OrderStepOptionalParametersProps> = 
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {renderStepContent()}
       {renderActions()}
     </Div>

@@ -1,7 +1,7 @@
 import { get, post } from 'orient-ui-library/library/helpers/api' // TODO: move to ui-lib after debugging
-
-import { PaginatedRequest, defaultPaginatedRequest } from 'library/helpers/api'
-import { Order, GridResponse } from 'library/models'
+import { defaultPaginatedRequest, PaginatedRequest } from 'library/helpers/api'
+import { GridResponse, Order } from 'library/models'
+import { FrameOrderItemParams } from 'library/api/frameOrder'
 
 
 export interface FrameSimpleItemParams {
@@ -10,7 +10,7 @@ export interface FrameSimpleItemParams {
 
 export async function getFrameSimpleOrdersList(
   params: FrameSimpleItemParams,
-  request: PaginatedRequest = defaultPaginatedRequest
+  request: PaginatedRequest = defaultPaginatedRequest,
 ) {
   const { bankId } = params
   return await post<GridResponse<Order[]>>(`/bank/${bankId}/order/frameSimple/list`, request)
@@ -33,4 +33,9 @@ export interface FrameSimpleOrderStepParams extends FrameSimpleOrderItemParams {
 export async function getFrameSimpleOrderWizardStep(params: FrameSimpleOrderStepParams) {
   const { bankId, orderId, step } = params
   return await get<Order>(`/bank/${bankId}/wizard/frameSimple/${orderId}/${step}`)
+}
+
+export async function setAssignedUserForFrameSimpleOrder(params: FrameOrderItemParams) {
+  const { orderId, bankId } = params
+  return await post(`/bank/${bankId}/wizard/frameSimple/${orderId}/assign`, {}, true)
 }

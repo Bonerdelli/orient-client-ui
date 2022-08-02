@@ -104,6 +104,20 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
     await assignCurrentUser()
     setSubmitting(false)
   }
+
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
+  const renderActions = () => (
+    <Row className="WizardStep__actions">
+    <Col flex={1}>{renderPrevButton()}</Col>
+    <Col>{!completed && renderSubmitButton()}</Col>
+    </Row>
+  )
+
   const renderAssignOrderButton = () => (
     <Button
       size="large"
@@ -114,19 +128,6 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
       {t('orderActions.assign.title')}
     </Button>
   )
-
-  const renderActions = () => {
-    const actions = () => (<>
-      <Col flex={1}>{renderPrevButton()}</Col>
-      <Col>{!completed && renderSubmitButton()}</Col>
-    </>)
-
-    return (
-      <Row justify="center">
-        {isCurrentUserAssigned ? actions() : renderAssignOrderButton()}
-      </Row>
-    )
-  }
 
   const renderPrevButton = () => (
     <Button
@@ -189,9 +190,9 @@ const OrderStepSendToBank: React.FC<OrderStepSendToBankProps> = ({
   }
 
   return (
-    <Div className="FrameWizard__step__content">
+    <Div className="WizardStep__content">
       {!completed ? renderReadyForSendingContent() : renderOrderSentContent()}
-      {renderActions()}
+      {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
     </Div>
   )
 }

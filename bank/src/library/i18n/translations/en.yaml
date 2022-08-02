@@ -24,6 +24,7 @@ frameOrdersPage:
     statusName: Статус
     amount: Сумма
     days: Срок отсрочки, дней
+    underwriter: Underwriter
 
 frameWizard:
   # TODO: translate me

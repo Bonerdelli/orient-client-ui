@@ -10,7 +10,7 @@ import { OrderDocument } from 'orient-ui-library/library/models/document'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { FactoringStatus } from 'orient-ui-library/library'
 
-import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+import { checkDocumentSigned, checkDocumentSignNeeded } from 'orient-ui-library/library/helpers/order'
 
 import { OrderCheckList as OrderCheckListModel } from 'library/models'
 import OrderDocumentsList from 'components/OrderDocumentsList'
@@ -34,6 +34,8 @@ export interface OrderDocumentsProps {
   setCurrentStep: (step: number) => void
   setOrderStatus: (status: FactoringStatus) => void,
   completed?: boolean
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
@@ -43,6 +45,8 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   sequenceStepNumber,
   setCurrentStep,
   setOrderStatus,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -196,6 +200,30 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
     )
   }
 
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    setSubmitting(false)
+  }
+
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.take.title')}
+    </Button>
+  )
+
+
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
+
   const renderActions = () => (
     <Row className="WizardStep__actions">
       <Col>{renderPrevStepButton()}</Col>
@@ -267,7 +295,10 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
       {documentsGenerated !== null && renderGeneratedDocumentsSection()}
       <Div className="WizardStep__section">
         <Title level={5}>{t('orderStepDocuments.sectionTitles.checkList')}</Title>
-        <OrderCheckList checkList={stepData?.checks} onChange={handleCheckListChange} />
+        <OrderCheckList
+          checkList={stepData?.checks}
+          onChange={handleCheckListChange}
+          readonlyMode={!isCurrentUserAssigned}/>
       </Div>
     </Div>
   )
@@ -287,7 +318,7 @@ const FactoringStepDocuments: React.FC<OrderDocumentsProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {renderActions()}
+      {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
     </Div>
   )
 }

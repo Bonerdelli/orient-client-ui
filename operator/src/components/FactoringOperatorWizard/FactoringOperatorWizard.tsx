@@ -6,6 +6,7 @@ import { Card, Grid, Skeleton, Steps } from 'antd'
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FactoringStatus } from 'orient-ui-library/library/models/order'
+import { AssignedUserDto } from 'orient-ui-library/library'
 
 import OrderStatusTag from 'components/OrderStatusTag'
 import FactoringStepParameters from 'components/FactoringStepParameters'
@@ -16,7 +17,6 @@ import FactoringStepSendToBank from 'components/FactoringStepSendToBank'
 import './FactoringOperatorWizard.style.less'
 import { getFactoringOrderWizard, setAssignedUserForFactoringOrder } from 'library/api/factoringWizard'
 import { useStoreState } from 'library/store'
-import { AssignedUserDto } from 'library/models'
 
 const { Step } = Steps
 const { useBreakpoint } = Grid

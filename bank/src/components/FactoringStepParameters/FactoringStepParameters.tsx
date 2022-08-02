@@ -23,6 +23,8 @@ export interface FactoringStepParametersProps {
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
   completed?: boolean
+  isCurrentUserAssigned: boolean
+  assignCurrentUser: () => Promise<unknown>
 }
 
 const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
@@ -32,6 +34,8 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   setCurrentStep,
   sequenceStepNumber,
   completed,
+  isCurrentUserAssigned,
+  assignCurrentUser,
 }) => {
   const { t } = useTranslation()
 
@@ -80,10 +84,37 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   }
 
   const handleNextStep = () => {
-    if (isNextStepAllowed) {
+    if (currentStep > sequenceStepNumber) {
+      setCurrentStep(sequenceStepNumber + 1)
+    } else if (isNextStepAllowed) {
       sendNextStep()
     }
   }
+
+  const handleOrderAssign = async () => {
+    setSubmitting(true)
+    await assignCurrentUser()
+    if (currentStep === sequenceStepNumber) {
+      await sendNextStep()
+    }
+    setSubmitting(false)
+  }
+  const renderAssignOrderButton = () => (
+    <Button
+      size="large"
+      type="primary"
+      disabled={submitting}
+      onClick={handleOrderAssign}
+    >
+      {t('orderActions.take.title')}
+    </Button>
+  )
+
+  const renderAssignAction = () => (
+    <Row className="WizardStep__actions WizardStep__actions--single">
+      <Col>{renderAssignOrderButton()}</Col>
+    </Row>
+  )
 
   const renderActions = () => (
     <Row className="WizardStep__actions">
@@ -112,7 +143,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
       disabled={submitting}
       onClick={handleNextStep}
     >
-      Взять на проверку
+      {t('orderActions.take.title')}
     </Button>
   )
 
@@ -163,7 +194,7 @@ const FactoringStepParameters: React.FC<FactoringStepParametersProps> = ({
   return (
     <Div className="WizardStep__content">
       {renderStepContent()}
-      {!completed && renderActions()}
+      {!completed && (isCurrentUserAssigned ? renderActions() : renderAssignAction())}
     </Div>
   )
 }
