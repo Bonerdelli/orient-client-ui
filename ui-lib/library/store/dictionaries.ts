@@ -1,5 +1,5 @@
 import { Action, action } from 'easy-peasy'
-import { Dictionaries } from 'orient-ui-library/library/models'
+import { Dictionaries } from 'library/models'
 
 export interface DictionaryStoreModel {
   list?: Dictionaries;

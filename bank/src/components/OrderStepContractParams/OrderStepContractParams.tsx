@@ -14,6 +14,10 @@ import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 import { getFrameWizardStep, sendFrameWizardStep } from 'library/api/frameWizard'
 
 import './OrderStepContractParams.style.less'
+import { useStoreState } from 'library/store'
+import {
+  convertDictionaryToSelectOptions,
+} from 'orient-ui-library/library/converters/dictionary-to-select-options.converter'
 
 const { Title } = Typography
 const { useForm, Item: FormItem } = Form
@@ -44,6 +48,7 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
 }) => {
   const { t } = useTranslation()
   const [ form ] = useForm()
+  const dictionaries = useStoreState(state => state.dictionary.list)
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(false)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
@@ -206,7 +211,6 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
 
   const isComission = () => conditionCode === OrderConditionType.Comission
   const isDiscount = () => conditionCode === OrderConditionType.Discount
-  const hidePayer = true // NOTE: be doesn't support this
 
   const formItemProps = {
     labelCol: { span: 14 },
@@ -230,19 +234,14 @@ const OrderStepContractParams: React.FC<OrderStepContractParamsProps> = ({
           value={OrderConditionType.Discount}>{t('models.orderCondition.fields.conditionCode.options.discount')}</Option>
       </Select>
     </FormItem>
-    {isComission() && !hidePayer &&
-      <FormItem
-        {...formItemProps}
-        name="payer"
-        label={t('models.orderCondition.fields.payer.title')}
-        rules={[ requiredRule ]}
-      >
-        <Select disabled={formDisabled} placeholder={t('models.orderCondition.fields.payer.placeholder')}
-                defaultValue={1}>
-          <Option value={1}>{t('models.orderCondition.fields.payer.options.provider')}</Option>
-        </Select>
-      </FormItem>
-    }
+    <FormItem {...formItemProps}
+              name="payer"
+              label={t('models.orderCondition.fields.payer.title')}
+              rules={[ requiredRule ]}>
+      <Select disabled={formDisabled}
+              options={dictionaries ? convertDictionaryToSelectOptions(dictionaries.orderPayer) : []}
+              placeholder={t('models.orderCondition.fields.payer.placeholder')}/>
+    </FormItem>
     {isComission() &&
       <FormItem
         {...formItemProps}

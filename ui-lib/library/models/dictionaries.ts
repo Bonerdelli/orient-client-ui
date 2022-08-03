@@ -1,3 +1,5 @@
+import { OrderPayer } from 'models/orderCondition'
+
 export enum CurrencyEnum {
   UZS = 'UZS',
   RUB = 'RUB',
@@ -21,13 +23,14 @@ export interface CurrencyDictionary extends CodeNameDictionary<CurrencyEnum> {
 }
 
 export interface Dictionaries {
-  currency: CurrencyDictionary[],
-  passport: CodeNameDictionary[],
-  orderCondition: CodeNameDictionary[],
-  creditExpiration: IdValueDictionary[],
-  employeeCount: IdValueDictionary[],
-  paymentForm: IdValueDictionary[],
-  taxationSystem: IdValueDictionary[],
-  orderType: CodeNameDictionary[],
+  currency: CurrencyDictionary[]
+  passport: CodeNameDictionary[]
+  orderCondition: CodeNameDictionary[]
+  creditExpiration: IdValueDictionary[]
+  employeeCount: IdValueDictionary[]
+  paymentForm: IdValueDictionary[]
+  taxationSystem: IdValueDictionary[]
+  orderType: CodeNameDictionary[]
   orderStatus: CodeNameDictionary[]
+  orderPayer: CodeNameDictionary<OrderPayer>[]
 }

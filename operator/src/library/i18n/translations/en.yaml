@@ -103,6 +103,9 @@ orderStepDocuments:
     bank:
       title: Банк
       placeholder: Выберите банк...
+    payer:
+      title: Плательщик
+      placeholder: Выберите плательщика...
     conditionCode:
       title: Условие договора
       placeholder: Выберите условие договора...
