@@ -113,25 +113,18 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
       setCurrentStep: handleStepChange,
       isCurrentUserAssigned,
       assignCurrentUser,
+      orderStatus,
+      setOrderStatus,
     }
     switch (selectedStep) {
       case 1:
-        return <FactoringStepParameters
-          {...stepBaseProps}
-          sequenceStepNumber={1}
-          setOrderStatus={setOrderStatus}
-        />
+        return <FactoringStepParameters {...stepBaseProps} sequenceStepNumber={1}/>
       case 2:
         return <FactoringStepDocuments {...stepBaseProps} sequenceStepNumber={2}/>
       case 3:
         return <FactoringStepStopFactors {...stepBaseProps} sequenceStepNumber={3}/>
       case 4:
-        return <FactoringStepSendToBank
-          {...stepBaseProps}
-          sequenceStepNumber={4}
-          orderStatus={orderStatus}
-          setOrderStatus={setOrderStatus}
-        />
+        return <FactoringStepSendToBank {...stepBaseProps} sequenceStepNumber={4}/>
       default:
         return <></>
     }

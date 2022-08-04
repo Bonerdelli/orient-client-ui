@@ -34,7 +34,7 @@ import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 import RejectOrderModal from 'components/RejectOrderModal'
 import OrderDocumentsList from 'components/OrderDocumentsList'
 
-import { REJECT_ALLOWED_STATUSES } from 'library/models/frameWizard'
+import { FRAME_REJECTION_ALLOWED_STATUSES } from 'library/models/frameWizard'
 import { Customer, DocumentStatus, GridResponse } from 'library/models' // TODO: to ui-lib // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getAllBanks } from 'library/api/bank'
@@ -322,7 +322,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     </Row>
   )
 
-  const rejectAllowed = orderStatus && !REJECT_ALLOWED_STATUSES.includes(orderStatus)
+  const rejectAllowed = orderStatus && !FRAME_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
 
   const renderActions = () => (
     <Row className="WizardStep__actions">

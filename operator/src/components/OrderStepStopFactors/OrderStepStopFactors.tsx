@@ -13,7 +13,7 @@ import { getControlColorByState } from 'orient-ui-library/library/helpers/contro
 
 import RejectOrderModal from 'components/RejectOrderModal'
 
-import { REJECT_ALLOWED_STATUSES } from 'library/models/frameWizard'
+import { FRAME_REJECTION_ALLOWED_STATUSES } from 'library/models/frameWizard'
 import { StopFactor } from 'library/models/stopFactor'
 
 import {
@@ -241,7 +241,7 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
     </Row>
   )
 
-  const rejectAllowed = orderStatus && !REJECT_ALLOWED_STATUSES.includes(orderStatus)
+  const rejectAllowed = orderStatus && !FRAME_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
 
   const renderActions = () => (
     <Row className="WizardStep__actions">

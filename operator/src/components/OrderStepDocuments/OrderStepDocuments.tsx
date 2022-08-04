@@ -16,7 +16,7 @@ import { CompanyFounderDto, CompanyQuestionnaireDto } from 'orient-ui-library/li
 
 import RejectOrderModal from 'components/RejectOrderModal'
 import OrderDocumentsList from 'components/OrderDocumentsList'
-import { REJECT_ALLOWED_STATUSES } from 'library/models/frameWizard'
+import { FRAME_REJECTION_ALLOWED_STATUSES } from 'library/models/frameWizard'
 import { DocumentStatus } from 'library/models'
 
 import {
@@ -260,7 +260,7 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
     </Row>
   )
 
-  const rejectAllowed = orderStatus && !REJECT_ALLOWED_STATUSES.includes(orderStatus)
+  const rejectAllowed = orderStatus && !FRAME_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
 
   const renderActions = () => (
     <Row className="WizardStep__actions">

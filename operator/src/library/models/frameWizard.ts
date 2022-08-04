@@ -1,6 +1,6 @@
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 
-export const REJECT_ALLOWED_STATUSES = [
+export const FRAME_REJECTION_ALLOWED_STATUSES = [
   OrderStatus.FRAME_BANK_VERIFYING,
   OrderStatus.FRAME_BANK_SIGN,
   OrderStatus.FRAME_HAS_OFFER,

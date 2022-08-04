@@ -9,13 +9,17 @@ import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
 import { formatDate } from 'orient-ui-library/library/helpers/date'
 import { getControlColorByState } from 'orient-ui-library/library/helpers/control'
+import { FactoringStatus } from 'orient-ui-library/library'
 
+import RejectOrderModal from 'components/RejectOrderModal'
+import { FACTORING_REJECTION_ALLOWED_STATUSES } from 'library/models/factoringWizard'
 import { StopFactor } from 'library/models/stopFactor'
 
 import {
   factoringWizardSetStopFactor,
   getFactoringWizardStep,
   sendFactoringWizardStep,
+  rejectFactoringOrder,
 } from 'library/api/factoringWizard'
 
 import './FactoringStepStopFactors.style.less'
@@ -27,6 +31,8 @@ export interface FactoringStepStopFactorsProps {
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: FactoringStatus) => void
+  orderStatus?: FactoringStatus
   isCurrentUserAssigned: boolean
   assignCurrentUser: () => Promise<unknown>
 }
@@ -35,6 +41,8 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
   orderId,
   currentStep,
   setCurrentStep,
+  setOrderStatus,
+  orderStatus,
   sequenceStepNumber,
   isCurrentUserAssigned,
   assignCurrentUser,
@@ -52,6 +60,8 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
   const [ submitting, setSubmitting ] = useState<boolean>()
 
   const [ stopFactors, setStopFactors ] = useState<StopFactor[] | null>(null)
+
+  const [ rejectModalOpened, setRejectModalOpened ] = useState<boolean>(false)
 
   useEffect(() => {
     loadCurrentStepData()
@@ -121,6 +131,18 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
     } else {
       setCurrentStep(sequenceStepNumber + 1)
     }
+  }
+
+  const handleOrderReject = async (code: number, reason: string) => {
+    const result = await rejectFactoringOrder({
+      step: sequenceStepNumber,
+      orderId: orderId as number,
+    }, {
+      rejectReasonId: code,
+      rejectComment: reason,
+    })
+    loadCurrentStepData()
+    return result.success ?? false
   }
 
   const handleApprove = async (item: StopFactor) => {
@@ -196,9 +218,13 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
     </Row>
   )
 
+  const rejectAllowed = orderStatus && !FACTORING_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
+
   const renderActions = () => (
     <Row className="WizardStep__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
+      <Col>{renderPrevButton()}</Col>
+      <Col>{rejectAllowed && renderRejectButton()}</Col>
+      <Col flex={1}></Col>
       <Col>{renderNextButton()}</Col>
     </Row>
   )
@@ -214,6 +240,19 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
       {t('common.actions.next.title')}
     </Button>
   )
+
+  const renderRejectButton = () => {
+    return (
+      <Button
+        danger
+        size="large"
+        type="default"
+        onClick={() => setRejectModalOpened(true)}
+      >
+        {t('common.actions.reject.title')}
+      </Button>
+    )
+  }
 
   const renderPrevButton = () => (
     <Button
@@ -337,6 +376,11 @@ const FactoringStepStopFactors: React.FC<FactoringStepStopFactorsProps> = ({
     <Div className="WizardStep__content">
       {renderStepContent()}
       {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
+      <RejectOrderModal
+        opened={rejectModalOpened}
+        setOpened={setRejectModalOpened}
+        rejectHandler={handleOrderReject}
+      />
     </Div>
   )
 }

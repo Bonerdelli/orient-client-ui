@@ -12,7 +12,7 @@ import { Bank } from 'orient-ui-library/library/models/bank'
 
 import RejectOrderModal from 'components/RejectOrderModal'
 
-import { REJECT_ALLOWED_STATUSES } from 'library/models/frameWizard'
+import { FRAME_REJECTION_ALLOWED_STATUSES } from 'library/models/frameWizard'
 import {
   getFrameWizardStep,
   sendFrameWizardStep4,
@@ -218,7 +218,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     </Row>
   )
 
-  const rejectAllowed = orderStatus && !REJECT_ALLOWED_STATUSES.includes(orderStatus)
+  const rejectAllowed = orderStatus && !FRAME_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
 
   const renderActions = () => (
     <Row className="WizardStep__actions">
