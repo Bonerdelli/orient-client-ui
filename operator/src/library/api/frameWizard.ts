@@ -104,9 +104,9 @@ export async function frameWizardReject(
   params: FrameWizardsCommonParameters,
   request: FrameWizardRejectOrderRequest,
 ) {
-  const { orderId, step, type } = params
+  const { orderId, type } = params
   const wizard = type === FrameWizardType.Simple ? 'frameSimple' : 'frame'
-  return await post(`/operator/wizard/${wizard}/${orderId}/${step}`, request)
+  return await post(`/operator/wizard/${wizard}/${orderId}/reject`, request)
 }
 
 /**

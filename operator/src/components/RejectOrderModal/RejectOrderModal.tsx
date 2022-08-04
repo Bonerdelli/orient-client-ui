@@ -6,7 +6,7 @@ import type { BaseOptionType } from 'antd/es/select'
 import { useStoreState } from 'library/store'
 import './RejectOrderModal.style.less'
 
-const { Item: FormItem } = Form
+const { useForm, Item: FormItem } = Form
 const { TextArea } = Input
 
 const REASONS_DICTS_NAME = 'taxationSystem'
@@ -23,6 +23,7 @@ const RejectOrderModal: React.FC<RejectOrderModalProps> = ({
   rejectHandler,
 }) => {
   const { t } = useTranslation()
+  const [ form ] = useForm()
 
   const dictionaries = useStoreState(state => state.dictionary.list)
 
@@ -54,10 +55,11 @@ const RejectOrderModal: React.FC<RejectOrderModalProps> = ({
     setOpened(false)
     setReasonCode(undefined)
     setComment(undefined)
+    form.resetFields()
   }
 
   const renderModalContent = () => (
-    <Form layout="vertical">
+    <Form layout="vertical" form={form}>
       <FormItem name="reasonCode"
                 label={t('rejectOrderModal.fields.reason')}
                 rules={[{ required: true }]}>
@@ -67,7 +69,8 @@ const RejectOrderModal: React.FC<RejectOrderModalProps> = ({
       </FormItem>
       <FormItem name="comment"
                 label={t('rejectOrderModal.fields.comment')}>
-        <TextArea rows={6} onChange={e => setComment(e.target.value)} />
+        <TextArea rows={6}
+                  onChange={e => setComment(e.target.value)} />
       </FormItem>
     </Form>
   )
