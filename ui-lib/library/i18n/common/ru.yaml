@@ -87,6 +87,8 @@ actions:
     title: Отправить в Банк
   sign:
     title: Подписать
+  view:
+    title: Посмотреть
 
 documents:
   fields:

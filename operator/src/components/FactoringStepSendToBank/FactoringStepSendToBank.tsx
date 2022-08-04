@@ -6,12 +6,15 @@ import { InfoCircleFilled } from '@ant-design/icons'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { getFactoringWizardStep, sendFactoringWizardStep } from 'library/api/factoringWizard'
+import { getFactoringWizardStep, sendFactoringWizardStep, factoringOrderReject } from 'library/api/factoringWizard'
 
 import './FactoringStepSendToBank.style.less'
 import { OperatorFactoringStep4Dto, OperatorFactoringWizardStep4ResponseDto } from 'library/models/factoringWizard'
 import { StopFactor } from 'library/models/stopFactor'
 import { FactoringStatus } from 'orient-ui-library/library'
+
+import RejectOrderModal from 'components/RejectOrderModal'
+import { FACTORING_REJECTION_ALLOWED_STATUSES } from 'library/models/factoringWizard'
 
 export interface FactoringStepSendToBankProps {
   orderId?: number
@@ -47,6 +50,8 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   const [ bankName, setBankName ] = useState<string>()
   const [ completed, setCompleted ] = useState<boolean>()
 
+  const [ rejectModalOpened, setRejectModalOpened ] = useState<boolean>(false)
+
   useEffect(() => {
     loadCurrentStepData()
   }, [])
@@ -81,6 +86,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     if (result.success) {
       const response = result.data as OperatorFactoringWizardStep4ResponseDto
       setStepData(response.data.bank)
+      setOrderStatus((result.data as OperatorFactoringWizardStep4ResponseDto).orderStatus as FactoringStatus)
       const failedStopFactors = response.data.bank.stopFactors?.filter(({ isOk }) => !isOk) ?? []
       setFailedStopFactors(failedStopFactors)
       setDataLoaded(true)
@@ -120,6 +126,18 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     }
   }
 
+  const handleOrderReject = async (code: number, reason: string) => {
+    const result = await factoringOrderReject({
+      step: sequenceStepNumber,
+      orderId: orderId as number,
+    }, {
+      rejectReasonId: code,
+      rejectComment: reason,
+    })
+    loadCurrentStepData()
+    return result.success ?? false
+  }
+
   const handleOrderAssign = async () => {
     setSubmitting(true)
     await assignCurrentUser()
@@ -143,9 +161,13 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     </Row>
   )
 
+  const rejectAllowed = orderStatus && FACTORING_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
+
   const renderActions = () => (
     <Row className="WizardStep__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
+      <Col>{renderPrevButton()}</Col>
+      <Col>{rejectAllowed && renderRejectButton()}</Col>
+      <Col flex={1}></Col>
       <Col>{!completed && renderSubmitButton()}</Col>
     </Row>
   )
@@ -171,6 +193,19 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       {t('common.actions.back.title')}
     </Button>
   )
+
+  const renderRejectButton = () => {
+    return (
+      <Button
+        danger
+        size="large"
+        type="default"
+        onClick={() => setRejectModalOpened(true)}
+      >
+        {t('common.actions.reject.title')}
+      </Button>
+    )
+  }
 
   // TODO: support negative scenarious after DEMO
   const renderStopFactors = () => (
@@ -224,6 +259,12 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
       {!completed ? renderReadyForSendingContent() : renderOrderSentContent()}
       {/* !completed && Boolean(failedStopFactors?.length) && renderStopFactors() */}
       {!completed && (isCurrentUserAssigned ? renderActions() : renderAssignAction())}
+      {!completed &&
+        <RejectOrderModal
+          opened={rejectModalOpened}
+          setOpened={setRejectModalOpened}
+          rejectHandler={handleOrderReject}
+        />}
     </Div>
   )
 }

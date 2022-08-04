@@ -1,5 +1,5 @@
 import { CompanyDto, CompanyFounderDto, CompanyRequisitesDto } from 'orient-ui-library/library/models/proxy'
-import { FactoringOrderInfo, FactoringWizardStepResponse } from 'orient-ui-library/library'
+import { FactoringOrderInfo, FactoringWizardStepResponse, FactoringStatus } from 'orient-ui-library/library'
 import { StopFactor } from 'library/models/stopFactor'
 
 export type OperatorFactoringWizardStep1ResponseDto = FactoringWizardStepResponse<OperatorFactoringStep1Dto>
@@ -21,3 +21,10 @@ export interface OperatorFactoringStep4Dto {
     stopFactors: StopFactor[]
   }
 }
+
+export const FACTORING_REJECTION_ALLOWED_STATUSES = [
+  FactoringStatus.FACTOR_OPERATOR_WAIT_FOR_VERIFY,
+  FactoringStatus.FACTOR_OPERATOR_VERIFY,
+  FactoringStatus.FACTOR_CLIENT_REWORK,
+  FactoringStatus.FACTOR_CLIENT_SIGN,
+]

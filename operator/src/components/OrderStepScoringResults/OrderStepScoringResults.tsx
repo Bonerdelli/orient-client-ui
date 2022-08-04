@@ -6,10 +6,18 @@ import type { ColumnsType } from 'antd/lib/table'
 
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
-import { FrameWizardStepResponse } from 'orient-ui-library/library/models/wizard'
+import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { Bank } from 'orient-ui-library/library/models/bank'
-import { getFrameWizardStep, sendFrameWizardStep4 } from 'library/api/frameWizard'
+
+import RejectOrderModal from 'components/RejectOrderModal'
+
+import { FRAME_REJECTION_ALLOWED_STATUSES } from 'library/models/frameWizard'
+import {
+  getFrameWizardStep,
+  sendFrameWizardStep4,
+  frameWizardReject,
+} from 'library/api/frameWizard'
 
 import './OrderStepScoringResults.style.less'
 
@@ -30,7 +38,9 @@ interface BankScoringResult extends ScoringResult {
 const { Title } = Typography
 
 export interface OrderStepScoringResultsProps {
+  wizardType?: FrameWizardType
   orderId?: number
+  orderStatus?: OrderStatus
   currentStep: number
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
@@ -40,7 +50,9 @@ export interface OrderStepScoringResultsProps {
 }
 
 const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
+  wizardType = FrameWizardType.Full,
   orderId,
+  orderStatus,
   setCurrentStep,
   sequenceStepNumber,
   setOrderStatus,
@@ -63,6 +75,8 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   const [ selectedRowKeys, setSelectedRowKeys ] = useState<React.Key[]>([])
   const [ tableData, setTableData ] = useState<BankScoringResult[] | null>(null)
 
+  const [ rejectModalOpened, setRejectModalOpened ] = useState<boolean>(false)
+
   useEffect(() => {
     loadCurrentStepData()
   }, [])
@@ -73,6 +87,10 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
       setScorings((stepData as any).banks)
     }
   }, [ stepData ])
+
+  useEffect(() => {
+    setNextStepAllowed(orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING)
+  }, [ orderStatus ])
 
   useEffect(() => {
     setNextStepAllowed(selectedRowKeys.length > 0)
@@ -109,7 +127,7 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<unknown>).data) // TODO: ask be to generate typings
-      setOrderStatus((result as any).data.orderStatus) // TODO: ask be to generate typings
+      setOrderStatus((result.data as FrameWizardStepResponse<unknown>).orderStatus as OrderStatus) // TODO: ask be to generate typings
       if ((result as any).data.orderStatus === OrderStatus.FRAME_CLIENT_SIGN) {
         setWizardCompleted(true)
       }
@@ -156,6 +174,33 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     await assignCurrentUser()
     setSubmitting(false)
   }
+
+  const handleOrderReject = async (code: number, reason: string) => {
+    const result = await frameWizardReject({
+      type: wizardType,
+      step: sequenceStepNumber,
+      orderId,
+    }, {
+      rejectReasonId: code,
+      rejectComment: reason,
+    })
+    loadCurrentStepData()
+    return result.success ?? false
+  }
+
+  const renderRejectOrderButton = () => {
+    return (
+      <Button
+        danger
+        size="large"
+        type="default"
+        onClick={() => setRejectModalOpened(true)}
+      >
+        {t('common.actions.reject.title')}
+      </Button>
+    )
+  }
+
   const renderAssignOrderButton = () => (
     <Button
       size="large"
@@ -173,9 +218,13 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     </Row>
   )
 
+  const rejectAllowed = orderStatus && !FRAME_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
+
   const renderActions = () => (
     <Row className="WizardStep__actions">
-      <Col flex={1}>{renderPrevButton()}</Col>
+      <Col>{renderPrevButton()}</Col>
+      <Col>{rejectAllowed && renderRejectOrderButton()}</Col>
+      <Col flex={1}></Col>
       <Col>{!isWizardCompleted && renderNextButton()}</Col>
     </Row>
   )
@@ -362,6 +411,11 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
     <Div className="WizardStep__content">
       {renderStepContent()}
       {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
+      <RejectOrderModal
+        opened={rejectModalOpened}
+        setOpened={setRejectModalOpened}
+        rejectHandler={handleOrderReject}
+      />
     </Div>
   )
 }

@@ -152,7 +152,10 @@ orders:
       title: Требует подписи Заказчика
     contractConcluded:
       title: Договор заключен
-
+    operatorReject:
+      title: Отказ системы
+      desc: К сожалению, заявка была отклонена
+      message: 'Причина отказа: {{ message }}'
 
 frameOrder:
   # TODO: translate me

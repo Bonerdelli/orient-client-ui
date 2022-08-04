@@ -169,6 +169,12 @@ orderActions:
   assign:
     title: Взять на проверку
 
+rejectOrderModal:
+  title: Please specify reject reason
+  fields:
+    reason: Reject reason
+    comment: Commentary
+
 orderStatuses:
 # Ожидает проверки
 # Просмотрена

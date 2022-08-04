@@ -25,18 +25,27 @@ import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 import CompanyFounderInfo from 'orient-ui-library/components/CompanyFounderInfo'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
+import { OrderStatus } from 'orient-ui-library/library/models/order'
 import { FrameWizardStepResponse, FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderConditions, OrderConditionType } from 'orient-ui-library/library/models/orderCondition'
 import { BankDto, CompanyFounderDto } from 'orient-ui-library/library/models/proxy'
 import { DATE_FORMAT } from 'orient-ui-library/library/helpers/date'
 
+import RejectOrderModal from 'components/RejectOrderModal'
 import OrderDocumentsList from 'components/OrderDocumentsList'
+
+import { FRAME_REJECTION_ALLOWED_STATUSES } from 'library/models/frameWizard'
 import { Customer, DocumentStatus, GridResponse } from 'library/models' // TODO: to ui-lib // TODO: to ui-lib
 import { useApi } from 'library/helpers/api' // TODO: to ui-lib
 import { getAllBanks } from 'library/api/bank'
 import { getAllCustomers } from 'library/api/customer'
 
-import { frameWizardSetDocStatus, getFrameWizardStep, sendFrameWizardStep2 } from 'library/api/frameWizard'
+import {
+  frameWizardSetDocStatus,
+  getFrameWizardStep,
+  sendFrameWizardStep2,
+  frameWizardReject,
+} from 'library/api/frameWizard'
 
 import './OrderStepDocumentsAndConditions.style.less'
 
@@ -49,8 +58,10 @@ export interface OrderDocumentsProps {
   wizardType?: FrameWizardType
   orderId?: number
   currentStep: number
+  orderStatus?: OrderStatus
   sequenceStepNumber: number
   setCurrentStep: (step: number) => void
+  setOrderStatus: (status: OrderStatus) => void
   isCurrentUserAssigned: boolean
   assignCurrentUser: () => Promise<unknown>
 }
@@ -67,8 +78,10 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   wizardType = FrameWizardType.Full,
   orderId,
   currentStep,
+  orderStatus,
   sequenceStepNumber,
   setCurrentStep,
+  setOrderStatus,
   isCurrentUserAssigned,
   assignCurrentUser,
 }) => {
@@ -102,10 +115,16 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
   const [ clientCompanyFounder, setClientCompanyFounder ] = useState<CompanyFounderDto | null>(null)
   const [ companyFounderModalVisible, setCompanyFounderModalVisible ] = useState<boolean>(false)
 
+  const [ rejectModalOpened, setRejectModalOpened ] = useState<boolean>(false)
+
   useEffect(() => {
     loadStepData()
     setFormDisabled(currentStep > sequenceStepNumber || !isCurrentUserAssigned)
   }, [ currentStep ])
+
+  useEffect(() => {
+    setNextStepAllowed(orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING)
+  }, [ orderStatus ])
 
   useEffect(() => {
     setFormDisabled(currentStep > sequenceStepNumber || !isCurrentUserAssigned)
@@ -164,6 +183,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
+      setOrderStatus((result.data as FrameWizardStepResponse<unknown>).orderStatus as OrderStatus) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -214,7 +234,20 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     }
   }
 
-  const renderCancelButton = () => {
+  const handleReject = async (code: number, reason: string) => {
+    const result = await frameWizardReject({
+      type: wizardType,
+      step: sequenceStepNumber,
+      orderId,
+    }, {
+      rejectReasonId: code,
+      rejectComment: reason,
+    })
+    loadStepData()
+    return result.success ?? false
+  }
+
+  const renderBackButton = () => {
     return (
       <Button
         size="large"
@@ -223,6 +256,19 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
         disabled={!isPrevStepAllowed}
       >
         {t('common.actions.back.title')}
+      </Button>
+    )
+  }
+
+  const renderRejectButton = () => {
+    return (
+      <Button
+        danger
+        size="large"
+        type="default"
+        onClick={() => setRejectModalOpened(true)}
+      >
+        {t('common.actions.reject.title')}
       </Button>
     )
   }
@@ -276,9 +322,12 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
     </Row>
   )
 
+  const rejectAllowed = orderStatus && !FRAME_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
+
   const renderActions = () => (
     <Row className="WizardStep__actions">
-      <Col>{renderCancelButton()}</Col>
+      <Col>{renderBackButton()}</Col>
+      <Col>{rejectAllowed && renderRejectButton()}</Col>
       <Col flex={1}></Col>
       <Col>{formDisabled ? renderNextButton() : renderSubmitButton()}</Col>
     </Row>
@@ -538,6 +587,11 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
       >
         {renderStepContent()}
         {isCurrentUserAssigned ? renderActions() : renderAssignAction()}
+        <RejectOrderModal
+          opened={rejectModalOpened}
+          setOpened={setRejectModalOpened}
+          rejectHandler={handleReject}
+        />
       </Form>
     </Div>
   )

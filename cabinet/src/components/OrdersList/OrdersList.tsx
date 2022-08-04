@@ -400,6 +400,7 @@ const OrdersList: React.FC<OrdersListProps> = ({
         loading={loaded === null}
         dataSource={listData ?? []}
         rowClassName={rowClassName}
+        scroll={{ x: true }}
         pagination={{
           size: "default",
           current: page,

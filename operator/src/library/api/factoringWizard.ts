@@ -14,6 +14,11 @@ export interface FactoringWizardStepParameters extends FactoringWizardCommonPara
   orderId: number
 }
 
+export interface RejectFactoringOrderRequest {
+  rejectReasonId: number
+  rejectComment: string
+}
+
 /**
  * Send wizard N-th step
  * NOTE: don't care, as BE response have no typings
@@ -67,6 +72,17 @@ export async function factoringWizardSetStopFactor(
 ) {
   const { orderId } = params
   return await post(`/operator/wizard/factor/${orderId}/stopFactor`, request)
+}
+
+/**
+ * Reject factoring order
+ */
+export async function factoringOrderReject(
+  params: FactoringWizardStepParameters,
+  request: RejectFactoringOrderRequest,
+) {
+  const { orderId } = params
+  return await post(`/operator/wizard/factor/${orderId}/reject`, request)
 }
 
 /**
