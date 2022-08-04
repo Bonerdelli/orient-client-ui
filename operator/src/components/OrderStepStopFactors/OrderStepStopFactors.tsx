@@ -78,6 +78,10 @@ const OrderStepStopFactors: React.FC<OrderStepStopFactorsProps> = ({
   }, [ stepData ])
 
   useEffect(() => {
+    setNextStepAllowed(orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING)
+  }, [ orderStatus ])
+
+  useEffect(() => {
     if (!stopFactors) return
     let allChecked = true
     for (let i = 0; i < stopFactors.length; i++) {

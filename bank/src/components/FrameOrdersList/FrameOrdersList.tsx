@@ -306,6 +306,7 @@ const FrameOrdersList: React.FC<FrameOrdersListProps> = ({ bankId }) => {
         loading={loaded === null}
         dataSource={listData ?? []}
         rowClassName={rowClassName}
+        scroll={{ x: true }}
         pagination={{
           size: 'default',
           current: page,

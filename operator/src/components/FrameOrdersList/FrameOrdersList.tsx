@@ -296,6 +296,7 @@ const FrameOrdersList: React.FC = () => {
         loading={loaded === null}
         dataSource={listData ?? []}
         rowClassName={rowClassName}
+        scroll={{ x: true }}
         pagination={{
           size: 'default',
           current: page,

@@ -89,6 +89,10 @@ const OrderStepScoringResults: React.FC<OrderStepScoringResultsProps> = ({
   }, [ stepData ])
 
   useEffect(() => {
+    setNextStepAllowed(orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING)
+  }, [ orderStatus ])
+
+  useEffect(() => {
     setNextStepAllowed(selectedRowKeys.length > 0)
     setSelectedBankIds(selectedRowKeys as number[])
   }, [ selectedRowKeys ])

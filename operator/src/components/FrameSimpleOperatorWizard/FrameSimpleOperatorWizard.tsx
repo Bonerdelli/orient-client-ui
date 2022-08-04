@@ -113,6 +113,8 @@ const FrameSimpleOperatorWizard: React.FC<FrameSimpleOperatorWizardProps> = ({ o
       setCurrentStep: handleStepChange,
       isCurrentUserAssigned,
       assignCurrentUser,
+      orderStatus,
+      setOrderStatus,
     }
     switch (selectedStep) {
       case 1:

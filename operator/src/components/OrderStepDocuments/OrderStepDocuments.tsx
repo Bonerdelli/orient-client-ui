@@ -85,6 +85,10 @@ const OrderStepDocuments: React.FC<OrderDocumentsProps> = ({
   }, [ currentStep ])
 
   useEffect(() => {
+    setNextStepAllowed(orderStatus === OrderStatus.FRAME_OPERATOR_VERIFYING)
+  }, [ orderStatus ])
+
+  useEffect(() => {
     if (!stepData) return
 
     const currentDocuments = stepData?.documents ?? []
