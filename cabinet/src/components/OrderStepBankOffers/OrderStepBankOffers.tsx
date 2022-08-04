@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Typography, Row, Col, Button, Skeleton, Table, Space, Tag } from 'antd'
+import { Button, Col, Row, Skeleton, Space, Table, Tag, Typography } from 'antd'
 import type { ColumnsType } from 'antd/lib/table'
 import { EyeOutlined } from '@ant-design/icons'
 
@@ -153,6 +153,8 @@ const OrderStepBankOffers: React.FC<OrderStepBankOffersProps> = ({
         return <Tag color="blue">{t('offerStatusTitles.customerSign')}</Tag>
       case BankOfferStatus.Completed:
         return <Tag color="blue">{t('offerStatusTitles.completed')}</Tag>
+      case BankOfferStatus.ClientOfferReject:
+        return <Tag color="red">{t('offerStatusTitles.offerRejected')}</Tag>
       default:
         return <></>
     }

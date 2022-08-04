@@ -57,7 +57,7 @@ function createAuthMiddleware(): Middleware {
       axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
     }
     return next(action)
-  };
+  }
 }
 
 export const axiosMiddleware = createAuthMiddleware()
@@ -85,7 +85,7 @@ export async function getFile(
   path: string,
   fileName: string,
   onError?: (error?: ApiErrorResponse) => void,
-  isPathAbsolute?: boolean
+  isPathAbsolute?: boolean,
 ): Promise<boolean> {
   try {
     const url = isPathAbsolute ? path : getEndpointUrl(path)
@@ -116,7 +116,7 @@ export async function getS3File(
       responseType: 'blob',
       headers: {
         Authorization: '',
-      }
+      },
     })
     if (!response.data) {
       throw new Error('Empty response')
@@ -141,6 +141,27 @@ export async function post<T, P = any>(
   try {
     const url = getEndpointUrl(path)
     const response = await axios.post(url, payload)
+    if (showFeedback) {
+      showResultMessage(response.data)
+    }
+    return response.data
+  } catch (err: any) {
+    return handleApiError(err, onError, showFeedback)
+  }
+}
+
+/**
+ * PUT request
+ */
+export async function put<T, P = any>(
+  path: string,
+  payload: P,
+  showFeedback = false,
+  onError?: (error?: ApiErrorResponse) => void,
+): Promise<ApiResponse<T>> {
+  try {
+    const url = getEndpointUrl(path)
+    const response = await axios.put(url, payload)
     if (showFeedback) {
       showResultMessage(response.data)
     }
@@ -208,7 +229,7 @@ export function getEndpointUrl(path: string): string {
 function handleApiError(
   error?: AxiosError<ApiErrorResponse>,
   onError?: (error?: ApiErrorResponse) => void,
-  showFeedback = false
+  showFeedback = false,
 ): ApiErrorResponse {
   const errorResponse = error?.response?.data
   if (onError) {
@@ -224,6 +245,6 @@ function handleApiError(
   }
   return {
     status: error?.response?.status,
-    error: 'Unknown API error' ,
+    error: 'Unknown API error',
   }
 }
