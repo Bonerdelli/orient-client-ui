@@ -83,6 +83,8 @@ actions:
     title: Check
   sign:
     title: Sign
+  view:
+    title: View
 
 documents:
   fields:

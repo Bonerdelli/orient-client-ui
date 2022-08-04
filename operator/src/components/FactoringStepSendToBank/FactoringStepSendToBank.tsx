@@ -6,7 +6,7 @@ import { InfoCircleFilled } from '@ant-design/icons'
 import Div from 'orient-ui-library/components/Div'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
 
-import { getFactoringWizardStep, sendFactoringWizardStep, rejectFactoringOrder } from 'library/api/factoringWizard'
+import { getFactoringWizardStep, sendFactoringWizardStep, factoringOrderReject } from 'library/api/factoringWizard'
 
 import './FactoringStepSendToBank.style.less'
 import { OperatorFactoringStep4Dto, OperatorFactoringWizardStep4ResponseDto } from 'library/models/factoringWizard'
@@ -86,6 +86,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     if (result.success) {
       const response = result.data as OperatorFactoringWizardStep4ResponseDto
       setStepData(response.data.bank)
+      setOrderStatus((result.data as OperatorFactoringWizardStep4ResponseDto).orderStatus as FactoringStatus)
       const failedStopFactors = response.data.bank.stopFactors?.filter(({ isOk }) => !isOk) ?? []
       setFailedStopFactors(failedStopFactors)
       setDataLoaded(true)
@@ -126,7 +127,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
   }
 
   const handleOrderReject = async (code: number, reason: string) => {
-    const result = await rejectFactoringOrder({
+    const result = await factoringOrderReject({
       step: sequenceStepNumber,
       orderId: orderId as number,
     }, {
@@ -160,7 +161,7 @@ const FactoringStepSendToBank: React.FC<FactoringStepSendToBankProps> = ({
     </Row>
   )
 
-  const rejectAllowed = orderStatus && !FACTORING_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
+  const rejectAllowed = orderStatus && FACTORING_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
 
   const renderActions = () => (
     <Row className="WizardStep__actions">

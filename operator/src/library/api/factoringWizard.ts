@@ -77,7 +77,7 @@ export async function factoringWizardSetStopFactor(
 /**
  * Reject factoring order
  */
-export async function rejectFactoringOrder(
+export async function factoringOrderReject(
   params: FactoringWizardStepParameters,
   request: RejectFactoringOrderRequest,
 ) {

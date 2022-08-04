@@ -9,7 +9,7 @@ import './RejectOrderModal.style.less'
 const { useForm, Item: FormItem } = Form
 const { TextArea } = Input
 
-const REASONS_DICTS_NAME = 'taxationSystem'
+const REASONS_DICTS_NAME = 'operatorRejectReason'
 
 export interface RejectOrderModalProps {
   opened: boolean
@@ -33,8 +33,8 @@ const RejectOrderModal: React.FC<RejectOrderModalProps> = ({
 
   useEffect(() => {
     if (dictionaries?.[REASONS_DICTS_NAME]) {
-      const options = dictionaries[REASONS_DICTS_NAME].map(datum => ({
-        label: datum.value,
+      const options = dictionaries[REASONS_DICTS_NAME].map((datum: any) => ({ // TODO: sync dict schemas (id or code)
+        label: datum.name,
         value: datum.id,
       }))
       setReasons(options)

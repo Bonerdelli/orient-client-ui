@@ -20,7 +20,7 @@ import {
   factoringWizardSetDocStatus,
   getFactoringWizardStep,
   sendFactoringWizardStep,
-  rejectFactoringOrder,
+  factoringOrderReject,
 } from 'library/api/factoringWizard'
 
 import './FactoringStepDocuments.style.less'
@@ -115,6 +115,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     })
     if (result.success) {
       setStepData((result.data as FrameWizardStepResponse<any>).data) // TODO: ask be to generate models
+      setOrderStatus((result.data as FrameWizardStepResponse<unknown>).orderStatus as FactoringStatus) // TODO: ask be to generate typings
       setDataLoaded(true)
     } else {
       setDataLoaded(false)
@@ -169,7 +170,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
   }
 
   const handleReject = async (code: number, reason: string) => {
-    const result = await rejectFactoringOrder({
+    const result = await factoringOrderReject({
       step: sequenceStepNumber,
       orderId: orderId as number,
     }, {
@@ -243,7 +244,7 @@ const FactoringStepDocuments: React.FC<FactoringStepDocumentsProps> = ({
     </Row>
   )
 
-  const rejectAllowed = orderStatus && !FACTORING_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
+  const rejectAllowed = orderStatus && FACTORING_REJECTION_ALLOWED_STATUSES.includes(orderStatus)
 
   const renderActions = () => (
     <Row className="WizardStep__actions">

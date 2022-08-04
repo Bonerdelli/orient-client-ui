@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Card, Grid, Result, Skeleton, Steps } from 'antd'
+import { CloseCircleFilled } from '@ant-design/icons'
 
 import WizardHeader from 'orient-ui-library/components/WizardHeader'
 import ErrorResultView from 'orient-ui-library/components/ErrorResultView'
@@ -45,6 +46,7 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
   const [ dataLoaded, setDataLoaded ] = useState<boolean>()
   const [ orderId, setOrderId ] = useState<number>()
   const [ orderStatus, setOrderStatus ] = useState<OrderStatus>()
+  const [ rejectReason, setRejectReason ] = useState<string>()
 
   // TODO: BE doesn't sent customer, fix after DE fixes
   const [ selectedCustomer, setSelectedCustomer ] = useState<Customer>()
@@ -77,6 +79,8 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
       setCurrentStepData((result.data as any).data)
       let step = Number((result.data as any).step)
       let orderStatus = (result.data as any).orderStatus
+      let rejectReason = (result.data as any).rejectReason
+      setRejectReason(rejectReason)
       setOrderStatus(orderStatus)
       setCurrentStep(step)
       setSelectedStep(step)
@@ -93,10 +97,16 @@ const FrameSimpleWizard: React.FC<FrameSimpleWizardProps> = ({ companyId, backUr
       setCurrentStep(step)
     }
   }
-
   const renderCurrentStep = () => {
     if (!companyId || stepDataLoading) {
       return <Skeleton active={true}/>
+    }
+    if (orderStatus === OrderStatus.FRAME_OPERATOR_REJECT) {
+      return <Result
+        icon={<CloseCircleFilled/>}
+        title={t('orders.statuses.operatorReject.desc')}
+        subTitle={rejectReason && t('orders.statuses.operatorReject.message', { message: rejectReason })}
+      />
     }
     switch (selectedStep) {
       case 1:
