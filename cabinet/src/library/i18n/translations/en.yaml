@@ -181,6 +181,19 @@ frameSimpleOrder:
   fourthStep:
     title: In the bank
 
+factoringWizard:
+  title: Заявка на факторинг
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы / БО
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Проверка на стоп-факторы
+  fourthStep:
+    title: Дополнительные параметры
+    desc: Дополнительные параметры
+
 factoring:
   title: Factoring Application
   firstStep:

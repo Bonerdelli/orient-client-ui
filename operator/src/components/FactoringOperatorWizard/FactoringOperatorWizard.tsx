@@ -140,7 +140,7 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
     <>
       <Card className="Wizard FactoringOperatorWizard">
         <WizardHeader
-          title={t('frameWizard.title')}
+          title={t('factoringWizard.title')}
           backUrl={backUrl}
           username={username}
           statusTag={
@@ -155,10 +155,10 @@ const FactoringOperatorWizard: React.FC<FactoringOperatorWizardProps> = ({ order
           direction={breakpoint.xl ? 'horizontal' : 'vertical'}
           onChange={(step) => setSelectedStep(step + 1)}
         >
-          <Step disabled={!isFirstStepActive()} title={t('frameWizard.firstStep.title')}/>
-          <Step disabled={!isSecondStepActive()} title={t('frameWizard.secondStep.title')}/>
-          <Step disabled={!isThirdStepActive()} title={t('frameWizard.thirdStep.title')}/>
-          <Step disabled={!isFourthStepActive()} title={t('frameWizard.fifthStep.title')}/>
+          <Step disabled={!isFirstStepActive()} title={t('factoringWizard.firstStep.title')}/>
+          <Step disabled={!isSecondStepActive()} title={t('factoringWizard.secondStep.title')}/>
+          <Step disabled={!isThirdStepActive()} title={t('factoringWizard.thirdStep.title')}/>
+          <Step disabled={!isFourthStepActive()} title={t('factoringWizard.fifthStep.title')}/>
         </Steps>
       </Card>
       <Card className="FactoringOperatorWizard__step">

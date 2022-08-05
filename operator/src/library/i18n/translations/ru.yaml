@@ -77,6 +77,19 @@ frameSimpleWizard:
   thirdStep:
     title: Отправка в Банк
 
+factoringWizard:
+  title: Заявка на факторинг
+  firstStep:
+    title: Параметры заявки и клиента
+  secondStep:
+    title: Документы / БО
+    desc: Список документов, приложенных к заявке
+  thirdStep:
+    title: Проверка на стоп-факторы
+  fourthStep:
+    title: Дополнительные параметры
+    desc: Дополнительные параметры
+
 orderStepParameters:
   title: Параметры заявки и клиента
 
