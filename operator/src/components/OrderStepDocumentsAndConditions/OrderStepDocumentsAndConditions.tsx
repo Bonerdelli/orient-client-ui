@@ -48,6 +48,10 @@ import {
 } from 'library/api/frameWizard'
 
 import './OrderStepDocumentsAndConditions.style.less'
+import {
+  convertDictionaryToSelectOptions,
+} from 'orient-ui-library/library/converters/dictionary-to-select-options.converter'
+import { useStoreState } from 'library/store'
 
 const { Title, Text } = Typography
 const { useForm, Item: FormItem } = Form
@@ -87,6 +91,7 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
 }) => {
   const { t } = useTranslation()
   const [ form ] = useForm()
+  const dictionaries = useStoreState(state => state.dictionary.list)
 
   const [ isNextStepAllowed, setNextStepAllowed ] = useState<boolean>(true)
   const [ isPrevStepAllowed, _setPrevStepAllowed ] = useState<boolean>(true)
@@ -458,6 +463,14 @@ const OrderStepDocumentsAndConditions: React.FC<OrderDocumentsProps> = ({
           {t('models.orderCondition.fields.conditionCode.options.discount')}
         </Option>
       </Select>
+    </FormItem>
+    <FormItem {...formItemProps}
+              name="payer"
+              label={t('orderStepDocuments.orderParametersFormFields.payer.title')}
+              rules={[ requiredRule ]}>
+      <Select disabled={formDisabled}
+              options={dictionaries ? convertDictionaryToSelectOptions(dictionaries.orderPayer) : []}
+              placeholder={t('orderStepDocuments.orderParametersFormFields.payer.placeholder')}/>
     </FormItem>
     {isComission() &&
       <FormItem {...formItemProps}

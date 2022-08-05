@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Descriptions, Skeleton } from 'antd'
-import { OrderConditions, OrderConditionType } from 'library/models/orderCondition'
+import { OrderConditions, OrderConditionType, OrderPayer } from 'library/models/orderCondition'
 import { formatDate } from 'library/helpers/date'
 
 const { Item: DescItem } = Descriptions
@@ -12,7 +12,7 @@ export interface OrderConditionProps {
 
 const OrderCondition: React.FC<OrderConditionProps> = ({
   condition,
-  size,
+  size = 'middle',
 }) => {
   const { t } = useTranslation()
 
@@ -36,9 +36,6 @@ const OrderCondition: React.FC<OrderConditionProps> = ({
       case OrderConditionType.Comission:
         return (
           <>
-            <DescItem label={t('models.orderCondition.fields.payer.title')}>
-              {renderPayer(condition.payer)}
-            </DescItem>
             <DescItem label={t('models.orderCondition.fields.percentOverall.title')}>
               {condition.percentOverall}
             </DescItem>
@@ -61,14 +58,20 @@ const OrderCondition: React.FC<OrderConditionProps> = ({
   }
 
 
-  const renderPayer = (payerType: any) => {
-    // NOTE: not supported by be
-    return payerType || '–'
+  const renderPayer = (payer: OrderPayer): string => {
+    switch (payer) {
+      case OrderPayer.Debtor:
+        return t('orderCondition.fields.payer.options.debtor')
+      case OrderPayer.Provider:
+        return t('orderCondition.fields.payer.options.provider')
+      default:
+        return ''
+    }
   }
 
   return (
     <Descriptions
-      size={size ?? 'middle'}
+      size={size}
       title={t('models.orderCondition.title')}
       className="OrderCondition"
       bordered
@@ -76,6 +79,9 @@ const OrderCondition: React.FC<OrderConditionProps> = ({
     >
       <DescItem label={t('models.orderCondition.fields.conditionCode.title')}>
         {renderConditionType(condition.conditionCode)}
+      </DescItem>
+      <DescItem label={t('models.orderCondition.fields.payer.title')}>
+        {renderPayer(condition.payer)}
       </DescItem>
       {renderFieldsByType(condition.conditionCode)}
       <DescItem label={t('models.orderCondition.fields.startDate.title')}>
