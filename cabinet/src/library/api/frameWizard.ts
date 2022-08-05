@@ -1,4 +1,4 @@
-import { get, post } from 'orient-ui-library/library/helpers/api'
+import { get, post, put } from 'orient-ui-library/library/helpers/api'
 import * as schema from 'orient-ui-library/library/api/schema'
 
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
@@ -33,6 +33,11 @@ export interface FrameWizardStepParameters extends FrameWizardCommonParameters {
 interface SaveBankRequisitesToOrderParams extends FrameWizardCommonParameters {
   orderId: number
   requisitesId: number
+}
+
+interface RejectBankOfferParams extends FrameWizardCommonParameters {
+  orderId: number
+  bankId: number
 }
 
 // TODO: ask be generate models for this
@@ -146,4 +151,14 @@ export async function saveRequisitesToOrder(
 ) {
   const basePath = getBasePath(companyId, type, mode)
   return await post(`${basePath}/${orderId}/requisites`, { requisitesId }, true)
+}
+
+/**
+ * Reject bank offer
+ */
+export async function rejectBankOffer(
+  { mode, companyId, orderId, type, bankId }: RejectBankOfferParams,
+) {
+  const basePath = getBasePath(companyId, type, mode)
+  return await put(`${basePath}/${orderId}/reject/offer/${bankId}`, {}, true)
 }

@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { sortBy } from 'lodash'
 
-import { Button, Col, message, Result, Row, Skeleton, Typography } from 'antd'
-import { ArrowLeftOutlined, ClockCircleFilled } from '@ant-design/icons'
+import { Button, Col, message, Modal, Result, Row, Skeleton, Typography } from 'antd'
+import { ArrowLeftOutlined, ClockCircleFilled, ExclamationCircleOutlined, InfoCircleFilled } from '@ant-design/icons'
 
 import Div from 'orient-ui-library/components/Div'
 import OrderConditionView from 'orient-ui-library/components/OrderCondition'
@@ -11,17 +11,17 @@ import { BankOffer, BankOfferStatus } from 'orient-ui-library/library/models/ban
 import { FrameWizardType } from 'orient-ui-library/library/models/wizard'
 import { OrderDocument } from 'orient-ui-library/library/models/document'
 
-import { checkDocumentSignNeeded, checkDocumentSigned } from 'orient-ui-library/library/helpers/order'
+import { checkDocumentSigned, checkDocumentSignNeeded } from 'orient-ui-library/library/helpers/order'
 
 import OrderDocumentsToSignList from 'components/OrderDocumentsToSignList'
-import { sendFrameWizardStep4 } from 'library/api/frameWizard'
+import { rejectBankOffer, sendFrameWizardStep4 } from 'library/api/frameWizard'
 
 import './ClientOrderBankOfferInfo.style.less'
 import { useHistory } from 'react-router-dom'
 import { FACTORING_ORDER_ID_PARAM, OFFER_BANK_ID_PARAM } from 'library/constants'
 
 const { Title, Paragraph } = Typography
-
+const { confirm } = Modal
 
 const DOCUMENTS_TO_SHOW = [
   9, // Рамочный договор
@@ -69,8 +69,37 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
     setDocumentTypes(updatedDocumentTypes)
   }, [ offer ])
 
-  const handleReject = () => {
-    onBack()
+
+  const handleReject = async () => {
+    if (!orderId || !companyId || !bankId) {
+      return
+    }
+    const res = await rejectBankOffer({
+      type: wizardType,
+      companyId,
+      orderId,
+      bankId,
+    })
+
+    if (res.success) {
+      onBack()
+    }
+  }
+
+  const openRejectConfirm = () => {
+    confirm({
+      title: t('orderStepBankOffer.rejectConfirmModal.title'),
+      content: t('orderStepBankOffer.rejectConfirmModal.desc'),
+      icon: <ExclamationCircleOutlined/>,
+      okText: t('orderStepBankOffer.rejectConfirmModal.ok'),
+      centered: true,
+      okButtonProps: {
+        type: 'primary',
+        danger: true,
+      },
+      cancelText: t('orderStepBankOffer.rejectConfirmModal.cancel'),
+      onOk: handleReject,
+    })
   }
 
   const handleAccept = async () => {
@@ -150,19 +179,28 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
     )
   }
 
+  const renderRejectMessage = () => (
+    <Result
+      icon={<InfoCircleFilled/>}
+      title={t('orderStepBankOffer.statuses.clientRejected.title')}
+      subTitle={t('orderStepBankOffer.statuses.clientRejected.desc')}
+    />
+  )
+
   const renderOfferContent = () => {
     if (!bankOfferStatus) {
       return <Skeleton active/>
     }
     if (bankOfferStatus === BankOfferStatus.BankSign
-        || bankOfferStatus === BankOfferStatus.BankVerify
-        || bankOfferStatus === BankOfferStatus.BankWaitForVerify
-        || bankOfferStatus === BankOfferStatus.BankViewed) {
+      || bankOfferStatus === BankOfferStatus.BankVerify
+      || bankOfferStatus === BankOfferStatus.BankWaitForVerify
+      || bankOfferStatus === BankOfferStatus.BankViewed) {
       return renderWaitMessage()
     }
     return (
       <>
         {bankOfferStatus === BankOfferStatus.CustomerSign && renderWaitMessage()}
+        {bankOfferStatus === BankOfferStatus.ClientOfferReject && renderRejectMessage()}
         {renderHasOfferContent()}
       </>
     )
@@ -173,8 +211,8 @@ const ClientOrderBankOfferInfo: React.FC<ClientOrderBankOfferInfoProps> = ({
       <Button
         danger
         size="large"
-        type="default"
-        onClick={handleReject}
+        type="primary"
+        onClick={openRejectConfirm}
       >
         {t('orderStepBankOffer.actions.reject.title')}
       </Button>
