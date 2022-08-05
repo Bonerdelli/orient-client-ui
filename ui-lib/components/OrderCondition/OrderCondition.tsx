@@ -61,9 +61,9 @@ const OrderCondition: React.FC<OrderConditionProps> = ({
   const renderPayer = (payer: OrderPayer): string => {
     switch (payer) {
       case OrderPayer.Debtor:
-        return 'Дебитор'
+        return t('orderCondition.fields.payer.options.debtor')
       case OrderPayer.Provider:
-        return 'Поставщик'
+        return t('orderCondition.fields.payer.options.provider')
       default:
         return ''
     }

@@ -200,6 +200,7 @@ orderCondition:
       placeholder: Выберите плательщика...
       options:
         provider: Поставщик
+        debtor: Дебитор
     percentOverall:
       title: Cтавка (единовременная)
     percentYear:
