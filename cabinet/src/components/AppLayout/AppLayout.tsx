@@ -16,6 +16,7 @@ import AppLayoutProtected from './AppLayoutProtected'
 
 import './AppLayout.style.less'
 import { getCompany } from 'library/api'
+import AxiosUnauthorizedInterceptor from 'library/hocs/AxiosUnauthorizedInterceptor'
 
 
 const AppLayout = () => {
@@ -89,7 +90,12 @@ const AppLayout = () => {
 
   return (
     <BrowserRouter>
-      {auth && user ? <AppLayoutProtected/> : <AppLayoutPublic/>}
+      {auth && user
+        ? <AxiosUnauthorizedInterceptor>
+          <AppLayoutProtected/>
+        </AxiosUnauthorizedInterceptor>
+        : <AppLayoutPublic/>
+      }
     </BrowserRouter>
   )
 }

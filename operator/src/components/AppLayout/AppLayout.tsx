@@ -14,6 +14,7 @@ import AppLayoutProtected from './AppLayoutProtected'
 
 import './AppLayout.style.less'
 import { Dictionaries, getDictionaries } from 'orient-ui-library/library'
+import AxiosUnauthorizedInterceptor from 'library/hocs/AxiosUnauthorizedInterceptor'
 
 
 const AppLayout = () => {
@@ -72,7 +73,12 @@ const AppLayout = () => {
 
   return (
     <BrowserRouter>
-      {auth && user ? <AppLayoutProtected/> : <AppLayoutPublic/>}
+      {auth && user
+        ? <AxiosUnauthorizedInterceptor>
+          <AppLayoutProtected/>
+        </AxiosUnauthorizedInterceptor>
+        : <AppLayoutPublic/>
+      }
     </BrowserRouter>
   )
 }

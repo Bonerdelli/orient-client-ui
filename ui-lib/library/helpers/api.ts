@@ -18,7 +18,9 @@ export const API_URL = process.env.API_PROXIED_PATH
 
 export const REQUEST_TIMEOUT = 15000 // in milliseconds
 
-axios.defaults.timeout = REQUEST_TIMEOUT
+export const axiosInstance = axios.create()
+
+axiosInstance.defaults.timeout = REQUEST_TIMEOUT
 
 export interface ApiErrorResponse {
   success?: false
@@ -54,7 +56,7 @@ function createAuthMiddleware(): Middleware {
       default:
     }
     if (token !== null) {
-      axios.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
+      axiosInstance.defaults.headers.common.Authorization = token ? `Bearer ${token}` : ''
     }
     return next(action)
   }
@@ -71,7 +73,7 @@ export async function get<T>(
 ): Promise<ApiResponse<T>> {
   try {
     const url = getEndpointUrl(path)
-    const response = await axios.get(url)
+    const response = await axiosInstance.get(url)
     return response.data
   } catch (err: any) {
     return handleApiError(err, onError)
@@ -89,7 +91,7 @@ export async function getFile(
 ): Promise<boolean> {
   try {
     const url = isPathAbsolute ? path : getEndpointUrl(path)
-    const response = await axios.get(url, {
+    const response = await axiosInstance.get(url, {
       responseType: 'blob',
     })
     if (!response.data) {
@@ -112,7 +114,7 @@ export async function getS3File(
   onError?: (error?: ApiErrorResponse) => void,
 ): Promise<boolean> {
   try {
-    const response = await axios.get(url, {
+    const response = await axiosInstance.get(url, {
       responseType: 'blob',
       headers: {
         Authorization: '',
@@ -140,7 +142,7 @@ export async function post<T, P = any>(
 ): Promise<ApiResponse<T>> {
   try {
     const url = getEndpointUrl(path)
-    const response = await axios.post(url, payload)
+    const response = await axiosInstance.post(url, payload)
     if (showFeedback) {
       showResultMessage(response.data)
     }
@@ -161,7 +163,7 @@ export async function put<T, P = any>(
 ): Promise<ApiResponse<T>> {
   try {
     const url = getEndpointUrl(path)
-    const response = await axios.put(url, payload)
+    const response = await axiosInstance.put(url, payload)
     if (showFeedback) {
       showResultMessage(response.data)
     }
@@ -180,7 +182,7 @@ export async function del(
 ): Promise<boolean> {
   try {
     const url = getEndpointUrl(path)
-    await axios.delete(url)
+    await axiosInstance.delete(url)
     return true
   } catch (err: any) {
     handleApiError(err, onError)
